@@ -25,6 +25,7 @@
 
     .pieChart{
         /*width: 140px;*/
+        position: absolute;
         display:inline-block;
     }
     .pieChartTableInvariant {
@@ -81,6 +82,7 @@
         margin-left: 20px;
     }
     .pieChartContainer{
+        position: absolute;
         display: inline-block;
         width: 305px;
         margin-top: 10px;
@@ -267,6 +269,9 @@
         // increase size of palatte
         d3.selectAll('.pieChartContainer')
                 .attr('height',600);
+        d3.selectAll('.pieChartContainer')
+                .selectAll('svg')
+                .attr('height',600);
         var s=d3.select('#a'+x);
 //        var rh= d3.select('#rh') ;
 //        s.attr('width',600);
@@ -339,7 +344,7 @@
 
     <div id = "pieCharts">
 
-        <div id = "a0"  class = "pieChartContainer">
+        <div id = "a0"  class = "pieChartContainer" style="left: 10px; top: 10px;">
             <div id="a0-chart" class="pieChart">
                 <span class="graphTitle">Biological process</span>
                 <a class="reset" href="javascript:biologicalProcessPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -351,7 +356,7 @@
             </div>
         </div>
 
-        <div id = "a1"  class = "pieChartContainer">
+        <div id = "a1"  class = "pieChartContainer" style="left: 260px; top: 10px;">
             <div id="a1-chart" class="pieChart">
                 <span class="graphTitle">Assay format</span>
                 <a class="reset" href="javascript:assayFormatPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -363,7 +368,7 @@
             </div>
         </div>
 
-        <div id = "a2"  class = "pieChartContainer">
+        <div id = "a2"  class = "pieChartContainer" style="left: 520px; top: 10px;">
             <div id="a2-chart" class="pieChart">
                 <span class="graphTitle">Assay format</span>
                 <a class="reset" href="javascript:assayIdDimensionPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -375,7 +380,7 @@
             </div>
         </div>
 
-        <div id = "a3"  class = "pieChartContainer" style="margin-right: 0px;">
+        <div id = "a3"  class = "pieChartContainer" style="left: 780px; top: 10px;">
             <div id="a3-chart" class="pieChart">
                 <span class="graphTitle">Assay type</span>
                 <a class="reset" href="javascript:assayTypePieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -457,7 +462,7 @@
 
 </div>
 
-<table id="data-table" class="table table-hover dc-data-table">
+<table id="data-table" class="table table-hover dc-data-table"  style="position:absolute; left: 10px; top: 300px;">
     <thead>
     <tr class="header">
         <th class="data-table-th">Index</th>
