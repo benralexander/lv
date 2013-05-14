@@ -80,19 +80,19 @@
     #histTitle{
         margin-left: 20px;
     }
-    /*.pieChartContainer{*/
-        /*display: inline-block;*/
-        /*width: 305px;*/
-        /*margin-top: 10px;*/
-        /*margin-bottom: 10px;*/
-        /*margin-right: 10px;*/
-    /*}*/
-    /*.pieChartContainer2{*/
-        /*display: inline-block;*/
-        /*width: 605px;*/
-        /*margin-bottom: 10px;*/
-        /*margin-right: 10px;*/
-    /*}*/
+    .pieChartContainer{
+        display: inline-block;
+        width: 305px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-right: 10px;
+    }
+    .pieChartContainer2{
+        display: inline-block;
+        width: 605px;
+        margin-bottom: 10px;
+        margin-right: 10px;
+    }
     #widthTest{
         position: absolute;
         visibility: hidden;
@@ -265,10 +265,12 @@
         //
 
         // increase size of palatte
+        d3.selectAll('.pieChartContainer')
+                .attr('height',600);
         var s=d3.select('#a'+x);
-        var rh= d3.select('#rh') ;
-        s.attr('width',600);
-        s.attr('height',600);
+//        var rh= d3.select('#rh') ;
+//        s.attr('width',600);
+//        s.attr('height',600);
 
         s.select('#a0-chart>svg')
                 .attr('width',600)
@@ -335,68 +337,9 @@
         <div class = "clearfix"></div>
     </div>
 
-    %{--<div id = "pieCharts">--}%
+    <div id = "pieCharts">
 
-        %{--<div id = "a0"  class = "pieChartContainer">--}%
-            %{--<div id="a0-chart" class="pieChart">--}%
-                %{--<span class="graphTitle">Biological process</span>--}%
-                %{--<a class="reset" href="javascript:biologicalProcessPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>--}%
-                %{--<span class="reset" style="display: none;"></span>--}%
-                %{--<div class = "clearfix"></div>--}%
-            %{--</div>--}%
-
-            %{--<div class = "colorBlockDiv" class="graphTitle" id="a0.chartBlocks">--}%
-            %{--</div>--}%
-        %{--</div>--}%
-
-        %{--<div id = "a1"  class = "pieChartContainer">--}%
-            %{--<div id="a1-chart" class="pieChart">--}%
-                %{--<span class="graphTitle">Assay format</span>--}%
-                %{--<a class="reset" href="javascript:assayFormatPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>--}%
-                %{--<span class="reset" style="display: none;"></span>--}%
-                %{--<div class = "clearfix"></div>--}%
-            %{--</div>--}%
-
-            %{--<div class = "colorBlockDiv" class="graphTitle" id="assayFormatPieBlocks">--}%
-            %{--</div>--}%
-        %{--</div>--}%
-
-        %{--<div id = "a2"  class = "pieChartContainer">--}%
-            %{--<div id="a2-chart" class="pieChart">--}%
-                %{--<span class="graphTitle">Assay format</span>--}%
-                %{--<a class="reset" href="javascript:assayIdDimensionPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>--}%
-                %{--<span class="reset" style="display: none;"></span>--}%
-                %{--<div class = "clearfix"></div>--}%
-            %{--</div>--}%
-
-            %{--<div class = "colorBlockDiv" class="graphTitle" id="assayIDPieBlocks">--}%
-            %{--</div>--}%
-        %{--</div>--}%
-
-        %{--<div id = "a3"  class = "pieChartContainer" style="margin-right: 0px;">--}%
-            %{--<div id="a3-chart" class="pieChart">--}%
-                %{--<span class="graphTitle">Assay type</span>--}%
-                %{--<a class="reset" href="javascript:assayTypePieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>--}%
-                %{--<span class="reset" style="display: none;"></span>--}%
-                %{--<div class = "clearfix"></div>--}%
-            %{--</div>--}%
-
-            %{--<div class = "colorBlockDiv" class="graphTitle" id="assayTypePieBlocks">--}%
-            %{--</div>--}%
-        %{--</div>--}%
-
-    %{--</div>--}%
-
-
-
-
-
-
-
-
-    <table class="pieChartTableInvariant">
-    <tr  class="pieChartTableRowDefaultContainer">
-        <td id = "a0" class="pieChartTableCellDefaultContainer">
+        <div id = "a0"  class = "pieChartContainer">
             <div id="a0-chart" class="pieChart">
                 <span class="graphTitle">Biological process</span>
                 <a class="reset" href="javascript:biologicalProcessPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -406,9 +349,9 @@
 
             <div class = "colorBlockDiv" class="graphTitle" id="a0.chartBlocks">
             </div>
+        </div>
 
-        </td>
-        <td id = "a1" class="pieChartTableCellDefaultContainer">
+        <div id = "a1"  class = "pieChartContainer">
             <div id="a1-chart" class="pieChart">
                 <span class="graphTitle">Assay format</span>
                 <a class="reset" href="javascript:assayFormatPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -418,8 +361,9 @@
 
             <div class = "colorBlockDiv" class="graphTitle" id="assayFormatPieBlocks">
             </div>
-        </td>
-        <td id = "a2" class="pieChartTableCellDefaultContainer">
+        </div>
+
+        <div id = "a2"  class = "pieChartContainer">
             <div id="a2-chart" class="pieChart">
                 <span class="graphTitle">Assay format</span>
                 <a class="reset" href="javascript:assayIdDimensionPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -429,9 +373,9 @@
 
             <div class = "colorBlockDiv" class="graphTitle" id="assayIDPieBlocks">
             </div>
-        </td>
+        </div>
 
-        <td id = "a3" class="pieChartTableCellDefaultContainer">
+        <div id = "a3"  class = "pieChartContainer" style="margin-right: 0px;">
             <div id="a3-chart" class="pieChart">
                 <span class="graphTitle">Assay type</span>
                 <a class="reset" href="javascript:assayTypePieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -441,15 +385,73 @@
 
             <div class = "colorBlockDiv" class="graphTitle" id="assayTypePieBlocks">
             </div>
-        </td>
+        </div>
 
-    </tr>
-    <tr class ="pieChartTableRowDefaultRowResult">
-        <td id="rh" class ="pieChartTableCellDefaultCellResult" colspan=4>
+    </div>
 
-        </td>
-    </tr>
-</table>
+
+
+
+
+
+
+
+    %{--<table class="pieChartTableInvariant">--}%
+    %{--<tr  class="pieChartTableRowDefaultContainer">--}%
+        %{--<td id = "a0" class="pieChartTableCellDefaultContainer">--}%
+            %{--<div id="a0-chart" class="pieChart">--}%
+                %{--<span class="graphTitle">Biological process</span>--}%
+                %{--<a class="reset" href="javascript:biologicalProcessPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>--}%
+                %{--<span class="reset" style="display: none;"></span>--}%
+                %{--<div class = "clearfix"></div>--}%
+            %{--</div>--}%
+
+            %{--<div class = "colorBlockDiv" class="graphTitle" id="a0.chartBlocks">--}%
+            %{--</div>--}%
+
+        %{--</td>--}%
+        %{--<td id = "a1" class="pieChartTableCellDefaultContainer">--}%
+            %{--<div id="a1-chart" class="pieChart">--}%
+                %{--<span class="graphTitle">Assay format</span>--}%
+                %{--<a class="reset" href="javascript:assayFormatPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>--}%
+                %{--<span class="reset" style="display: none;"></span>--}%
+                %{--<div class = "clearfix"></div>--}%
+            %{--</div>--}%
+
+            %{--<div class = "colorBlockDiv" class="graphTitle" id="assayFormatPieBlocks">--}%
+            %{--</div>--}%
+        %{--</td>--}%
+        %{--<td id = "a2" class="pieChartTableCellDefaultContainer">--}%
+            %{--<div id="a2-chart" class="pieChart">--}%
+                %{--<span class="graphTitle">Assay format</span>--}%
+                %{--<a class="reset" href="javascript:assayIdDimensionPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>--}%
+                %{--<span class="reset" style="display: none;"></span>--}%
+                %{--<div class = "clearfix"></div>--}%
+            %{--</div>--}%
+
+            %{--<div class = "colorBlockDiv" class="graphTitle" id="assayIDPieBlocks">--}%
+            %{--</div>--}%
+        %{--</td>--}%
+
+        %{--<td id = "a3" class="pieChartTableCellDefaultContainer">--}%
+            %{--<div id="a3-chart" class="pieChart">--}%
+                %{--<span class="graphTitle">Assay type</span>--}%
+                %{--<a class="reset" href="javascript:assayTypePieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>--}%
+                %{--<span class="reset" style="display: none;"></span>--}%
+                %{--<div class = "clearfix"></div>--}%
+            %{--</div>--}%
+
+            %{--<div class = "colorBlockDiv" class="graphTitle" id="assayTypePieBlocks">--}%
+            %{--</div>--}%
+        %{--</td>--}%
+
+    %{--</tr>--}%
+    %{--<tr class ="pieChartTableRowDefaultRowResult">--}%
+        %{--<td id="rh" class ="pieChartTableCellDefaultCellResult" colspan=4>--}%
+
+        %{--</td>--}%
+    %{--</tr>--}%
+%{--</table>--}%
 
 
 
