@@ -52,6 +52,7 @@
     }
     .pieChartContainer{
         position: absolute;
+        border:
 
     }
     .sizeMinor {
@@ -77,28 +78,6 @@
     .posCompressed3{
         left: 780px;
         top: 10px;
-    }
-    .posExpanded0{
-        left:50px;
-        top: 10px;
-    }
-    .posExpanded1{
-        left: 396px;
-        top: 10px;
-    }
-    .posExpanded2{
-        left: 742px;
-        top: 10px;
-    }
-    .posBigOne{
-        left: 242px;
-        top: 300px;
-    }
-    .pieChartContainer2{
-        display: inline-block;
-        width: 605px;
-        margin-bottom: 10px;
-        margin-right: 10px;
     }
     #widthTest{
         position: absolute;
@@ -156,6 +135,31 @@
         border-spacing: 0px;
         text-align: center;
     }
+    .expander{
+        float: right;
+        border: 1px solid #5d9046;
+        background: #67AA25;
+        color: #fff;
+        font-family: Arial, Helvetica, Sans-Serif;
+        text-decoration: none;
+        width: 100px;
+        font-size: 10px;
+        font-weight: bold;
+        padding: 3px 0;
+        text-align: center;
+        display: block;
+        border-radius: 4px;
+        -moz-border-radius: 4px;
+        -webkit-border-radius: 4px;
+        text-shadow: 1px 1px 1px #666;
+        -moz-box-shadow: 0 1px 3px #111;
+        -webkit-box-shadow: 0 1px 3px #111;
+        box-shadow: 0 1px 3px #111;
+        background: #3F8EB5; /* old browsers */
+        background: -moz-linear-gradient(top, #3F8EB5 0%, #1D76A0 100%); /* firefox */
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3F8EB5), color-stop(100%,#1D76A0)); /* webkit */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3F8EB5', endColorstr='#1D76A0',GradientType=0 );
+    }
     </style>
     <link rel="stylesheet" type="text/css" href="${resource(dir: 'css', file: 'style.css')}" />
 
@@ -176,18 +180,29 @@
                 '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', "#8c564b", "#e377c2", "#7f7f7f"],
             assay = {},
             piename=['a0','a1','a2','a3'],
+            margin=20,
             diameter=260,
-            diameter2=diameter* 2,
-            margin=20;
+            diameter2=margin +diameter+margin +margin +diameter+margin,
+            diameter3=diameter2+margin +diameter+margin;
 
 
     var bigarc = d3.svg.arc()
             .innerRadius(innerRadius*1.2)
             .outerRadius(bigPie);
 
+    var compressedPos = [  {'x':10,  'y':10},
+                           {'x':260, 'y':10},
+                           {'x':520, 'y':10},
+                           {'x':780, 'y':10} ];
+    var expandedPos = [  {'x':50,  'y':10},
+                         {'x':396, 'y':10},
+                         {'x':742, 'y':10} ];
+
+    var centerstagePos = {'x':742, 'y':10};
 
 
-    function readInData(incoming) {
+
+        function readInData(incoming) {
 
         var processedAssays = {}; // Use for de-duplication
         var developingAssayList = []; // This will be the return value
@@ -267,7 +282,38 @@
                 });
     }
 
-
+     function expandForAllPieCharts (pieChartHolderElement)  {
+         pieChartHolderElement.attr('height',diameter3);
+     }
+    function moveDataTableOutOfTheWay (dataTable, duration)  {
+        dataTable.transition()
+                .duration(duration)
+                .style("top",diameter3+ "px") ;
+    }
+    function spotlightOneAndBackgroundThree (spotlight,background1,background2,background3,expandedPos)  {
+        // first handle the spotlight element and then the three backup singers
+        spotlight.attr('height',diameter2)
+                .attr('width',diameter2)
+                .style("top","10px")
+                .transition()
+                .duration(500)
+                .style("top",""+(diameter+margin)+"px")
+                .transition()
+                .duration(500)
+                .style("left",""+diameter+"px");
+        background1
+                .transition()
+                .duration(1500)
+                .style("left",""+expandedPos[0].x+"px");
+        background2
+                .transition()
+                .duration(1500)
+                .style("left",""+expandedPos[1].x+"px");
+        background3
+                .transition()
+                .duration(1500)
+                .style("left",""+expandedPos[2].x+"px");
+    }
 
     function clickMiddleOfPie(d,x) {
         // x tells us the index of the pie
@@ -278,40 +324,9 @@
         //
 
         // increase size of palatte
-        d3.select('.pieCharts')
-                .attr('height',800);
-        d3.select('#data-table')
-                .transition()
-                .duration(500)
-                .style("top","800px")
-        d3.select('#a0')
-                .attr('height',diameter2)
-                .attr('width',diameter2)
-                .style("top","10px")
-                .transition()
-                .duration(500)
-                .style("top",""+(diameter+margin)+"px")
-                .transition()
-                .duration(500)
-                .style("left",""+diameter+"px");
-//        d3.selectAll('.pieChartContainer')
-//                .classed("sizeMinor",true)
-//                .classed("sizeMajor",false)
-//                .classed("posCompressed0",false)
-//                .classed("posCompressed1",false)
-//                .classed("posCompressed2",false)
-//                .classed("posCompressed3",false);
-//        d3.select('#a0')
-//                .classed("sizeMinor",false)
-//                .classed("posBigOne",true)
-//                .classed("sizeMajor",true);
-//        d3.select('#a1')
-//                .classed("posExpanded0",true);
-//        d3.select('#a2')
-//                .classed("posExpanded1",true) ;
-//        d3.select('#a3')
-//                .classed("posExpanded2",true) ;
-//        d3.select('#data-table').style("top","800px")
+        expandForAllPieCharts (d3.select('.pieCharts'));
+        moveDataTableOutOfTheWay(d3.select('#data-table'), 500);
+        spotlightOneAndBackgroundThree (d3.select('#a0'),d3.select('#a1'),d3.select('#a2'),d3.select('#a3'),expandedPos);
 
         var s=d3.select('#a'+x);
         s.select('#a0-chart>svg')
@@ -356,15 +371,19 @@
 
         dc.renderAll();
 
-        var pies = d3.selectAll('svg')
-                .attr('cy',pieWidth/2)
-                .attr('r',innerRadius)
-                .attr('fill','black')
-                .on('click',clickMiddleOfPie);
+        var buttondata = [  {name:"a",num:0},
+                            {name:"b",num:1},
+                            {name:"c",num:2},
+                            {name:"d",num:3}] ;
+
+        var placeButtonsHere = d3.selectAll('.pieChartContainer')
+                .data(buttondata);
+
+
+        placeButtonsHere.append("div").text('click to expand').attr("class", "expander").on('click',clickMiddleOfPie);
+
+
     });
-
-
-
 
 </script>
 
@@ -374,12 +393,12 @@
 </head>
 <body>
 <div id = "graphs">
-    <div id="histogram">
-        <span id = "histTitle" class="graphTitle">Histogram</span>
-        <a class="reset" href="javascript:histogramChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
-        <span class="reset" style="display: none;"></span>
-        <div class = "clearfix"></div>
-    </div>
+    %{--<div id="histogram">--}%
+        %{--<span id = "histTitle" class="graphTitle">Histogram</span>--}%
+        %{--<a class="reset" href="javascript:histogramChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>--}%
+        %{--<span class="reset" style="display: none;"></span>--}%
+        %{--<div class = "clearfix"></div>--}%
+    %{--</div>--}%
 
     <div id = "pieCharts" class="pieCharts">
 
@@ -393,6 +412,7 @@
 
             <div class = "colorBlockDiv" class="graphTitle" id="a0.chartBlocks">
             </div>
+           %{--<span class="expander">Click to expand</span>--}%
         </div>
 
         <div id = "a1"  class = "pieChartContainer posCompressed1 sizeMinor" >
@@ -439,8 +459,29 @@
 
 
 </div>
+%{--<script>--}%
+    %{----}%
+    %{----}%
+    %{--var buttondata = [{"name":"a"},--}%
+        %{--{"name":"b"},--}%
+        %{--{"name":"c"},--}%
+        %{--{"name":"d"}] ;--}%
 
-<table id="data-table" class="table table-hover dc-data-table"  style="position:absolute; left: 10px; top: 300px;">
+    %{--d3.selectAll(".pieChartContainer")--}%
+%{--.data(buttondata)--}%
+%{--.enter()--}%
+%{--.append('p').text("j") ;--}%
+%{--//                .append("span")--}%
+%{--//                .attr("class", "expander").property("value","g");--}%
+%{--//                .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");--}%
+
+
+
+
+
+%{--</script>--}%
+
+    <table id="data-table" class="table table-hover dc-data-table"  style="position:absolute; left: 10px; top: 300px;">
     <thead>
     <tr class="header">
         <th class="data-table-th">Index</th>
