@@ -24,43 +24,9 @@
     }
 
     .pieChart{
-        /*width: 140px;*/
-        position: absolute;
         display:inline-block;
     }
-    .pieChartTableInvariant {
-        border: 0;
-        background-color: #fff;
-        border-collapse: collapse;
-        border:none;
-    }
-    .pieChartTableRowDefaultContainer {
-        height:250px;
-    }
-    .pieChartTableCellDefaultContainer {
-        height:250px;
-        width:25%;
-    }
-    .pieChartTableCellDefaultRowResult {
-        border:none;
-        height:0px;
-    }
-    .pieChartTableCellDefaultCellResult {
-        border:none;
-        width:100%;
-    }
-    .pieChartTableCellExpandedRowResult {
-        height:500px;
-    }
-    .pieChartTableCellExpandedCellResult {
-        width:100%;
-    }
-
-    .pieChart2{
-        width: 280px;
-        display:inline-block;
-    }
-    .legendLine{
+     .legendLine{
         line-height: 250%;
     }
 
@@ -70,8 +36,11 @@
     }
 
     #pieCharts{
-/*        display: inline-block; */
-        /*margin-left: 30px*/
+        position: absolute;
+        width: 1100px;
+        height: 300px;
+        left: 0px;
+        top: 0px;
     }
 
     #histogram{
@@ -83,11 +52,47 @@
     }
     .pieChartContainer{
         position: absolute;
-        display: inline-block;
-        width: 305px;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        margin-right: 10px;
+
+    }
+    .sizeMinor {
+        width: 260px;
+        height: 260px;
+    }
+    .sizeMajor {
+        width: 600px;
+        height: 600px;
+    }
+    .posCompressed0{
+        left: 10px;
+        top: 10px;
+    }
+    .posCompressed1{
+        left: 260px;
+        top: 10px;
+    }
+    .posCompressed2{
+        left: 520px;
+        top: 10px;
+    }
+    .posCompressed3{
+        left: 780px;
+        top: 10px;
+    }
+    .posExpanded0{
+        left:50px;
+        top: 10px;
+    }
+    .posExpanded1{
+        left: 396px;
+        top: 10px;
+    }
+    .posExpanded2{
+        left: 742px;
+        top: 10px;
+    }
+    .posBigOne{
+        left: 242px;
+        top: 300px;
     }
     .pieChartContainer2{
         display: inline-block;
@@ -165,16 +170,22 @@
 //                formatTime = d3.time.format("%I:%M %p"),
             pieWidth = 250,
             innerRadius = 30,
+            bigPie = 300,
             colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', "#8c564b", "#e377c2", "#7f7f7f",
                 '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', "#8c564b", "#e377c2", "#7f7f7f",
                 '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', "#8c564b", "#e377c2", "#7f7f7f"],
             assay = {},
-            piename=['a0','a1','a2','a3'];
+            piename=['a0','a1','a2','a3'],
+            diameter=260,
+            diameter2=diameter* 2,
+            margin=20;
 
 
     var bigarc = d3.svg.arc()
-            .innerRadius(innerRadius*2)
-            .outerRadius(pieWidth*2);
+            .innerRadius(innerRadius*1.2)
+            .outerRadius(bigPie);
+
+
 
     function readInData(incoming) {
 
@@ -267,16 +278,42 @@
         //
 
         // increase size of palatte
-        d3.selectAll('.pieChartContainer')
-                .attr('height',600);
-        d3.selectAll('.pieChartContainer')
-                .selectAll('svg')
-                .attr('height',600);
-        var s=d3.select('#a'+x);
-//        var rh= d3.select('#rh') ;
-//        s.attr('width',600);
-//        s.attr('height',600);
+        d3.select('.pieCharts')
+                .attr('height',800);
+        d3.select('#data-table')
+                .transition()
+                .duration(500)
+                .style("top","800px")
+        d3.select('#a0')
+                .attr('height',diameter2)
+                .attr('width',diameter2)
+                .style("top","10px")
+                .transition()
+                .duration(500)
+                .style("top",""+(diameter+margin)+"px")
+                .transition()
+                .duration(500)
+                .style("left",""+diameter+"px");
+//        d3.selectAll('.pieChartContainer')
+//                .classed("sizeMinor",true)
+//                .classed("sizeMajor",false)
+//                .classed("posCompressed0",false)
+//                .classed("posCompressed1",false)
+//                .classed("posCompressed2",false)
+//                .classed("posCompressed3",false);
+//        d3.select('#a0')
+//                .classed("sizeMinor",false)
+//                .classed("posBigOne",true)
+//                .classed("sizeMajor",true);
+//        d3.select('#a1')
+//                .classed("posExpanded0",true);
+//        d3.select('#a2')
+//                .classed("posExpanded1",true) ;
+//        d3.select('#a3')
+//                .classed("posExpanded2",true) ;
+//        d3.select('#data-table').style("top","800px")
 
+        var s=d3.select('#a'+x);
         s.select('#a0-chart>svg')
                 .attr('width',600)
                 .attr('height',600);
@@ -289,8 +326,10 @@
                 .selectAll('g')
                 .select('path')
                 .transition()
-                .duration(1000)
-                .attr("d", bigarc);
+                .duration(1500)
+                .attr("d", bigarc)
+                .attr("transform", "translate(175,175)");
+
     }
 
 
@@ -342,9 +381,9 @@
         <div class = "clearfix"></div>
     </div>
 
-    <div id = "pieCharts">
+    <div id = "pieCharts" class="pieCharts">
 
-        <div id = "a0"  class = "pieChartContainer" style="left: 10px; top: 10px;">
+        <div id = "a0"  class = "pieChartContainer posCompressed0 sizeMinor"  >
             <div id="a0-chart" class="pieChart">
                 <span class="graphTitle">Biological process</span>
                 <a class="reset" href="javascript:biologicalProcessPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -356,7 +395,7 @@
             </div>
         </div>
 
-        <div id = "a1"  class = "pieChartContainer" style="left: 260px; top: 10px;">
+        <div id = "a1"  class = "pieChartContainer posCompressed1 sizeMinor" >
             <div id="a1-chart" class="pieChart">
                 <span class="graphTitle">Assay format</span>
                 <a class="reset" href="javascript:assayFormatPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -368,7 +407,7 @@
             </div>
         </div>
 
-        <div id = "a2"  class = "pieChartContainer" style="left: 520px; top: 10px;">
+        <div id = "a2"  class = "pieChartContainer posCompressed2 sizeMinor" >
             <div id="a2-chart" class="pieChart">
                 <span class="graphTitle">Assay format</span>
                 <a class="reset" href="javascript:assayIdDimensionPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -380,7 +419,7 @@
             </div>
         </div>
 
-        <div id = "a3"  class = "pieChartContainer" style="left: 780px; top: 10px;">
+        <div id = "a3"  class = "pieChartContainer posCompressed3 sizeMinor">
             <div id="a3-chart" class="pieChart">
                 <span class="graphTitle">Assay type</span>
                 <a class="reset" href="javascript:assayTypePieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -396,67 +435,6 @@
 
 
 
-
-
-
-
-
-    %{--<table class="pieChartTableInvariant">--}%
-    %{--<tr  class="pieChartTableRowDefaultContainer">--}%
-        %{--<td id = "a0" class="pieChartTableCellDefaultContainer">--}%
-            %{--<div id="a0-chart" class="pieChart">--}%
-                %{--<span class="graphTitle">Biological process</span>--}%
-                %{--<a class="reset" href="javascript:biologicalProcessPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>--}%
-                %{--<span class="reset" style="display: none;"></span>--}%
-                %{--<div class = "clearfix"></div>--}%
-            %{--</div>--}%
-
-            %{--<div class = "colorBlockDiv" class="graphTitle" id="a0.chartBlocks">--}%
-            %{--</div>--}%
-
-        %{--</td>--}%
-        %{--<td id = "a1" class="pieChartTableCellDefaultContainer">--}%
-            %{--<div id="a1-chart" class="pieChart">--}%
-                %{--<span class="graphTitle">Assay format</span>--}%
-                %{--<a class="reset" href="javascript:assayFormatPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>--}%
-                %{--<span class="reset" style="display: none;"></span>--}%
-                %{--<div class = "clearfix"></div>--}%
-            %{--</div>--}%
-
-            %{--<div class = "colorBlockDiv" class="graphTitle" id="assayFormatPieBlocks">--}%
-            %{--</div>--}%
-        %{--</td>--}%
-        %{--<td id = "a2" class="pieChartTableCellDefaultContainer">--}%
-            %{--<div id="a2-chart" class="pieChart">--}%
-                %{--<span class="graphTitle">Assay format</span>--}%
-                %{--<a class="reset" href="javascript:assayIdDimensionPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>--}%
-                %{--<span class="reset" style="display: none;"></span>--}%
-                %{--<div class = "clearfix"></div>--}%
-            %{--</div>--}%
-
-            %{--<div class = "colorBlockDiv" class="graphTitle" id="assayIDPieBlocks">--}%
-            %{--</div>--}%
-        %{--</td>--}%
-
-        %{--<td id = "a3" class="pieChartTableCellDefaultContainer">--}%
-            %{--<div id="a3-chart" class="pieChart">--}%
-                %{--<span class="graphTitle">Assay type</span>--}%
-                %{--<a class="reset" href="javascript:assayTypePieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>--}%
-                %{--<span class="reset" style="display: none;"></span>--}%
-                %{--<div class = "clearfix"></div>--}%
-            %{--</div>--}%
-
-            %{--<div class = "colorBlockDiv" class="graphTitle" id="assayTypePieBlocks">--}%
-            %{--</div>--}%
-        %{--</td>--}%
-
-    %{--</tr>--}%
-    %{--<tr class ="pieChartTableRowDefaultRowResult">--}%
-        %{--<td id="rh" class ="pieChartTableCellDefaultCellResult" colspan=4>--}%
-
-        %{--</td>--}%
-    %{--</tr>--}%
-%{--</table>--}%
 
 
 
