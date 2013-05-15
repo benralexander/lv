@@ -52,31 +52,29 @@
     }
     .pieChartContainer{
         position: absolute;
-        border:
-
+        border:  2px solid black;
+        border-radius: 8px;
+        -moz-border-radius: 8px;
+        -webkit-border-radius: 8px;
     }
     .sizeMinor {
         width: 260px;
-        height: 260px;
-    }
-    .sizeMajor {
-        width: 600px;
-        height: 600px;
+        height: 300px;
     }
     .posCompressed0{
         left: 10px;
         top: 10px;
     }
     .posCompressed1{
-        left: 260px;
+        left: 280px;
         top: 10px;
     }
     .posCompressed2{
-        left: 520px;
+        left: 550px;
         top: 10px;
     }
     .posCompressed3{
-        left: 780px;
+        left: 820px;
         top: 10px;
     }
     #widthTest{
@@ -282,25 +280,27 @@
                 });
     }
 
-     function expandForAllPieCharts (pieChartHolderElement)  {
+     function expandDataAreaForAllPieCharts (pieChartHolderElement)  {
          pieChartHolderElement.attr('height',diameter3);
      }
     function moveDataTableOutOfTheWay (dataTable, duration)  {
         dataTable.transition()
                 .duration(duration)
-                .style("top",diameter3+ "px") ;
+                .style("top",diameter3+margin+margin+margin+margin +"px") ;
     }
-    function spotlightOneAndBackgroundThree (spotlight,background1,background2,background3,expandedPos)  {
+    function spotlightOneAndBackgroundThree (origButton,spotlight,background1,background2,background3,expandedPos)  {
         // first handle the spotlight element and then the three backup singers
-        spotlight.attr('height',diameter2)
-                .attr('width',diameter2)
+        spotlight.classed('sizeMinor',false)
+                .style('height',diameter2+margin+margin+margin+"px")
+                .style('width',margin+diameter2+"px")
+                .style('padding-left',margin+"px")
                 .style("top","10px")
                 .transition()
                 .duration(500)
-                .style("top",""+(diameter+margin)+"px")
+                .style("top",""+(diameter+margin+margin+margin)+"px")
                 .transition()
                 .duration(500)
-                .style("left",""+diameter+"px");
+                .style("left",diameter+"px");
         background1
                 .transition()
                 .duration(1500)
@@ -313,7 +313,30 @@
                 .transition()
                 .duration(1500)
                 .style("left",""+expandedPos[2].x+"px");
+        var x=d3.selectAll('#expbutton'+origButton.index)
+                 .text('click to contract');
     }
+
+    function expandGraphicsArea (graphicsTarget) {
+        graphicsTarget
+                .attr('width',600)
+                .attr('height',600);
+
+        graphicsTarget
+                .select('g')
+                .selectAll('text')
+                .remove();
+
+        graphicsTarget
+                .selectAll('g')
+                .select('path')
+                .transition()
+                .duration(1500)
+                .attr("d", bigarc)
+                .attr("transform", "translate(175,175)");
+
+    }
+
 
     function clickMiddleOfPie(d,x) {
         // x tells us the index of the pie
@@ -324,26 +347,10 @@
         //
 
         // increase size of palatte
-        expandForAllPieCharts (d3.select('.pieCharts'));
+        expandDataAreaForAllPieCharts (d3.select('.pieCharts'));
         moveDataTableOutOfTheWay(d3.select('#data-table'), 500);
-        spotlightOneAndBackgroundThree (d3.select('#a0'),d3.select('#a1'),d3.select('#a2'),d3.select('#a3'),expandedPos);
-
-        var s=d3.select('#a'+x);
-        s.select('#a0-chart>svg')
-                .attr('width',600)
-                .attr('height',600);
-
-        s.select('#a0-chart>svg>g')
-                .selectAll('text')
-                .remove();
-
-        s.select('#a0-chart>svg>g')
-                .selectAll('g')
-                .select('path')
-                .transition()
-                .duration(1500)
-                .attr("d", bigarc)
-                .attr("transform", "translate(175,175)");
+        spotlightOneAndBackgroundThree (d,d3.select('#a0'),d3.select('#a1'),d3.select('#a2'),d3.select('#a3'),expandedPos);
+        expandGraphicsArea (d3.select('#a'+x).select('#a0-chart>svg'));
 
     }
 
@@ -371,16 +378,20 @@
 
         dc.renderAll();
 
-        var buttondata = [  {name:"a",num:0},
-                            {name:"b",num:1},
-                            {name:"c",num:2},
-                            {name:"d",num:3}] ;
+        var buttondata = [  {index:0,origCoords:{x:10,y:10}},
+                            {index:1,origCoords:{x:280,y:10}},
+                            {index:2,origCoords:{x:550,y:10}},
+                            {index:3,origCoords:{x:820,y:10}}] ;
 
-        var placeButtonsHere = d3.selectAll('.pieChartContainer')
-                .data(buttondata);
+        var placeButtonsHere =    d3.selectAll('.pieChartContainer')
+                                    .data(buttondata);
 
 
-        placeButtonsHere.append("div").text('click to expand').attr("class", "expander").on('click',clickMiddleOfPie);
+        placeButtonsHere.append("div")
+                .text('click to expand')
+                .attr('class', 'expander')
+                .attr('id', function(d){return 'expbutton'+ d.index;})
+                .on('click',clickMiddleOfPie);
 
 
     });
@@ -459,21 +470,6 @@
 
 
 </div>
-%{--<script>--}%
-    %{----}%
-    %{----}%
-    %{--var buttondata = [{"name":"a"},--}%
-        %{--{"name":"b"},--}%
-        %{--{"name":"c"},--}%
-        %{--{"name":"d"}] ;--}%
-
-    %{--d3.selectAll(".pieChartContainer")--}%
-%{--.data(buttondata)--}%
-%{--.enter()--}%
-%{--.append('p').text("j") ;--}%
-%{--//                .append("span")--}%
-%{--//                .attr("class", "expander").property("value","g");--}%
-%{--//                .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");--}%
 
 
 
