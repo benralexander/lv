@@ -181,7 +181,9 @@
             margin=20,
             diameter=260,
             diameter2=margin +diameter+margin +margin +diameter+margin,
-            diameter3=diameter2+margin +diameter+margin;
+            diameter3=diameter2+margin +diameter+margin,
+            textForExpandingButton = 'click to expand',
+            textForContractingButton = 'click to contract';
 
 
     var bigarc = d3.svg.arc()
@@ -288,7 +290,7 @@
                 .duration(duration)
                 .style("top",diameter3+margin+margin+margin+margin +"px") ;
     }
-    function spotlightOneAndBackgroundThree (origButton,spotlight,background1,background2,background3,expandedPos)  {
+    function spotlightOneAndBackgroundThree (origButton,spotlight,background1,background2,background3,origButton,expandedPos)  {
         // first handle the spotlight element and then the three backup singers
         spotlight.classed('sizeMinor',false)
                 .style('height',diameter2+margin+margin+margin+"px")
@@ -313,8 +315,8 @@
                 .transition()
                 .duration(1500)
                 .style("left",""+expandedPos[2].x+"px");
-        var x=d3.selectAll('#expbutton'+origButton.index)
-                 .text('click to contract');
+        var x=origButton
+                 .text(textForContractingButton);
     }
 
     function expandGraphicsArea (graphicsTarget) {
@@ -339,18 +341,19 @@
 
 
     function clickMiddleOfPie(d,x) {
-        // x tells us the index of the pie
-        // this is the pie DOM element
+        // we better decide whether where you want to expand or contract
+        var origButton=d3.selectAll('#expbutton'+d.index);
+        if (origButton.text () === textForExpandingButton) {
+            // increase size of canvas
+            expandDataAreaForAllPieCharts (d3.select('.pieCharts'));
+            moveDataTableOutOfTheWay(d3.select('#data-table'), 500);
+            spotlightOneAndBackgroundThree (d,d3.select('#a0'),d3.select('#a1'),d3.select('#a2'),d3.select('#a3'),origButton,expandedPos);
+            expandGraphicsArea (d3.select('#a'+x).select('#a0-chart>svg'));
+        }
 
-        //
-        //move other tables out of the way, and increase the size of the pie
-        //
-
-        // increase size of palatte
-        expandDataAreaForAllPieCharts (d3.select('.pieCharts'));
-        moveDataTableOutOfTheWay(d3.select('#data-table'), 500);
-        spotlightOneAndBackgroundThree (d,d3.select('#a0'),d3.select('#a1'),d3.select('#a2'),d3.select('#a3'),expandedPos);
-        expandGraphicsArea (d3.select('#a'+x).select('#a0-chart>svg'));
+        else if (origButton.text () === textForContractingButton) {
+               ;
+        }
 
     }
 
@@ -388,7 +391,7 @@
 
 
         placeButtonsHere.append("div")
-                .text('click to expand')
+                .text(textForExpandingButton)
                 .attr('class', 'expander')
                 .attr('id', function(d){return 'expbutton'+ d.index;})
                 .on('click',clickMiddleOfPie);
