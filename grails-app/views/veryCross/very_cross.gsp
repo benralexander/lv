@@ -200,6 +200,62 @@
 
     var centerstagePos = {'x':742, 'y':10};
 
+    var widgetPosition  = new WidgetPosition ();
+
+    function WidgetPosition()  {
+        var currentWidgetPosition = { 'up': [0,1,2,3],
+                                  'down': [] };
+        this.isAnyWidgetExpanded  =  function () {   // returns a Boolean
+            return currentWidgetPosition.down.length>0;
+        };
+        this.expandedWidget  =  function () {   // returns a number
+            if (currentWidgetPosition.down.length==1){
+                return currentWidgetPosition.down[0];
+            } else {
+                return -1;
+            }
+        };
+        this.unexpandedWidgets = function () {   // returns an array
+            return currentWidgetPosition.up;
+        };
+
+        // the main action routine.
+        this.expandThisWidget = function (widgetToBeExpanded) {  // number: 1 = success, 0 = failure
+            var indexOfDesiredWidget  = 0;
+            // first make sure the incoming argument is inside the acceptable range
+            if ((widgetToBeExpanded < 0) || (widgetToBeExpanded > 3)) {
+                return -1;
+            }
+            // another way to go wrong is to try to expand a widget that isn't in the top row to begin with
+            indexOfDesiredWidget = currentWidgetPosition.up.indexOf(widgetToBeExpanded);
+            if (indexOfDesiredWidget == -1){
+                return indexOfDesiredWidget;
+            }
+            // you can also go wrong if there is already a widget expanded
+            if (currentWidgetPosition.down.length!=0) {
+                indexOfDesiredWidget = -1;
+            }
+
+            if (indexOfDesiredWidget  > -1)  {
+                // everything looks good. Let's do what the caller has asked us to do.
+                //First copy the widget to the down position
+                currentWidgetPosition.down.push(currentWidgetPosition.up[indexOfDesiredWidget]);
+                // Now remove it from the top row and collapse those around it
+                currentWidgetPosition.up = currentWidgetPosition.up.slice(0,indexOfDesiredWidget).concat(
+                        currentWidgetPosition.up.slice(indexOfDesiredWidget+1,4));
+            }
+            return indexOfDesiredWidget;
+        };
+        // the other action routine, though this one is much simpler since there's only one choice
+        unexpandAllWidgets= function (){
+            currentWidgetPosition.up.push(currentWidgetPosition.down.pop ());
+            currentWidgetPosition.up.sort( function (a,b){
+                return a-b;
+            });
+            currentWidgetPosition.down = [];
+        };
+    }
+
 
 
         function readInData(incoming) {
@@ -343,15 +399,16 @@
     function clickMiddleOfPie(d,x) {
         // we better decide whether where you want to expand or contract
         var origButton=d3.selectAll('#expbutton'+d.index);
-        if (origButton.text () === textForExpandingButton) {
-            // increase size of canvas
+
+        if (!widgetPosition.isAnyWidgetExpanded())  {
+            widgetPosition.expandThisWidget(d.index)
             expandDataAreaForAllPieCharts (d3.select('.pieCharts'));
             moveDataTableOutOfTheWay(d3.select('#data-table'), 500);
             spotlightOneAndBackgroundThree (d,d3.select('#a0'),d3.select('#a1'),d3.select('#a2'),d3.select('#a3'),origButton,expandedPos);
             expandGraphicsArea (d3.select('#a'+x).select('#a0-chart>svg'));
         }
 
-        else if (origButton.text () === textForContractingButton) {
+        else if (widgetPosition.expandedWidget()==d.index) {
                ;
         }
 
