@@ -10,10 +10,10 @@
 <head>
     <meta charset="utf-8">
 
-    <title>Zeo + Crossfilter</title>
+    <title>Linked pies</title>
 
-    <script src="../js/crossfilter.min.js"></script>
-    <script src="../js/d3.min.js"></script>
+    <script src="../js/crossfilter.js"></script>
+    <script src="../js/d3.js"></script>
     <script src="../js/dc.js"></script>
 %{--<script src="../js/graph.js"></script>--}%
    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
