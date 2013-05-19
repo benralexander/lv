@@ -162,26 +162,25 @@
     <link rel="stylesheet" type="text/css" href="${resource(dir: 'css', file: 'style.css')}" />
 
 <script>
-
-    // Various formatters.
+    var grandWidth = 1052;
+    var margin = {top: 30, right: 20, bottom: 30, left: 50},
+            width = grandWidth - margin.left - margin.right,
+            height = 270 - margin.top - margin.bottom;
+    var widgetWidth =  grandWidth/ 4,
+            quarterWidgetWidth =  widgetWidth/4;
     var data,
-//                formatNumber = d3.format(",d"),
-//                formatFloat = d3.format(",.2f"),
-//                formatChange = d3.format("+,d"),
-//                formatDate = d3.time.format("%B %d, %Y"),
-//                formatTime = d3.time.format("%I:%M %p"),
-            pieWidth = 250,
+            pieWidth = widgetWidth,
             innerRadius = 30,
-            bigPie = 300,
+            bigPie = widgetWidth+(quarterWidgetWidth/2),
             colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', "#8c564b", "#e377c2", "#7f7f7f",
                 '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', "#8c564b", "#e377c2", "#7f7f7f",
                 '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', "#8c564b", "#e377c2", "#7f7f7f"],
             assay = {},
             piename=['a0','a1','a2','a3'],
-            margin=20,
+            pieWidgetMargin=20,
             diameter=260,
-            diameter2=margin +diameter+margin +margin +diameter+margin,
-            diameter3=diameter2+margin +diameter+margin,
+            diameter2=pieWidgetMargin +diameter+pieWidgetMargin +pieWidgetMargin +diameter+pieWidgetMargin,
+            diameter3=diameter2+pieWidgetMargin +diameter+pieWidgetMargin,
             textForExpandingButton = 'click to expand',
             textForContractingButton = 'click to contract';
 
@@ -190,13 +189,13 @@
             .innerRadius(innerRadius*1.2)
             .outerRadius(bigPie);
 
-    var compressedPos = [  {'x':10,  'y':10},
-                           {'x':260, 'y':10},
-                           {'x':520, 'y':10},
-                           {'x':780, 'y':10} ];
-    var expandedPos = [  {'x':50,  'y':10},
-                         {'x':396, 'y':10},
-                         {'x':742, 'y':10} ];
+    var compressedPos = [  {'x':widgetWidth*0,  'y':10},
+                           {'x':widgetWidth*1, 'y':10},
+                           {'x':widgetWidth*2, 'y':10},
+                           {'x':widgetWidth*3, 'y':10} ];
+    var expandedPos = [  {'x':(widgetWidth*0)+(quarterWidgetWidth*1),  'y':10},
+                         {'x':(widgetWidth*1)+(quarterWidgetWidth*2), 'y':10},
+                         {'x':(widgetWidth*2)+(quarterWidgetWidth*3), 'y':10} ];
 
     var centerstagePos = {'x':742, 'y':10};
 
@@ -344,18 +343,18 @@
     function moveDataTableOutOfTheWay (dataTable, duration)  {
         dataTable.transition()
                 .duration(duration)
-                .style("top",diameter3+margin+margin+margin+margin +"px") ;
+                .style("top",diameter3+pieWidgetMargin+pieWidgetMargin+pieWidgetMargin+pieWidgetMargin +"px") ;
     }
     function spotlightOneAndBackgroundThree (origButton,spotlight,background1,background2,background3,origButton,expandedPos)  {
         // first handle the spotlight element and then the three backup singers
         spotlight.classed('sizeMinor',false)
-                .style('height',diameter2+margin+margin+margin+"px")
-                .style('width',margin+diameter2+"px")
-                .style('padding-left',margin+"px")
+                .style('height',diameter2+pieWidgetMargin+pieWidgetMargin+pieWidgetMargin+"px")
+                .style('width',pieWidgetMargin+diameter2+"px")
+                .style('padding-left',pieWidgetMargin+"px")
                 .style("top","10px")
                 .transition()
                 .duration(500)
-                .style("top",""+(diameter+margin+margin+margin)+"px")
+                .style("top",""+(diameter+pieWidgetMargin+pieWidgetMargin+pieWidgetMargin)+"px")
                 .transition()
                 .duration(500)
                 .style("left",diameter+"px");
