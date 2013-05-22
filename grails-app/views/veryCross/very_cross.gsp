@@ -42,14 +42,6 @@
         left: 0px;
         top: 0px;
     }
-
-    #histogram{
-        display:block;
-    }
-
-    #histTitle{
-        margin-left: 20px;
-    }
     .pieChartContainer{
         position: absolute;
         border:  2px solid black;
@@ -163,13 +155,17 @@
 
 <script>
     var grandWidth = 1052;
+    var totalWidgetNumber = 4;
+    var widgetHeight =  270;
     var margin = {top: 30, right: 20, bottom: 30, left: 50},
             width = grandWidth - margin.left - margin.right,
-            height = 270 - margin.top - margin.bottom;
-    var widgetWidth =  grandWidth/ 4,
+            height = widgetHeight - margin.top - margin.bottom;
+    var widgetWidth =  grandWidth / totalWidgetNumber,
             quarterWidgetWidth =  widgetWidth/4;
+    var pieChartWidth =  widgetWidth-13,
+        pieChartRadius = pieChartWidth/2;
+    var pieWidth = widgetWidth;
     var data,
-            pieWidth = widgetWidth,
             innerRadius = 30,
             bigPie = widgetWidth+(quarterWidgetWidth/2),
             colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', "#8c564b", "#e377c2", "#7f7f7f",
@@ -188,11 +184,14 @@
     var bigarc = d3.svg.arc()
             .innerRadius(innerRadius*1.2)
             .outerRadius(bigPie);
+    var arc = d3.svg.arc()
+            .innerRadius(innerRadius)
+            .outerRadius(pieChartRadius);
 
-    var compressedPos = [  {'x':widgetWidth*0,  'y':10},
-                           {'x':widgetWidth*1, 'y':10},
-                           {'x':widgetWidth*2, 'y':10},
-                           {'x':widgetWidth*3, 'y':10} ];
+    var compressedPos = [  {'x':widgetHeight*0,  'y':10},
+                           {'x':widgetHeight*1, 'y':10},
+                           {'x':widgetHeight*2, 'y':10},
+                           {'x':widgetHeight*3, 'y':10} ];
     var expandedPos = [  {'x':(widgetWidth*0)+(quarterWidgetWidth*1),  'y':10},
                          {'x':(widgetWidth*1)+(quarterWidgetWidth*2), 'y':10},
                          {'x':(widgetWidth*2)+(quarterWidgetWidth*3), 'y':10} ];
@@ -289,11 +288,11 @@
         });
 
         return dc.pieChart("#" + id)
-                .width(250)
-                .height(250)
+                .width(pieChartWidth)
+                .height(pieChartWidth)
                 .transitionDuration(200)
-                .radius(120)
-                .innerRadius(30)
+                .radius(pieChartRadius)
+                .innerRadius(innerRadius)
                 .dimension(dimensionVariable)
                 .group(dimensionVariableGroup)
                 .colors(colors)
@@ -345,7 +344,13 @@
                 .duration(duration)
                 .style("top",diameter3+pieWidgetMargin+pieWidgetMargin+pieWidgetMargin+pieWidgetMargin +"px") ;
     }
-    function spotlightOneAndBackgroundThree (origButton,spotlight,background1,background2,background3,origButton,expandedPos)  {
+    function shiftBackgroundWidgets ( domDescription, horizontalPosition)  {
+        domDescription
+                .transition()
+                .duration(1500)
+                .style("left",horizontalPosition+"px");
+    }
+    function spotlightOneAndBackgroundThree (d,spotlight,background1,background2,background3,origButton,expandedPos)  {
         // first handle the spotlight element and then the three backup singers
         spotlight.classed('sizeMinor',false)
                 .style('height',diameter2+pieWidgetMargin+pieWidgetMargin+pieWidgetMargin+"px")
@@ -358,26 +363,36 @@
                 .transition()
                 .duration(500)
                 .style("left",diameter+"px");
-        background1
-                .transition()
-                .duration(1500)
-                .style("left",""+expandedPos[0].x+"px");
-        background2
-                .transition()
-                .duration(1500)
-                .style("left",""+expandedPos[1].x+"px");
-        background3
-                .transition()
-                .duration(1500)
-                .style("left",""+expandedPos[2].x+"px");
+        shiftBackgroundWidgets (background1,expandedPos[0].x);
+        shiftBackgroundWidgets (background2,expandedPos[1].x);
+        shiftBackgroundWidgets (background3,expandedPos[2].x);
         var x=origButton
                  .text(textForContractingButton);
+    }
+    function resetOneAndResettleThree (d,spotlight,background1,background2,background3,origButton,expandedPos)  {
+        // first handle the spotlight element and then the three backup singers
+        spotlight.transition()
+                .duration(500)
+                .style('height',"300px")
+                .style('width',"260px")
+                .transition()
+                .duration(500)
+                .style("left",spotlight.data()[0].origCoords.x+"px")
+                .transition()
+                .duration(500)
+                .style("top",spotlight.data()[0].origCoords.y+"px")
+;
+        shiftBackgroundWidgets (background1,background1.data()[0].origCoords.x);
+        shiftBackgroundWidgets (background2,background2.data()[0].origCoords.x);
+        shiftBackgroundWidgets (background3,background3.data()[0].origCoords.x);
+        var x=origButton
+                .text(textForExpandingButton);
     }
 
     function expandGraphicsArea (graphicsTarget) {
         graphicsTarget
-                .attr('width',600)
-                .attr('height',600);
+                .attr('width',(widgetWidth*2)+quarterWidgetWidth)
+                .attr('height',(widgetWidth*2)+quarterWidgetWidth);
 
         graphicsTarget
                 .select('g')
@@ -390,7 +405,28 @@
                 .transition()
                 .duration(1500)
                 .attr("d", bigarc)
-                .attr("transform", "translate(175,175)");
+                .attr("transform", "translate(171,171)");
+
+    }
+    function contractGraphicsArea (graphicsTarget) {
+        graphicsTarget
+                .transition()
+                .duration(1500)
+                .attr('width',pieWidth)
+                .attr('height',pieWidth);
+
+        graphicsTarget
+                .select('g')
+                .selectAll('text')
+                .remove();
+
+        graphicsTarget
+                .selectAll('g')
+                .select('path')
+                .transition()
+                .duration(500)
+                .attr("d", arc)
+                .attr("transform", "translate(0,0)");
 
     }
 
@@ -400,15 +436,30 @@
         var origButton=d3.selectAll('#expbutton'+d.index);
 
         if (!widgetPosition.isAnyWidgetExpanded())  {
-            widgetPosition.expandThisWidget(d.index)
             expandDataAreaForAllPieCharts (d3.select('.pieCharts'));
             moveDataTableOutOfTheWay(d3.select('#data-table'), 500);
-            spotlightOneAndBackgroundThree (d,d3.select('#a0'),d3.select('#a1'),d3.select('#a2'),d3.select('#a3'),origButton,expandedPos);
-            expandGraphicsArea (d3.select('#a'+x).select('#a0-chart>svg'));
+            widgetPosition.expandThisWidget(d.index);
+            var expandedWidget = widgetPosition.expandedWidget ();
+            var unexpandedWidget =  widgetPosition.unexpandedWidgets ();
+            spotlightOneAndBackgroundThree (d,d3.select('#a'+expandedWidget),
+                    d3.select('#a'+unexpandedWidget[0]),
+                    d3.select('#a'+unexpandedWidget[1]),
+                    d3.select('#a'+unexpandedWidget[2]),
+                    origButton,
+                    expandedPos);
+            expandGraphicsArea (d3.select('#a'+expandedWidget).select('.pieChart>svg'));
         }
 
         else if (widgetPosition.expandedWidget()==d.index) {
-               ;
+            contractGraphicsArea (d3.select('#a'+x).select('.pieChart>svg'));
+            var expandedWidget = widgetPosition.expandedWidget ();
+            var unexpandedWidget =  widgetPosition.unexpandedWidgets ();
+            resetOneAndResettleThree(d,d3.select('#a'+expandedWidget),
+                    d3.select('#a'+unexpandedWidget[0]),
+                    d3.select('#a'+unexpandedWidget[1]),
+                    d3.select('#a'+unexpandedWidget[2]),
+                    origButton,
+                    expandedPos);
         }
 
     }
@@ -437,10 +488,10 @@
 
         dc.renderAll();
 
-        var buttondata = [  {index:0,origCoords:{x:10,y:10}},
-                            {index:1,origCoords:{x:280,y:10}},
-                            {index:2,origCoords:{x:550,y:10}},
-                            {index:3,origCoords:{x:820,y:10}}] ;
+        var buttondata = [  {index:0,origCoords:{x:compressedPos[0].x,y:compressedPos[0].y}},
+                            {index:1,origCoords:{x:compressedPos[1].x,y:compressedPos[1].y}},
+                            {index:2,origCoords:{x:compressedPos[2].x,y:compressedPos[2].y}},
+                            {index:3,origCoords:{x:compressedPos[3].x,y:compressedPos[3].y}}] ;
 
         var placeButtonsHere =    d3.selectAll('.pieChartContainer')
                                     .data(buttondata);
