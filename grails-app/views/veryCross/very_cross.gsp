@@ -157,13 +157,20 @@
     var grandWidth = 1052;
     var totalWidgetNumber = 4;
     var widgetHeight =  270;
-    var margin = {top: 30, right: 20, bottom: 30, left: 50},
+    var widgetSpacing = 7;
+    var margin = {top: 30, right: 20, bottom: 30, left: 10},
             width = grandWidth - margin.left - margin.right,
             height = widgetHeight - margin.top - margin.bottom;
     var widgetWidth =  grandWidth / totalWidgetNumber,
             quarterWidgetWidth =  widgetWidth/4;
+    var widgetWidthWithoutSpacing = 260;
+    var widgetWidthWithTitle = 300;
     var pieChartWidth =  widgetWidth-13,
         pieChartRadius = pieChartWidth/2;
+    var displayWidgetX = 260,
+        displayWidgetY = 320,
+        displayWidgetWidth = 600,
+        displayWidgetHeight = 660    ;
     var pieWidth = widgetWidth;
     var data,
             innerRadius = 30,
@@ -188,13 +195,14 @@
             .innerRadius(innerRadius)
             .outerRadius(pieChartRadius);
 
-    var compressedPos = [  {'x':widgetHeight*0,  'y':10},
-                           {'x':widgetHeight*1, 'y':10},
-                           {'x':widgetHeight*2, 'y':10},
-                           {'x':widgetHeight*3, 'y':10} ];
+    var compressedPos = [  {'x':margin.left+((widgetWidth+widgetSpacing)*0),  'y':10},
+                           {'x':margin.left+((widgetWidth+widgetSpacing)*1), 'y':10},
+                           {'x':margin.left+((widgetWidth+widgetSpacing)*2), 'y':10},
+                           {'x':margin.left+((widgetWidth+widgetSpacing)*3), 'y':10} ];
     var expandedPos = [  {'x':(widgetWidth*0)+(quarterWidgetWidth*1),  'y':10},
                          {'x':(widgetWidth*1)+(quarterWidgetWidth*2), 'y':10},
                          {'x':(widgetWidth*2)+(quarterWidgetWidth*3), 'y':10} ];
+    var displaySize =  {'width':620,  'height':660};
 
     var centerstagePos = {'x':742, 'y':10};
 
@@ -245,7 +253,7 @@
             return indexOfDesiredWidget;
         };
         // the other action routine, though this one is much simpler since there's only one choice
-        unexpandAllWidgets= function (){
+        this.unexpandAllWidgets= function (){
             currentWidgetPosition.up.push(currentWidgetPosition.down.pop ());
             currentWidgetPosition.up.sort( function (a,b){
                 return a-b;
@@ -353,16 +361,21 @@
     function spotlightOneAndBackgroundThree (d,spotlight,background1,background2,background3,origButton,expandedPos)  {
         // first handle the spotlight element and then the three backup singers
         spotlight.classed('sizeMinor',false)
-                .style('height',diameter2+pieWidgetMargin+pieWidgetMargin+pieWidgetMargin+"px")
-                .style('width',pieWidgetMargin+diameter2+"px")
                 .style('padding-left',pieWidgetMargin+"px")
-                .style("top","10px")
                 .transition()
-                .duration(500)
+                .duration(1000)
                 .style("top",""+(diameter+pieWidgetMargin+pieWidgetMargin+pieWidgetMargin)+"px")
                 .transition()
+                .duration(1000)
+                .style("left",diameter+"px")
+                .transition()
                 .duration(500)
-                .style("left",diameter+"px");
+                .style('height',diameter2+pieWidgetMargin+pieWidgetMargin+pieWidgetMargin+"px")
+                .transition()
+                .duration(1000)
+                .style('width',pieWidgetMargin+diameter2+"px")
+                .transition()
+                .duration(1000);
         shiftBackgroundWidgets (background1,expandedPos[0].x);
         shiftBackgroundWidgets (background2,expandedPos[1].x);
         shiftBackgroundWidgets (background3,expandedPos[2].x);
@@ -373,18 +386,19 @@
         // first handle the spotlight element and then the three backup singers
         spotlight.transition()
                 .duration(500)
-                .style('height',"300px")
-                .style('width',"260px")
+                .style('height',spotlight.data()[0].orig.size.height+"px")
+                .style('width',spotlight.data()[0].orig.size.width+"px")
+                .style('padding-left',"0px")
                 .transition()
                 .duration(500)
-                .style("left",spotlight.data()[0].origCoords.x+"px")
+                .style("left",spotlight.data()[0].orig.coords.x+"px")
                 .transition()
                 .duration(500)
-                .style("top",spotlight.data()[0].origCoords.y+"px")
+                .style("top",spotlight.data()[0].orig.coords.y+"px")
 ;
-        shiftBackgroundWidgets (background1,background1.data()[0].origCoords.x);
-        shiftBackgroundWidgets (background2,background2.data()[0].origCoords.x);
-        shiftBackgroundWidgets (background3,background3.data()[0].origCoords.x);
+        shiftBackgroundWidgets (background1,background1.data()[0].orig.coords.x);
+        shiftBackgroundWidgets (background2,background2.data()[0].orig.coords.x);
+        shiftBackgroundWidgets (background3,background3.data()[0].orig.coords.x);
         var x=origButton
                 .text(textForExpandingButton);
     }
@@ -412,8 +426,8 @@
         graphicsTarget
                 .transition()
                 .duration(1500)
-                .attr('width',pieWidth)
-                .attr('height',pieWidth);
+                .attr('width',pieChartWidth)
+                .attr('height',pieChartWidth);
 
         graphicsTarget
                 .select('g')
@@ -460,6 +474,7 @@
                     d3.select('#a'+unexpandedWidget[2]),
                     origButton,
                     expandedPos);
+            widgetPosition.unexpandAllWidgets();
         }
 
     }
@@ -488,10 +503,59 @@
 
         dc.renderAll();
 
-        var buttondata = [  {index:0,origCoords:{x:compressedPos[0].x,y:compressedPos[0].y}},
-                            {index:1,origCoords:{x:compressedPos[1].x,y:compressedPos[1].y}},
-                            {index:2,origCoords:{x:compressedPos[2].x,y:compressedPos[2].y}},
-                            {index:3,origCoords:{x:compressedPos[3].x,y:compressedPos[3].y}}] ;
+//        var buttondata = [  {index:0,origCoords:{x:compressedPos[0].x,y:compressedPos[0].y},expCoords:{x:displaySize.width,y:displaySize.height}},
+//                            {index:1,origCoords:{x:compressedPos[1].x,y:compressedPos[1].y}},
+//                            {index:2,origCoords:{x:compressedPos[2].x,y:compressedPos[2].y}},
+//                            {index:3,origCoords:{x:compressedPos[3].x,y:compressedPos[3].y}}] ;
+          var buttondata = [  {    index  :  0,
+                                   orig   :  {     coords  :  {     x      :  compressedPos[0].x,
+                                                                    y      :  compressedPos[0].y },
+                                                   size    :  {     width  :  widgetWidthWithoutSpacing,
+                                                                    height :  widgetWidthWithTitle }
+                                   },
+                                   display:  {     coords  :  {     x      :  displayWidgetX ,
+                                                                    y      :  displayWidgetY },
+                                                   size    :  {     width  :  displayWidgetWidth,
+                                                                    height :  displayWidgetHeight }
+                                   }
+                              },
+                              {    index  :  1,
+                                   orig   :  {     coords   :  {     x      :  compressedPos[1].x,
+                                                                     y      :  compressedPos[1].y },
+                                                   size     :  {     width  :  widgetWidthWithoutSpacing,
+                                                                     height :  widgetWidthWithTitle }
+                                             },
+                                   display:  {     coords  :  {     x      :  displayWidgetX ,
+                                                                    y      :  displayWidgetY },
+                                                   size    :  {     width  :  displayWidgetWidth,
+                                                                    height :  displayWidgetHeight }
+                                   }
+                              },
+                              {    index  :  2,
+                                   orig   :  {     coords  :  {     x      :  compressedPos[2].x,
+                                                                    y      :  compressedPos[2].y },
+                                                   size    :  {     width  :  widgetWidthWithoutSpacing,
+                                                                    height :  widgetWidthWithTitle }
+                                             },
+                                   display:  {     coords  :  {     x      :  displayWidgetX ,
+                                                                    y      :  displayWidgetY },
+                                                   size    :  {     width  :  displayWidgetWidth,
+                                                                    height :  displayWidgetHeight }
+                                             }
+                              },
+                              {   index  :  3,
+                                  orig   :  {     coords  :  {     x      :  compressedPos[3].x,
+                                                                   y      :  compressedPos[3].y },
+                                                  size    :  {     width  :  widgetWidthWithoutSpacing,
+                                                                   height :  widgetWidthWithTitle }
+                                            },
+                                  display:  {     coords  :  {     x      :  displayWidgetX ,
+                                                                   y      :  displayWidgetY },
+                                                  size    :  {     width  :  displayWidgetWidth,
+                                                                   height :  displayWidgetHeight }
+                                            }
+                              }
+          ];
 
         var placeButtonsHere =    d3.selectAll('.pieChartContainer')
                                     .data(buttondata);
