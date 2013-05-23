@@ -37,6 +37,8 @@
 
 <div class="row-fluid header">
 
+<div id="histogramHere"></div>
+
 
 <div class="span6">
 
@@ -46,28 +48,31 @@
                 width = 600 - margin.left - margin.right,
                 height = 270 - margin.top - margin.bottom;
         var parseDate = d3.time.format("%d-%b-%y").parse;
-        var x = d3.time.scale().range([0, width]);
-        var y = d3.scale.linear().range([height, 0]);
+        var x = d3.time.scale().ordinal()
+                .domain(histogram.map(function(d) { return d.x; }))
+                .rangeRoundBands([0, width]);
+        var y = d3.scale.linear().domain([0, d3.max(histogram.map(function(d) { return d.y; }))])
+                .range([0, height]);
         var jsondata;
-        var xAxis = d3.svg.axis()
-                .scale(x)
-                .orient("bottom")
-                .ticks(5);
-        var yAxis = d3.svg.axis()
-                .scale(y)
-                .orient("left")
-                .ticks(5);
-        var area = d3.svg.area()
-                .x(function(d) { return x(d.date); })
-                .y0(height)
-                .y1(function(d) { return y(d.close); });
-        var valueline = d3.svg.line()
-                .x(function (d) {
-                    return x(d.date);
-                })
-                .y(function (d) {
-                    return y(d.close);
-                });
+//        var xAxis = d3.svg.axis()
+//                .scale(x)
+//                .orient("bottom")
+//                .ticks(5);
+//        var yAxis = d3.svg.axis()
+//                .scale(y)
+//                .orient("left")
+//                .ticks(5);
+//        var area = d3.svg.area()
+//                .x(function(d) { return x(d.date); })
+//                .y0(height)
+//                .y1(function(d) { return y(d.close); });
+//        var valueline = d3.svg.line()
+//                .x(function (d) {
+//                    return x(d.date);
+//                })
+//                .y(function (d) {
+//                    return y(d.close);
+//                });
         var svg = d3.select("body")
                 .append("svg")
                 .attr("width", width + margin.left + margin.right)
@@ -92,19 +97,17 @@
 
 
 
-        function doSomethingWithData() {
+        function drawHistogram(divName,dataObject) {
+
             console.log(jsondata);
         }
         function load(){ // <-E
             d3.json("http://localhost:8028/cow/histogram/feedMeJson", function(error,dataFromServer) {
-                console.log('start');
                 if (error) {
-                    console.log('hi');
                     return console.log(error);
                 }
-                console.log('ho');
                 jsondata = dataFromServer;
-            doSomethingWithData();
+            drawHistogram(d3.select('#histogramHere',jsondata));
         }  );
         }
         window.onload=load();
