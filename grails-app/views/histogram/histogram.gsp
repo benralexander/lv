@@ -14,12 +14,33 @@
     <script src="../js/d3.min.js"></script>
     <script src="../js/dc.js"></script>
     <script src="../js/crossfilter.min.js"></script>
+<style>
+
+body {
+    font: 10px sans-serif;
+}
+
+.bar rect {
+    fill: steelblue;
+    shape-rendering: crispEdges;
+}
+
+.bar text {
+    fill: #fff;
+}
+
+.axis path, .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+</style>
 
 
 
 
 
-    %{--<script src="/bardwebclient/static/plugins/jquery-1.7.1/js/jquery/jquery-1.7.1.min.js" type="text/javascript" ></script>--}%
+%{--<script src="/bardwebclient/static/plugins/jquery-1.7.1/js/jquery/jquery-1.7.1.min.js" type="text/javascript" ></script>--}%
     %{--<link href="/bardwebclient/static/css/flick/jquery-ui-1.8.20.custom.css" type="text/css" rel="stylesheet" media="screen, projection" />--}%
     %{--<script src="/bardwebclient/static/plugins/jquery-ui-1.8.15/jquery-ui/js/jquery-ui-1.8.15.custom.min.js" type="text/javascript" ></script>--}%
     %{--<link href="/bardwebclient/static/bundle-bundle_core_head.css" type="text/css" rel="stylesheet" media="screen, projection" />--}%
@@ -45,48 +66,62 @@
 
     <script>
        function  drawHistogram(domMarker,jsondata){
-            var margin = {top: 30, right: 20, bottom: 30, left: 50},
-            width = 600 - margin.left - margin.right,
+           var formatCount = d3.format(",.0f");
+
+            var margin = {top: 30, right: 20, bottom: 30, left: 20},
+            width = 800 - margin.left - margin.right,
             height = 270 - margin.top - margin.bottom;
 
-           var w = 500;
-           var h = 100;
            var barPadding = 1;
 
-           var dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
-               11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
 
-
-        var xScale = d3.scale.ordinal()
+        var xScale = d3.scale.linear()
                 .domain([jsondata[0].min,jsondata[0].max])
-                .range(0,width);
-//                .rangeRoundBands([0, width]);
+                .range([0,width]);
+              //  .rangeRoundBands([0, width]);
         var yScale = d3.scale.linear()
-                .domain([0, 83196])
-                .range([0, height]);
+                .domain([0, d3.max(jsondata[0].histogram,function(d) { return d[0]; })])
+                .range([0,height]);
 
 
            //Create SVG element
            var svg = d3.select("#histogramHere")
                    .append("svg")
-                   .attr("width", width)
-                   .attr("height", height);
+                   .attr("width", width + margin.left + margin.right)
+                   .attr("height", height + margin.top + margin.bottom)
+                   .append("g")
+                   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-           svg.selectAll("rect")
+
+           var bar = svg.selectAll("rect")
                    .data(jsondata[0].histogram)
                    .enter()
-                   .append("rect")
-                   .attr("x", function(d, i) {
-                       return i * (width / jsondata[0].histogram.length);
+                   .append("g")
+                   .attr("class", "bar")
+                   .append("rect");
+
+            bar.attr("x", function(d, i) {
+                       return xScale(d[1]);
                    })
                    .attr("y",function(d){
                        return height-yScale(d[0]);
                    })
-                   .attr("width", (width / jsondata[0].histogram.length)-1)
+                   .attr("width", (width / jsondata[0].histogram.length)-barPadding)
                    .attr("height", function(d){
                        return yScale(d[0]);
                    });
+//                    .attr("transform", function(d) {
+//                        return "translate(" + xScale(d[1]) + "," + yScale(d[0]) + ")";
+//                    });
 
+           bar.append("text")
+                   .attr("dy", "77.75em")
+                   .attr("y", 6)
+                   .attr("x", function(d, i) {
+                       return xScale(d[1])/2;
+                   })
+                   .attr("text-anchor", "middle")
+                   .text(function(d) { return formatCount(d[0]); });
 
        }
 
