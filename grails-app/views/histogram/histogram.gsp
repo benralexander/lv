@@ -21,12 +21,11 @@ body {
 }
 
 .bar rect {
-    fill: steelblue;
     shape-rendering: crispEdges;
 }
 
 .bar text {
-    fill: #fff;
+    fill: #000;
 }
 
 .axis path, .axis line {
@@ -109,15 +108,31 @@ body {
                    .style("visibility", "visible")
                    .attr("class", "toolTextAppearance");
 
-           function tooltipContent(d) {
-               if (d.name != '/') {
-                   tooltip.style("visibility", "visible").style("opacity", "0").transition()
-                           .duration(200).style("opacity", "1")
-               }
-
-               return tooltip.html('Compounds in bin: '+ d[0]+ '<br/>' + 'Minimim values: ' + d[1] + '<br/>' + 'Maximum values:' +  d[2]);
-
+           function respondToBarChartMouseOver(d) {
+                tooltip.style("visibility", "visible")
+                        .style("opacity", "0")
+                        .transition()
+                        .duration(200)
+                        .style("opacity", "1");
+                var stringToReturn =  tooltip.html('Compounds in bin: '+ d[0]+
+                        '<br/>' + 'Minimim bin value: ' + d[1].toPrecision(3) +
+                        '<br/>' + 'Maximum bin value:' +  d[2].toPrecision(3));
+               d3.select(this)
+                       .transition()
+                       .duration(250)
+                       .attr('fill','#FFA500');
+                return stringToReturn;
            }
+
+           function respondToBarChartMouseOut(d) {
+               var returnValue = tooltip.style("visibility", "hidden");
+               d3.select(this)
+                       .transition()
+                       .duration(250)
+                       .attr('fill','steelblue');
+               return returnValue;
+           }
+
 
            //Create SVG element
            var svg = d3.select("#histogramHere")
@@ -133,6 +148,7 @@ body {
                    .enter()
                    .append("g")
                    .attr("class", "bar")
+                   .attr("fill", "steelblue")
                    .append("rect");
 
             bar.attr("x", function(d, i) {
@@ -145,26 +161,16 @@ body {
                    .attr("height", function(d){
                        return yScale(d[0]);
                    })
-                    .on("mouseover", tooltipContent)
+                    .on("mouseover", respondToBarChartMouseOver)
                     .on("mousemove", function () {
                         return tooltip.style("top", (event.pageY - 10) + "px").style("left", (event.pageX + 10) + "px");
                     })
-                    .on("mouseout", function () {
-                        return tooltip.style("visibility", "hidden");
-                    });
+                    .on("mouseout", respondToBarChartMouseOut);
 
 //                    .attr("transform", function(d) {
 //                        return "translate(" + xScale(d[1]) + "," + yScale(d[0]) + ")";
 //                    });
 
-           bar.append("text")
-                   .attr("dy", ".75em")
-                   .attr("y", 6)
-                   .attr("x", function(d, i) {
-                       return xScale(d[1])/2;
-                   })
-                   .attr("text-anchor", "middle")
-                   .text(function(d) { return formatCount(d[0]); });
 
            svg.append("g")
                    .attr("class", "x axis")
@@ -177,83 +183,11 @@ body {
                    .attr("text-anchor", "middle")
                    .style("font-size", "16px")
                    .style("text-decoration", "underline")
-                   .text(jsondata[0].name);
+                   .text('Distribution of '+jsondata[0].name);
 
        }
 
 
-
-
-
-
-
-       //        var margin = {top: 30, right: 20, bottom: 30, left: 50},
-//                width = 600 - margin.left - margin.right,
-//                height = 270 - margin.top - margin.bottom;
-//        var parseDate = d3.time.format("%d-%b-%y").parse;
-//        var jsondata;
-//
-//        function drawHistogram(divName,dataObject) {
-//
-//            var histogram = d3.layout.histogram() (pos_data);
-//            var x = d3.scale().ordinal()
-//                .domain(histogram.map(function(d) { return d.x; }))
-//                .rangeRoundBands([0, width]);
-//        var y = d3.scale.linear().domain([0, d3.max(histogram.map(function(d) { return d.y; }))])
-//                .range([0, height]);
-
-
-
-
-
-
-
-
-
-
-
-
-//        var yAxis = d3.svg.axis()
-//                .scale(y)
-//                .orient("left")
-//                .ticks(5);
-//        var area = d3.svg.area()
-//                .x(function(d) { return x(d.date); })
-//                .y0(height)
-//                .y1(function(d) { return y(d.close); });
-//        var valueline = d3.svg.line()
-//                .x(function (d) {
-//                    return x(d.date);
-//                })
-//                .y(function (d) {
-//                    return y(d.close);
-//                });
-
-
-
-
-
-//        var svg = d3.select("body")
-//                .append("svg")
-//                .attr("width", width + margin.left + margin.right)
-//                .attr("height", height + margin.top + margin.bottom)
-//                .append("g")
-//                .attr("transform", "translate(" + margin.left + "," + margin.top +
-//                ")");
-//        // function for the x grid lines
-//        function make_x_axis() {
-//            return d3.svg.axis()
-//                    .scale(x)
-//                    .orient("bottom")
-//                    .ticks(5)
-//        }
-//        // function for the y grid lines
-//        function make_y_axis() {
-//            return d3.svg.axis()
-//                    .scale(y)
-//                    .orient("left")
-//                    .ticks(5)
-//        }
 
 
 
