@@ -44,16 +44,84 @@
 
 
     <script>
-        var margin = {top: 30, right: 20, bottom: 30, left: 50},
-                width = 600 - margin.left - margin.right,
-                height = 270 - margin.top - margin.bottom;
-        var parseDate = d3.time.format("%d-%b-%y").parse;
-        var x = d3.time.scale().ordinal()
-                .domain(histogram.map(function(d) { return d.x; }))
-                .rangeRoundBands([0, width]);
-        var y = d3.scale.linear().domain([0, d3.max(histogram.map(function(d) { return d.y; }))])
+       function  drawHistogram(domMarker,jsondata){
+            var margin = {top: 30, right: 20, bottom: 30, left: 50},
+            width = 600 - margin.left - margin.right,
+            height = 270 - margin.top - margin.bottom;
+
+           var w = 500;
+           var h = 100;
+           var barPadding = 1;
+
+           var dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
+               11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
+
+
+        var xScale = d3.scale.ordinal()
+                .domain([jsondata[0].min,jsondata[0].max])
+                .range(0,width);
+//                .rangeRoundBands([0, width]);
+        var yScale = d3.scale.linear()
+                .domain([0, 83196])
                 .range([0, height]);
-        var jsondata;
+
+
+           //Create SVG element
+           var svg = d3.select("#histogramHere")
+                   .append("svg")
+                   .attr("width", width)
+                   .attr("height", height);
+
+           svg.selectAll("rect")
+                   .data(jsondata[0].histogram)
+                   .enter()
+                   .append("rect")
+                   .attr("x", function(d, i) {
+                       return i * (width / jsondata[0].histogram.length);
+                   })
+                   .attr("y",function(d){
+                       return height-yScale(d[0]);
+                   })
+                   .attr("width", (width / jsondata[0].histogram.length)-1)
+                   .attr("height", function(d){
+                       return yScale(d[0]);
+                   });
+
+
+       }
+
+
+
+
+
+
+
+        //        var margin = {top: 30, right: 20, bottom: 30, left: 50},
+//                width = 600 - margin.left - margin.right,
+//                height = 270 - margin.top - margin.bottom;
+//        var parseDate = d3.time.format("%d-%b-%y").parse;
+//        var jsondata;
+//
+//        function drawHistogram(divName,dataObject) {
+//
+//            var histogram = d3.layout.histogram() (pos_data);
+//            var x = d3.scale().ordinal()
+//                .domain(histogram.map(function(d) { return d.x; }))
+//                .rangeRoundBands([0, width]);
+//        var y = d3.scale.linear().domain([0, d3.max(histogram.map(function(d) { return d.y; }))])
+//                .range([0, height]);
+
+
+
+
+
+
+
+
+
+
+
+
 //        var xAxis = d3.svg.axis()
 //                .scale(x)
 //                .orient("bottom")
@@ -73,44 +141,48 @@
 //                .y(function (d) {
 //                    return y(d.close);
 //                });
-        var svg = d3.select("body")
-                .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top +
-                ")");
-        // function for the x grid lines
-        function make_x_axis() {
-            return d3.svg.axis()
-                    .scale(x)
-                    .orient("bottom")
-                    .ticks(5)
-        }
-        // function for the y grid lines
-        function make_y_axis() {
-            return d3.svg.axis()
-                    .scale(y)
-                    .orient("left")
-                    .ticks(5)
-        }
 
 
 
-        function drawHistogram(divName,dataObject) {
 
-            console.log(jsondata);
-        }
-        function load(){ // <-E
+
+//        var svg = d3.select("body")
+//                .append("svg")
+//                .attr("width", width + margin.left + margin.right)
+//                .attr("height", height + margin.top + margin.bottom)
+//                .append("g")
+//                .attr("transform", "translate(" + margin.left + "," + margin.top +
+//                ")");
+//        // function for the x grid lines
+//        function make_x_axis() {
+//            return d3.svg.axis()
+//                    .scale(x)
+//                    .orient("bottom")
+//                    .ticks(5)
+//        }
+//        // function for the y grid lines
+//        function make_y_axis() {
+//            return d3.svg.axis()
+//                    .scale(y)
+//                    .orient("left")
+//                    .ticks(5)
+//        }
+
+
+
+
+//            console.log(jsondata);
+//        }
+//        function load(){ // <-E
             d3.json("http://localhost:8028/cow/histogram/feedMeJson", function(error,dataFromServer) {
                 if (error) {
                     return console.log(error);
                 }
                 jsondata = dataFromServer;
-            drawHistogram(d3.select('#histogramHere',jsondata));
-        }  );
-        }
-        window.onload=load();
+            drawHistogram(d3.select('#histogramHere'),jsondata);
+        });
+//        }
+//        window.onload=load();
 
 
 //        // Get the data
