@@ -34,6 +34,19 @@ body {
     stroke: #000;
     shape-rendering: crispEdges;
 }
+
+
+.toolTextAppearance {
+    font: 16px serif;
+    font-weight: bold;
+    margin: 5px;
+    padding: 10px;
+    background: #eeeeee;
+    border: 1px solid blue;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+
 </style>
 
 
@@ -83,6 +96,28 @@ body {
                 .domain([0, d3.max(jsondata[0].histogram,function(d) { return d[0]; })])
                 .range([0,height]);
 
+           var xAxis = d3.svg.axis()
+                   .scale(xScale)
+                   .orient("bottom")
+                   .ticks(5);
+
+           var tooltip = d3.select("body")
+                   .append("div")
+                   .style("opacity", "0")
+                   .style("position", "absolute")
+                   .style("z-index", "10")
+                   .style("visibility", "visible")
+                   .attr("class", "toolTextAppearance");
+
+           function tooltipContent(d) {
+               if (d.name != '/') {
+                   tooltip.style("visibility", "visible").style("opacity", "0").transition()
+                           .duration(200).style("opacity", "1")
+               }
+
+               return tooltip.html('Compounds in bin: '+ d[0]+ '<br/>' + 'Minimim values: ' + d[1] + '<br/>' + 'Maximum values:' +  d[2]);
+
+           }
 
            //Create SVG element
            var svg = d3.select("#histogramHere")
@@ -109,19 +144,40 @@ body {
                    .attr("width", (width / jsondata[0].histogram.length)-barPadding)
                    .attr("height", function(d){
                        return yScale(d[0]);
-                   });
+                   })
+                    .on("mouseover", tooltipContent)
+                    .on("mousemove", function () {
+                        return tooltip.style("top", (event.pageY - 10) + "px").style("left", (event.pageX + 10) + "px");
+                    })
+                    .on("mouseout", function () {
+                        return tooltip.style("visibility", "hidden");
+                    });
+
 //                    .attr("transform", function(d) {
 //                        return "translate(" + xScale(d[1]) + "," + yScale(d[0]) + ")";
 //                    });
 
            bar.append("text")
-                   .attr("dy", "77.75em")
+                   .attr("dy", ".75em")
                    .attr("y", 6)
                    .attr("x", function(d, i) {
                        return xScale(d[1])/2;
                    })
                    .attr("text-anchor", "middle")
                    .text(function(d) { return formatCount(d[0]); });
+
+           svg.append("g")
+                   .attr("class", "x axis")
+                   .attr("transform", "translate(0," + height + ")")
+                   .call(xAxis);
+
+           svg.append("text")
+                   .attr("x", (width / 2))
+                   .attr("y", 0 - (margin.top / 2))
+                   .attr("text-anchor", "middle")
+                   .style("font-size", "16px")
+                   .style("text-decoration", "underline")
+                   .text(jsondata[0].name);
 
        }
 
@@ -131,7 +187,7 @@ body {
 
 
 
-        //        var margin = {top: 30, right: 20, bottom: 30, left: 50},
+       //        var margin = {top: 30, right: 20, bottom: 30, left: 50},
 //                width = 600 - margin.left - margin.right,
 //                height = 270 - margin.top - margin.bottom;
 //        var parseDate = d3.time.format("%d-%b-%y").parse;
@@ -157,10 +213,6 @@ body {
 
 
 
-//        var xAxis = d3.svg.axis()
-//                .scale(x)
-//                .orient("bottom")
-//                .ticks(5);
 //        var yAxis = d3.svg.axis()
 //                .scale(y)
 //                .orient("left")
