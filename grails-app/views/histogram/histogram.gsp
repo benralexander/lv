@@ -33,8 +33,34 @@ body {
     stroke: #000;
     shape-rendering: crispEdges;
 }
+.yaxis line {
+    fill: none;
+    stroke: #ccc;
+    shape-rendering: crispEdges;
+}
+.yaxis path {
+    fill: none;
+    stroke: #e0e;
+    display: none;
+    shape-rendering: crispEdges;
+}
+.yaxis text {
+    fill: none;
+    stroke: #e0e;
+    display: none;
+    shape-rendering: crispEdges;
+}
 
+.histogramDiv {
+    display: inline-block;
+    border-style:solid;
+    border-width: 1px;
+    border-color:#000000;
+    background-color:#E3FEF5;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
 
+}
 .toolTextAppearance {
     font: 16px serif;
     font-weight: bold;
@@ -70,7 +96,7 @@ body {
 
 <div class="row-fluid header">
 
-<div id="histogramHere"></div>
+<div id="histogramHere" class="histogramDiv"></div>
 
 
 <div class="span6">
@@ -100,6 +126,18 @@ body {
                    .orient("bottom")
                    .ticks(5);
 
+           var yAxis = d3.svg.axis()
+                   .scale(yScale)
+                   .orient("left")
+                   .ticks(10)
+                   .tickSize(-width);
+
+           function make_x_axis() {
+               return d3.svg.axis(xScale)
+                       .scale(xScale)
+                       .orient("bottom")
+                       .ticks(5)
+           }
            var tooltip = d3.select("body")
                    .append("div")
                    .style("opacity", "0")
@@ -135,12 +173,21 @@ body {
 
 
            //Create SVG element
-           var svg = d3.select("#histogramHere")
+           var histogramDiv = d3.select("#histogramHere")
+                   .attr("width", width + margin.left + margin.right)
+                   .attr("height", height + margin.top + margin.bottom);
+
+           var svg = histogramDiv
                    .append("svg")
                    .attr("width", width + margin.left + margin.right)
                    .attr("height", height + margin.top + margin.bottom)
                    .append("g")
                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+           svg.append("g")
+                   .attr("class", "yaxis")
+                   .attr("transform", "translate(0,0)")
+                   .call(yAxis);
 
 
            var bar = svg.selectAll("rect")
@@ -185,14 +232,23 @@ body {
                    .style("text-decoration", "underline")
                    .text('Distribution of '+jsondata[0].name);
 
+           svg.append("g")
+                   .attr("class", "grid")
+                   .attr("transform", "translate(0," + height + ")")
+                   .call(make_x_axis()
+                   .tickSize(-height, 0, 0)
+                   .tickFormat("")
+           )
+
+
+
        }
 
 
 
 
 
-
-//            console.log(jsondata);
+       //            console.log(jsondata);
 //        }
 //        function load(){ // <-E
             d3.json("http://localhost:8028/cow/histogram/feedMeJson", function(error,dataFromServer) {
@@ -205,13 +261,6 @@ body {
 //        }
 //        window.onload=load();
 
-
-//        // Get the data
-//        d3.tsv("http://localhost:8028/cow/histogram/feedMeJson", function (error, data) {
-//            data.forEach(function (d) {
-//                d.date = parseDate(d.date);
-//                d.close = +d.close;
-//            });
 //// Scale the range of the data
 //            x.domain(d3.extent(data, function (d) {
 //                return d.date;
