@@ -24,10 +24,6 @@ body {
     shape-rendering: crispEdges;
 }
 
-.bar text {
-    fill: #000;
-}
-
 .axis path, .axis line {
     fill: none;
     stroke: #000;
@@ -39,10 +35,7 @@ body {
     shape-rendering: crispEdges;
 }
 .yaxis path {
-    fill: none;
-    stroke: #e0e;
     display: none;
-    shape-rendering: crispEdges;
 }
 .yaxis text {
     fill: none;
@@ -54,7 +47,7 @@ body {
 .histogramDiv {
     display: inline-block;
     border-style:solid;
-    border-width: 1px;
+    border-width: 2px;
     border-color:#000000;
     margin-right: 4px;
     margin-bottom: 4px;
@@ -77,18 +70,6 @@ body {
 </style>
 
 
-
-
-
-%{--<script src="/bardwebclient/static/plugins/jquery-1.7.1/js/jquery/jquery-1.7.1.min.js" type="text/javascript" ></script>--}%
-    %{--<link href="/bardwebclient/static/css/flick/jquery-ui-1.8.20.custom.css" type="text/css" rel="stylesheet" media="screen, projection" />--}%
-    %{--<script src="/bardwebclient/static/plugins/jquery-ui-1.8.15/jquery-ui/js/jquery-ui-1.8.15.custom.min.js" type="text/javascript" ></script>--}%
-    %{--<link href="/bardwebclient/static/bundle-bundle_core_head.css" type="text/css" rel="stylesheet" media="screen, projection" />--}%
-    %{--<link href="/bardwebclient/static/bundle-fixtaglib_head.css" type="text/css" rel="stylesheet" media="screen, projection" />--}%
-    %{--<link href="/bardwebclient/static/bundle-bundle_bootstrap_head.css" type="text/css" rel="stylesheet" media="screen, projection" />--}%
-    %{--<link href="/bardwebclient/static/css/cbas.css" type="text/css" rel="stylesheet" media="screen, projection" />--}%
-    %{--<script src="/bardwebclient/static/bundle-bundle_cart_head.js" type="text/javascript" ></script>--}%
-    %{--<link href="/bardwebclient/static/bundle-bundle_cart_head.css" type="text/css" rel="stylesheet" media="screen, projection" />--}%
 
 
 </head>
@@ -242,7 +223,8 @@ body {
 
 
 
-            d3.json("http://localhost:8028/cow/histogram/feedMeDoubleJson", function(error,dataFromServer) {
+  //  d3.json("http://localhost:8028/cow/histogram/feedMeDoubleJson", function(error,dataFromServer) {
+        d3.json("http://localhost:8028/cow/histogram/feedMeJson", function(error,dataFromServer) {
                 if (error) {
                     return console.log(error);
                 }
