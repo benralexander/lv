@@ -87,6 +87,14 @@ body {
 <script>
     function drawHistogram(domMarker, oneHistogramsData) {
 
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // This D3 graphic is implemented in three sections: definitions, tools, and then building the DOM
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        //
+        // Part 1: definitions
+        //
+
         // Size definitions go here
         var margin = {top:30, right:20, bottom:30, left:20},
                 width = 800 - margin.left - margin.right,
@@ -105,6 +113,10 @@ body {
                 .domain([0, d3.max(oneHistogramsData.histogram, function (d) {return d[0];})])
                 .range([0, height]);
 
+        //
+        // Part 2: tools
+        //
+
         // D3 axis definitions
         var xAxis = d3.svg.axis()
                 .scale(xScale)
@@ -122,40 +134,52 @@ body {
                     .orient("bottom");
         }
 
-        var tooltip = d3.select("body")
-                .append("div")
-                .style("position", "absolute")
-                .style("visibility", "visible")
-                .attr("class", "toolTextAppearance");
-
-        function respondToBarChartMouseOver(d) {
-            tooltip.style("visibility", "visible")
-                    .style("opacity", "0")
-                    .transition()
-                    .duration(200)
-                    .style("opacity", "1");
-            var stringToReturn = tooltip.html('Compounds in bin: ' + d[0] +
-                    '<br/>' + 'Minimim bin value: ' + d[1].toPrecision(3) +
-                    '<br/>' + 'Maximum bin value:' + d[2].toPrecision(3));
-            d3.select(this)
-                    .transition()
-                    .duration(250)
-                    .attr('fill', '#FFA500');
-            return stringToReturn;
+        // Encapsulate the variables/methods necessary to handle tooltips
+        var tooltipHandler  = new TooltipHandler ();
+        function TooltipHandler()  {
+            // private variable =  tooltip
+            var tooltip = d3.select("body")
+                    .append("div")
+                    .style("position", "absolute")
+                    .style("visibility", "visible")
+                    .attr("class", "toolTextAppearance");
+            this.respondToBarChartMouseOver = function(d) {
+                tooltip.style("visibility", "visible")
+                        .style("opacity", "0")
+                        .transition()
+                        .duration(200)
+                        .style("opacity", "1");
+                var stringToReturn = tooltip.html('Compounds in bin: ' + d[0] +
+                        '<br/>' + 'Minimim bin value: ' + d[1].toPrecision(3) +
+                        '<br/>' + 'Maximum bin value:' + d[2].toPrecision(3));
+                d3.select(this)
+                        .transition()
+                        .duration(250)
+                        .attr('fill', '#FFA500');
+                return stringToReturn;
+            };
+            this.respondToBarChartMouseOut =  function(d) {
+                var returnValue = tooltip.style("visibility", "hidden");
+                d3.select(this)
+                        .transition()
+                        .duration(250)
+                        .attr('fill', 'steelblue');
+                return returnValue;
+            };
+            this.respondToBarChartMouseMove =  function(d) {
+                return tooltip.style("top", (event.pageY - 10) + "px").style("left", (event.pageX + 10) + "px");
+            };
         }
 
-        function respondToBarChartMouseOut(d) {
-            var returnValue = tooltip.style("visibility", "hidden");
-            d3.select(this)
-                    .transition()
-                    .duration(250)
-                    .attr('fill', 'steelblue');
-            return returnValue;
-        }
+        //
+        //  part 3:  Build up the Dom
+        //
 
+        // Create a div for each histogram we make. All of those dudes are held within the div with ID = histogramHere
         var histogramDiv = d3.select("#histogramHere")
                 .append("div");
 
+        // Create an SVG to hold the graphics
         var svg = histogramDiv
                 .attr("class","histogramDiv")
                 .append("svg")
@@ -164,12 +188,13 @@ body {
                 .append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+        // Create grid lines
         svg.append("g")
                 .attr("class", "yaxis")
                 .attr("transform", "translate(0,0)")
                 .call(yAxis);
 
-
+        // Create the rectangles that make up the histogram
         var bar = svg.selectAll("rect")
                 .data(oneHistogramsData.histogram)
                 .enter()
@@ -178,21 +203,15 @@ body {
                 .attr("fill", "steelblue")
                 .append("rect");
 
-        bar.attr("x", function (d, i) {
-            return xScale(d[1]);
-        })
-                .attr("y", function (d) {
-                    return height - yScale(d[0]);
-                })
-                .attr("width", (width / oneHistogramsData.histogram.length) - barPadding)
+        bar.attr("x", function (d, i) { return xScale(d[1]);  })
+           .attr("y", function (d) { return height - yScale(d[0]);  })
+           .attr("width", (width / oneHistogramsData.histogram.length) - barPadding)
                 .attr("height", function (d) {
                     return yScale(d[0]);
                 })
-                .on("mouseover", respondToBarChartMouseOver)
-                .on("mousemove", function () {
-                    return tooltip.style("top", (event.pageY - 10) + "px").style("left", (event.pageX + 10) + "px");
-                })
-                .on("mouseout", respondToBarChartMouseOut);
+                .on("mouseover", tooltipHandler.respondToBarChartMouseOver)
+                .on("mousemove", tooltipHandler.respondToBarChartMouseMove)
+                .on("mouseout", tooltipHandler.respondToBarChartMouseOut);
 
 
         svg.append("g")
