@@ -9,8 +9,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>BARD : Experiment Result : 3325</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-    %{--<link rel="stylesheet" type="text/css" href="${resource(dir: 'css', file: 'dc.css')}" />--}%
-    %{--<link rel="stylesheet" type="text/css" href="${resource(dir: 'css', file: 'style.css')}" />--}%
     <script src="../js/d3.min.js"></script>
     <script src="../js/dc.js"></script>
     <script src="../js/crossfilter.min.js"></script>
@@ -66,7 +64,12 @@ body {
     -moz-border-radius: 15px;
     border-radius: 15px;
 }
-
+.histogramTitle {
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: underline;
+    margin-top: 20px;
+}
 </style>
 
 
@@ -127,12 +130,6 @@ body {
                 .orient("left")
                 .ticks(numberOfHorizontalGridlines)
                 .tickSize(-width);
-        // this last one is only for gridlines
-        function make_x_axis() {
-            return d3.svg.axis()
-                    .scale(xScale)
-                    .orient("bottom");
-        }
 
         // Encapsulate the variables/methods necessary to handle tooltips
         var tooltipHandler  = new TooltipHandler ();
@@ -201,40 +198,36 @@ body {
                 .append("g")
                 .attr("class", "bar")
                 .attr("fill", "steelblue")
-                .append("rect");
+                .append("rect")
+               .attr("x", function (d, i) { return xScale(d[1]);  })
+               .attr("y", function (d) { return height - yScale(d[0]);  })
+               .attr("width", (width / oneHistogramsData.histogram.length) - barPadding)
+               .attr("height", function (d) { return yScale(d[0]);})
+               .on("mouseover", tooltipHandler.respondToBarChartMouseOver)
+               .on("mousemove", tooltipHandler.respondToBarChartMouseMove)
+               .on("mouseout", tooltipHandler.respondToBarChartMouseOut);
 
-        bar.attr("x", function (d, i) { return xScale(d[1]);  })
-           .attr("y", function (d) { return height - yScale(d[0]);  })
-           .attr("width", (width / oneHistogramsData.histogram.length) - barPadding)
-                .attr("height", function (d) {
-                    return yScale(d[0]);
-                })
-                .on("mouseover", tooltipHandler.respondToBarChartMouseOver)
-                .on("mousemove", tooltipHandler.respondToBarChartMouseMove)
-                .on("mouseout", tooltipHandler.respondToBarChartMouseOut);
-
-
+        // Create horizontal axis
         svg.append("g")
                 .attr("class", "x axis")
                 .attr("transform", "translate(0," + height + ")")
                 .call(xAxis);
 
+        // Create title  across the top of the graphic
         svg.append("text")
                 .attr("x", (width / 2))
-                .attr("y", 0 - (margin.top / 2)+5 )
+                .attr("y", 0 - (margin.top / 2)+10)
                 .attr("text-anchor", "middle")
-                .style("font-size", "18px")
-                .style("font-weight", "bold")
-                .style("text-decoration", "underline")
+                .attr("class", "histogramTitle")
                 .text("Distribution of '" +oneHistogramsData.name + "'");
 
-        svg.append("g")
-                .attr("class", "grid")
-                .attr("transform", "translate(0," + height + ")")
-                .call(make_x_axis()
-                .tickSize(-height, 0, 0)
-                .tickFormat("")
-        )
+        // Create title  across the top of the graphic
+        svg.append("text")
+                .attr("x", (3* width / 4))
+                .attr("y", 0 - (margin.top / 2)+10)
+                .attr("text-anchor", "middle")
+                .attr("class", "histogramTitle")
+                .text("Distribution of '" +oneHistogramsData.name + "'");
 
 
     }
