@@ -70,6 +70,12 @@ body {
     text-decoration: underline;
     margin-top: 20px;
 }
+.histogramMouseInfo {
+    font-size: 9px;
+    font-weight: normal;
+    font-style: italic;
+color: #000000;
+}
 </style>
 
 
@@ -99,9 +105,12 @@ body {
         //
 
         // Size definitions go here
-        var margin = {top:30, right:20, bottom:30, left:20},
-                width = 800 - margin.left - margin.right,
-                height = 270 - margin.top - margin.bottom;
+        var container_dimensions = {width: 800, height: 270},
+                margin = {top:30, right:20, bottom:30, left:20},
+                chart_dimensions = {
+                    width: container_dimensions.width - margin.left - margin.right,
+                    height: container_dimensions.height - margin.top - margin.bottom
+                };
 
         // adjustable parameters
         var barPadding = 1;
@@ -111,10 +120,10 @@ body {
         // D3 scaling definitions
         var xScale = d3.scale.linear()
                 .domain([oneHistogramsData.min, oneHistogramsData.max])
-                .range([0, width]);
+                .range([0, chart_dimensions.width]);
         var yScale = d3.scale.linear()
                 .domain([0, d3.max(oneHistogramsData.histogram, function (d) {return d[0];})])
-                .range([0, height]);
+                .range([0, chart_dimensions.height]);
 
         //
         // Part 2: tools
@@ -129,7 +138,7 @@ body {
                 .scale(yScale)
                 .orient("left")
                 .ticks(numberOfHorizontalGridlines)
-                .tickSize(-width);
+                .tickSize(-chart_dimensions.width);
 
         // Encapsulate the variables/methods necessary to handle tooltips
         var tooltipHandler  = new TooltipHandler ();
@@ -180,8 +189,8 @@ body {
         var svg = histogramDiv
                 .attr("class","histogramDiv")
                 .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
+                .attr("width", chart_dimensions.width + margin.left + margin.right)
+                .attr("height", chart_dimensions.height + margin.top + margin.bottom)
                 .append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -200,8 +209,8 @@ body {
                 .attr("fill", "steelblue")
                 .append("rect")
                .attr("x", function (d, i) { return xScale(d[1]);  })
-               .attr("y", function (d) { return height - yScale(d[0]);  })
-               .attr("width", (width / oneHistogramsData.histogram.length) - barPadding)
+               .attr("y", function (d) { return chart_dimensions.height - yScale(d[0]);  })
+               .attr("width", (chart_dimensions.width / oneHistogramsData.histogram.length) - barPadding)
                .attr("height", function (d) { return yScale(d[0]);})
                .on("mouseover", tooltipHandler.respondToBarChartMouseOver)
                .on("mousemove", tooltipHandler.respondToBarChartMouseMove)
@@ -210,24 +219,25 @@ body {
         // Create horizontal axis
         svg.append("g")
                 .attr("class", "x axis")
-                .attr("transform", "translate(0," + height + ")")
+                .attr("transform", "translate(0," + chart_dimensions.height + ")")
                 .call(xAxis);
 
         // Create title  across the top of the graphic
         svg.append("text")
-                .attr("x", (width / 2))
+                .attr("x", (chart_dimensions.width / 2))
                 .attr("y", 0 - (margin.top / 2)+10)
                 .attr("text-anchor", "middle")
                 .attr("class", "histogramTitle")
                 .text("Distribution of '" +oneHistogramsData.name + "'");
 
         // Create title  across the top of the graphic
-        svg.append("text")
-                .attr("x", (3* width / 4))
+        svg
+                .append("text")
+                .attr("x", (4* chart_dimensions.width / 5))
                 .attr("y", 0 - (margin.top / 2)+10)
-                .attr("text-anchor", "middle")
-                .attr("class", "histogramTitle")
-                .text("Distribution of '" +oneHistogramsData.name + "'");
+                .attr("text-anchor", "right")
+                .attr("class", "histogramMouseInfo")
+                .text("Mouse-over bars for more information");
 
 
     }
@@ -235,8 +245,8 @@ body {
 
 
 
-  //  d3.json("http://localhost:8028/cow/histogram/feedMeDoubleJson", function(error,dataFromServer) {
-        d3.json("http://localhost:8028/cow/histogram/feedMeJson", function(error,dataFromServer) {
+    d3.json("http://localhost:8028/cow/histogram/feedMeDoubleJson", function(error,dataFromServer) {
+//        d3.json("http://localhost:8028/cow/histogram/feedMeJson", function(error,dataFromServer) {
                 if (error) {
                     return console.log(error);
                 }
