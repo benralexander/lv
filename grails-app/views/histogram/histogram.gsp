@@ -14,10 +14,6 @@
     <script src="../js/crossfilter.min.js"></script>
 <style>
 
-body {
-    font: 10px sans-serif;
-}
-
 .bar rect {
     shape-rendering: crispEdges;
 }
@@ -150,17 +146,17 @@ color: #000000;
                     .style("visibility", "visible")
                     .attr("class", "toolTextAppearance");
             this.respondToBarChartMouseOver = function(d) {
-                tooltip.style("visibility", "visible")
-                        .style("opacity", "0")
-                        .transition()
-                        .duration(200)
-                        .style("opacity", "1");
                 var stringToReturn = tooltip.html('Compounds in bin: ' + d[0] +
                         '<br/>' + 'Minimim bin value: ' + d[1].toPrecision(3) +
                         '<br/>' + 'Maximum bin value:' + d[2].toPrecision(3));
+                tooltip.style("visibility", "visible")
+                        .style("opacity", "0")
+                        .transition()
+                        .duration(500)
+                        .style("opacity", "1");
                 d3.select(this)
                         .transition()
-                        .duration(250)
+                        .duration(10)
                         .attr('fill', '#FFA500');
                 return stringToReturn;
             };
@@ -243,10 +239,10 @@ color: #000000;
     }
 
 
-
-
-    d3.json("http://localhost:8028/cow/histogram/feedMeDoubleJson", function(error,dataFromServer) {
-//        d3.json("http://localhost:8028/cow/histogram/feedMeJson", function(error,dataFromServer) {
+</script>
+<script>
+//    d3.json("http://localhost:8028/cow/histogram/feedMeDoubleJson", function(error,dataFromServer) {
+        d3.json("http://localhost:8028/cow/histogram/feedMeJson", function(error,dataFromServer) {
                 if (error) {
                     return console.log(error);
                 }
