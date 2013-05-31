@@ -8,15 +8,15 @@
     <title>Sunburst</title>
     <title>BARD : Compound Bio-Activity Summary</title>
 
-    <script src="/bardwebclient/static/plugins/jquery-1.7.1/js/jquery/jquery-1.7.1.min.js" type="text/javascript" ></script>
+    %{--<script src="/bardwebclient/static/plugins/jquery-1.7.1/js/jquery/jquery-1.7.1.min.js" type="text/javascript" ></script>--}%
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/bardwebclient/static/images/favicon.ico" type="image/x-icon">
-    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="../js/d3.js"></script>
 <script>
-    function createALegend(legendWidth, legendHeight, minimumValue,maximumValue,numberOfDivisions, colorScale, domSelector) {
+    function createALegend(legendWidth, legendHeight, numberOfDivisions, colorScale, domSelector) {
         var numberOfTics = 10;
         var arr = Array.apply(null, {length:numberOfDivisions + 1}).map(Number.call, Number);
         var intervals = (legendHeight) / numberOfDivisions;
@@ -50,7 +50,7 @@
                     return (i * 2) + 11;
                 })
                 .text(function (d, i) {
-                    if ((i % textSpacing) == 0) {
+                    if ((i % textSpacing) === 0) {
                         var valToWrite = (i / numberOfDivisions);
                         return valToWrite.toString();
                     }
@@ -59,21 +59,20 @@
                 });
 
     }
-
 </script>
     <script>
         function createASunburst(width, height, padding, duration, colorScale, domSelector) {
 
+
             var radius = Math.min(width, height) / 2;
 
-            color = d3.scale.category10().domain(["/",
+            var color = d3.scale.category10().domain(["/",
                 "cytoskeletal protein",
                 "ligase"
             ]);
 
 
             function colorArcFill(d) {
-//                return colorByRandomMap(d)
                 return colorByActivity(d)
             }
 
@@ -87,18 +86,16 @@
             function colorByActivity(d) {
                 var returnValue = new String();
                 if (d.ac != undefined) {
-                    if (d.name=="/")   { // root is special cased
-                       return "#fff";
+                    if (d.name==="/")   { // root is special cased
+                        return "#fff";
                     }
                     var actives = parseInt(d.ac);
                     var inactives = parseInt(d.inac);
-                    if ((actives + inactives)==0) // this should never happen, but safety first!
+                    if ((actives + inactives)===0) // this should never happen, but safety first!
                         return "#fff";
                     var prop = actives / (actives + inactives);
-                     returnValue = colorScale(prop);
-
-
-                } else {    // should never happen
+                    returnValue = colorScale(prop);
+                } else {
                     returnValue = "#FF00FF";
                 }
                 return returnValue;
@@ -123,9 +120,6 @@
 
 
             var partition = d3.layout.partition()
-                    .sort(function (d) {
-                        return d.size;
-                    })
                     .value(function (d) {
                         return d.size;
                     });
@@ -157,7 +151,7 @@
                     tooltip.style("visibility", "visible").style("opacity", "0").transition()
                             .duration(200).style("opacity", "1")
                 }
-                if (d.children == undefined)
+                if (d.children === undefined)
                     return tooltip.html(d.name + '<br/>' + 'active in ' + d.ac + '<br/>' + 'inactive in ' + d.inac);
                 else
                     return tooltip.html(d.name);
@@ -255,6 +249,7 @@
                     .style("fill-opacity", 1)
                     .style("fill", function (d) {
                         return  colorText(d);
+//                                    return brightness(d3.rgb(color(d))) < 125 ? "#eee" : "#000";
                     })
                     .attr("text-anchor", function (d) {
                         return x(d.x + d.dx / 2) > Math.PI ? "end" : "start";
@@ -278,10 +273,7 @@
             textEnter.append("tspan")
                     .attr("x", 0)
                     .text(function (d) {
-                        if (d.name=='/')
-                          return 'Panther class hierarchy root';
-                        else
-                          return d.depth ? d.name.split(" ")[0] : "";
+                        return d.depth ? d.name.split(" ")[0] : "";
                     });
             textEnter.append("tspan")
                     .attr("x", 0)
@@ -305,73 +297,73 @@
 
             d3.select(self.frameElement).style("height", height + "px");
         }
-
     </script>
-    <style>
-    #sunburstdiv {
-        font-family: sans-serif;
-        font-size: 12px;
-        position: relative;
+
+
+
+<style>
+#sunburstdiv {
+    font-family: sans-serif;
+    font-size: 12px;
+    position: relative;
+}
+
+.toolTextAppearance {
+    font: 20px serif;
+    font-weight: bold;
+    margin: 5px;
+    padding: 10px;
+    background: #eeeeee;
+    border: 1px solid blue;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+
+.legend {
+    font: 14px sans-serif;
+    font-weight: bold;
+}
+
+.legendHolder {
+    border: 3px solid black;
+    font: 12px sans-serif;
+    font-weight: bold;
+    text-align: center;
+    background: #eeeeee;
+    width: 160px;
+}
+
+</style>
+
+<script>
+    window.onload = function () {
+        $('#activity').change(function () {
+            if (this.value == "1") {
+                location.href = "./bigSunburst?actives=t&inactives=f";
+            }
+            if (this.value == "2") {
+                location.href = "./bigSunburst?actives=f&inactives=t";
+            }
+            if (this.value == "3") {
+                location.href = "./bigSunburst?actives=t&inactives=t";
+            }
+
+        });
+        $('#coloringOptions').change(function () {
+            if (this.value == "1") {
+                location.href = "./bigSunburst?colorOption=1";
+            }
+            if (this.value == "2") {
+                location.href = "./bigSunburst?colorOption=2";
+            }
+            if (this.value == "3") {
+                location.href = "./bigSunburst?colorOption=3";
+            }
+        });
     }
-
-    .toolTextAppearance {
-        font: 20px serif;
-        font-weight: bold;
-        margin: 5px;
-        padding: 10px;
-        background: #eeeeee;
-        border: 1px solid blue;
-        -moz-border-radius: 15px;
-        border-radius: 15px;
-    }
-
-    .legend {
-        font: 14px sans-serif;
-        font-weight: bold;
-    }
-
-    .legendHolder {
-        border: 2px solid black;
-        padding-right: -50px;
-        font: 12px sans-serif;
-        font-weight: bold;
-        text-align: center;
-        background: #eeeeee;
-        width: 160px;
-    }
-
-    </style>
-
-    <script>
-        window.onload = function () {
-            $('#activity').change(function () {
-                if (this.value == "1") {
-                    location.href = "./bigSunburst?actives=t&inactives=f";
-                }
-                if (this.value == "2") {
-                    location.href = "./bigSunburst?actives=f&inactives=t";
-                }
-                if (this.value == "3") {
-                    location.href = "./bigSunburst?actives=t&inactives=t";
-                }
-
-            });
-            $('#coloringOptions').change(function () {
-                if (this.value == "1") {
-                    location.href = "./bigSunburst?colorOption=1";
-                }
-                if (this.value == "2") {
-                    location.href = "./bigSunburst?colorOption=2";
-                }
-                if (this.value == "3") {
-                    location.href = "./bigSunburst?colorOption=3";
-                }
-            });
-        }
-    </script>
+</script>
 
 </head>
-
 <body>
 
 
@@ -393,28 +385,12 @@
     </div>
 
 
-    <script>var $data = [{"name":"/", "ac":"0", "inac":"0", "children": [
-        {"name":"receptor", "ac":"8", "inac":"8", "children": [
-            {"name":"G-protein coupled receptor", "ac":"3", "inac":"3", "size":3}
-        ]},
-        {"name":"transcription factor", "ac":"8", "inac":"5", "children": [
-            {"name":"nuclear hormone receptor", "ac":"1", "inac":"1", "size":1},
-            {"name":"zinc finger transcription factor", "ac":"1", "inac":"0", "size":1}
-        ]},
-        {"name":"nucleic acid binding", "ac":"4", "inac":"3", "size":4},
-        {"name":"cytoskeletal protein", "ac":"3", "inac":"3", "children": [
-            {"name":"microtubule family cytoskeletal protein", "ac":"2", "inac":"2", "children": [
-                {"name":"non-motor microtubule binding protein", "ac":"1", "inac":"1", "size":1}
-            ]}
-        ]},
-        {"name":"ligase", "ac":"4", "inac":"4", "children": [
-            {"name":"ubiquitin-protein ligase", "ac":"2", "inac":"2", "size":2}
-        ]}
-    ]}]
-    var minimumValue=0.0;
-    var maximumValue=1.0;
+    <script>var $data = [{"name":"/", "ac":"0", "inac":"0", "size":1}]
+    var minimumValue=0;
+    var maximumValue=0;
+
     var continuousColorScale = d3.scale.linear()
-            .domain([0, 1])
+            .domain([0, 0])
             .interpolate(d3.interpolateRgb)
             .range(["#ff0000", "#00ff00"]);
 
@@ -465,11 +441,11 @@
                     <option value="3" >Color by class</option>
                 </select>
                 <div  style="padding-top: 320px;"></div>
-                <select id="activity">
-                    <option value="1" selected>Active only</option>
+                <select id="activity" style="visibility: hidden">
+                    <option value="1" >Active only</option>
                     <option value="2" >Inactive only</option>
                     <option value="3"
-                    >Active and Inactive</option>
+                            selected>Active and Inactive</option>
                 </select>
 
             </div>
