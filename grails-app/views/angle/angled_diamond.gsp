@@ -20,7 +20,18 @@
         var numberOfTics = 10;
         var arr = Array.apply(null, {length:numberOfDivisions + 1}).map(Number.call, Number);
         var intervals = (legendHeight) / numberOfDivisions;
-        var legendHolder = d3.select(domSelector).append("svg")
+
+        var rootLegendHolder = d3.select(domSelector).append("div")
+                .attr("id", "sunburstlegend")
+                .attr("class", "legendHolder")
+                .html('<br />Color assignment:<br /> x = active / <br />(active + inactive)')
+
+        rootLegendHolder.append('hr')
+                .attr("width", '100%')
+                .attr("color", '#000');
+
+
+        var legendHolder = rootLegendHolder.append("svg")
                 .attr("width", legendWidth)
                 .attr("height", legendHeight + 10)
                 .attr("transform", "translate(" + legendWidth / 2 + "," + (legendHeight * 0.5 + 5) + ")");
@@ -61,6 +72,50 @@
     }
 </script>
     <script>
+
+
+        // Encapsulate the variables/methods necessary to handle tooltips
+        var ColorManagementRoutines = function () {
+
+                    // Safety trick for constructors
+                    if (!(this instanceof ColorManagementRoutines)) {
+                        return new ColorManagementRoutines();
+                    }
+
+                    // private variable =  tooltip
+
+                    var colorScale = d3.scale.linear()
+                            .domain([0, 0])
+                            .interpolate(d3.interpolateRgb)
+                            .range(["#ff0000", "#00ff00"]);
+
+
+                    // public methods
+                    this.colorArcFill = function (d) {
+                        var returnValue = new String();
+                        if (d.ac != undefined) {
+                            if (d.name === "/") { // root is special cased
+                                return "#fff";
+                            }
+                            var actives = parseInt(d.ac);
+                            var inactives = parseInt(d.inac);
+                            if ((actives + inactives) === 0) // this should never happen, but safety first!
+                                return "#fff";
+                            var prop = actives / (actives + inactives);
+                            returnValue = colorScale(prop);
+                        } else {
+                            returnValue = "#FF00FF";
+                        }
+                        return returnValue;
+                    };
+
+                    this.colorText = function (d) {
+                        return '#000';
+                    };
+                },
+                colorManagementRoutines = new ColorManagementRoutines();
+
+
         function createASunburst(width, height, padding, duration, colorScale, domSelector) {
 
 
@@ -72,40 +127,6 @@
             ]);
 
 
-            function colorArcFill(d) {
-                return colorByActivity(d)
-            }
-
-
-            function colorByRandomMap(d) {
-                var returnValue = d3.scale.category10().domain(["nucleic acid binding", "ligase", "nuclear hormone receptor"]);
-                return returnValue(d.name);
-            }
-
-
-            function colorByActivity(d) {
-                var returnValue = new String();
-                if (d.ac != undefined) {
-                    if (d.name==="/")   { // root is special cased
-                        return "#fff";
-                    }
-                    var actives = parseInt(d.ac);
-                    var inactives = parseInt(d.inac);
-                    if ((actives + inactives)===0) // this should never happen, but safety first!
-                        return "#fff";
-                    var prop = actives / (actives + inactives);
-                    returnValue = colorScale(prop);
-                } else {
-                    returnValue = "#FF00FF";
-                }
-                return returnValue;
-            }
-            function colorFill(d) {
-                return colorByRandomMap(d);
-            }
-            function colorText(d) {
-                return '#000';
-            }
             var svg = d3.select(domSelector).append("svg")
                     .attr("width", width)
                     .attr("height", height + 10)
@@ -164,7 +185,7 @@
                     .attr("d", arc)
                     .style("stroke", "#fff")
                     .style("fill", function (d) {
-                        return colorArcFill(d);
+                        return colorManagementRoutines.colorArcFill(d);
                     })
                     .on("click", click)
                     .on("mouseover", tooltipContent)
@@ -177,9 +198,6 @@
 
             var text = svg.datum($data[0]).selectAll("text").data(partition.nodes);
 
-            function brightness(rgb) {
-                return rgb.r * .299 + rgb.g * .587 + rgb.b * .114;
-            }
             // Interpolate the scales!
             function arcTween(d) {
                 var my = maxY(d),
@@ -248,8 +266,7 @@
             var textEnter = text.enter().append("svg:text")
                     .style("fill-opacity", 1)
                     .style("fill", function (d) {
-                        return  colorText(d);
-//                                    return brightness(d3.rgb(color(d))) < 125 ? "#eee" : "#000";
+                        return  colorManagementRoutines.colorText(d);
                     })
                     .attr("text-anchor", function (d) {
                         return x(d.x + d.dx / 2) > Math.PI ? "end" : "start";
@@ -336,31 +353,31 @@
 </style>
 
 <script>
-    window.onload = function () {
-        $('#activity').change(function () {
-            if (this.value == "1") {
-                location.href = "./bigSunburst?actives=t&inactives=f";
-            }
-            if (this.value == "2") {
-                location.href = "./bigSunburst?actives=f&inactives=t";
-            }
-            if (this.value == "3") {
-                location.href = "./bigSunburst?actives=t&inactives=t";
-            }
-
-        });
-        $('#coloringOptions').change(function () {
-            if (this.value == "1") {
-                location.href = "./bigSunburst?colorOption=1";
-            }
-            if (this.value == "2") {
-                location.href = "./bigSunburst?colorOption=2";
-            }
-            if (this.value == "3") {
-                location.href = "./bigSunburst?colorOption=3";
-            }
-        });
-    }
+//    window.onload = function () {
+//        $('#activity').change(function () {
+//            if (this.value == "1") {
+//                location.href = "./bigSunburst?actives=t&inactives=f";
+//            }
+//            if (this.value == "2") {
+//                location.href = "./bigSunburst?actives=f&inactives=t";
+//            }
+//            if (this.value == "3") {
+//                location.href = "./bigSunburst?actives=t&inactives=t";
+//            }
+//
+//        });
+//        $('#coloringOptions').change(function () {
+//            if (this.value == "1") {
+//                location.href = "./bigSunburst?colorOption=1";
+//            }
+//            if (this.value == "2") {
+//                location.href = "./bigSunburst?colorOption=2";
+//            }
+//            if (this.value == "3") {
+//                location.href = "./bigSunburst?colorOption=3";
+//            }
+//        });
+//    }
 </script>
 
 </head>
@@ -385,8 +402,61 @@
     </div>
 
 
-    <script>var $data = [{"name":"/", "ac":"0", "inac":"0", "size":1}]
-    var minimumValue=0;
+    <script>
+//        var $data = [{"name":"/", "ac":"0", "inac":"0", "size":1}]
+var $data = [{"name":"/", "ac":"0", "inac":"0", "children": [
+    {"name":"enzyme modulator", "ac":"0", "inac":"19", "children": [
+        {"name":"G-protein", "ac":"0", "inac":"6", "children": [
+            {"name":"heterotrimeric G-protein", "ac":"0", "inac":"1", "size":1},
+            {"name":"small GTPase", "ac":"0", "inac":"2", "size":2}
+        ]},
+        {"name":"G-protein modulator", "ac":"0", "inac":"5", "size":5}
+    ]},
+    {"name":"signaling molecule", "ac":"0", "inac":"6", "size":6},
+    {"name":"receptor", "ac":"0", "inac":"7", "children": [
+        {"name":"G-protein coupled receptor", "ac":"0", "inac":"3", "size":3}
+    ]},
+    {"name":"extracellular matrix protein", "ac":"0", "inac":"2", "children": [
+        {"name":"extracellular matrix glycoprotein", "ac":"0", "inac":"1", "size":1}
+    ]},
+    {"name":"cell adhesion molecule", "ac":"0", "inac":"5", "children": [
+        {"name":"cadherin", "ac":"0", "inac":"1", "size":1}
+    ]},
+    {"name":"hydrolase", "ac":"0", "inac":"1", "size":1},
+    {"name":"nucleic acid binding", "ac":"0", "inac":"11", "children": [
+        {"name":"DNA binding protein", "ac":"0", "inac":"2", "size":2},
+        {"name":"nuclease", "ac":"0", "inac":"3", "children": [
+            {"name":"exodeoxyribonuclease", "ac":"0", "inac":"1", "size":1},
+            {"name":"endodeoxyribonuclease", "ac":"0", "inac":"1", "size":1}
+        ]},
+        {"name":"helicase", "ac":"0", "inac":"2", "children": [
+            {"name":"DNA helicase", "ac":"0", "inac":"1", "size":1}
+        ]},
+        {"name":"RNA binding protein", "ac":"0", "inac":"1", "size":1}
+    ]},
+    {"name":"transferase", "ac":"0", "inac":"7", "children": [
+        {"name":"kinase", "ac":"0", "inac":"5", "children": [
+            {"name":"carbohydrate kinase", "ac":"0", "inac":"1", "size":1},
+            {"name":"protein kinase", "ac":"0", "inac":"2", "children": [
+                {"name":"non-receptor serine/threonine protein kinase", "ac":"0", "inac":"1", "size":1}
+            ]}
+        ]}
+    ]},
+    {"name":"transporter", "ac":"0", "inac":"2", "children": [
+        {"name":"ion channel", "ac":"0", "inac":"1", "size":1}
+    ]},
+    {"name":"membrane traffic protein", "ac":"0", "inac":"1", "size":1},
+    {"name":"cell junction protein", "ac":"0", "inac":"1", "size":1}
+]}]
+
+
+
+
+
+
+
+
+var minimumValue=0;
     var maximumValue=0;
 
     var continuousColorScale = d3.scale.linear()
@@ -402,12 +472,9 @@
 
             <div id="sunburstdiv">
 
-                <div id="sunburstdiv">
                     <script>
                         createASunburst( 800, 800,5,1000,continuousColorScale,'div#sunburstdiv');
                     </script>
-
-                </div>
             </div>
 
         </div>
@@ -415,19 +482,12 @@
         <div class="span3" style="padding-top: 50px;  height: 600px;">
             <div style="float:right;">
 
-                <div id="sunburstlegend" class="legendHolder">
-                    Color assignment:<br />
-                    x = active / <br />
-                    (active + inactive)
-                    <hr width=100% color=black style="color: #000; height:1px;">
-
-                    <script>
-                        createALegend(120, 200,100,continuousColorScale,'div#sunburstlegend');
-                    </script>
-
-                    <div  style="padding-top: 5px;"></div>
-
-                </div>
+                <div id="legendGoesHere"></div>
+                <script>
+                    if ($data[0].children !== 'undefined') {
+                        createALegend(120, 200,100,continuousColorScale,'div#legendGoesHere');
+                    }
+                </script>
 
             </div>
 
