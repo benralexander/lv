@@ -549,7 +549,7 @@ var $data = [{"name":"/", "ac":"0", "inac":"0", "children": [
     var continuousColorScale = d3.scale.linear()
             .domain([minimumValue, maximumValue])
             .interpolate(d3.interpolateRgb)
-            .range(["#dbffd5", "#74c476"]);
+            .range(["#deffd9", "#74c476"]);
 
     </script>
 
@@ -560,7 +560,20 @@ var $data = [{"name":"/", "ac":"0", "inac":"0", "children": [
             <div id="sunburstdiv">
 
                     <script>
-                        createASunburst( 1000, 1000,5,1000,continuousColorScale,'div#sunburstdiv');
+                        if ($data[0].children !== undefined) {
+                            createASunburst( 1000, 1000,5,1000,continuousColorScale,'div#sunburstdiv');
+                        } else {
+                            d3.select('div#sunburstdiv')
+                                    .append('div')
+                                    .attr("width", 1000)
+                                    .attr("height", 1000 )
+                                    .style("padding-top", '200px' )
+                                    .style("text-align", 'center' )
+                                    .append("h1")
+                                    .html("No off-embargo assay data are  available for this compound.<br /><br />"+
+                                    "Please either choose a different compound, or else come<br />"+
+                                    "back later when more assay data may have accumulated.");
+                        }
                     </script>
             </div>
 
@@ -571,7 +584,7 @@ var $data = [{"name":"/", "ac":"0", "inac":"0", "children": [
 
                 <div id="legendGoesHere"></div>
                 <script>
-                    if ($data[0].children !== 'undefined') {
+                    if ($data[0].children !== undefined) {
                         createALegend(120, 200,100,continuousColorScale,'div#legendGoesHere');
                     }
                 </script>
