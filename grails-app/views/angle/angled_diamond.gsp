@@ -14,6 +14,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/bardwebclient/static/images/favicon.ico" type="image/x-icon">
+<style>
+    .g {
+        color: #dbffd5;
+        color: #c7e9c0;
+        color: #c7e9c0;
+        color: #c7e9c0;
+    }
+</style>
     <script src="../js/d3.js"></script>
 <script>
     function createALegend(legendWidth, legendHeight, numberOfDivisions, colorScale, domSelector) {
@@ -73,22 +81,15 @@
 </script>
     <script>
 
+        // Encapsulate the variables/methods necessary to handle tooltips
 
         // Encapsulate the variables/methods necessary to handle tooltips
-        var ColorManagementRoutines = function () {
+        var ColorManagementRoutines = function (colorScale) {
 
                     // Safety trick for constructors
                     if (!(this instanceof ColorManagementRoutines)) {
                         return new ColorManagementRoutines();
                     }
-
-                    // private variable =  tooltip
-
-                    var colorScale = d3.scale.linear()
-                            .domain([0, 0])
-                            .interpolate(d3.interpolateRgb)
-                            .range(["#ff0000", "#00ff00"]);
-
 
                     // public methods
                     this.colorArcFill = function (d) {
@@ -112,31 +113,60 @@
                     this.colorText = function (d) {
                         return '#000';
                     };
-                },
-                colorManagementRoutines = new ColorManagementRoutines();
+                };
+
+
+        var TooltipHandler = function ()  {
+                    // Safety trick for constructors
+                    if (! (this instanceof TooltipHandler)){
+                        return new TooltipHandler ();
+                    }
+
+                    var tooltip = d3.select("body")
+                            .append("div")
+                            .style("opacity", "0")
+                            .style("position", "absolute")
+                            .style("z-index", "10")
+                            .style("visibility", "visible")
+                            .attr("class", "toolTextAppearance");
+
+                    this.mouseOver = function(d) {
+                        if (d.name != '/') {
+                            tooltip.style("visibility", "visible").style("opacity", "0").transition()
+                                    .duration(200).style("opacity", "1")
+                        }
+//                        if (d.children === undefined)
+                            return tooltip.html(d.name + '<br/>' + 'active in ' + d.ac + '<br/>' + 'inactive in ' + d.inac);
+                    };
+                    this.mouseMove = function () {
+                        return tooltip.style("top", (event.pageY - 10) + "px").style("left", (event.pageX + 10) + "px");
+                    };
+                    this.mouseOut =  function () {
+                        return tooltip.style("visibility", "hidden");
+                    };
+                };
+//                tooltipHandler  = new TooltipHandler ();
+
+
 
 
         function createASunburst(width, height, padding, duration, colorScale, domSelector) {
 
-
+            var tooltipHandler  = new TooltipHandler ();
+            var colorManagementRoutines = new ColorManagementRoutines(colorScale);
             var radius = Math.min(width, height) / 2;
-
-            var color = d3.scale.category10().domain(["/",
-                "cytoskeletal protein",
-                "ligase"
-            ]);
 
 
             var svg = d3.select(domSelector).append("svg")
                     .attr("width", width)
-                    .attr("height", height + 10)
+                    .attr("height", height )
                     .append("g")
-                    .attr("transform", "translate(" + width / 2 + "," + (height * .5 + 5) + ")");
+                    .attr("transform", "translate(" + width / 2 + "," + (height /2 ) + ")");
 
             var x = d3.scale.linear()
                     .range([0, 2 * Math.PI]);
 
-            var y = d3.scale.sqrt()
+            var y = d3.scale.linear()
                     .range([0, radius]);
 
 
@@ -159,42 +189,19 @@
                         return Math.max(0, y(d.y + d.dy));
                     });
 
-            var tooltip = d3.select("body")
-                    .append("div")
-                    .style("opacity", "0")
-                    .style("position", "absolute")
-                    .style("z-index", "10")
-                    .style("visibility", "visible")
-                    .attr("class", "toolTextAppearance");
-
-            function tooltipContent(d) {
-                if (d.name != '/') {
-                    tooltip.style("visibility", "visible").style("opacity", "0").transition()
-                            .duration(200).style("opacity", "1")
-                }
-                if (d.children === undefined)
-                    return tooltip.html(d.name + '<br/>' + 'active in ' + d.ac + '<br/>' + 'inactive in ' + d.inac);
-                else
-                    return tooltip.html(d.name);
-            }
-
             var path = svg.datum($data[0]).selectAll("path")
                     .data(partition.nodes)
                     .enter().append("path")
-                // .attr("display", function(d) { return (d.depth || d.name!='/') ? null : "none"; }) // hide inner ring
+            //     .attr("display", function(d) { return (d.depth || d.name!='/') ? null : "none"; }) // hide inner ring
                     .attr("d", arc)
                     .style("stroke", "#fff")
                     .style("fill", function (d) {
                         return colorManagementRoutines.colorArcFill(d);
                     })
                     .on("click", click)
-                    .on("mouseover", tooltipContent)
-                    .on("mousemove", function () {
-                        return tooltip.style("top", (event.pageY - 10) + "px").style("left", (event.pageX + 10) + "px");
-                    })
-                    .on("mouseout", function () {
-                        return tooltip.style("visibility", "hidden");
-                    });
+                    .on("mouseover", tooltipHandler.mouseOver)
+                    .on("mousemove", tooltipHandler.mouseMove)
+                    .on("mouseout",tooltipHandler.mouseOut );
 
             var text = svg.datum($data[0]).selectAll("text").data(partition.nodes);
 
@@ -203,7 +210,7 @@
                 var my = maxY(d),
                         xd = d3.interpolate(x.domain(), [d.x, d.x + d.dx]),
                         yd = d3.interpolate(y.domain(), [d.y, my]),
-                        yr = d3.interpolate(y.range(), [d.y ? 20 : 0, radius]);
+                        yr = d3.interpolate(y.range(), [d.y ? 100 : 0, radius]);
                 return function (d) {
                     return function (t) {
                         x.domain(xd(t));
@@ -225,9 +232,6 @@
                     });
                 }
                 return false;
-            }
-            function mouseover(d) {
-                return d.name;
             }
 
             function click(d) {
@@ -279,13 +283,9 @@
                         return "rotate(" + rotate + ")translate(" + (y(d.y) + padding) + ")rotate(" + (angle > 90 ? -180 : 0) + ")";
                     })
                     .on("click", click)
-                    .on("mouseover", tooltipContent)
-                    .on("mousemove", function () {
-                        return tooltip.style("top", (event.pageY - 10) + "px").style("left", (event.pageX + 10) + "px");
-                    })
-                    .on("mouseout", function () {
-                        return tooltip.style("visibility", "hidden");
-                    });
+                    .on("mouseover", tooltipHandler.mouseOver)
+                    .on("mousemove", tooltipHandler.mouseMove)
+                    .on("mouseout",tooltipHandler.mouseOut );
 
             textEnter.append("tspan")
                     .attr("x", 0)
@@ -403,7 +403,9 @@
 
 
     <script>
+        //empty
 //        var $data = [{"name":"/", "ac":"0", "inac":"0", "size":1}]
+        /* monochrome
 var $data = [{"name":"/", "ac":"0", "inac":"0", "children": [
     {"name":"enzyme modulator", "ac":"0", "inac":"19", "children": [
         {"name":"G-protein", "ac":"0", "inac":"6", "children": [
@@ -447,7 +449,60 @@ var $data = [{"name":"/", "ac":"0", "inac":"0", "children": [
     ]},
     {"name":"membrane traffic protein", "ac":"0", "inac":"1", "size":1},
     {"name":"cell junction protein", "ac":"0", "inac":"1", "size":1}
-]}]
+]}]         */
+        var $data = [{"name":"/", "ac":"0", "inac":"0", "children": [
+            {"name":"signaling molecule", "ac":"4", "inac":"5", "size":6},
+            {"name":"nucleic acid binding", "ac":"5", "inac":"14", "children": [
+                {"name":"DNA binding protein", "ac":"1", "inac":"4", "children": [
+                    {"name":"DNA strand-pairing protein", "ac":"0", "inac":"1", "size":1}
+                ]},
+                {"name":"nuclease", "ac":"3", "inac":"3", "children": [
+                    {"name":"exodeoxyribonuclease", "ac":"1", "inac":"1", "size":1},
+                    {"name":"endodeoxyribonuclease", "ac":"1", "inac":"1", "size":1}
+                ]},
+                {"name":"helicase", "ac":"0", "inac":"2", "children": [
+                    {"name":"DNA helicase", "ac":"0", "inac":"1", "size":1}
+                ]},
+                {"name":"RNA binding protein", "ac":"0", "inac":"1", "size":1}
+            ]},
+            {"name":"hydrolase", "ac":"1", "inac":"1", "size":2},
+            {"name":"cell adhesion molecule", "ac":"2", "inac":"3", "children": [
+                {"name":"cadherin", "ac":"1", "inac":"0", "size":1}
+            ]},
+            {"name":"cell junction protein", "ac":"1", "inac":"0", "size":1},
+            {"name":"enzyme modulator", "ac":"0", "inac":"19", "children": [
+                {"name":"G-protein", "ac":"0", "inac":"6", "children": [
+                    {"name":"heterotrimeric G-protein", "ac":"0", "inac":"1", "size":1},
+                    {"name":"small GTPase", "ac":"0", "inac":"2", "size":2}
+                ]},
+                {"name":"G-protein modulator", "ac":"0", "inac":"5", "size":5}
+            ]},
+            {"name":"receptor", "ac":"0", "inac":"7", "children": [
+                {"name":"G-protein coupled receptor", "ac":"0", "inac":"3", "size":3}
+            ]},
+            {"name":"transferase", "ac":"0", "inac":"7", "children": [
+                {"name":"kinase", "ac":"0", "inac":"5", "children": [
+                    {"name":"protein kinase", "ac":"0", "inac":"2", "children": [
+                        {"name":"non-receptor serine/threonine protein kinase", "ac":"0", "inac":"1", "size":1}
+                    ]},
+                    {"name":"carbohydrate kinase", "ac":"0", "inac":"1", "size":1}
+                ]}
+            ]},
+            {"name":"transporter", "ac":"0", "inac":"33", "children": [
+                {"name":"ion channel", "ac":"0", "inac":"23", "children": [
+                    {"name":"potassium channel", "ac":"0", "inac":"5", "size":5},
+                    {"name":"voltage-gated ion channel", "ac":"0", "inac":"10", "children": [
+                        {"name":"voltage-gated potassium channel", "ac":"0", "inac":"5", "size":5}
+                    ]},
+                    {"name":"anion channel", "ac":"0", "inac":"1", "size":1}
+                ]},
+                {"name":"ATP-binding cassette (ABC) transporter", "ac":"0", "inac":"2", "size":2}
+            ]},
+            {"name":"extracellular matrix protein", "ac":"0", "inac":"2", "children": [
+                {"name":"extracellular matrix glycoprotein", "ac":"0", "inac":"1", "size":1}
+            ]},
+            {"name":"membrane traffic protein", "ac":"0", "inac":"1", "size":1}
+        ]}]
 
 
 
@@ -456,13 +511,14 @@ var $data = [{"name":"/", "ac":"0", "inac":"0", "children": [
 
 
 
-var minimumValue=0;
-    var maximumValue=0;
+
+        var minimumValue=0;
+    var maximumValue=0.5;
 
     var continuousColorScale = d3.scale.linear()
-            .domain([0, 0])
+            .domain([minimumValue, maximumValue])
             .interpolate(d3.interpolateRgb)
-            .range(["#ff0000", "#00ff00"]);
+            .range(["#dbffd5", "#74c476"]);
 
     </script>
 
@@ -473,7 +529,7 @@ var minimumValue=0;
             <div id="sunburstdiv">
 
                     <script>
-                        createASunburst( 800, 800,5,1000,continuousColorScale,'div#sunburstdiv');
+                        createASunburst( 1000, 1000,5,1000,continuousColorScale,'div#sunburstdiv');
                     </script>
             </div>
 
