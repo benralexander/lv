@@ -61,6 +61,7 @@
 
 }
 .toolTextAppearance {
+    position: relative;
     font: 16px serif;
     font-weight: bold;
     margin: 5px;
@@ -149,14 +150,13 @@ color: #000000;
                     var tooltip = d3.select("body")
                             .append("div")
                             .style("position", "absolute")
-                            .style("visibility", "visible")
+                            .style("opacity", "0")
                             .attr("class", "toolTextAppearance");
                     this.respondToBarChartMouseOver = function(d) {
                         var stringToReturn = tooltip.html('Compounds in bin: ' + d[0] +
                                 '<br/>' + 'Minimim bin value: ' + d[1].toPrecision(3) +
                                 '<br/>' + 'Maximum bin value:' + d[2].toPrecision(3));
-                        tooltip.style("visibility", "visible")
-                                .style("opacity", "0")
+                        tooltip
                                 .transition()
                                 .duration(500)
                                 .style("opacity", "1");
@@ -167,7 +167,10 @@ color: #000000;
                         return stringToReturn;
                     };
                     this.respondToBarChartMouseOut =  function(d) {
-                        var returnValue = tooltip.style("visibility", "hidden");
+                        var returnValue = tooltip
+                                .transition()
+                                .duration(500)
+                        .style("opacity", "0");
                         d3.select(this)
                                 .transition()
                                 .duration(250)
@@ -175,7 +178,7 @@ color: #000000;
                         return returnValue;
                     };
                     this.respondToBarChartMouseMove =  function(d) {
-                        return tooltip.style("top", (event.pageY - 10) + "px").style("left", (event.pageX + 10) + "px");
+                        return tooltip.style("top", (d3.event.pageY - 10) + "px").style("left", (d3.event.pageX + 10) + "px");
                     };
                 },
                 tooltipHandler  = new TooltipHandler ();

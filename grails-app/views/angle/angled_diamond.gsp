@@ -127,22 +127,25 @@
                             .style("opacity", "0")
                             .style("position", "absolute")
                             .style("z-index", "10")
-                            .style("visibility", "visible")
                             .attr("class", "toolTextAppearance");
 
                     this.mouseOver = function(d) {
                         if (d.name != '/') {
-                            tooltip.style("visibility", "visible").style("opacity", "0").transition()
-                                    .duration(200).style("opacity", "1")
+                            tooltip.style("opacity", "0")
+                                    .transition()
+                                    .duration(200)
+                                    .style("opacity", "1")
                         }
 //                        if (d.children === undefined)
                             return tooltip.html(d.name + '<br/>' + 'active in ' + d.ac + '<br/>' + 'inactive in ' + d.inac);
                     };
                     this.mouseMove = function () {
-                        return tooltip.style("top", (event.pageY - 10) + "px").style("left", (event.pageX + 10) + "px");
+                        return tooltip
+                                .style("top", (d3.event.pageY - 10) + "px")
+                                .style("left", (d3.event.pageX + 10) + "px");
                     };
                     this.mouseOut =  function () {
-                        return tooltip.style("visibility", "hidden");
+                        return tooltip.style("opacity", "0");
                     };
                 };
 //                tooltipHandler  = new TooltipHandler ();
