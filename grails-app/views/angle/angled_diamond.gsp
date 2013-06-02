@@ -207,12 +207,38 @@
                     },
              sunburstAnimation = SunburstAnimation();
 
+            var pict = d3.select("body")
+                    .append("div")
+                    .style("position", "absolute")
+                    .style("top", "550px")
+                    .style("border", "1")
+                    .style("left", "450px")
+                    .attr("height", "150")
+                    .attr("width", "150")
+                    .style("z-index", "100")
+                    .attr("class", "molstruct")
+            .append("img")
+        .attr("src", "../images/mol1.png");
+//                    .attr("padding-top", '-50px')
+//                    .attr("padding-left", '-50px')
+//                    .attr("width", 150)
+//                    .attr("height", 150)
+//                    .attr("z-index", 150)
 
             var svg = d3.select(domSelector).append("svg")
                     .attr("width", width)
                     .attr("height", height )
                     .append("g")
                     .attr("transform", "translate(" + width / 2 + "," + (height /2 ) + ")");
+
+//            svg.append("image")
+//                    .attr("xlink:href", "../images/mol1.png")
+//                    .attr("padding-top", '-50px')
+//                    .attr("padding-left", '-50px')
+//                    .attr("width", 150)
+//                    .attr("height", 150)
+//                    .attr("z-index", 150)
+//            ;
 
             var x = d3.scale.linear()
                     .range([0, 2 * Math.PI]);
@@ -348,12 +374,12 @@
     font-size: 12px;
     position: relative;
 }
-#sunburstdiv img {
+#molstruct {
     position: absolute;
-    width: 200px;
-    height: 200px;
-    left: 400px;
-    top: 500px;
+    width: 150px;
+    height: 150px;
+    left: 375px;
+    top: 475px;
 }
 
 .toolTextAppearance {
