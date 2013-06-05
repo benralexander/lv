@@ -96,7 +96,7 @@
                         var returnValue = new String();
                         if (d.ac != undefined) {
                             if (d.name === "/") { // root is special cased
-                                return "#fff";
+                                return "#ffff99";
                             }
                             var actives = parseInt(d.ac);
                             var inactives = parseInt(d.inac);
@@ -219,11 +219,6 @@
                     .attr("class", "molstruct")
             .append("img")
         .attr("src", "../images/mol1.png");
-//                    .attr("padding-top", '-50px')
-//                    .attr("padding-left", '-50px')
-//                    .attr("width", 150)
-//                    .attr("height", 150)
-//                    .attr("z-index", 150)
 
             var svg = d3.select(domSelector).append("svg")
                     .attr("width", width)
@@ -231,14 +226,6 @@
                     .append("g")
                     .attr("transform", "translate(" + width / 2 + "," + (height /2 ) + ")");
 
-//            svg.append("image")
-//                    .attr("xlink:href", "../images/mol1.png")
-//                    .attr("padding-top", '-50px')
-//                    .attr("padding-left", '-50px')
-//                    .attr("width", 150)
-//                    .attr("height", 150)
-//                    .attr("z-index", 150)
-//            ;
 
             var x = d3.scale.linear()
                     .range([0, 2 * Math.PI]);
@@ -271,6 +258,9 @@
                     .enter().append("path")
             //     .attr("display", function(d) { return (d.depth || d.name!='/') ? null : "none"; }) // hide inner ring
                     .attr("d", arc)
+                    .attr("id", function (d) {
+                        return (String(d.name).replace(/\s/g,'_'));
+                    })
                     .style("stroke", "#fff")
                     .style("fill", function (d) {
                         return colorManagementRoutines.colorArcFill(d);
@@ -285,7 +275,18 @@
             // Interpolate the scales!
 
             function click(d) {
-                path.transition()
+                if (!(d.parent.name  === undefined))  {
+                    var parentName =  d.parent.name;
+                    var parentNode =  d3.select('#'+(String(parentName).replace(/\s/g,'_')));
+                    parentNode
+                            .attr ('class','yeller');
+                    parentNode
+                            .attr ('class','yeller')
+                            .style ('fill',function (d) {
+                        return  "#ffff99";
+                    }) ;
+                }
+                 path.transition()
                         .duration(duration)
                         .attrTween("d", sunburstAnimation.arcTween(d));
 
@@ -405,6 +406,9 @@
     text-align: center;
     background: #eeeeee;
     width: 160px;
+}
+.yeller {
+    fill: #ffff99;
 }
 
 </style>

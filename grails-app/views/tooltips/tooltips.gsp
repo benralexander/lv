@@ -45,6 +45,8 @@ div.tooltip {					/* set the CSS for tooltip divs */
 <!-- load the d3.js library -->
 <script src="../js/d3.js"></script>
 
+<div>Hello</div>
+<div rel="tooltip" data-container="body" data-html="true" title="&lt;nobr&gt;R-squared : 0.9888  &lt;/nobr&gt;&lt;br /&gt;&lt;nobr&gt;percent activity : -95.5809  &lt;/nobr&gt;&lt;br /&gt;&lt;nobr&gt;activity type : Inhibitor  &lt;/nobr&gt;&lt;br /&gt;&lt;nobr&gt;efficacy : 84.0177  &lt;/nobr&gt;&lt;br /&gt;&lt;nobr&gt;QC analyst : QC\'d by Chem Div  &lt;/nobr&gt;&lt;br /&gt;&lt;nobr&gt;curve-fit class : =-1.1  &lt;/nobr&gt;&lt;br /&gt;&lt;nobr&gt;curve-fit specification : Complete curve; high efficacy  &lt;/nobr&gt;&lt;br /&gt;&lt;nobr&gt;excluded points : 0 0 0 0 0 0  &lt;/nobr&gt;&lt;br /&gt;" data-trigger="hover"><font color="#F62217"><nobr>0.282 </nobr></font></div>
 <script>
 
     // Set the dimensions of the canvas / graph
