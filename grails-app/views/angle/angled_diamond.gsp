@@ -95,9 +95,9 @@
                     this.colorArcFill = function (d) {
                         var returnValue = new String();
                         if (d.ac != undefined) {
-                            if (d.name === "/") { // root is special cased
-                                return "#ffff99";
-                            }
+//                            if (d.name === "/") { // root is special cased
+//                                return "#ffff99";
+//                            }
                             var actives = parseInt(d.ac);
                             var inactives = parseInt(d.inac);
                             if ((actives + inactives) === 0) // this should never happen, but safety first!
@@ -131,15 +131,14 @@
 
                     this.mouseOver = function(d) {
                         if (d.name != '/') {
-                            tooltip.transition()
+                            tooltip.html(d.name + '<br/>' + 'active in ' + d.ac + '<br/>' + 'inactive in ' + d.inac)
+                                    .transition()
                                     .duration(200)
-                                    .style("opacity", "1")
+                                    .style("opacity", "1");
+                            return;// tooltip.html(d.name + '<br/>' + 'active in ' + d.ac + '<br/>' + 'inactive in ' + d.inac);
                         }
-//                        if (d.children === undefined)
-                        if (d.name === '/')  {
+                        else {
                             return tooltip.html(null).style("opacity", "0");
-                        }  else {
-                            return tooltip.html(d.name + '<br/>' + 'active in ' + d.ac + '<br/>' + 'inactive in ' + d.inac);
                         }
 
                     };
@@ -173,6 +172,17 @@
                 if (! (this instanceof SunburstAnimation)){
                     return new SunburstAnimation ();
                 }
+
+                // Need to keep track of how Zoomed we are
+                var currentZoomLevel = 0;
+                this.zoomLevel = function (newZoomLevel){
+                    if (newZoomLevel === undefined){
+                        return  currentZoomLevel;
+                    }  else {
+                        currentZoomLevel =  newZoomLevel;
+                    }
+                }
+
 
                 this.arcTween = function (d) {
                     var my = maxY(d),
@@ -217,8 +227,8 @@
                     .attr("width", "150")
                     .style("z-index", "100")
                     .attr("class", "molstruct")
-            .append("img")
-        .attr("src", "../images/mol1.png");
+                    .append("img")
+                    .attr("src", "../images/mol1.png");
 
             var svg = d3.select(domSelector).append("svg")
                     .attr("width", width)
@@ -253,14 +263,28 @@
                         return Math.max(0, y(d.y + d.dy));
                     });
 
+            // Method local to createASunburst
+            var createIdForNode = function (incomingName) {
+                var returnValue = 'null';
+                var preliminaryGeneratedId = String(incomingName).replace(/\s/g,'_');
+                if (preliminaryGeneratedId === '/') {
+                    returnValue = 'root';
+                } else {
+                    returnValue = preliminaryGeneratedId;
+                }
+                return returnValue;
+            }
+
             var path = svg.datum($data[0]).selectAll("path")
                     .data(partition.nodes)
                     .enter().append("path")
             //     .attr("display", function(d) { return (d.depth || d.name!='/') ? null : "none"; }) // hide inner ring
                     .attr("d", arc)
                     .attr("id", function (d) {
-                        return (String(d.name).replace(/\s/g,'_'));
+                        return createIdForNode(d.name);
                     })
+                    .classed('indicateZoomIn', function(d) { return (d.depth || d.name!='/');} )
+                    .classed('indicateNoZoomingPossible', function(d) { return (!(d.depth || d.name!='/'));} )
                     .style("stroke", "#fff")
                     .style("fill", function (d) {
                         return colorManagementRoutines.colorArcFill(d);
@@ -275,16 +299,62 @@
             // Interpolate the scales!
 
             function click(d) {
-                if (!(d.parent.name  === undefined))  {
+                if ( !(d.parent  === undefined) &&
+                     !(d.parent.name  === undefined) )  {
+                    sunburstAnimation.zoomLevel(d.depth);
                     var parentName =  d.parent.name;
-                    var parentNode =  d3.select('#'+(String(parentName).replace(/\s/g,'_')));
-                    parentNode
-                            .attr ('class','yeller');
-                    parentNode
-                            .attr ('class','yeller')
-                            .style ('fill',function (d) {
-                        return  "#ffff99";
-                    }) ;
+                    var nodeName =  d.name;
+                    // reset the cursor for the last center of the sunburst, since it is no longer
+                    // ready to support a zoom out.  Note that this select statement will also grab
+                    // nny other stray classes indicating zoom out.
+                    var previousCenterpiece = d3.select('.indicateZoomOut');
+                    if (!(previousCenterpiece === undefined)){
+                        previousCenterpiece.classed('indicateZoomIn', true)
+                                           .classed('indicateZoomOut', false)
+                                           .classed('indicateNoZoomingPossible', false);
+                    }
+                    var arcThatWasLastZoomed = d3.selectAll('.indicateNoZoomingPossible');
+                    if (!(arcThatWasLastZoomed === undefined)){
+                        arcThatWasLastZoomed.classed('indicateNoZoomingPossible', function(d){
+                            return (d.name === "/");
+                        });
+                        arcThatWasLastZoomed.classed('indicateZoomIn',  function(d){
+                            return (!(d.name === "/"));
+                        });
+                    }
+                    // Now deal with the parent node, which DOES need to adopt
+                    // a cursor indicating that a zoom out is possible.
+                    var parentNode =  d3.select('#'+createIdForNode(parentName));
+                    if (sunburstAnimation.zoomLevel()>0)   {
+                        parentNode.classed('indicateZoomOut', true)
+                                  .classed('indicateZoomIn', false)
+                                  .classed('indicateNoZoomingPossible', false);
+                    }
+                    // Take the current arc ( the one that was clicked ) and
+                    // turn off any mouse handling at all, since After clicking an arc
+                    // it becomes fully expanded, and there is no purpose to clicking it again.
+                    var currentNode =  d3.select('#'+createIdForNode(nodeName));
+                    currentNode.classed('indicateZoomOut', false)
+                            .classed('indicateZoomIn', false)
+                            .classed('indicateNoZoomingPossible', true);
+
+                } else if ( !(d  === undefined) &&
+                            !(d.name  === undefined) ) {  // Root node clicked -- reset mouse ptr
+                    sunburstAnimation.zoomLevel(d.depth);
+                    var nodeName =  d.name;
+                    var arcThatWasLastZoomed = d3.selectAll('.indicateNoZoomingPossible');
+                    if (!(arcThatWasLastZoomed === undefined)){
+                        arcThatWasLastZoomed.classed('indicateNoZoomingPossible', function(d){
+                            return (d.name === "/");
+                        });
+                        arcThatWasLastZoomed.classed('indicateZoomIn',  function(d){
+                            return (!(d.name === "/"));
+                        });
+                    }
+                    var currentNode =  d3.select('#'+createIdForNode(nodeName));
+                    currentNode.classed('indicateZoomOut', false)
+                               .classed('indicateZoomIn', false)
+                               .classed('indicateNoZoomingPossible', true);
                 }
                  path.transition()
                         .duration(duration)
@@ -320,6 +390,7 @@
 
             var textEnter = text.enter().append("svg:text")
                     .style("fill-opacity", 1)
+                    .style("pointer-events", "none")
                     .style("fill", function (d) {
                         return  colorManagementRoutines.colorText(d);
                     })
@@ -333,10 +404,10 @@
                                 rotate = angle + (multiline ? -.5 : 0);
                         return "rotate(" + rotate + ")translate(" + (y(d.y) + padding) + ")rotate(" + (angle > 90 ? -180 : 0) + ")";
                     })
-                    .on("click", click)
-                    .on("mouseover", tooltipHandler.mouseOver)
-                    .on("mousemove", tooltipHandler.mouseMove)
-                    .on("mouseout",tooltipHandler.mouseOut );
+                    .on("click", click);
+//                    .on("mouseover", tooltipHandler.mouseOver)
+//                    .on("mousemove", tooltipHandler.mouseMove)
+//                    .on("mouseout",tooltipHandler.mouseOut );
 
             textEnter.append("tspan")
                     .attr("x", 0)
@@ -407,8 +478,18 @@
     background: #eeeeee;
     width: 160px;
 }
-.yeller {
-    fill: #ffff99;
+.indicateZoomIn {
+    cursor:crosshair;
+    cursor:-webkit-zoom-in;
+    cursor:-moz-zoom-in;
+}
+.indicateZoomOut {
+    cursor:crosshair;
+    cursor:-webkit-zoom-out;
+    cursor:-moz-zoom-out;
+}
+.indicateNoZoomingPossible {
+    cursor:auto;
 }
 
 </style>
