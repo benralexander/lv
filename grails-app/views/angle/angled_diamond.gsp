@@ -24,59 +24,85 @@
 </style>
     <script src="../js/d3.js"></script>
 <script>
-    function createALegend(legendWidth, legendHeight, numberOfDivisions, colorScale, domSelector) {
-        var numberOfTics = 10;
-        var arr = Array.apply(null, {length:numberOfDivisions + 1}).map(Number.call, Number);
-        var intervals = (legendHeight) / numberOfDivisions;
+    var createALegend = function (legendWidth, legendHeight, numberOfDivisions, colorScale, domSelector, minimumValue, maximumValue) {
+        var  numberOfTics = 10,
+             dynamicRange = maximumValue - minimumValue;
+
+        //
+        // First build the core the legend, which is used no matter what the dynamic range
+        //
 
         var rootLegendHolder = d3.select(domSelector).append("div")
                 .attr("id", "sunburstlegend")
                 .attr("class", "legendHolder")
-                .html('<br />Color assignment:<br /> x = active / <br />(active + inactive)')
+                .html('<br />Color assignment:<br /> x = active / <br />(active + inactive)');
 
         rootLegendHolder.append('hr')
                 .attr("width", '100%')
                 .attr("color", '#000');
 
-
-        var legendHolder = rootLegendHolder.append("svg")
-                .attr("width", legendWidth)
-                .attr("height", legendHeight + 10)
-                .attr("transform", "translate(" + legendWidth / 2 + "," + (legendHeight * 0.5 + 5) + ")");
-
-        var theLegend = legendHolder.selectAll('g')
-                .data(arr)
-                .enter()
-                .append('g')
-                .attr('class', 'legend');
+        //
+        // Define a few private methods that we will use later
+        //
+        var zeroDynamicRange = function (rootLegendHolder,maximumValue) {
+            rootLegendHolder.append('div')
+                    .attr('class', 'legendExplanation')
+                    .html('Dynamic range is 0.   All arcs had value <strong>'+maximumValue+'</strong> and the color scheme is therefore constant.');
+        }
 
 
-        theLegend.append('rect')
-                .attr('x', legendWidth - 80)
-                .attr('y', function (d, i) {
-                    return (i * intervals) + 6;
-                })
-                .attr('width', 10)
-                .attr('height', intervals)
-                .style('fill', function (d, i) {
-                    return colorScale(i / numberOfDivisions);//color(d.name);
-                });
+        var nonzeroDynamicRange = function (numberOfTics,rootLegendHolder,legendWidth,legendHeight,colorScale,numberOfDivisions) {
+            var arr = Array.apply(null, {length:numberOfDivisions + 1}).map(Number.call, Number),
+                    intervals = (legendHeight) / numberOfDivisions;
 
-        var textSpacing = (legendHeight) / (numberOfTics * 2);
-        theLegend.append('text')
-                .attr('x', legendWidth - 60)
-                .attr('y', function (d, i) {
-                    return (i * 2) + 11;
-                })
-                .text(function (d, i) {
-                    if ((i % textSpacing) === 0) {
-                        var valToWrite = (i / numberOfDivisions);
-                        return valToWrite.toString();
-                    }
-                    else
-                        return '';
-                });
+            var legendHolder = rootLegendHolder.append("svg")
+                    .attr("width", legendWidth)
+                    .attr("height", legendHeight + 10)
+                    .attr("transform", "translate(" + legendWidth / 2 + "," + (legendHeight * 0.5 + 5) + ")");
 
+            var theLegend = legendHolder.selectAll('g')
+                    .data(arr)
+                    .enter()
+                    .append('g')
+                    .attr('class', 'legend');
+            theLegend.append('rect')
+                    .attr('x', legendWidth - 80)
+                    .attr('y', function (d, i) {
+                        return (i * intervals) + 6;
+                    })
+                    .attr('width', 10)
+                    .attr('height', intervals)
+                    .style('fill', function (d, i) {
+                        return colorScale(i / numberOfDivisions);//color(d.name);
+                    });
+
+            var textSpacing = (legendHeight) / (numberOfTics * 2);
+            theLegend.append('text')
+                    .attr('x', legendWidth - 60)
+                    .attr('y', function (d, i) {
+                        return (i * 2) + 11;
+                    })
+                    .text(function (d, i) {
+                        if ((i % textSpacing) === 0) {
+                            var valToWrite = (i / numberOfDivisions);
+                            return valToWrite.toString();
+                        }
+                        else
+                            return '';
+                    });
+        }
+
+
+
+        // Finally build the rest of the legends depending on whether the dynamic range
+        //  is 0 or nonzero
+        if (dynamicRange === 0) {
+            zeroDynamicRange(rootLegendHolder,maximumValue);
+
+        } else {
+                nonzeroDynamicRange (numberOfTics,rootLegendHolder,legendWidth,legendHeight,colorScale,numberOfDivisions);
+
+        }
     }
 </script>
     <script>
@@ -263,7 +289,7 @@
                         return Math.max(0, y(d.y + d.dy));
                     });
 
-            // Method local to createASunburst
+            // Method local to createASunburst to keep track of our depth
             var createIdForNode = function (incomingName) {
                 var returnValue = 'null';
                 var preliminaryGeneratedId = String(incomingName).replace(/\s/g,'_');
@@ -275,30 +301,14 @@
                 return returnValue;
             }
 
-            var path = svg.datum($data[0]).selectAll("path")
-                    .data(partition.nodes)
-                    .enter().append("path")
-            //     .attr("display", function(d) { return (d.depth || d.name!='/') ? null : "none"; }) // hide inner ring
-                    .attr("d", arc)
-                    .attr("id", function (d) {
-                        return createIdForNode(d.name);
-                    })
-                    .classed('indicateZoomIn', function(d) { return (d.depth || d.name!='/');} )
-                    .classed('indicateNoZoomingPossible', function(d) { return (!(d.depth || d.name!='/'));} )
-                    .style("stroke", "#fff")
-                    .style("fill", function (d) {
-                        return colorManagementRoutines.colorArcFill(d);
-                    })
-                    .on("click", click)
-                    .on("mouseover", tooltipHandler.mouseOver)
-                    .on("mousemove", tooltipHandler.mouseMove)
-                    .on("mouseout",tooltipHandler.mouseOut );
-
-            var text = svg.datum($data[0]).selectAll("text").data(partition.nodes);
-
-            // Interpolate the scales!
-
-            function click(d) {
+             //
+            // Change the cursor to zoom-in or zoom-out or nothing, all depending on the current expansion
+            //  level of the sunburst.
+            //
+            var adjustSunburstCursor = function (d) {
+                //
+                // first deal with all non-root arcs
+                //
                 if ( !(d.parent  === undefined) &&
                      !(d.parent.name  === undefined) )  {
                     sunburstAnimation.zoomLevel(d.depth);
@@ -310,8 +320,8 @@
                     var previousCenterpiece = d3.select('.indicateZoomOut');
                     if (!(previousCenterpiece === undefined)){
                         previousCenterpiece.classed('indicateZoomIn', true)
-                                           .classed('indicateZoomOut', false)
-                                           .classed('indicateNoZoomingPossible', false);
+                                .classed('indicateZoomOut', false)
+                                .classed('indicateNoZoomingPossible', false);
                     }
                     var arcThatWasLastZoomed = d3.selectAll('.indicateNoZoomingPossible');
                     if (!(arcThatWasLastZoomed === undefined)){
@@ -327,8 +337,8 @@
                     var parentNode =  d3.select('#'+createIdForNode(parentName));
                     if (sunburstAnimation.zoomLevel()>0)   {
                         parentNode.classed('indicateZoomOut', true)
-                                  .classed('indicateZoomIn', false)
-                                  .classed('indicateNoZoomingPossible', false);
+                                .classed('indicateZoomIn', false)
+                                .classed('indicateNoZoomingPossible', false);
                     }
                     // Take the current arc ( the one that was clicked ) and
                     // turn off any mouse handling at all, since After clicking an arc
@@ -338,10 +348,12 @@
                             .classed('indicateZoomIn', false)
                             .classed('indicateNoZoomingPossible', true);
 
-                } else if ( !(d  === undefined) &&
-                            !(d.name  === undefined) ) {  // Root node clicked -- reset mouse ptr
+                }  // next deal with the root arc, in case the user clicked it.
+                else if ( !(d  === undefined) &&
+                        !(d.name  === undefined) ) {  // Root node clicked -- reset mouse ptr
                     sunburstAnimation.zoomLevel(d.depth);
                     var nodeName =  d.name;
+                    // whatever had no cursor needs to be turned on
                     var arcThatWasLastZoomed = d3.selectAll('.indicateNoZoomingPossible');
                     if (!(arcThatWasLastZoomed === undefined)){
                         arcThatWasLastZoomed.classed('indicateNoZoomingPossible', function(d){
@@ -351,11 +363,40 @@
                             return (!(d.name === "/"));
                         });
                     }
+                    // take the current arc and turn the cursor off
                     var currentNode =  d3.select('#'+createIdForNode(nodeName));
                     currentNode.classed('indicateZoomOut', false)
-                               .classed('indicateZoomIn', false)
-                               .classed('indicateNoZoomingPossible', true);
+                            .classed('indicateZoomIn', false)
+                            .classed('indicateNoZoomingPossible', true);
                 }
+            }
+
+
+            var path = svg.datum($data[0]).selectAll("path")
+                    .data(partition.nodes)
+                    .enter().append("path")
+                    .attr("d", arc)
+                    .attr("id", function (d) {
+                        return createIdForNode(d.name);
+                    })
+                    .classed('indicateZoomIn', function(d) { return (d.depth || d.name!='/');} )
+                    .classed('indicateNoZoomingPossible', function(d) { return (!(d.depth || d.name!='/'));} )
+                    .style("stroke", "#fff")
+                    .style("fill", function (d) {
+                        return colorManagementRoutines.colorArcFill(d);
+                    })
+                    .on("click", click)
+                    .on("mouseover", tooltipHandler.mouseOver)
+                    .on("mousemove", tooltipHandler.mouseMove)
+                    .on("mouseout",tooltipHandler.mouseOut );
+
+
+            var text = svg.datum($data[0]).selectAll("text").data(partition.nodes);
+
+
+            // Interpolate the scales!
+            function click(d) {
+                 adjustSunburstCursor(d);
                  path.transition()
                         .duration(duration)
                         .attrTween("d", sunburstAnimation.arcTween(d));
@@ -470,6 +511,17 @@
     font-weight: bold;
 }
 
+.legendExplanation {
+    font: 14px sans-serif;
+    font-weight: normal;
+    padding-top: 10px;
+    padding-bottom: 15px;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+
+
 .legendHolder {
     border: 3px solid black;
     font: 12px sans-serif;
@@ -547,51 +599,54 @@
     <script>
         //empty
 //        var $data = [{"name":"/", "ac":"0", "inac":"0", "size":1}]
-        /* monochrome
-var $data = [{"name":"/", "ac":"0", "inac":"0", "children": [
-    {"name":"enzyme modulator", "ac":"0", "inac":"19", "children": [
-        {"name":"G-protein", "ac":"0", "inac":"6", "children": [
-            {"name":"heterotrimeric G-protein", "ac":"0", "inac":"1", "size":1},
-            {"name":"small GTPase", "ac":"0", "inac":"2", "size":2}
-        ]},
-        {"name":"G-protein modulator", "ac":"0", "inac":"5", "size":5}
-    ]},
-    {"name":"signaling molecule", "ac":"0", "inac":"6", "size":6},
-    {"name":"receptor", "ac":"0", "inac":"7", "children": [
-        {"name":"G-protein coupled receptor", "ac":"0", "inac":"3", "size":3}
-    ]},
-    {"name":"extracellular matrix protein", "ac":"0", "inac":"2", "children": [
-        {"name":"extracellular matrix glycoprotein", "ac":"0", "inac":"1", "size":1}
-    ]},
-    {"name":"cell adhesion molecule", "ac":"0", "inac":"5", "children": [
-        {"name":"cadherin", "ac":"0", "inac":"1", "size":1}
-    ]},
-    {"name":"hydrolase", "ac":"0", "inac":"1", "size":1},
-    {"name":"nucleic acid binding", "ac":"0", "inac":"11", "children": [
-        {"name":"DNA binding protein", "ac":"0", "inac":"2", "size":2},
-        {"name":"nuclease", "ac":"0", "inac":"3", "children": [
-            {"name":"exodeoxyribonuclease", "ac":"0", "inac":"1", "size":1},
-            {"name":"endodeoxyribonuclease", "ac":"0", "inac":"1", "size":1}
-        ]},
-        {"name":"helicase", "ac":"0", "inac":"2", "children": [
-            {"name":"DNA helicase", "ac":"0", "inac":"1", "size":1}
-        ]},
-        {"name":"RNA binding protein", "ac":"0", "inac":"1", "size":1}
-    ]},
-    {"name":"transferase", "ac":"0", "inac":"7", "children": [
-        {"name":"kinase", "ac":"0", "inac":"5", "children": [
-            {"name":"carbohydrate kinase", "ac":"0", "inac":"1", "size":1},
-            {"name":"protein kinase", "ac":"0", "inac":"2", "children": [
-                {"name":"non-receptor serine/threonine protein kinase", "ac":"0", "inac":"1", "size":1}
-            ]}
-        ]}
-    ]},
-    {"name":"transporter", "ac":"0", "inac":"2", "children": [
-        {"name":"ion channel", "ac":"0", "inac":"1", "size":1}
-    ]},
-    {"name":"membrane traffic protein", "ac":"0", "inac":"1", "size":1},
-    {"name":"cell junction protein", "ac":"0", "inac":"1", "size":1}
-]}]         */
+//         monochrome
+
+//var $data = [{"name":"/", "ac":"0", "inac":"0", "children": [
+//    {"name":"enzyme modulator", "ac":"0", "inac":"19", "children": [
+//        {"name":"G-protein", "ac":"0", "inac":"6", "children": [
+//            {"name":"heterotrimeric G-protein", "ac":"0", "inac":"1", "size":1},
+//            {"name":"small GTPase", "ac":"0", "inac":"2", "size":2}
+//        ]},
+//        {"name":"G-protein modulator", "ac":"0", "inac":"5", "size":5}
+//    ]},
+//    {"name":"signaling molecule", "ac":"0", "inac":"6", "size":6},
+//    {"name":"receptor", "ac":"0", "inac":"7", "children": [
+//        {"name":"G-protein coupled receptor", "ac":"0", "inac":"3", "size":3}
+//    ]},
+//    {"name":"extracellular matrix protein", "ac":"0", "inac":"2", "children": [
+//        {"name":"extracellular matrix glycoprotein", "ac":"0", "inac":"1", "size":1}
+//    ]},
+//    {"name":"cell adhesion molecule", "ac":"0", "inac":"5", "children": [
+//        {"name":"cadherin", "ac":"0", "inac":"1", "size":1}
+//    ]},
+//    {"name":"hydrolase", "ac":"0", "inac":"1", "size":1},
+//    {"name":"nucleic acid binding", "ac":"0", "inac":"11", "children": [
+//        {"name":"DNA binding protein", "ac":"0", "inac":"2", "size":2},
+//        {"name":"nuclease", "ac":"0", "inac":"3", "children": [
+//            {"name":"exodeoxyribonuclease", "ac":"0", "inac":"1", "size":1},
+//            {"name":"endodeoxyribonuclease", "ac":"0", "inac":"1", "size":1}
+//        ]},
+//        {"name":"helicase", "ac":"0", "inac":"2", "children": [
+//            {"name":"DNA helicase", "ac":"0", "inac":"1", "size":1}
+//        ]},
+//        {"name":"RNA binding protein", "ac":"0", "inac":"1", "size":1}
+//    ]},
+//    {"name":"transferase", "ac":"0", "inac":"7", "children": [
+//        {"name":"kinase", "ac":"0", "inac":"5", "children": [
+//            {"name":"carbohydrate kinase", "ac":"0", "inac":"1", "size":1},
+//            {"name":"protein kinase", "ac":"0", "inac":"2", "children": [
+//                {"name":"non-receptor serine/threonine protein kinase", "ac":"0", "inac":"1", "size":1}
+//            ]}
+//        ]}
+//    ]},
+//    {"name":"transporter", "ac":"0", "inac":"2", "children": [
+//        {"name":"ion channel", "ac":"0", "inac":"1", "size":1}
+//    ]},
+//    {"name":"membrane traffic protein", "ac":"0", "inac":"1", "size":1},
+//    {"name":"cell junction protein", "ac":"0", "inac":"1", "size":1}
+//]}];
+
+
         var $data = [{"name":"/", "ac":"0", "inac":"0", "children": [
             {"name":"signaling molecule", "ac":"4", "inac":"5", "size":6},
             {"name":"nucleic acid binding", "ac":"5", "inac":"14", "children": [
@@ -654,7 +709,7 @@ var $data = [{"name":"/", "ac":"0", "inac":"0", "children": [
 
 
 
-        var minimumValue=0;
+        var minimumValue=0.5;
     var maximumValue=0.5;
 
     var continuousColorScale = d3.scale.linear()
@@ -696,7 +751,7 @@ var $data = [{"name":"/", "ac":"0", "inac":"0", "children": [
                 <div id="legendGoesHere"></div>
                 <script>
                     if ($data[0].children !== undefined) {
-                        createALegend(120, 200,100,continuousColorScale,'div#legendGoesHere');
+                        createALegend(120, 200,100,continuousColorScale,'div#legendGoesHere',minimumValue, maximumValue);
                     }
                 </script>
 
