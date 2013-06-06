@@ -311,53 +311,46 @@
 
 
     function addDcTable(crossFilterVariable, id, key) {
-        var dimensionVariable = crossFilterVariable.dimension(function (d) {
-            return d[key];
-        });
-        var dimensionVariableGroup = function (d) {
-            return "";
-        };
+        var dimensionVariable = crossFilterVariable.dimension(function (d) {return d[key]; }),
+            dimensionVariableGroup = function (d) {return "";};
 
         return dc.dataTable("#" + id)
                 .dimension(dimensionVariable)
                 .group(dimensionVariableGroup)
                 .size(20)
                 .columns([
-            function (d) {
-                return d.index;
-            },
-            function (d) {
-                return d.assayId;
-            },
-            function (d) {
-                return d.GO_biological_process_term;
-            },
-            function (d) {
-                return d.assay_format;
-            },
-            function (d) {
-                return d.assay_type;
-            }])
+                        function (d) {return d.index;},
+                        function (d) {return d.assayId;},
+                        function (d) {return d.GO_biological_process_term;},
+                        function (d) {return d.assay_format;},
+                        function (d) {return d.assay_type;}
+                  ])
                 .order(d3.ascending)
-                .sortBy(function (d) {
-                    return d.assayId;
-                });
+                .sortBy(function (d) {return d.assayId;});
     }
+
+
 
      function expandDataAreaForAllPieCharts (pieChartHolderElement)  {
          pieChartHolderElement.attr('height',diameter3);
      }
+
+
     function moveDataTableOutOfTheWay (dataTable, duration)  {
         dataTable.transition()
                 .duration(duration)
                 .style("top",diameter3+pieWidgetMargin+pieWidgetMargin+pieWidgetMargin+pieWidgetMargin +"px") ;
     }
+
+
     function shiftBackgroundWidgets ( domDescription, horizontalPosition)  {
         domDescription
                 .transition()
                 .duration(1500)
                 .style("left",horizontalPosition+"px");
     }
+
+
     function spotlightOneAndBackgroundThree (d,spotlight,background1,background2,background3,origButton,expandedPos)  {
         // first handle the spotlight element and then the three backup singers
         spotlight.classed('sizeMinor',false)
@@ -484,91 +477,89 @@
     //
     //   Get the data and make the plots using dc.js
     //
-    d3.json("http://localhost:8028/cow/veryCross/feedMeJson", function (incomingData) {
-        // create an empty list
-        var assays = [];
+    var generateLinkedPies = function () {
+        d3.json("http://localhost:8028/cow/veryCross/feedMeJson", function (incomingData) {
+            // create an empty list
+            var assays = [];
 
-        // Clean up the data.  De-dup, and assign
-        assays = readInData(incomingData);
-
-
-        // Create the crossfilter for the relevant dimensions and groups.
-        assay = crossfilter(assays);
-
-        allDataDcTable = addDcTable(assay, 'data-table', 'assayId');
-        biologicalProcessPieChart = addPieChart(assay, 'a0-chart', 'GO_biological_process_term', colors);
-        assayFormatPieChart = addPieChart(assay, 'a1-chart', 'assay_format', colors);
-        assayIdDimensionPieChart = addPieChart(assay, 'a2-chart', 'index', colors);
-        assayTypePieChart = addPieChart(assay, 'a3-chart', 'assay_type', colors);
-
-        dc.renderAll();
-
-//        var buttondata = [  {index:0,origCoords:{x:compressedPos[0].x,y:compressedPos[0].y},expCoords:{x:displaySize.width,y:displaySize.height}},
-//                            {index:1,origCoords:{x:compressedPos[1].x,y:compressedPos[1].y}},
-//                            {index:2,origCoords:{x:compressedPos[2].x,y:compressedPos[2].y}},
-//                            {index:3,origCoords:{x:compressedPos[3].x,y:compressedPos[3].y}}] ;
-          var buttondata = [  {    index  :  0,
-                                   orig   :  {     coords  :  {     x      :  compressedPos[0].x,
-                                                                    y      :  compressedPos[0].y },
-                                                   size    :  {     width  :  widgetWidthWithoutSpacing,
-                                                                    height :  widgetWidthWithTitle }
-                                   },
-                                   display:  {     coords  :  {     x      :  displayWidgetX ,
-                                                                    y      :  displayWidgetY },
-                                                   size    :  {     width  :  displayWidgetWidth,
-                                                                    height :  displayWidgetHeight }
-                                   }
-                              },
-                              {    index  :  1,
-                                   orig   :  {     coords   :  {     x      :  compressedPos[1].x,
-                                                                     y      :  compressedPos[1].y },
-                                                   size     :  {     width  :  widgetWidthWithoutSpacing,
-                                                                     height :  widgetWidthWithTitle }
-                                             },
-                                   display:  {     coords  :  {     x      :  displayWidgetX ,
-                                                                    y      :  displayWidgetY },
-                                                   size    :  {     width  :  displayWidgetWidth,
-                                                                    height :  displayWidgetHeight }
-                                   }
-                              },
-                              {    index  :  2,
-                                   orig   :  {     coords  :  {     x      :  compressedPos[2].x,
-                                                                    y      :  compressedPos[2].y },
-                                                   size    :  {     width  :  widgetWidthWithoutSpacing,
-                                                                    height :  widgetWidthWithTitle }
-                                             },
-                                   display:  {     coords  :  {     x      :  displayWidgetX ,
-                                                                    y      :  displayWidgetY },
-                                                   size    :  {     width  :  displayWidgetWidth,
-                                                                    height :  displayWidgetHeight }
-                                             }
-                              },
-                              {   index  :  3,
-                                  orig   :  {     coords  :  {     x      :  compressedPos[3].x,
-                                                                   y      :  compressedPos[3].y },
-                                                  size    :  {     width  :  widgetWidthWithoutSpacing,
-                                                                   height :  widgetWidthWithTitle }
-                                            },
-                                  display:  {     coords  :  {     x      :  displayWidgetX ,
-                                                                   y      :  displayWidgetY },
-                                                  size    :  {     width  :  displayWidgetWidth,
-                                                                   height :  displayWidgetHeight }
-                                            }
-                              }
-          ];
-
-        var placeButtonsHere =    d3.selectAll('.pieChartContainer')
-                                    .data(buttondata);
+            // Clean up the data.  De-dup, and assign
+            assays = readInData(incomingData);
 
 
-        placeButtonsHere.append("div")
-                .text(textForExpandingButton)
-                .attr('class', 'expander')
-                .attr('id', function(d){return 'expbutton'+ d.index;})
-                .on('click',clickMiddleOfPie);
+            // Create the crossfilter for the relevant dimensions and groups.
+            assay = crossfilter(assays);
+
+            allDataDcTable = addDcTable(assay, 'data-table', 'assayId');
+            biologicalProcessPieChart = addPieChart(assay, 'a0-chart', 'GO_biological_process_term', colors);
+            assayFormatPieChart = addPieChart(assay, 'a1-chart', 'assay_format', colors);
+            assayIdDimensionPieChart = addPieChart(assay, 'a2-chart', 'index', colors);
+            assayTypePieChart = addPieChart(assay, 'a3-chart', 'assay_type', colors);
+
+            dc.renderAll();
+
+              var buttondata = [  {    index  :  0,
+                                       orig   :  {     coords  :  {     x      :  compressedPos[0].x,
+                                                                        y      :  compressedPos[0].y },
+                                                       size    :  {     width  :  widgetWidthWithoutSpacing,
+                                                                        height :  widgetWidthWithTitle }
+                                       },
+                                       display:  {     coords  :  {     x      :  displayWidgetX ,
+                                                                        y      :  displayWidgetY },
+                                                       size    :  {     width  :  displayWidgetWidth,
+                                                                        height :  displayWidgetHeight }
+                                       }
+                                  },
+                                  {    index  :  1,
+                                       orig   :  {     coords   :  {     x      :  compressedPos[1].x,
+                                                                         y      :  compressedPos[1].y },
+                                                       size     :  {     width  :  widgetWidthWithoutSpacing,
+                                                                         height :  widgetWidthWithTitle }
+                                                 },
+                                       display:  {     coords  :  {     x      :  displayWidgetX ,
+                                                                        y      :  displayWidgetY },
+                                                       size    :  {     width  :  displayWidgetWidth,
+                                                                        height :  displayWidgetHeight }
+                                       }
+                                  },
+                                  {    index  :  2,
+                                       orig   :  {     coords  :  {     x      :  compressedPos[2].x,
+                                                                        y      :  compressedPos[2].y },
+                                                       size    :  {     width  :  widgetWidthWithoutSpacing,
+                                                                        height :  widgetWidthWithTitle }
+                                                 },
+                                       display:  {     coords  :  {     x      :  displayWidgetX ,
+                                                                        y      :  displayWidgetY },
+                                                       size    :  {     width  :  displayWidgetWidth,
+                                                                        height :  displayWidgetHeight }
+                                                 }
+                                  },
+                                  {   index  :  3,
+                                      orig   :  {     coords  :  {     x      :  compressedPos[3].x,
+                                                                       y      :  compressedPos[3].y },
+                                                      size    :  {     width  :  widgetWidthWithoutSpacing,
+                                                                       height :  widgetWidthWithTitle }
+                                                },
+                                      display:  {     coords  :  {     x      :  displayWidgetX ,
+                                                                       y      :  displayWidgetY },
+                                                      size    :  {     width  :  displayWidgetWidth,
+                                                                       height :  displayWidgetHeight }
+                                                }
+                                  }
+              ];
+
+            var placeButtonsHere =    d3.selectAll('.pieChartContainer')
+                                        .data(buttondata);
 
 
-    });
+            placeButtonsHere.append("div")
+                    .text(textForExpandingButton)
+                    .attr('class', 'expander')
+                    .attr('id', function(d){return 'expbutton'+ d.index;})
+                    .on('click',clickMiddleOfPie);
+
+
+        });
+    }();
 
 </script>
 
