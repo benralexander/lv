@@ -15,7 +15,6 @@
     <script src="../js/crossfilter.js"></script>
     <script src="../js/d3.js"></script>
     <script src="../js/dc.js"></script>
-%{--<script src="../js/graph.js"></script>--}%
    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
    <link rel="stylesheet" type="text/css" href="${resource(dir: 'css', file: 'dc.css')}" />
     <style>
@@ -48,26 +47,6 @@
         border-radius: 8px;
         -moz-border-radius: 8px;
         -webkit-border-radius: 8px;
-    }
-    .sizeMinor {
-        width: 260px;
-        height: 300px;
-    }
-    .posCompressed0{
-        left: 10px;
-        top: 10px;
-    }
-    .posCompressed1{
-        left: 280px;
-        top: 10px;
-    }
-    .posCompressed2{
-        left: 550px;
-        top: 10px;
-    }
-    .posCompressed3{
-        left: 820px;
-        top: 10px;
     }
     #widthTest{
         position: absolute;
@@ -578,7 +557,7 @@
 
     <div id = "pieCharts" class="pieCharts">
 
-        <div id = "a0"  class = "pieChartContainer posCompressed0 sizeMinor"  >
+        <div id = "a0"  class = "pieChartContainer" style="left: 10px; top: 10px;">
             <div id="a0-chart" class="pieChart">
                 <span class="graphTitle">Biological process</span>
                 <a class="reset" href="javascript:biologicalProcessPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -591,7 +570,7 @@
            %{--<span class="expander">Click to expand</span>--}%
         </div>
 
-        <div id = "a1"  class = "pieChartContainer posCompressed1 sizeMinor" >
+        <div id = "a1"  class = "pieChartContainer" style="left: 280px; top: 10px;">
             <div id="a1-chart" class="pieChart">
                 <span class="graphTitle">Assay format</span>
                 <a class="reset" href="javascript:assayFormatPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -603,7 +582,7 @@
             </div>
         </div>
 
-        <div id = "a2"  class = "pieChartContainer posCompressed2 sizeMinor" >
+        <div id = "a2"  class = "pieChartContainer" style="left: 550px; top: 10px;">
             <div id="a2-chart" class="pieChart">
                 <span class="graphTitle">Assay format</span>
                 <a class="reset" href="javascript:assayIdDimensionPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -615,7 +594,7 @@
             </div>
         </div>
 
-        <div id = "a3"  class = "pieChartContainer posCompressed3 sizeMinor">
+        <div id = "a3"  class = "pieChartContainer" style="left: 820px; top: 10px;">
             <div id="a3-chart" class="pieChart">
                 <span class="graphTitle">Assay type</span>
                 <a class="reset" href="javascript:assayTypePieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
