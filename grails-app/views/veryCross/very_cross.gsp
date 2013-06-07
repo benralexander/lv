@@ -197,88 +197,89 @@
                     {'x': (widgetWidth * 2) + (quarterWidgetWidth * 3), 'y': 10}
                 ],
 
-        // JavaScript constructor. This portion of the code allows us to keep track of which widgets are expanded
+
+        //-------widgetPosition------
+        // JavaScript module. This portion of the code allows us to keep track of which widgets are expanded
         // and which remain in their original positions. There are a functions that allow you to ask the constructor
         // about its status ( examples:  isAnyWidgetExpanded() returns a Boolean to tell you if anything's expanded,
         // while expandedWidget () returns a number to tell you which widget has been expanded.
-         WidgetPosition = function () {
+        //---------------------------
+                widgetPosition = (function () {
+                    // private property
                     var currentWidgetPosition = { 'up': [0, 1, 2, 3],
-                        'down': [] };
-                    this.isAnyWidgetExpanded = function () {   // returns a Boolean
-                        return currentWidgetPosition.down.length > 0;
-                    };
-                    this.expandedWidget = function () {   // returns a number
-                        if (currentWidgetPosition.down.length == 1) {
-                            return currentWidgetPosition.down[0];
-                        } else {
-                            return -1;
-                        }
-                    };
-                    this.unexpandedWidgets = function () {   // returns an array
-                        return currentWidgetPosition.up;
-                    };
+                                'down': [] },
+
+                            isAnyWidgetExpanded = function () {   // returns a Boolean
+                                return currentWidgetPosition.down.length > 0;
+                            },
+
+                            expandedWidget = function () {   // returns a number
+                                if (currentWidgetPosition.down.length == 1) {
+                                    return currentWidgetPosition.down[0];
+                                } else {
+                                    return -1;
+                                }
+                            },
+
+                            unexpandedWidgets = function () {   // returns an array
+                                return currentWidgetPosition.up;
+                            },
 
                     // the main action routine.
-                    this.expandThisWidget = function (widgetToBeExpanded) {  // number: 1 = success, 0 = failure
-                        var indexOfDesiredWidget = 0;
-                        // first make sure the incoming argument is inside the acceptable range
-                        if ((widgetToBeExpanded < 0) || (widgetToBeExpanded > 3)) {
-                            return -1;
-                        }
-                        // another way to go wrong is to try to expand a widget that isn't in the top row to begin with
-                        indexOfDesiredWidget = currentWidgetPosition.up.indexOf(widgetToBeExpanded);
-                        if (indexOfDesiredWidget == -1) {
-                            return indexOfDesiredWidget;
-                        }
-                        // you can also go wrong if there is already a widget expanded
-                        if (currentWidgetPosition.down.length != 0) {
-                            indexOfDesiredWidget = -1;
-                        }
+                            expandThisWidget = function (widgetToBeExpanded) {  // number: 1 = success, 0 = failure
+                                var indexOfDesiredWidget = 0;
+                                // first make sure the incoming argument is inside the acceptable range
+                                if ((widgetToBeExpanded < 0) || (widgetToBeExpanded > 3)) {
+                                    return -1;
+                                }
+                                // another way to go wrong is to try to expand a widget that isn't in the top row to begin with
+                                indexOfDesiredWidget = currentWidgetPosition.up.indexOf(widgetToBeExpanded);
+                                if (indexOfDesiredWidget == -1) {
+                                    return indexOfDesiredWidget;
+                                }
+                                // you can also go wrong if there is already a widget expanded
+                                if (currentWidgetPosition.down.length != 0) {
+                                    indexOfDesiredWidget = -1;
+                                }
 
-                        if (indexOfDesiredWidget > -1) {
-                            // everything looks good. Let's do what the caller has asked us to do.
-                            //First copy the widget to the down position
-                            currentWidgetPosition.down.push(currentWidgetPosition.up[indexOfDesiredWidget]);
-                            // Now remove it from the top row and collapse those around it
-                            currentWidgetPosition.up = currentWidgetPosition.up.slice(0, indexOfDesiredWidget).concat(
-                                    currentWidgetPosition.up.slice(indexOfDesiredWidget + 1, 4));
-                        }
-                        return indexOfDesiredWidget;
-                    };
+                                if (indexOfDesiredWidget > -1) {
+                                    // everything looks good. Let's do what the caller has asked us to do.
+                                    //First copy the widget to the down position
+                                    currentWidgetPosition.down.push(currentWidgetPosition.up[indexOfDesiredWidget]);
+                                    // Now remove it from the top row and collapse those around it
+                                    currentWidgetPosition.up = currentWidgetPosition.up.slice(0, indexOfDesiredWidget).concat(
+                                            currentWidgetPosition.up.slice(indexOfDesiredWidget + 1, 4));
+                                }
+                                return indexOfDesiredWidget;
+                            },
+
                     // the other action routine, though this one is much simpler since there's only one choice
-                    this.unexpandAllWidgets = function () {
-                        currentWidgetPosition.up.push(currentWidgetPosition.down.pop());
-                        currentWidgetPosition.up.sort(function (a, b) {
-                            return a - b;
-                        });
-                        currentWidgetPosition.down = [];
+                            unexpandAllWidgets = function () {
+                                currentWidgetPosition.up.push(currentWidgetPosition.down.pop());
+                                currentWidgetPosition.up.sort(function (a, b) {
+                                    return a - b;
+                                });
+                                currentWidgetPosition.down = [];
+                            };
+                    // end var
+
+                    // now present the public API
+                    return {
+                        unexpandAllWidgets: unexpandAllWidgets,
+                        expandThisWidget: expandThisWidget,
+                        unexpandedWidgets: unexpandedWidgets,
+                        expandedWidget: expandedWidget,
+                        isAnyWidgetExpanded: isAnyWidgetExpanded
                     };
-                },
-                widgetPosition = new WidgetPosition();
 
 
-        var readInData = function (incoming) {
+                }());
 
-            var processedAssays = {}; // Use for de-duplication
-            var developingAssayList = []; // This will be the return value
 
-            incoming.forEach(function (d, i) {
 
-                // de-duplication step
-                if (processedAssays[d.assayId] !== true) {
-                    processedAssays[d.assayId] = true;
 
-                    developingAssayList.push({
-                        index: i,
-                        assayId: d.assayId,
-                        GO_biological_process_term: d.data.GO_biological_process_term,
-                        assay_format: d.data.assay_format,
-                        assay_type: d.data.assay_type
-                    });
-                }
-            });
-            return  developingAssayList;
-                };
+
+
 
         function addPieChart(crossFilterVariable, id, key, colors, localPieChartWidth, localPieChartRadius, localInnerRadius) {
             var dimensionVariable = crossFilterVariable.dimension(function (d) {
@@ -379,7 +380,7 @@
                     .transition()
                     .delay(1000)
                     .duration(500)
-                    .style('opacity',1);
+                    .style('opacity', 1);
         }
 
         function resetOneAndResettleThree(d, spotlight, background1, background2, background3, origButton, expandedPos) {
@@ -404,7 +405,7 @@
                     .transition()
                     .delay(1000)
                     .duration(500)
-                    .style('opacity',1);
+                    .style('opacity', 1);
         }
 
         function expandGraphicsArea(graphicsTarget) {
@@ -460,48 +461,96 @@
         }
 
 
-        function clickMiddleOfPie(d, x) {
-            // we better decide whether where you want to expand or contract
-            var origButton = d3.select('#expbutton' + d.index)
-                    .style('opacity',0);
-
-            if (!widgetPosition.isAnyWidgetExpanded()) {
-                expandDataAreaForAllPieCharts(d3.select('.pieCharts'));
-                moveDataTableOutOfTheWay(d3.select('#data-table'), 500);
-                widgetPosition.expandThisWidget(d.index);
-                var expandedWidget = widgetPosition.expandedWidget();
-                var unexpandedWidget = widgetPosition.unexpandedWidgets();
-                spotlightOneAndBackgroundThree(d, d3.select('#a' + expandedWidget),
-                        d3.select('#a' + unexpandedWidget[0]),
-                        d3.select('#a' + unexpandedWidget[1]),
-                        d3.select('#a' + unexpandedWidget[2]),
-                        origButton,
-                        expandedPos);
-                expandGraphicsArea(d3.select('#a' + expandedWidget).select('.pieChart>svg'));
-            }
-
-            else if (widgetPosition.expandedWidget() == d.index) {
-                contractGraphicsArea(d3.select('#a' + x).select('.pieChart>svg'));
-                var expandedWidget = widgetPosition.expandedWidget();
-                var unexpandedWidget = widgetPosition.unexpandedWidgets();
-                resetOneAndResettleThree(d, d3.select('#a' + expandedWidget),
-                        d3.select('#a' + unexpandedWidget[0]),
-                        d3.select('#a' + unexpandedWidget[1]),
-                        d3.select('#a' + unexpandedWidget[2]),
-                        origButton,
-                        expandedPos);
-                widgetPosition.unexpandAllWidgets();
-            }
-
-        }
-
-
         //
-        //   Get the data and make the plots using dc.js
+        //   Get the data and make the plots using dc.js.  Use this as an opportunity to encapsulate any methods that are
+        //    used strictly locally
         //
-        var generateLinkedPies = function () {
-            d3.json("http://localhost:8028/cow/veryCross/feedMeJson", function (incomingData) {
+        var generateLinkedPies = (function () {
 
+            // Private method used to pull the data in from the remote site
+            var readInData = function (incoming) {
+
+                        var processedAssays = {}; // Use for de-duplication
+                        var developingAssayList = []; // This will be the return value
+
+                        incoming.forEach(function (d, i) {
+
+                            // de-duplication step
+                            if (processedAssays[d.assayId] !== true) {
+                                processedAssays[d.assayId] = true;
+
+                                developingAssayList.push({
+                                    index: i,
+                                    assayId: d.assayId,
+                                    GO_biological_process_term: d.data.GO_biological_process_term,
+                                    assay_format: d.data.assay_format,
+                                    assay_type: d.data.assay_type
+                                });
+                            }
+                        });
+                        return  developingAssayList;
+                    },
+
+
+            // Our main button handler callback
+                    handleExpandOrContractClick = function (d, x) {
+                        // we better decide whether where you want to expand or contract
+                        var origButton = d3.select('#expbutton' + d.index)
+                                .style('opacity', 0);
+
+                        if (!widgetPosition.isAnyWidgetExpanded()) {
+                            expandDataAreaForAllPieCharts(d3.select('.pieCharts'));
+                            moveDataTableOutOfTheWay(d3.select('#data-table'), 500);
+                            widgetPosition.expandThisWidget(d.index);
+                            var expandedWidget = widgetPosition.expandedWidget();
+                            var unexpandedWidget = widgetPosition.unexpandedWidgets();
+                            spotlightOneAndBackgroundThree(d, d3.select('#a' + expandedWidget),
+                                    d3.select('#a' + unexpandedWidget[0]),
+                                    d3.select('#a' + unexpandedWidget[1]),
+                                    d3.select('#a' + unexpandedWidget[2]),
+                                    origButton,
+                                    expandedPos);
+                            expandGraphicsArea(d3.select('#a' + expandedWidget).select('.pieChart>svg'));
+                        }
+
+                        else if (widgetPosition.expandedWidget() == d.index) {
+                            contractGraphicsArea(d3.select('#a' + x).select('.pieChart>svg'));
+                            var expandedWidget = widgetPosition.expandedWidget();
+                            var unexpandedWidget = widgetPosition.unexpandedWidgets();
+                            resetOneAndResettleThree(d, d3.select('#a' + expandedWidget),
+                                    d3.select('#a' + unexpandedWidget[0]),
+                                    d3.select('#a' + unexpandedWidget[1]),
+                                    d3.select('#a' + unexpandedWidget[2]),
+                                    origButton,
+                                    expandedPos);
+                            widgetPosition.unexpandAllWidgets();
+                        }
+
+                    },
+
+                    attachButtonsToThePieContainers = function (classOfPieContainers, callbackToExpandOrContractOnButtonClick, buttondata) {
+                        var placeButtonsHere = d3.selectAll(classOfPieContainers)
+                                .data(buttondata);
+
+                        placeButtonsHere.append("div")
+                                .text(textForExpandingButton)
+                                .attr('class', 'expander')
+                                .attr('id', function (d) {
+                                    return 'expbutton' + d.index;
+                                })
+                                .on('click', callbackToExpandOrContractOnButtonClick);
+
+                    };
+
+
+            //   A fairly high-level method, used to call the other calls that get everything launched.
+            prepareThePies = function () {
+
+                //
+                // the following data structure defines where everything sits on the page. It is attached
+                //  to the data, and so it gets passed around to various callbacks. If you want to adjust
+                // how this page looks, You'll probably need to change the values held below in  buttondata.
+                //
                 var buttondata = [
                     {    index: 0,
                         orig: {
@@ -577,39 +626,46 @@
                     }
                 ];
 
+                // Retrieve the data do whatever we want to do with it
+                d3.json("http://localhost:8028/cow/veryCross/feedMeJson", function (incomingData) {
 
-                // Clean up the data.  De-dup, and assign
-                // create an empty list
-                var assays = [];
-                assays = readInData(incomingData);
+                    // create an empty list, Just in case we get null data
+                    var assays = [];
 
+                    // Clean up the data.  De-dup, and assign
+                    assays = readInData(incomingData);
 
-                // Create the crossfilter for the relevant dimensions and groups.
-                assay = crossfilter(assays);
+                    // Create the crossfilter for the relevant dimensions and groups.
+                    assay = crossfilter(assays);
 
-                allDataDcTable = addDcTable(assay, 'data-table', 'assayId');
-                biologicalProcessPieChart = addPieChart(assay, 'a0-chart', 'GO_biological_process_term', colors, pieChartWidth, pieChartRadius, innerRadius);
-                assayFormatPieChart = addPieChart(assay, 'a1-chart', 'assay_format', colors, pieChartWidth, pieChartRadius, innerRadius);
-                assayIdDimensionPieChart = addPieChart(assay, 'a2-chart', 'index', colors, pieChartWidth, pieChartRadius, innerRadius);
-                assayTypePieChart = addPieChart(assay, 'a3-chart', 'assay_type', colors, pieChartWidth, pieChartRadius, innerRadius);
+                    // Build everything were going to display
+                    allDataDcTable = addDcTable(assay, 'data-table', 'assayId');
+                    biologicalProcessPieChart = addPieChart(assay, 'a0-chart', 'GO_biological_process_term', colors, pieChartWidth, pieChartRadius, innerRadius);
+                    assayFormatPieChart = addPieChart(assay, 'a1-chart', 'assay_format', colors, pieChartWidth, pieChartRadius, innerRadius);
+                    assayIdDimensionPieChart = addPieChart(assay, 'a2-chart', 'index', colors, pieChartWidth, pieChartRadius, innerRadius);
+                    assayTypePieChart = addPieChart(assay, 'a3-chart', 'assay_type', colors, pieChartWidth, pieChartRadius, innerRadius);
 
-                dc.renderAll();
+                    // We should be ready, display it
+                    dc.renderAll();
 
-
-                var placeButtonsHere = d3.selectAll('.pieChartContainer')
-                        .data(buttondata);
-
-                placeButtonsHere.append("div")
-                        .text(textForExpandingButton)
-                        .attr('class', 'expander')
-                        .attr('id', function (d) {
-                            return 'expbutton' + d.index;
-                        })
-                        .on('click', clickMiddleOfPie);
+                    // Finally, attach some data along with buttons and callbacks to the pie charts we've built
+                    attachButtonsToThePieContainers('.pieChartContainer', handleExpandOrContractClick, buttondata);
 
 
-            });
-        }();
+                });// d3.json
+            }; //prepareThePies
+            return {
+                prepareThePies: prepareThePies
+            }
+        }())//,
+
+
+        // **********************************************************
+        // The highest level call.  Everything starts from here.
+        // **********************************************************
+        generateLinkedPies.prepareThePies();
+
+
     }());
 
 </script>
