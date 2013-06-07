@@ -276,189 +276,200 @@
                 }());
 
 
+        var displayManipulator = (function () {
+
+            var addPieChart = function (crossFilterVariable, id, key, colors, localPieChartWidth, localPieChartRadius, localInnerRadius) {
+                        var dimensionVariable = crossFilterVariable.dimension(function (d) {
+                            return d[key];
+                        });
+                        var dimensionVariableGroup = dimensionVariable.group().reduceSum(function (d) {
+                            return 1;
+                        });
+
+                        return dc.pieChart("#" + id)
+                                .width(localPieChartWidth)
+                                .height(localPieChartWidth)
+                                .transitionDuration(200)
+                                .radius(localPieChartRadius)
+                                .innerRadius(localInnerRadius)
+                                .dimension(dimensionVariable)
+                                .group(dimensionVariableGroup)
+                                .colors(colors)
+                                .label(function (d) {
+                                    return d.data.key.toString() + ": " + d.data.value;
+                                });
+                    },
 
 
+                    addDcTable = function (crossFilterVariable, id, key) {
+                        var dimensionVariable = crossFilterVariable.dimension(function (d) {
+                                    return d[key];
+                                }),
+                                dimensionVariableGroup = function (d) {
+                                    return "";
+                                };
+
+                        return dc.dataTable("#" + id)
+                                .dimension(dimensionVariable)
+                                .group(dimensionVariableGroup)
+                                .size(20)
+                                .columns([
+                                    function (d) {
+                                        return d.index;
+                                    },
+                                    function (d) {
+                                        return d.assayId;
+                                    },
+                                    function (d) {
+                                        return d.GO_biological_process_term;
+                                    },
+                                    function (d) {
+                                        return d.assay_format;
+                                    },
+                                    function (d) {
+                                        return d.assay_type;
+                                    }
+                                ])
+                                .order(d3.ascending)
+                                .sortBy(function (d) {
+                                    return d.assayId;
+                                });
+                    },
 
 
-
-        function addPieChart(crossFilterVariable, id, key, colors, localPieChartWidth, localPieChartRadius, localInnerRadius) {
-            var dimensionVariable = crossFilterVariable.dimension(function (d) {
-                return d[key];
-            });
-            var dimensionVariableGroup = dimensionVariable.group().reduceSum(function (d) {
-                return 1;
-            });
-
-            return dc.pieChart("#" + id)
-                    .width(localPieChartWidth)
-                    .height(localPieChartWidth)
-                    .transitionDuration(200)
-                    .radius(localPieChartRadius)
-                    .innerRadius(localInnerRadius)
-                    .dimension(dimensionVariable)
-                    .group(dimensionVariableGroup)
-                    .colors(colors)
-                    .label(function (d) {
-                        return d.data.key.toString() + ": " + d.data.value;
-                    });
-        }
+                    expandDataAreaForAllPieCharts = function (pieChartHolderElement) {
+                        pieChartHolderElement.attr('height', displayWidgetY);
+                    },
 
 
-        function addDcTable(crossFilterVariable, id, key) {
-            var dimensionVariable = crossFilterVariable.dimension(function (d) {
-                        return d[key];
-                    }),
-                    dimensionVariableGroup = function (d) {
-                        return "";
+                    moveDataTableOutOfTheWay = function (dataTable, duration) {
+                        dataTable.transition()
+                                .duration(duration)
+                                .style("top", displayWidgetY + displayWidgetHeight + "px");
+                    },
+
+
+                    shiftBackgroundWidgets = function (domDescription, horizontalPosition) {
+                        domDescription
+                                .transition()
+                                .duration(1000)
+                                .style("left", horizontalPosition + "px");
+                    },
+
+
+                    spotlightOneAndBackgroundThree = function (d, spotlight, background1, background2, background3, origButton, expandedPos) {
+                        // first handle the spotlight element and then the three backup singers
+                        spotlight
+                                .style('padding-left', 10 + "px")
+                                .transition()
+                                .duration(200)
+                                .style("top", d.display.coords.y + "px")
+                                .transition()
+                                .duration(400)
+                                .style("left", d.display.coords.x + "px")
+                                .style('height', d.display.size.height + "px")
+                                .style('width', d.display.size.width + "px");
+                        shiftBackgroundWidgets(background1, expandedPos[0].x);
+                        shiftBackgroundWidgets(background2, expandedPos[1].x);
+                        shiftBackgroundWidgets(background3, expandedPos[2].x);
+                        origButton
+                                .text(textForContractingButton)
+                                .transition()
+                                .delay(1000)
+                                .duration(500)
+                                .style('opacity', 1);
+                    },
+
+                    resetOneAndResettleThree = function (d, spotlight, background1, background2, background3, origButton, expandedPos) {
+                        // first handle the spotlight element and then the three backup singers
+                        spotlight.transition()
+                                .duration(500)
+                                .style('height', d.orig.size.height + "px")
+                                .style('width', d.orig.size.width + "px")
+                                .style('padding-left', '5px')
+                                .transition()
+                                .duration(500)
+                                .style("left", d.orig.coords.x + "px")
+                                .transition()
+                                .duration(500)
+                                .style("top", d.orig.coords.y + "px");
+
+                        shiftBackgroundWidgets(background1, background1.data()[0].orig.coords.x);
+                        shiftBackgroundWidgets(background2, background2.data()[0].orig.coords.x);
+                        shiftBackgroundWidgets(background3, background3.data()[0].orig.coords.x);
+                        var x = origButton
+                                .text(textForExpandingButton)
+                                .transition()
+                                .delay(1000)
+                                .duration(500)
+                                .style('opacity', 1);
+                    },
+
+                    expandGraphicsArea = function (graphicsTarget) {
+
+                        var bigarc = d3.svg.arc()
+                                .innerRadius(innerRadius * 1.2)
+                                .outerRadius(bigPie);
+
+                        graphicsTarget
+                                .attr('width', (widgetWidth * 2) + quarterWidgetWidth)
+                                .attr('height', (widgetWidth * 2) + quarterWidgetWidth);
+
+                        graphicsTarget
+                                .select('g')
+                                .selectAll('text')
+                                .remove();
+
+                        graphicsTarget
+                                .selectAll('g')
+                                .select('path')
+                                .transition()
+                                .duration(1500)
+                                .attr("d", bigarc)
+                                .attr("transform", "translate(171,171)");
+
+                    },
+
+                    contractGraphicsArea = function (graphicsTarget) {
+
+                        var arc = d3.svg.arc()
+                                .innerRadius(innerRadius)
+                                .outerRadius(pieChartRadius);
+
+                        graphicsTarget
+                                .transition()
+                                .duration(1500)
+                                .attr('width', pieChartWidth)
+                                .attr('height', pieChartWidth);
+
+                        graphicsTarget
+                                .select('g')
+                                .selectAll('text')
+                                .remove();
+
+                        graphicsTarget
+                                .selectAll('g')
+                                .select('path')
+                                .transition()
+                                .duration(500)
+                                .attr("d", arc)
+                                .attr("transform", "translate(0,0)");
+
                     };
+            // end var
 
-            return dc.dataTable("#" + id)
-                    .dimension(dimensionVariable)
-                    .group(dimensionVariableGroup)
-                    .size(20)
-                    .columns([
-                        function (d) {
-                            return d.index;
-                        },
-                        function (d) {
-                            return d.assayId;
-                        },
-                        function (d) {
-                            return d.GO_biological_process_term;
-                        },
-                        function (d) {
-                            return d.assay_format;
-                        },
-                        function (d) {
-                            return d.assay_type;
-                        }
-                    ])
-                    .order(d3.ascending)
-                    .sortBy(function (d) {
-                        return d.assayId;
-                    });
-        }
-
-
-        function expandDataAreaForAllPieCharts(pieChartHolderElement) {
-            pieChartHolderElement.attr('height', displayWidgetY);
-        }
-
-
-        function moveDataTableOutOfTheWay(dataTable, duration) {
-            dataTable.transition()
-                    .duration(duration)
-                    .style("top", displayWidgetY + displayWidgetHeight + "px");
-        }
-
-
-        function shiftBackgroundWidgets(domDescription, horizontalPosition) {
-            domDescription
-                    .transition()
-                    .duration(1000)
-                    .style("left", horizontalPosition + "px");
-        }
-
-
-        function spotlightOneAndBackgroundThree(d, spotlight, background1, background2, background3, origButton, expandedPos) {
-            // first handle the spotlight element and then the three backup singers
-            spotlight
-                    .style('padding-left', 10 + "px")
-                    .transition()
-                    .duration(200)
-                    .style("top", d.display.coords.y + "px")
-                    .transition()
-                    .duration(400)
-                    .style("left", d.display.coords.x + "px")
-                    .style('height', d.display.size.height + "px")
-                    .style('width', d.display.size.width + "px");
-            shiftBackgroundWidgets(background1, expandedPos[0].x);
-            shiftBackgroundWidgets(background2, expandedPos[1].x);
-            shiftBackgroundWidgets(background3, expandedPos[2].x);
-            origButton
-                    .text(textForContractingButton)
-                    .transition()
-                    .delay(1000)
-                    .duration(500)
-                    .style('opacity', 1);
-        }
-
-        function resetOneAndResettleThree(d, spotlight, background1, background2, background3, origButton, expandedPos) {
-            // first handle the spotlight element and then the three backup singers
-            spotlight.transition()
-                    .duration(500)
-                    .style('height', d.orig.size.height + "px")
-                    .style('width', d.orig.size.width + "px")
-                    .style('padding-left', '5px')
-                    .transition()
-                    .duration(500)
-                    .style("left", d.orig.coords.x + "px")
-                    .transition()
-                    .duration(500)
-                    .style("top", d.orig.coords.y + "px");
-
-            shiftBackgroundWidgets(background1, background1.data()[0].orig.coords.x);
-            shiftBackgroundWidgets(background2, background2.data()[0].orig.coords.x);
-            shiftBackgroundWidgets(background3, background3.data()[0].orig.coords.x);
-            var x = origButton
-                    .text(textForExpandingButton)
-                    .transition()
-                    .delay(1000)
-                    .duration(500)
-                    .style('opacity', 1);
-        }
-
-        function expandGraphicsArea(graphicsTarget) {
-
-            var bigarc = d3.svg.arc()
-                    .innerRadius(innerRadius * 1.2)
-                    .outerRadius(bigPie);
-
-            graphicsTarget
-                    .attr('width', (widgetWidth * 2) + quarterWidgetWidth)
-                    .attr('height', (widgetWidth * 2) + quarterWidgetWidth);
-
-            graphicsTarget
-                    .select('g')
-                    .selectAll('text')
-                    .remove();
-
-            graphicsTarget
-                    .selectAll('g')
-                    .select('path')
-                    .transition()
-                    .duration(1500)
-                    .attr("d", bigarc)
-                    .attr("transform", "translate(171,171)");
-
-        }
-
-        function contractGraphicsArea(graphicsTarget) {
-
-            var arc = d3.svg.arc()
-                    .innerRadius(innerRadius)
-                    .outerRadius(pieChartRadius);
-
-            graphicsTarget
-                    .transition()
-                    .duration(1500)
-                    .attr('width', pieChartWidth)
-                    .attr('height', pieChartWidth);
-
-            graphicsTarget
-                    .select('g')
-                    .selectAll('text')
-                    .remove();
-
-            graphicsTarget
-                    .selectAll('g')
-                    .select('path')
-                    .transition()
-                    .duration(500)
-                    .attr("d", arc)
-                    .attr("transform", "translate(0,0)");
-
-        }
+            // Public API for this module
+            return {
+                contractGraphicsArea:contractGraphicsArea,
+                expandGraphicsArea:expandGraphicsArea,
+                resetOneAndResettleThree:resetOneAndResettleThree,
+                spotlightOneAndBackgroundThree:spotlightOneAndBackgroundThree,
+                expandDataAreaForAllPieCharts:expandDataAreaForAllPieCharts,
+                moveDataTableOutOfTheWay:moveDataTableOutOfTheWay,
+                addDcTable:addDcTable,
+                addPieChart:addPieChart
+            };
+        }() );
 
 
         //
@@ -499,25 +510,25 @@
                                 .style('opacity', 0);
 
                         if (!widgetPosition.isAnyWidgetExpanded()) {
-                            expandDataAreaForAllPieCharts(d3.select('.pieCharts'));
-                            moveDataTableOutOfTheWay(d3.select('#data-table'), 500);
+                            displayManipulator.expandDataAreaForAllPieCharts(d3.select('.pieCharts'));
+                            displayManipulator.moveDataTableOutOfTheWay(d3.select('#data-table'), 500);
                             widgetPosition.expandThisWidget(d.index);
                             var expandedWidget = widgetPosition.expandedWidget();
                             var unexpandedWidget = widgetPosition.unexpandedWidgets();
-                            spotlightOneAndBackgroundThree(d, d3.select('#a' + expandedWidget),
+                            displayManipulator.spotlightOneAndBackgroundThree(d, d3.select('#a' + expandedWidget),
                                     d3.select('#a' + unexpandedWidget[0]),
                                     d3.select('#a' + unexpandedWidget[1]),
                                     d3.select('#a' + unexpandedWidget[2]),
                                     origButton,
                                     expandedPos);
-                            expandGraphicsArea(d3.select('#a' + expandedWidget).select('.pieChart>svg'));
+                            displayManipulator.expandGraphicsArea(d3.select('#a' + expandedWidget).select('.pieChart>svg'));
                         }
 
                         else if (widgetPosition.expandedWidget() == d.index) {
-                            contractGraphicsArea(d3.select('#a' + x).select('.pieChart>svg'));
+                            displayManipulator.contractGraphicsArea(d3.select('#a' + x).select('.pieChart>svg'));
                             var expandedWidget = widgetPosition.expandedWidget();
                             var unexpandedWidget = widgetPosition.unexpandedWidgets();
-                            resetOneAndResettleThree(d, d3.select('#a' + expandedWidget),
+                            displayManipulator.resetOneAndResettleThree(d, d3.select('#a' + expandedWidget),
                                     d3.select('#a' + unexpandedWidget[0]),
                                     d3.select('#a' + unexpandedWidget[1]),
                                     d3.select('#a' + unexpandedWidget[2]),
@@ -639,11 +650,11 @@
                     assay = crossfilter(assays);
 
                     // Build everything were going to display
-                    allDataDcTable = addDcTable(assay, 'data-table', 'assayId');
-                    biologicalProcessPieChart = addPieChart(assay, 'a0-chart', 'GO_biological_process_term', colors, pieChartWidth, pieChartRadius, innerRadius);
-                    assayFormatPieChart = addPieChart(assay, 'a1-chart', 'assay_format', colors, pieChartWidth, pieChartRadius, innerRadius);
-                    assayIdDimensionPieChart = addPieChart(assay, 'a2-chart', 'index', colors, pieChartWidth, pieChartRadius, innerRadius);
-                    assayTypePieChart = addPieChart(assay, 'a3-chart', 'assay_type', colors, pieChartWidth, pieChartRadius, innerRadius);
+                    allDataDcTable = displayManipulator.addDcTable(assay, 'data-table', 'assayId');
+                    biologicalProcessPieChart = displayManipulator.addPieChart(assay, 'a0-chart', 'GO_biological_process_term', colors, pieChartWidth, pieChartRadius, innerRadius);
+                    assayFormatPieChart = displayManipulator.addPieChart(assay, 'a1-chart', 'assay_format', colors, pieChartWidth, pieChartRadius, innerRadius);
+                    assayIdDimensionPieChart = displayManipulator.addPieChart(assay, 'a2-chart', 'index', colors, pieChartWidth, pieChartRadius, innerRadius);
+                    assayTypePieChart = displayManipulator.addPieChart(assay, 'a3-chart', 'assay_type', colors, pieChartWidth, pieChartRadius, innerRadius);
 
                     // We should be ready, display it
                     dc.renderAll();
