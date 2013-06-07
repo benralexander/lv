@@ -23,7 +23,7 @@
     }
 
     .pieChart{
-        display:inline-block;
+        /*display:inline-block;*/
     }
      .legendLine{
         line-height: 250%;
@@ -529,7 +529,6 @@
             var placeButtonsHere =    d3.selectAll('.pieChartContainer')
                                         .data(buttondata);
 
-
             placeButtonsHere.append("div")
                     .text(textForExpandingButton)
                     .attr('class', 'expander')
@@ -557,7 +556,7 @@
 
     <div id = "pieCharts" class="pieCharts">
 
-        <div id = "a0"  class = "pieChartContainer" style="left: 10px; top: 10px;">
+        <div id = "a0"  class = "pieChartContainer" style="left: 10px; top: 10px; width: 260px;">
             <div id="a0-chart" class="pieChart">
                 <span class="graphTitle">Biological process</span>
                 <a class="reset" href="javascript:biologicalProcessPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -565,12 +564,9 @@
                 <div class = "clearfix"></div>
             </div>
 
-            <div class = "colorBlockDiv" class="graphTitle" id="a0.chartBlocks">
-            </div>
-           %{--<span class="expander">Click to expand</span>--}%
         </div>
 
-        <div id = "a1"  class = "pieChartContainer" style="left: 280px; top: 10px;">
+        <div id = "a1"  class = "pieChartContainer" style="left: 280px; top: 10px; width: 260px;">
             <div id="a1-chart" class="pieChart">
                 <span class="graphTitle">Assay format</span>
                 <a class="reset" href="javascript:assayFormatPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -578,11 +574,9 @@
                 <div class = "clearfix"></div>
             </div>
 
-            <div class = "colorBlockDiv" class="graphTitle" id="assayFormatPieBlocks">
-            </div>
         </div>
 
-        <div id = "a2"  class = "pieChartContainer" style="left: 550px; top: 10px;">
+        <div id = "a2"  class = "pieChartContainer" style="left: 550px; top: 10px;  width: 260px;">
             <div id="a2-chart" class="pieChart">
                 <span class="graphTitle">Assay format</span>
                 <a class="reset" href="javascript:assayIdDimensionPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -590,11 +584,9 @@
                 <div class = "clearfix"></div>
             </div>
 
-            <div class = "colorBlockDiv" class="graphTitle" id="assayIDPieBlocks">
-            </div>
         </div>
 
-        <div id = "a3"  class = "pieChartContainer" style="left: 820px; top: 10px;">
+        <div id = "a3"  class = "pieChartContainer" style="left: 820px; top: 10px; width: 260px;">
             <div id="a3-chart" class="pieChart">
                 <span class="graphTitle">Assay type</span>
                 <a class="reset" href="javascript:assayTypePieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -602,8 +594,6 @@
                 <div class = "clearfix"></div>
             </div>
 
-            <div class = "colorBlockDiv" class="graphTitle" id="assayTypePieBlocks">
-            </div>
         </div>
 
     </div>
