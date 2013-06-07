@@ -114,7 +114,8 @@
         width: 100px;
         font-size: 10px;
         font-weight: bold;
-        padding: 3px 0;
+        padding-right: 0px;
+        padding-bottom: 1px;
         text-align: center;
         display: block;
         border-radius: 4px;
@@ -133,38 +134,57 @@
     <link rel="stylesheet" type="text/css" href="${resource(dir: 'css', file: 'style.css')}" />
 
 <script>
-    var grandWidth = 1052;
-    var totalWidgetNumber = 4;
-    var widgetHeight =  270;
-    var widgetSpacing = 7;
-    var margin = {top: 30, right: 20, bottom: 30, left: 10},
-            width = grandWidth - margin.left - margin.right,
-            height = widgetHeight - margin.top - margin.bottom;
-    var widgetWidth =  grandWidth / totalWidgetNumber,
-            quarterWidgetWidth =  widgetWidth/4;
-    var widgetWidthWithoutSpacing = 260;
-    var widgetWidthWithTitle = 300;
-    var pieChartWidth =  widgetWidth-13,
-        pieChartRadius = pieChartWidth/2;
-    var displayWidgetX = 260,
-        displayWidgetY = 320,
-        displayWidgetWidth = 600,
-        displayWidgetHeight = 660    ;
-    var pieWidth = widgetWidth;
-    var data,
-            innerRadius = 30,
-            bigPie = widgetWidth+(quarterWidgetWidth/2),
-            colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', "#8c564b", "#e377c2", "#7f7f7f",
+
+    //
+    //  Variables to describe the layout of the whole page, with special attention
+    //   to the unexpended widgets
+    //
+    var grandWidth = 1052,// width of the entire display
+     totalWidgetNumber = 4, // how many widgets are we dealing with
+     widgetHeight =  270, // how tall is each individual widget
+     widgetSpacing = 7, // how much vertical space between widgets
+     margin = {top: 30, right: 20, bottom: 30, left: 10},  // boundaries of displayable area
+            width = grandWidth - margin.left - margin.right, // displayable width
+            height = widgetHeight - margin.top - margin.bottom, // displayable height
+     widgetWidth =  grandWidth / totalWidgetNumber,   // each individual widget width
+            quarterWidgetWidth =  widgetWidth/ 4,   // useful spacer
+     allowThisMuchExtraSpaceInWidgetForATitle = 30, // the title in your widget
+     widgetWidthWithoutSpacing = widgetWidth - (widgetSpacing *0.5),
+     widgetHeightWithTitle = widgetHeight+allowThisMuchExtraSpaceInWidgetForATitle, // final widget width
+
+    // We have to explicitly pass in the size of the pie charts, so describe those here
+     pieChartWidth =  widgetWidth-13,  // how wide is the pie chart
+     pieChartRadius = pieChartWidth/ 2, // pie chart reuse
+     innerRadius = 30, // open circle in pie
+
+    // The expanded widgets are described below. These numbers can't be derived from anything else, because you could
+    //  in principle put this display anywhere.
+     displayWidgetX = 260,// expanded widget X location.
+     displayWidgetY = 320, // expanded widget Y location.
+     displayWidgetWidth = 600, // expanded widget Y width.
+     displayWidgetHeight = 660 // expanded widget Y height.
+     bigPie = widgetWidth+(quarterWidgetWidth/2), // size of pie in display mode
+
+     colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', "#8c564b", "#e377c2", "#7f7f7f",// colors for our pie slices
                 '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', "#8c564b", "#e377c2", "#7f7f7f",
                 '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', "#8c564b", "#e377c2", "#7f7f7f"],
-            assay = {},
-            piename=['a0','a1','a2','a3'],
-            pieWidgetMargin=20,
-            diameter=260,
-            diameter2=pieWidgetMargin +diameter+pieWidgetMargin +pieWidgetMargin +diameter+pieWidgetMargin,
-            diameter3=diameter2+pieWidgetMargin +diameter+pieWidgetMargin,
-            textForExpandingButton = 'click to expand',
-            textForContractingButton = 'click to contract';
+
+     // below are some names and text strings
+     piename=['a0','a1','a2','a3'], // internal names for the widgets
+     textForExpandingButton = 'click to expand', // text on button to expand to full display
+     textForContractingButton = 'click to contract'; //text on button to contract unexpended widget
+
+     //  This next set of variables are only for convenience.  They are derived strictly from those above,
+     //   and they are consumed below in preference to those above.  The idea was to conceptually simplify
+     //   some of the variables above and to those that describe either compressed or uncompressed widgets.
+     compressedPos = [  {'x':margin.left+((widgetWidth+widgetSpacing)*0),  'y':10},
+                           {'x':margin.left+((widgetWidth+widgetSpacing)*1), 'y':10},
+                           {'x':margin.left+((widgetWidth+widgetSpacing)*2), 'y':10},
+                           {'x':margin.left+((widgetWidth+widgetSpacing)*3), 'y':10} ],
+     expandedPos = [  {'x':(widgetWidth*0)+(quarterWidgetWidth*1),  'y':10},
+                         {'x':(widgetWidth*1)+(quarterWidgetWidth*2), 'y':10},
+                         {'x':(widgetWidth*2)+(quarterWidgetWidth*3), 'y':10} ],
+     displaySize =  {'width':displayWidgetWidth,  'height':displayWidgetHeight};
 
 
     var bigarc = d3.svg.arc()
@@ -174,16 +194,6 @@
             .innerRadius(innerRadius)
             .outerRadius(pieChartRadius);
 
-    var compressedPos = [  {'x':margin.left+((widgetWidth+widgetSpacing)*0),  'y':10},
-                           {'x':margin.left+((widgetWidth+widgetSpacing)*1), 'y':10},
-                           {'x':margin.left+((widgetWidth+widgetSpacing)*2), 'y':10},
-                           {'x':margin.left+((widgetWidth+widgetSpacing)*3), 'y':10} ];
-    var expandedPos = [  {'x':(widgetWidth*0)+(quarterWidgetWidth*1),  'y':10},
-                         {'x':(widgetWidth*1)+(quarterWidgetWidth*2), 'y':10},
-                         {'x':(widgetWidth*2)+(quarterWidgetWidth*3), 'y':10} ];
-    var displaySize =  {'width':620,  'height':660};
-
-    var centerstagePos = {'x':742, 'y':10};
 
     var widgetPosition  = new WidgetPosition ();
 
@@ -266,7 +276,7 @@
         return  developingAssayList;
     }
 
-    function addPieChart(crossFilterVariable, id, key, colors) {
+    function addPieChart(crossFilterVariable, id, key, colors, localPieChartWidth, localPieChartRadius, localInnerRadius) {
         var dimensionVariable = crossFilterVariable.dimension(function (d) {
             return d[key];
         });
@@ -275,11 +285,11 @@
         });
 
         return dc.pieChart("#" + id)
-                .width(pieChartWidth)
-                .height(pieChartWidth)
+                .width(localPieChartWidth)
+                .height(localPieChartWidth)
                 .transitionDuration(200)
-                .radius(pieChartRadius)
-                .innerRadius(innerRadius)
+                .radius(localPieChartRadius)
+                .innerRadius(localInnerRadius)
                 .dimension(dimensionVariable)
                 .group(dimensionVariableGroup)
                 .colors(colors)
@@ -311,14 +321,14 @@
 
 
      function expandDataAreaForAllPieCharts (pieChartHolderElement)  {
-         pieChartHolderElement.attr('height',diameter3);
+         pieChartHolderElement.attr('height',displayWidgetY);
      }
 
 
     function moveDataTableOutOfTheWay (dataTable, duration)  {
         dataTable.transition()
                 .duration(duration)
-                .style("top",diameter3+pieWidgetMargin+pieWidgetMargin+pieWidgetMargin+pieWidgetMargin +"px") ;
+                .style("top",displayWidgetY +displayWidgetHeight +"px") ;
     }
 
 
@@ -332,22 +342,16 @@
 
     function spotlightOneAndBackgroundThree (d,spotlight,background1,background2,background3,origButton,expandedPos)  {
         // first handle the spotlight element and then the three backup singers
-        spotlight.classed('sizeMinor',false)
-                .style('padding-left',pieWidgetMargin+"px")
-                .transition()
-                .duration(1000)
-                .style("top",""+(diameter+pieWidgetMargin+pieWidgetMargin+pieWidgetMargin)+"px")
-                .transition()
-                .duration(1000)
-                .style("left",diameter+"px")
+        spotlight
+                .style('padding-left',10+"px")
                 .transition()
                 .duration(500)
-                .style('height',diameter2+pieWidgetMargin+pieWidgetMargin+pieWidgetMargin+"px")
+                .style("top",d.display.coords.y+"px")
                 .transition()
-                .duration(1000)
-                .style('width',pieWidgetMargin+diameter2+"px")
-                .transition()
-                .duration(1000);
+                .duration(500)
+                .style("left", d.display.coords.x+"px")
+                .style('height',d.display.size.height+"px")
+                .style('width',d.display.size.width+"px");
         shiftBackgroundWidgets (background1,expandedPos[0].x);
         shiftBackgroundWidgets (background2,expandedPos[1].x);
         shiftBackgroundWidgets (background3,expandedPos[2].x);
@@ -358,16 +362,16 @@
         // first handle the spotlight element and then the three backup singers
         spotlight.transition()
                 .duration(500)
-                .style('height',spotlight.data()[0].orig.size.height+"px")
-                .style('width',spotlight.data()[0].orig.size.width+"px")
-                .style('padding-left',"0px")
+    .style('height',d.orig.size.height+"px")
+                .style('width',d.orig.size.width+"px")
+                .style('padding-left','0px')
                 .transition()
                 .duration(500)
-                .style("left",spotlight.data()[0].orig.coords.x+"px")
+                .style("left",d.orig.coords.x+"px")
                 .transition()
                 .duration(500)
-                .style("top",spotlight.data()[0].orig.coords.y+"px")
-;
+                .style("top",d.orig.coords.y+"px");
+
         shiftBackgroundWidgets (background1,background1.data()[0].orig.coords.x);
         shiftBackgroundWidgets (background2,background2.data()[0].orig.coords.x);
         shiftBackgroundWidgets (background3,background3.data()[0].orig.coords.x);
@@ -458,10 +462,86 @@
     //
     var generateLinkedPies = function () {
         d3.json("http://localhost:8028/cow/veryCross/feedMeJson", function (incomingData) {
-            // create an empty list
-            var assays = [];
+
+            var buttondata = [
+                {    index: 0,
+                    orig: {
+                        coords: {
+                            x: compressedPos[0].x,
+                            y: compressedPos[0].y },
+                        size: {
+                            width: widgetWidthWithoutSpacing,
+                            height: widgetHeightWithTitle }
+                    },
+                    display: {
+                        coords: {
+                            x: displayWidgetX,
+                            y: displayWidgetY },
+                        size: {
+                            width: displayWidgetWidth,
+                            height: displayWidgetHeight }
+                    }
+                },
+                {    index: 1,
+                    orig: {
+                        coords: {
+                            x: compressedPos[1].x,
+                            y: compressedPos[1].y },
+                        size: {
+                            width: widgetWidthWithoutSpacing,
+                            height: widgetHeightWithTitle }
+                    },
+                    display: {
+                        coords: {
+                            x: displayWidgetX,
+                            y: displayWidgetY },
+                        size: {
+                            width: displayWidgetWidth,
+                            height: displayWidgetHeight }
+                    }
+                },
+                {    index: 2,
+                    orig: {
+                        coords: {
+                            x: compressedPos[2].x,
+                            y: compressedPos[2].y },
+                        size: {
+                            width: widgetWidthWithoutSpacing,
+                            height: widgetHeightWithTitle }
+                    },
+                    display: {
+                        coords: {
+                            x: displayWidgetX,
+                            y: displayWidgetY },
+                        size: {
+                            width: displayWidgetWidth,
+                            height: displayWidgetHeight }
+                    }
+                },
+                {   index: 3,
+                    orig: {
+                        coords: {
+                            x: compressedPos[3].x,
+                            y: compressedPos[3].y },
+                        size: {
+                            width: widgetWidthWithoutSpacing,
+                            height: widgetHeightWithTitle }
+                    },
+                    display: {
+                        coords: {
+                            x: displayWidgetX,
+                            y: displayWidgetY },
+                        size: {
+                            width: displayWidgetWidth,
+                            height: displayWidgetHeight }
+                    }
+                }
+            ];
+
 
             // Clean up the data.  De-dup, and assign
+            // create an empty list
+            var assays = [];
             assays = readInData(incomingData);
 
 
@@ -469,62 +549,13 @@
             assay = crossfilter(assays);
 
             allDataDcTable = addDcTable(assay, 'data-table', 'assayId');
-            biologicalProcessPieChart = addPieChart(assay, 'a0-chart', 'GO_biological_process_term', colors);
-            assayFormatPieChart = addPieChart(assay, 'a1-chart', 'assay_format', colors);
-            assayIdDimensionPieChart = addPieChart(assay, 'a2-chart', 'index', colors);
-            assayTypePieChart = addPieChart(assay, 'a3-chart', 'assay_type', colors);
+            biologicalProcessPieChart = addPieChart(assay, 'a0-chart', 'GO_biological_process_term', colors, pieChartWidth, pieChartRadius, innerRadius);
+            assayFormatPieChart = addPieChart(assay, 'a1-chart', 'assay_format', colors, pieChartWidth, pieChartRadius, innerRadius);
+            assayIdDimensionPieChart = addPieChart(assay, 'a2-chart', 'index', colors, pieChartWidth, pieChartRadius, innerRadius);
+            assayTypePieChart = addPieChart(assay, 'a3-chart', 'assay_type', colors, pieChartWidth, pieChartRadius, innerRadius);
 
             dc.renderAll();
 
-              var buttondata = [  {    index  :  0,
-                                       orig   :  {     coords  :  {     x      :  compressedPos[0].x,
-                                                                        y      :  compressedPos[0].y },
-                                                       size    :  {     width  :  widgetWidthWithoutSpacing,
-                                                                        height :  widgetWidthWithTitle }
-                                       },
-                                       display:  {     coords  :  {     x      :  displayWidgetX ,
-                                                                        y      :  displayWidgetY },
-                                                       size    :  {     width  :  displayWidgetWidth,
-                                                                        height :  displayWidgetHeight }
-                                       }
-                                  },
-                                  {    index  :  1,
-                                       orig   :  {     coords   :  {     x      :  compressedPos[1].x,
-                                                                         y      :  compressedPos[1].y },
-                                                       size     :  {     width  :  widgetWidthWithoutSpacing,
-                                                                         height :  widgetWidthWithTitle }
-                                                 },
-                                       display:  {     coords  :  {     x      :  displayWidgetX ,
-                                                                        y      :  displayWidgetY },
-                                                       size    :  {     width  :  displayWidgetWidth,
-                                                                        height :  displayWidgetHeight }
-                                       }
-                                  },
-                                  {    index  :  2,
-                                       orig   :  {     coords  :  {     x      :  compressedPos[2].x,
-                                                                        y      :  compressedPos[2].y },
-                                                       size    :  {     width  :  widgetWidthWithoutSpacing,
-                                                                        height :  widgetWidthWithTitle }
-                                                 },
-                                       display:  {     coords  :  {     x      :  displayWidgetX ,
-                                                                        y      :  displayWidgetY },
-                                                       size    :  {     width  :  displayWidgetWidth,
-                                                                        height :  displayWidgetHeight }
-                                                 }
-                                  },
-                                  {   index  :  3,
-                                      orig   :  {     coords  :  {     x      :  compressedPos[3].x,
-                                                                       y      :  compressedPos[3].y },
-                                                      size    :  {     width  :  widgetWidthWithoutSpacing,
-                                                                       height :  widgetWidthWithTitle }
-                                                },
-                                      display:  {     coords  :  {     x      :  displayWidgetX ,
-                                                                       y      :  displayWidgetY },
-                                                      size    :  {     width  :  displayWidgetWidth,
-                                                                       height :  displayWidgetHeight }
-                                                }
-                                  }
-              ];
 
             var placeButtonsHere =    d3.selectAll('.pieChartContainer')
                                         .data(buttondata);
