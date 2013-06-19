@@ -681,9 +681,6 @@
 
 </script>
 
-<style>
-    @import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700);
-    </style>
 </head>
 <body>
 <div id = "graphs">
