@@ -1,7 +1,7 @@
 Testsuite: cow.LinkedVisHierDataUnitSpec
-Tests run: 1, Failures: 0, Errors: 0, Time elapsed: 0.079 sec
+Tests run: 1, Failures: 0, Errors: 0, Time elapsed: 87.223 sec
 ------------- Standard Error -----------------
 --Output from bloog--
 ------------- ---------------- ---------------
 
-Testcase: bloog took 0.05 sec
+Testcase: bloog took 87.188 sec

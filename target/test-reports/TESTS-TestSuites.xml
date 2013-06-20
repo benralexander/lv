@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <testsuites>
-  <testsuite errors="0" failures="0" hostname="GPA84-952" id="0" name="LinkedVisHierDataUnitSpec" package="cow" tests="1" time="0.079" timestamp="2013-06-20T15:26:34">
+  <testsuite errors="0" failures="0" hostname="GPA84-952" id="0" name="LinkedVisHierDataUnitSpec" package="cow" tests="1" time="87.223" timestamp="2013-06-20T17:47:46">
       <properties />
 
-      <testcase classname="cow.LinkedVisHierDataUnitSpec" name="bloog" time="0.05" />
+      <testcase classname="cow.LinkedVisHierDataUnitSpec" name="bloog" time="87.188" />
 
       <system-out><![CDATA[]]></system-out>
 

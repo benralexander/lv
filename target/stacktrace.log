@@ -349,3 +349,864 @@ junit.framework.AssertionFailedError: Condition not satisfied:
                                             Catego(-)y
 
 	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:27)
+2013-06-20 13:27:40,899 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.converters.exceptions.ConverterException: Error parsing JSON
+	at grails.converters.JSON.parse(JSON.java:290)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+Caused by: org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 26 of [
+{     CatIdx : 0
+      CatName : Biological process
+      CatDescr : GO Biological process
+      CatIdent : GO_biological_process_term
+},
+{     CatIdx : 1
+      CatName : Assay format
+      CatDescr : Bard assay format
+      CatIdent : assay_format
+},
+{     CatIdx : 2
+      CatName : Protein target
+      CatDescr : Panther protein target
+      CatIdent : assay_type
+},
+{     CatIdx : 3
+      CatName : Assay type
+      CatDescr : Bard assay format
+      CatIdent : protein_target
+}[
+	at org.codehaus.groovy.grails.web.json.JSONTokener.syntaxError(JSONTokener.java:470)
+	at org.codehaus.groovy.grails.web.json.JSONObject.<init>(JSONObject.java:236)
+	at org.codehaus.groovy.grails.web.json.JSONTokener.nextValue(JSONTokener.java:328)
+	at org.codehaus.groovy.grails.web.json.JSONArray.<init>(JSONArray.java:121)
+	at org.codehaus.groovy.grails.web.json.JSONTokener.nextValue(JSONTokener.java:331)
+	at grails.converters.JSON.parse(JSON.java:281)
+	... 1 more
+2013-06-20 13:27:40,902 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 26 of [
+{     CatIdx : 0
+      CatName : Biological process
+      CatDescr : GO Biological process
+      CatIdent : GO_biological_process_term
+},
+{     CatIdx : 1
+      CatName : Assay format
+      CatDescr : Bard assay format
+      CatIdent : assay_format
+},
+{     CatIdx : 2
+      CatName : Protein target
+      CatDescr : Panther protein target
+      CatIdent : assay_type
+},
+{     CatIdx : 3
+      CatName : Assay type
+      CatDescr : Bard assay format
+      CatIdent : protein_target
+}[
+	at org.codehaus.groovy.grails.web.json.JSONTokener.syntaxError(JSONTokener.java:470)
+	at org.codehaus.groovy.grails.web.json.JSONObject.<init>(JSONObject.java:236)
+	at org.codehaus.groovy.grails.web.json.JSONTokener.nextValue(JSONTokener.java:328)
+	at org.codehaus.groovy.grails.web.json.JSONArray.<init>(JSONArray.java:121)
+	at org.codehaus.groovy.grails.web.json.JSONTokener.nextValue(JSONTokener.java:331)
+	at grails.converters.JSON.parse(JSON.java:281)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+2013-06-20 13:27:40,902 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.converters.exceptions.ConverterException: Error parsing JSON
+	at grails.converters.JSON.parse(JSON.java:290)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+Caused by: org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 26 of [
+{     CatIdx : 0
+      CatName : Biological process
+      CatDescr : GO Biological process
+      CatIdent : GO_biological_process_term
+},
+{     CatIdx : 1
+      CatName : Assay format
+      CatDescr : Bard assay format
+      CatIdent : assay_format
+},
+{     CatIdx : 2
+      CatName : Protein target
+      CatDescr : Panther protein target
+      CatIdent : assay_type
+},
+{     CatIdx : 3
+      CatName : Assay type
+      CatDescr : Bard assay format
+      CatIdent : protein_target
+}[
+	at grails.converters.JSON.parse(JSON.java:281)
+	... 1 more
+2013-06-20 13:27:40,906 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.converters.exceptions.ConverterException: Error parsing JSON
+	at grails.converters.JSON.parse(JSON.java:290)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+Caused by: org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 26 of [
+{     CatIdx : 0
+      CatName : Biological process
+      CatDescr : GO Biological process
+      CatIdent : GO_biological_process_term
+},
+{     CatIdx : 1
+      CatName : Assay format
+      CatDescr : Bard assay format
+      CatIdent : assay_format
+},
+{     CatIdx : 2
+      CatName : Protein target
+      CatDescr : Panther protein target
+      CatIdent : assay_type
+},
+{     CatIdx : 3
+      CatName : Assay type
+      CatDescr : Bard assay format
+      CatIdent : protein_target
+}[
+	at grails.converters.JSON.parse(JSON.java:281)
+	... 1 more
+2013-06-20 13:27:40,906 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 26 of [
+{     CatIdx : 0
+      CatName : Biological process
+      CatDescr : GO Biological process
+      CatIdent : GO_biological_process_term
+},
+{     CatIdx : 1
+      CatName : Assay format
+      CatDescr : Bard assay format
+      CatIdent : assay_format
+},
+{     CatIdx : 2
+      CatName : Protein target
+      CatDescr : Panther protein target
+      CatIdent : assay_type
+},
+{     CatIdx : 3
+      CatName : Assay type
+      CatDescr : Bard assay format
+      CatIdent : protein_target
+}[
+	at grails.converters.JSON.parse(JSON.java:281)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+2013-06-20 13:27:40,906 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.converters.exceptions.ConverterException: Error parsing JSON
+	at grails.converters.JSON.parse(JSON.java:290)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+Caused by: org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 26 of [
+{     CatIdx : 0
+      CatName : Biological process
+      CatDescr : GO Biological process
+      CatIdent : GO_biological_process_term
+},
+{     CatIdx : 1
+      CatName : Assay format
+      CatDescr : Bard assay format
+      CatIdent : assay_format
+},
+{     CatIdx : 2
+      CatName : Protein target
+      CatDescr : Panther protein target
+      CatIdent : assay_type
+},
+{     CatIdx : 3
+      CatName : Assay type
+      CatDescr : Bard assay format
+      CatIdent : protein_target
+}[
+	at grails.converters.JSON.parse(JSON.java:281)
+	... 1 more
+2013-06-20 13:27:40,914 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.converters.exceptions.ConverterException: Error parsing JSON
+	at grails.converters.JSON.parse(JSON.java:290)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+Caused by: org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 26 of [
+{     CatIdx : 0
+      CatName : Biological process
+      CatDescr : GO Biological process
+      CatIdent : GO_biological_process_term
+},
+{     CatIdx : 1
+      CatName : Assay format
+      CatDescr : Bard assay format
+      CatIdent : assay_format
+},
+{     CatIdx : 2
+      CatName : Protein target
+      CatDescr : Panther protein target
+      CatIdent : assay_type
+},
+{     CatIdx : 3
+      CatName : Assay type
+      CatDescr : Bard assay format
+      CatIdent : protein_target
+}[
+	at grails.converters.JSON.parse(JSON.java:281)
+	... 1 more
+2013-06-20 13:27:40,915 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 26 of [
+{     CatIdx : 0
+      CatName : Biological process
+      CatDescr : GO Biological process
+      CatIdent : GO_biological_process_term
+},
+{     CatIdx : 1
+      CatName : Assay format
+      CatDescr : Bard assay format
+      CatIdent : assay_format
+},
+{     CatIdx : 2
+      CatName : Protein target
+      CatDescr : Panther protein target
+      CatIdent : assay_type
+},
+{     CatIdx : 3
+      CatName : Assay type
+      CatDescr : Bard assay format
+      CatIdent : protein_target
+}[
+	at grails.converters.JSON.parse(JSON.java:281)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+2013-06-20 13:27:40,915 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.converters.exceptions.ConverterException: Error parsing JSON
+	at grails.converters.JSON.parse(JSON.java:290)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+Caused by: org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 26 of [
+{     CatIdx : 0
+      CatName : Biological process
+      CatDescr : GO Biological process
+      CatIdent : GO_biological_process_term
+},
+{     CatIdx : 1
+      CatName : Assay format
+      CatDescr : Bard assay format
+      CatIdent : assay_format
+},
+{     CatIdx : 2
+      CatName : Protein target
+      CatDescr : Panther protein target
+      CatIdent : assay_type
+},
+{     CatIdx : 3
+      CatName : Assay type
+      CatDescr : Bard assay format
+      CatIdent : protein_target
+}[
+	at grails.converters.JSON.parse(JSON.java:281)
+	... 1 more
+2013-06-20 13:35:55,216 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.converters.exceptions.ConverterException: Error parsing JSON
+	at grails.converters.JSON.parse(JSON.java:290)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+Caused by: org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 42 of [
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+}[
+	at org.codehaus.groovy.grails.web.json.JSONTokener.syntaxError(JSONTokener.java:470)
+	at org.codehaus.groovy.grails.web.json.JSONObject.<init>(JSONObject.java:236)
+	at org.codehaus.groovy.grails.web.json.JSONTokener.nextValue(JSONTokener.java:328)
+	at org.codehaus.groovy.grails.web.json.JSONArray.<init>(JSONArray.java:121)
+	at org.codehaus.groovy.grails.web.json.JSONTokener.nextValue(JSONTokener.java:331)
+	at grails.converters.JSON.parse(JSON.java:281)
+	... 1 more
+2013-06-20 13:35:55,218 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 42 of [
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+}[
+	at org.codehaus.groovy.grails.web.json.JSONTokener.syntaxError(JSONTokener.java:470)
+	at org.codehaus.groovy.grails.web.json.JSONObject.<init>(JSONObject.java:236)
+	at org.codehaus.groovy.grails.web.json.JSONTokener.nextValue(JSONTokener.java:328)
+	at org.codehaus.groovy.grails.web.json.JSONArray.<init>(JSONArray.java:121)
+	at org.codehaus.groovy.grails.web.json.JSONTokener.nextValue(JSONTokener.java:331)
+	at grails.converters.JSON.parse(JSON.java:281)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+2013-06-20 13:35:55,218 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.converters.exceptions.ConverterException: Error parsing JSON
+	at grails.converters.JSON.parse(JSON.java:290)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+Caused by: org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 42 of [
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+}[
+	at grails.converters.JSON.parse(JSON.java:281)
+	... 1 more
+2013-06-20 13:35:55,221 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.converters.exceptions.ConverterException: Error parsing JSON
+	at grails.converters.JSON.parse(JSON.java:290)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+Caused by: org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 42 of [
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+}[
+	at grails.converters.JSON.parse(JSON.java:281)
+	... 1 more
+2013-06-20 13:35:55,221 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 42 of [
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+}[
+	at grails.converters.JSON.parse(JSON.java:281)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+2013-06-20 13:35:55,222 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.converters.exceptions.ConverterException: Error parsing JSON
+	at grails.converters.JSON.parse(JSON.java:290)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+Caused by: org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 42 of [
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+}[
+	at grails.converters.JSON.parse(JSON.java:281)
+	... 1 more
+2013-06-20 13:35:55,229 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.converters.exceptions.ConverterException: Error parsing JSON
+	at grails.converters.JSON.parse(JSON.java:290)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+Caused by: org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 42 of [
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+}[
+	at grails.converters.JSON.parse(JSON.java:281)
+	... 1 more
+2013-06-20 13:35:55,230 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 42 of [
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+}[
+	at grails.converters.JSON.parse(JSON.java:281)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+2013-06-20 13:35:55,230 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.converters.exceptions.ConverterException: Error parsing JSON
+	at grails.converters.JSON.parse(JSON.java:290)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+Caused by: org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 42 of [
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+}[
+	at grails.converters.JSON.parse(JSON.java:281)
+	... 1 more
+2013-06-20 13:36:37,894 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.converters.exceptions.ConverterException: Error parsing JSON
+	at grails.converters.JSON.parse(JSON.java:290)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+Caused by: org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 42 of [
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+}]
+	at org.codehaus.groovy.grails.web.json.JSONTokener.syntaxError(JSONTokener.java:470)
+	at org.codehaus.groovy.grails.web.json.JSONObject.<init>(JSONObject.java:236)
+	at org.codehaus.groovy.grails.web.json.JSONTokener.nextValue(JSONTokener.java:328)
+	at org.codehaus.groovy.grails.web.json.JSONArray.<init>(JSONArray.java:121)
+	at org.codehaus.groovy.grails.web.json.JSONTokener.nextValue(JSONTokener.java:331)
+	at grails.converters.JSON.parse(JSON.java:281)
+	... 1 more
+2013-06-20 13:36:37,896 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 42 of [
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+}]
+	at org.codehaus.groovy.grails.web.json.JSONTokener.syntaxError(JSONTokener.java:470)
+	at org.codehaus.groovy.grails.web.json.JSONObject.<init>(JSONObject.java:236)
+	at org.codehaus.groovy.grails.web.json.JSONTokener.nextValue(JSONTokener.java:328)
+	at org.codehaus.groovy.grails.web.json.JSONArray.<init>(JSONArray.java:121)
+	at org.codehaus.groovy.grails.web.json.JSONTokener.nextValue(JSONTokener.java:331)
+	at grails.converters.JSON.parse(JSON.java:281)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+2013-06-20 13:36:37,896 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.converters.exceptions.ConverterException: Error parsing JSON
+	at grails.converters.JSON.parse(JSON.java:290)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+Caused by: org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 42 of [
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+}]
+	at grails.converters.JSON.parse(JSON.java:281)
+	... 1 more
+2013-06-20 13:36:37,900 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.converters.exceptions.ConverterException: Error parsing JSON
+	at grails.converters.JSON.parse(JSON.java:290)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+Caused by: org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 42 of [
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+}]
+	at grails.converters.JSON.parse(JSON.java:281)
+	... 1 more
+2013-06-20 13:36:37,900 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 42 of [
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+}]
+	at grails.converters.JSON.parse(JSON.java:281)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+2013-06-20 13:36:37,900 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.converters.exceptions.ConverterException: Error parsing JSON
+	at grails.converters.JSON.parse(JSON.java:290)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+Caused by: org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 42 of [
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+}]
+	at grails.converters.JSON.parse(JSON.java:281)
+	... 1 more
+2013-06-20 13:36:37,909 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.converters.exceptions.ConverterException: Error parsing JSON
+	at grails.converters.JSON.parse(JSON.java:290)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+Caused by: org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 42 of [
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+}]
+	at grails.converters.JSON.parse(JSON.java:281)
+	... 1 more
+2013-06-20 13:36:37,909 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 42 of [
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+}]
+	at grails.converters.JSON.parse(JSON.java:281)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+2013-06-20 13:36:37,909 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.web.converters.exceptions.ConverterException: Error parsing JSON
+	at grails.converters.JSON.parse(JSON.java:290)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+Caused by: org.codehaus.groovy.grails.web.json.JSONException: Expected a ',' or '}' at character 42 of [
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+},
+{     "CatIdx" : "categoryIndex"
+      "CatName" : "categoryName"
+      "CatDescr" : "categoryDescription"
+      "CatIdent" : "categoryIdentifier"
+}]
+	at grails.converters.JSON.parse(JSON.java:281)
+	... 1 more
+2013-06-20 13:39:29,886 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.runtime.typehandling.GroovyCastException: Cannot cast object '[{"CatDescr":"categoryDescription","CatName":"categoryName","CatIdent":"categoryIdentifier","CatIdx":"categoryIndex"},{"CatDescr":"categoryDescription","CatName":"categoryName","CatIdent":"categoryIdentifier","CatIdx":"categoryIndex"},{"CatDescr":"categoryDescription","CatName":"categoryName","CatIdent":"categoryIdentifier","CatIdx":"categoryIndex"},{"CatDescr":"categoryDescription","CatName":"categoryName","CatIdent":"categoryIdentifier","CatIdx":"categoryIndex"}]' with class 'org.codehaus.groovy.grails.web.json.JSONArray' to class 'org.codehaus.groovy.grails.web.json.JSONObject' due to: groovy.lang.GroovyRuntimeException: Could not find matching constructor for: org.codehaus.groovy.grails.web.json.JSONObject(org.codehaus.groovy.grails.web.json.JSONObject, org.codehaus.groovy.grails.web.json.JSONObject, org.codehaus.groovy.grails.web.json.JSONObject, org.codehaus.groovy.grails.web.json.JSONObject)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+2013-06-20 13:39:29,889 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.runtime.typehandling.GroovyCastException: Cannot cast object '[{"CatDescr":"categoryDescription","CatName":"categoryName","CatIdent":"categoryIdentifier","CatIdx":"categoryIndex"},{"CatDescr":"categoryDescription","CatName":"categoryName","CatIdent":"categoryIdentifier","CatIdx":"categoryIndex"},{"CatDescr":"categoryDescription","CatName":"categoryName","CatIdent":"categoryIdentifier","CatIdx":"categoryIndex"},{"CatDescr":"categoryDescription","CatName":"categoryName","CatIdent":"categoryIdentifier","CatIdx":"categoryIndex"}]' with class 'org.codehaus.groovy.grails.web.json.JSONArray' to class 'org.codehaus.groovy.grails.web.json.JSONObject' due to: groovy.lang.GroovyRuntimeException: Could not find matching constructor for: org.codehaus.groovy.grails.web.json.JSONObject(org.codehaus.groovy.grails.web.json.JSONObject, org.codehaus.groovy.grails.web.json.JSONObject, org.codehaus.groovy.grails.web.json.JSONObject, org.codehaus.groovy.grails.web.json.JSONObject)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+2013-06-20 13:39:29,894 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.runtime.typehandling.GroovyCastException: Cannot cast object '[{"CatDescr":"categoryDescription","CatName":"categoryName","CatIdent":"categoryIdentifier","CatIdx":"categoryIndex"},{"CatDescr":"categoryDescription","CatName":"categoryName","CatIdent":"categoryIdentifier","CatIdx":"categoryIndex"},{"CatDescr":"categoryDescription","CatName":"categoryName","CatIdent":"categoryIdentifier","CatIdx":"categoryIndex"},{"CatDescr":"categoryDescription","CatName":"categoryName","CatIdent":"categoryIdentifier","CatIdx":"categoryIndex"}]' with class 'org.codehaus.groovy.grails.web.json.JSONArray' to class 'org.codehaus.groovy.grails.web.json.JSONObject' due to: groovy.lang.GroovyRuntimeException: Could not find matching constructor for: org.codehaus.groovy.grails.web.json.JSONObject(org.codehaus.groovy.grails.web.json.JSONObject, org.codehaus.groovy.grails.web.json.JSONObject, org.codehaus.groovy.grails.web.json.JSONObject, org.codehaus.groovy.grails.web.json.JSONObject)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+2013-06-20 13:39:29,894 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.runtime.typehandling.GroovyCastException: Cannot cast object '[{"CatDescr":"categoryDescription","CatName":"categoryName","CatIdent":"categoryIdentifier","CatIdx":"categoryIndex"},{"CatDescr":"categoryDescription","CatName":"categoryName","CatIdent":"categoryIdentifier","CatIdx":"categoryIndex"},{"CatDescr":"categoryDescription","CatName":"categoryName","CatIdent":"categoryIdentifier","CatIdx":"categoryIndex"},{"CatDescr":"categoryDescription","CatName":"categoryName","CatIdent":"categoryIdentifier","CatIdx":"categoryIndex"}]' with class 'org.codehaus.groovy.grails.web.json.JSONArray' to class 'org.codehaus.groovy.grails.web.json.JSONObject' due to: groovy.lang.GroovyRuntimeException: Could not find matching constructor for: org.codehaus.groovy.grails.web.json.JSONObject(org.codehaus.groovy.grails.web.json.JSONObject, org.codehaus.groovy.grails.web.json.JSONObject, org.codehaus.groovy.grails.web.json.JSONObject, org.codehaus.groovy.grails.web.json.JSONObject)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+2013-06-20 13:39:29,902 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.runtime.typehandling.GroovyCastException: Cannot cast object '[{"CatDescr":"categoryDescription","CatName":"categoryName","CatIdent":"categoryIdentifier","CatIdx":"categoryIndex"},{"CatDescr":"categoryDescription","CatName":"categoryName","CatIdent":"categoryIdentifier","CatIdx":"categoryIndex"},{"CatDescr":"categoryDescription","CatName":"categoryName","CatIdent":"categoryIdentifier","CatIdx":"categoryIndex"},{"CatDescr":"categoryDescription","CatName":"categoryName","CatIdent":"categoryIdentifier","CatIdx":"categoryIndex"}]' with class 'org.codehaus.groovy.grails.web.json.JSONArray' to class 'org.codehaus.groovy.grails.web.json.JSONObject' due to: groovy.lang.GroovyRuntimeException: Could not find matching constructor for: org.codehaus.groovy.grails.web.json.JSONObject(org.codehaus.groovy.grails.web.json.JSONObject, org.codehaus.groovy.grails.web.json.JSONObject, org.codehaus.groovy.grails.web.json.JSONObject, org.codehaus.groovy.grails.web.json.JSONObject)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+2013-06-20 13:39:29,902 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.runtime.typehandling.GroovyCastException: Cannot cast object '[{"CatDescr":"categoryDescription","CatName":"categoryName","CatIdent":"categoryIdentifier","CatIdx":"categoryIndex"},{"CatDescr":"categoryDescription","CatName":"categoryName","CatIdent":"categoryIdentifier","CatIdx":"categoryIndex"},{"CatDescr":"categoryDescription","CatName":"categoryName","CatIdent":"categoryIdentifier","CatIdx":"categoryIndex"},{"CatDescr":"categoryDescription","CatName":"categoryName","CatIdent":"categoryIdentifier","CatIdx":"categoryIndex"}]' with class 'org.codehaus.groovy.grails.web.json.JSONArray' to class 'org.codehaus.groovy.grails.web.json.JSONObject' due to: groovy.lang.GroovyRuntimeException: Could not find matching constructor for: org.codehaus.groovy.grails.web.json.JSONObject(org.codehaus.groovy.grails.web.json.JSONObject, org.codehaus.groovy.grails.web.json.JSONObject, org.codehaus.groovy.grails.web.json.JSONObject, org.codehaus.groovy.grails.web.json.JSONObject)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+2013-06-20 13:44:13,307 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.json.JsonException: Expected a value, an array, or an object on line: 10, column: 43.
+But got ',' instead.
+	at groovy.json.JsonSlurper.parseArray(JsonSlurper.java:122)
+	at groovy.json.JsonSlurper.parse(JsonSlurper.java:77)
+	at groovy.json.JsonSlurper.parseText(JsonSlurper.java:59)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:29)
+2013-06-20 13:44:13,310 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.json.JsonException: Expected a value, an array, or an object on line: 10, column: 43.
+But got ',' instead.
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:29)
+2013-06-20 13:44:13,312 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.json.JsonException: Expected a value, an array, or an object on line: 10, column: 43.
+But got ',' instead.
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:29)
+2013-06-20 13:44:13,312 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.json.JsonException: Expected a value, an array, or an object on line: 10, column: 43.
+But got ',' instead.
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:29)
+2013-06-20 13:44:13,321 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.json.JsonException: Expected a value, an array, or an object on line: 10, column: 43.
+But got ',' instead.
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:29)
+2013-06-20 13:44:13,321 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.json.JsonException: Expected a value, an array, or an object on line: 10, column: 43.
+But got ',' instead.
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:29)
+2013-06-20 13:46:37,174 [main] ERROR StackTrace  - Full Stack Trace:
+Condition not satisfied:
+
+userJson.getClass().name == 'ArrayList'
+|        |          |    |
+|        |          |    false
+|        |          |    10 differences (47% similarity)
+|        |          |    (java.util.)ArrayList
+|        |          |    (----------)ArrayList
+|        |          java.util.ArrayList
+|        class java.util.ArrayList
+[[CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex], [CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex], [CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex], [CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex]]
+
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+2013-06-20 13:46:37,182 [main] ERROR StackTrace  - Full Stack Trace:
+Condition not satisfied:
+
+userJson.getClass().name == 'ArrayList'
+|        |          |    |
+|        |          |    false
+|        |          |    10 differences (47% similarity)
+|        |          |    (java.util.)ArrayList
+|        |          |    (----------)ArrayList
+|        |          java.util.ArrayList
+|        class java.util.ArrayList
+[[CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex], [CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex], [CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex], [CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex]]
+
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+2013-06-20 13:46:37,199 [main] ERROR StackTrace  - Full Stack Trace:
+junit.framework.AssertionFailedError: Condition not satisfied:
+
+userJson.getClass().name == 'ArrayList'
+|        |          |    |
+|        |          |    false
+|        |          |    10 differences (47% similarity)
+|        |          |    (java.util.)ArrayList
+|        |          |    (----------)ArrayList
+|        |          java.util.ArrayList
+|        class java.util.ArrayList
+[[CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex], [CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex], [CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex], [CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex]]
+
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+2013-06-20 13:46:37,199 [main] ERROR StackTrace  - Full Stack Trace:
+junit.framework.AssertionFailedError: Condition not satisfied:
+
+userJson.getClass().name == 'ArrayList'
+|        |          |    |
+|        |          |    false
+|        |          |    10 differences (47% similarity)
+|        |          |    (java.util.)ArrayList
+|        |          |    (----------)ArrayList
+|        |          java.util.ArrayList
+|        class java.util.ArrayList
+[[CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex], [CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex], [CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex], [CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex]]
+
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+2013-06-20 13:46:37,205 [main] ERROR StackTrace  - Full Stack Trace:
+junit.framework.AssertionFailedError: Condition not satisfied:
+
+userJson.getClass().name == 'ArrayList'
+|        |          |    |
+|        |          |    false
+|        |          |    10 differences (47% similarity)
+|        |          |    (java.util.)ArrayList
+|        |          |    (----------)ArrayList
+|        |          java.util.ArrayList
+|        class java.util.ArrayList
+[[CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex], [CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex], [CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex], [CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex]]
+
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+2013-06-20 13:46:37,205 [main] ERROR StackTrace  - Full Stack Trace:
+junit.framework.AssertionFailedError: Condition not satisfied:
+
+userJson.getClass().name == 'ArrayList'
+|        |          |    |
+|        |          |    false
+|        |          |    10 differences (47% similarity)
+|        |          |    (java.util.)ArrayList
+|        |          |    (----------)ArrayList
+|        |          java.util.ArrayList
+|        class java.util.ArrayList
+[[CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex], [CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex], [CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex], [CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex]]
+
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
