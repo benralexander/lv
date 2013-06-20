@@ -93,9 +93,17 @@ color: #000000;
 
 <script>
     function drawHistogram(domMarker, oneHistogramsData) {
+        "use strict";
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // This D3 graphic is implemented in three sections: definitions, tools, and then building the DOM
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        // Check your data before going any further.  If something is wrong than abandon the whole process up front
+        if ((oneHistogramsData=== undefined) ||
+                (oneHistogramsData.histogram=== undefined) ||
+                (oneHistogramsData.histogram.length <= 0)) {
+            return;
+        }
 
         //
         // Part 1: definitions
@@ -110,18 +118,23 @@ color: #000000;
                 },
 
         // adjustable parameters
-                barPadding = 1,
+                barPaddingPercent = 12,
                 ticksAlongHorizontalAxis = 5,
                 numberOfHorizontalGridlines = 10,
+                paddingOnTopForTitle = 10,
                 yLabelProportion = 1, /* implies (1-yLabelProportion is) reserved for y axis labels  */
+                minXValue = d3.min(oneHistogramsData.histogram, function (d) {return d[1];}),
+                maxXValue = d3.max(oneHistogramsData.histogram, function (d) {return d[2];}),
 
         // D3 scaling definitions
                 xScale = d3.scale.linear()
-                        .domain([d3.min(oneHistogramsData.histogram, function (d) {return d[1];}), d3.max(oneHistogramsData.histogram, function (d) {return d[2];})])
+                        .domain([minXValue, maxXValue])
                         .range([0, chart_dimensions.width]),
                 yScale = d3.scale.linear()
                         .domain([0, d3.max(oneHistogramsData.histogram, function (d) {return d[0];})])
                         .range([chart_dimensions.height, margin.bottom]),
+                histogramBarWidth = xScale(maxXValue - minXValue) / oneHistogramsData.histogram.length,
+                adjustedHistogramBarWidth =  histogramBarWidth-((barPaddingPercent/100)*histogramBarWidth),
 
         //
         // Part 2: tools
@@ -141,6 +154,7 @@ color: #000000;
 
         // Encapsulate the variables/methods necessary to handle tooltips
                 TooltipHandler = function ()  {
+
                     // Safety trick for constructors
                     if (! (this instanceof TooltipHandler)){
                         return new TooltipHandler ();
@@ -152,6 +166,8 @@ color: #000000;
                             .style("position", "absolute")
                             .style("opacity", "0")
                             .attr("class", "toolTextAppearance");
+
+                    // public methods
                     this.respondToBarChartMouseOver = function(d) {
                         var stringToReturn = tooltip.html('Compounds in bin: ' + d[0] +
                                 '<br/>' + 'Minimim bin value: ' + d[1].toPrecision(3) +
@@ -170,7 +186,7 @@ color: #000000;
                         var returnValue = tooltip
                                 .transition()
                                 .duration(500)
-                        .style("opacity", "0");
+                                .style("opacity", "0");
                         d3.select(this)
                                 .transition()
                                 .duration(250)
@@ -187,7 +203,7 @@ color: #000000;
         //  part 3:  Build up the Dom
         //
 
-        // Create a div for each histogram we make. All of those dudes are held within the div with ID = histogramHere
+        // Create a div for each histogram we make. All of those divs are held within the div with ID = histogramHere
         var histogramDiv = domMarker
                 .append("div");
 
@@ -214,15 +230,43 @@ color: #000000;
                 .append("g")
                 .attr("class", "bar")
                 .attr("fill", "steelblue")
-                .append("rect")
-                .attr("x", function (d, i) { return xScale(d[1]);  })
-                .attr("y", function (d) { return yScale(d[0]);  })
-                .attr("width", (chart_dimensions.width / oneHistogramsData.histogram.length) - barPadding)
-                .attr("height", function (d) { return chart_dimensions.height-yScale(d[0]);})
+                .append('svg:polyline')
+                .attr('points',function(d){
+                        return (xScale(d[1])+' '+(yScale(0))+','+
+                                xScale(d[1])+' '+yScale(d[0])+','+
+                                xScale(d[2])+' '+yScale(d[0])+','+
+                                xScale(d[2])+' '+(yScale(0))) })
+                .attr('stroke-width',2).attr("stroke", "black").attr('id','foo')
                 .on("mouseover", tooltipHandler.respondToBarChartMouseOver)
                 .on("mousemove", tooltipHandler.respondToBarChartMouseMove)
-                .on("mouseout", tooltipHandler.respondToBarChartMouseOut);
+                .on("mouseout", tooltipHandler.respondToBarChartMouseOut)
 
+//                .append("rect")
+//                .attr("x", function (d, i) {
+//                    return xScale(d[1]);
+//                })
+//                .attr("y", function (d) {
+//                    return yScale(d[0]);
+//                })
+//                .attr("width", function (d, i) {
+//                    return (xScale(d[2])-xScale(d[1]));
+//                } )
+//                .attr("height", function (d) {
+//                    return chart_dimensions.height-yScale(d[0]);
+//                })
+//                .on("mouseover", tooltipHandler.respondToBarChartMouseOver)
+//                .on("mousemove", tooltipHandler.respondToBarChartMouseMove)
+//                .on("mouseout", tooltipHandler.respondToBarChartMouseOut);
+
+//        svg.selectAll('g>.bar').append('svg:polyline').attr('points',function(d){
+//            return (xScale(d[1])+' '+(yScale(0))+','+
+//                    xScale(d[1])+' '+yScale(d[0])+','+
+//                    xScale(d[2])+' '+yScale(d[0])+','+
+//                    xScale(d[2])+' '+(yScale(0))) })
+//        .attr('stroke-width',2).attr("stroke", "black").attr('id','foo')
+//                .on("mouseover", tooltipHandler.respondToBarChartMouseOver)
+//                .on("mousemove", tooltipHandler.respondToBarChartMouseMove)
+//                .on("mouseout", tooltipHandler.respondToBarChartMouseOut)
 
 
         // Create horizontal axis
@@ -234,7 +278,7 @@ color: #000000;
         // Create title  across the top of the graphic
         svg.append("text")
                 .attr("x", (chart_dimensions.width / 2))
-                .attr("y", 0 - (margin.top / 2)+10)
+                .attr("y", -(margin.top / 2)+paddingOnTopForTitle)
                 .attr("text-anchor", "middle")
                 .attr("class", "histogramTitle")
                 .text("Distribution of '" +oneHistogramsData.name + "'");
@@ -243,7 +287,7 @@ color: #000000;
         svg
                 .append("text")
                 .attr("x", (4* chart_dimensions.width / 5))
-                .attr("y", 0 - (margin.top / 2)+10)
+                .attr("y", -(margin.top / 2)+paddingOnTopForTitle)
                 .attr("text-anchor", "right")
                 .attr("class", "histogramMouseInfo")
                 .text("Mouse-over bars for more information");
@@ -254,7 +298,8 @@ color: #000000;
 
 </script>
 <script>
-    d3.json("http://localhost:8028/cow/histogram/feedMeTripleJson", function(error,dataFromServer) {
+//    d3.json("http://localhost:8028/cow/histogram/feedMeTripleJson", function(error,dataFromServer) {
+        d3.json("http://localhost:8028/cow/histogram/feedMeJson", function(error,dataFromServer) {
 
                 if (error) {
                     return console.log(error);
