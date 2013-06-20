@@ -112,3 +112,240 @@ java.lang.NullPointerException: Cannot invoke method getBytes() on null object
 	at cow.HonolController.citysource(HonolController.groovy:14)
 	at grails.plugin.cache.web.filter.PageFragmentCachingFilter.doFilter(PageFragmentCachingFilter.java:195)
 	at grails.plugin.cache.web.filter.AbstractFilter.doFilter(AbstractFilter.java:63)
+2013-06-20 11:19:16,768 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.exceptions.GrailsConfigurationException: Cannot add Domain class [class cow.LinkedVisHierData]. It is not a Domain!
+	at org.codehaus.groovy.grails.commons.DefaultGrailsApplication.addArtefact(DefaultGrailsApplication.java:831)
+	at org.codehaus.groovy.grails.commons.DefaultGrailsApplication.addArtefact(DefaultGrailsApplication.java:535)
+	at grails.test.mixin.domain.DomainClassUnitTestMixin.registerGrailsDomainClass(DomainClassUnitTestMixin.groovy:204)
+	at grails.test.mixin.domain.DomainClassUnitTestMixin.mockDomain(DomainClassUnitTestMixin.groovy:145)
+	at grails.test.mixin.domain.DomainClassUnitTestMixin.mockDomain(DomainClassUnitTestMixin.groovy:142)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.runtime.extension.builtin.JUnitFixtureMethodsExtension$FixtureType$FixtureMethodInterceptor.intercept(JUnitFixtureMethodsExtension.java:145)
+	at org.spockframework.runtime.extension.MethodInvocation.proceed(MethodInvocation.java:84)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.junit.runners.Suite.runChild(Suite.java:128)
+	at org.junit.runners.Suite.runChild(Suite.java:24)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:300)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:157)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:136)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:117)
+	at grails.plugin.spock.test.GrailsSpecTestType.doRun(GrailsSpecTestType.groovy:73)
+	at org.codehaus.groovy.grails.test.support.GrailsTestTypeSupport.run(GrailsTestTypeSupport.groovy:118)
+	at _GrailsTest_groovy.run_closure4(_GrailsTest_groovy:290)
+	at groovy.lang.GroovyObjectSupport.invokeMethod(GroovyObjectSupport.java:44)
+	at groovy.lang.Script.invokeMethod(Script.java:78)
+	at _GrailsTest_groovy.run_closure2(_GrailsTest_groovy:248)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:425)
+	at _GrailsTest_groovy.run_closure1_closure21(_GrailsTest_groovy:195)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at _GrailsTest_groovy.run_closure1(_GrailsTest_groovy:184)
+	at org.codehaus.gant.GantMetaClass.invokeMethod(GantMetaClass.java:133)
+	at org.codehaus.gant.GantBinding.initializeGantBinding_closure5_closure16_closure18(GantBinding.groovy:185)
+	at org.codehaus.gant.GantBinding.initializeGantBinding_closure5_closure16_closure18(GantBinding.groovy)
+	at org.codehaus.gant.GantBinding.withTargetEvent(GantBinding.groovy:90)
+	at groovy.lang.GroovyObjectSupport.invokeMethod(GroovyObjectSupport.java:44)
+	at org.codehaus.gant.GantBinding.initializeGantBinding_closure5_closure16(GantBinding.groovy:185)
+	at org.codehaus.gant.GantBinding.initializeGantBinding_closure5_closure16(GantBinding.groovy)
+	at groovy.lang.GroovyObjectSupport.invokeMethod(GroovyObjectSupport.java:44)
+	at groovy.lang.Script.invokeMethod(Script.java:78)
+	at org.codehaus.gant.GantMetaClass.invokeMethod(GantMetaClass.java:133)
+	at TestApp.run_closure1(TestApp.groovy:82)
+	at org.codehaus.gant.GantMetaClass.invokeMethod(GantMetaClass.java:133)
+	at org.codehaus.gant.GantBinding.initializeGantBinding_closure5_closure16_closure18(GantBinding.groovy:185)
+	at org.codehaus.gant.GantBinding.initializeGantBinding_closure5_closure16_closure18(GantBinding.groovy)
+	at org.codehaus.gant.GantBinding.withTargetEvent(GantBinding.groovy:90)
+	at groovy.lang.GroovyObjectSupport.invokeMethod(GroovyObjectSupport.java:44)
+	at org.codehaus.gant.GantBinding.initializeGantBinding_closure5_closure16(GantBinding.groovy:185)
+	at org.codehaus.gant.GantBinding.initializeGantBinding_closure5_closure16(GantBinding.groovy)
+	at gant.Gant.dispatch_closure5(Gant.groovy:381)
+	at gant.Gant.dispatch_closure7(Gant.groovy:415)
+	at gant.Gant.dispatch_closure7(Gant.groovy)
+	at gant.Gant.withBuildListeners(Gant.groovy:427)
+	at gant.Gant.dispatch(Gant.groovy:415)
+	at gant.Gant.executeTargets(Gant.groovy:591)
+	at gant.Gant.executeTargets(Gant.groovy:590)
+	at org.codehaus.groovy.grails.cli.GrailsScriptRunner.executeWithGantInstance(GrailsScriptRunner.java:768)
+	at org.codehaus.groovy.grails.cli.GrailsScriptRunner.executeScriptFile(GrailsScriptRunner.java:566)
+	at org.codehaus.groovy.grails.cli.GrailsScriptRunner.executeScriptWithCaching(GrailsScriptRunner.java:465)
+	at org.codehaus.groovy.grails.cli.GrailsScriptRunner.callPluginOrGrailsScript(GrailsScriptRunner.java:409)
+	at org.codehaus.groovy.grails.cli.GrailsScriptRunner.executeCommand(GrailsScriptRunner.java:373)
+	at org.codehaus.groovy.grails.cli.GrailsScriptRunner.main(GrailsScriptRunner.java:232)
+	at org.codehaus.groovy.grails.cli.support.GrailsStarter.rootLoader(GrailsStarter.java:234)
+	at org.codehaus.groovy.grails.cli.support.GrailsStarter.main(GrailsStarter.java:262)
+2013-06-20 11:19:16,780 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.exceptions.GrailsConfigurationException: Cannot add Domain class [class cow.LinkedVisHierData]. It is not a Domain!
+	at grails.test.mixin.domain.DomainClassUnitTestMixin.registerGrailsDomainClass(DomainClassUnitTestMixin.groovy:204)
+	at grails.test.mixin.domain.DomainClassUnitTestMixin.mockDomain(DomainClassUnitTestMixin.groovy:145)
+	at grails.test.mixin.domain.DomainClassUnitTestMixin.mockDomain(DomainClassUnitTestMixin.groovy:142)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.runtime.extension.builtin.JUnitFixtureMethodsExtension$FixtureType$FixtureMethodInterceptor.intercept(JUnitFixtureMethodsExtension.java:145)
+	at org.spockframework.runtime.extension.MethodInvocation.proceed(MethodInvocation.java:84)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+2013-06-20 11:19:16,785 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.exceptions.GrailsConfigurationException: Cannot add Domain class [class cow.LinkedVisHierData]. It is not a Domain!
+	at grails.test.mixin.domain.DomainClassUnitTestMixin.registerGrailsDomainClass(DomainClassUnitTestMixin.groovy:204)
+	at grails.test.mixin.domain.DomainClassUnitTestMixin.mockDomain(DomainClassUnitTestMixin.groovy:145)
+	at grails.test.mixin.domain.DomainClassUnitTestMixin.mockDomain(DomainClassUnitTestMixin.groovy:142)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.runtime.extension.builtin.JUnitFixtureMethodsExtension$FixtureType$FixtureMethodInterceptor.intercept(JUnitFixtureMethodsExtension.java:145)
+	at org.spockframework.runtime.extension.MethodInvocation.proceed(MethodInvocation.java:84)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+2013-06-20 11:19:16,785 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.exceptions.GrailsConfigurationException: Cannot add Domain class [class cow.LinkedVisHierData]. It is not a Domain!
+	at grails.test.mixin.domain.DomainClassUnitTestMixin.registerGrailsDomainClass(DomainClassUnitTestMixin.groovy:204)
+	at grails.test.mixin.domain.DomainClassUnitTestMixin.mockDomain(DomainClassUnitTestMixin.groovy:145)
+	at grails.test.mixin.domain.DomainClassUnitTestMixin.mockDomain(DomainClassUnitTestMixin.groovy:142)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.runtime.extension.builtin.JUnitFixtureMethodsExtension$FixtureType$FixtureMethodInterceptor.intercept(JUnitFixtureMethodsExtension.java:145)
+	at org.spockframework.runtime.extension.MethodInvocation.proceed(MethodInvocation.java:84)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+2013-06-20 11:19:16,795 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.exceptions.GrailsConfigurationException: Cannot add Domain class [class cow.LinkedVisHierData]. It is not a Domain!
+	at grails.test.mixin.domain.DomainClassUnitTestMixin.registerGrailsDomainClass(DomainClassUnitTestMixin.groovy:204)
+	at grails.test.mixin.domain.DomainClassUnitTestMixin.mockDomain(DomainClassUnitTestMixin.groovy:145)
+	at grails.test.mixin.domain.DomainClassUnitTestMixin.mockDomain(DomainClassUnitTestMixin.groovy:142)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.runtime.extension.builtin.JUnitFixtureMethodsExtension$FixtureType$FixtureMethodInterceptor.intercept(JUnitFixtureMethodsExtension.java:145)
+	at org.spockframework.runtime.extension.MethodInvocation.proceed(MethodInvocation.java:84)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+2013-06-20 11:19:16,795 [main] ERROR StackTrace  - Full Stack Trace:
+org.codehaus.groovy.grails.exceptions.GrailsConfigurationException: Cannot add Domain class [class cow.LinkedVisHierData]. It is not a Domain!
+	at grails.test.mixin.domain.DomainClassUnitTestMixin.registerGrailsDomainClass(DomainClassUnitTestMixin.groovy:204)
+	at grails.test.mixin.domain.DomainClassUnitTestMixin.mockDomain(DomainClassUnitTestMixin.groovy:145)
+	at grails.test.mixin.domain.DomainClassUnitTestMixin.mockDomain(DomainClassUnitTestMixin.groovy:142)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.runtime.extension.builtin.JUnitFixtureMethodsExtension$FixtureType$FixtureMethodInterceptor.intercept(JUnitFixtureMethodsExtension.java:145)
+	at org.spockframework.runtime.extension.MethodInvocation.proceed(MethodInvocation.java:84)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+2013-06-20 11:23:48,007 [main] ERROR StackTrace  - Full Stack Trace:
+Condition not satisfied:
+
+i == 2
+| |
+1 false
+
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:25)
+2013-06-20 11:23:48,011 [main] ERROR StackTrace  - Full Stack Trace:
+Condition not satisfied:
+
+i == 2
+| |
+1 false
+
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:25)
+2013-06-20 11:23:48,027 [main] ERROR StackTrace  - Full Stack Trace:
+junit.framework.AssertionFailedError: Condition not satisfied:
+
+i == 2
+| |
+1 false
+
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:25)
+2013-06-20 11:23:48,027 [main] ERROR StackTrace  - Full Stack Trace:
+junit.framework.AssertionFailedError: Condition not satisfied:
+
+i == 2
+| |
+1 false
+
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:25)
+2013-06-20 11:23:48,033 [main] ERROR StackTrace  - Full Stack Trace:
+junit.framework.AssertionFailedError: Condition not satisfied:
+
+i == 2
+| |
+1 false
+
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:25)
+2013-06-20 11:23:48,033 [main] ERROR StackTrace  - Full Stack Trace:
+junit.framework.AssertionFailedError: Condition not satisfied:
+
+i == 2
+| |
+1 false
+
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:25)
+2013-06-20 11:26:13,313 [main] ERROR StackTrace  - Full Stack Trace:
+Condition not satisfied:
+
+(linkedVisHierData.writeCategorySection ()  == "Categoy" )
+ |                 |                        |
+ |                 Category                 false
+ cow.LinkedVisHierData@7eaadc2d             1 difference (87% similarity)
+                                            Catego(r)y
+                                            Catego(-)y
+
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:27)
+2013-06-20 11:26:13,321 [main] ERROR StackTrace  - Full Stack Trace:
+Condition not satisfied:
+
+(linkedVisHierData.writeCategorySection ()  == "Categoy" )
+ |                 |                        |
+ |                 Category                 false
+ cow.LinkedVisHierData@7eaadc2d             1 difference (87% similarity)
+                                            Catego(r)y
+                                            Catego(-)y
+
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:27)
+2013-06-20 11:26:13,341 [main] ERROR StackTrace  - Full Stack Trace:
+junit.framework.AssertionFailedError: Condition not satisfied:
+
+(linkedVisHierData.writeCategorySection ()  == "Categoy" )
+ |                 |                        |
+ |                 Category                 false
+ cow.LinkedVisHierData@7eaadc2d             1 difference (87% similarity)
+                                            Catego(r)y
+                                            Catego(-)y
+
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:27)
+2013-06-20 11:26:13,341 [main] ERROR StackTrace  - Full Stack Trace:
+junit.framework.AssertionFailedError: Condition not satisfied:
+
+(linkedVisHierData.writeCategorySection ()  == "Categoy" )
+ |                 |                        |
+ |                 Category                 false
+ cow.LinkedVisHierData@7eaadc2d             1 difference (87% similarity)
+                                            Catego(r)y
+                                            Catego(-)y
+
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:27)
+2013-06-20 11:26:13,350 [main] ERROR StackTrace  - Full Stack Trace:
+junit.framework.AssertionFailedError: Condition not satisfied:
+
+(linkedVisHierData.writeCategorySection ()  == "Categoy" )
+ |                 |                        |
+ |                 Category                 false
+ cow.LinkedVisHierData@7eaadc2d             1 difference (87% similarity)
+                                            Catego(r)y
+                                            Catego(-)y
+
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:27)
+2013-06-20 11:26:13,350 [main] ERROR StackTrace  - Full Stack Trace:
+junit.framework.AssertionFailedError: Condition not satisfied:
+
+(linkedVisHierData.writeCategorySection ()  == "Categoy" )
+ |                 |                        |
+ |                 Category                 false
+ cow.LinkedVisHierData@7eaadc2d             1 difference (87% similarity)
+                                            Catego(r)y
+                                            Catego(-)y
+
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:27)
