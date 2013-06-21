@@ -1210,3 +1210,270 @@ userJson.getClass().name == 'ArrayList'
 [[CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex], [CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex], [CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex], [CatDescr:categoryDescription, CatName:categoryName, CatIdent:categoryIdentifier, CatIdx:categoryIndex]]
 
 	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:30)
+2013-06-21 07:53:02,281 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingMethodException: No signature of method: cow.LinkedVisHierData.addQuotes() is applicable for argument types: (java.lang.Integer) values: [0]
+	at cow.LinkedVisHierData.individualCategorySection(LinkedVisHierData.groovy:26)
+	at cow.LinkedVisHierData.writeCategorySection(LinkedVisHierData.groovy:53)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:25)
+2013-06-21 07:53:02,305 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingMethodException: No signature of method: cow.LinkedVisHierData.addQuotes() is applicable for argument types: (java.lang.Integer) values: [0]
+	at cow.LinkedVisHierData.individualCategorySection(LinkedVisHierData.groovy:26)
+	at cow.LinkedVisHierData.writeCategorySection(LinkedVisHierData.groovy:53)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:25)
+2013-06-21 07:53:02,352 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingMethodException: No signature of method: cow.LinkedVisHierData.addQuotes() is applicable for argument types: (java.lang.Integer) values: [0]
+	at cow.LinkedVisHierData.individualCategorySection(LinkedVisHierData.groovy:26)
+	at cow.LinkedVisHierData.writeCategorySection(LinkedVisHierData.groovy:53)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:25)
+2013-06-21 07:53:02,363 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingMethodException: No signature of method: cow.LinkedVisHierData.addQuotes() is applicable for argument types: (java.lang.Integer) values: [0]
+	at cow.LinkedVisHierData.individualCategorySection(LinkedVisHierData.groovy:26)
+	at cow.LinkedVisHierData.writeCategorySection(LinkedVisHierData.groovy:53)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:25)
+2013-06-21 07:53:02,404 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingMethodException: No signature of method: cow.LinkedVisHierData.addQuotes() is applicable for argument types: (java.lang.Integer) values: [0]
+	at cow.LinkedVisHierData.individualCategorySection(LinkedVisHierData.groovy:26)
+	at cow.LinkedVisHierData.writeCategorySection(LinkedVisHierData.groovy:53)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:25)
+2013-06-21 07:53:02,410 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingMethodException: No signature of method: cow.LinkedVisHierData.addQuotes() is applicable for argument types: (java.lang.Integer) values: [0]
+	at cow.LinkedVisHierData.individualCategorySection(LinkedVisHierData.groovy:26)
+	at cow.LinkedVisHierData.writeCategorySection(LinkedVisHierData.groovy:53)
+	at cow.LinkedVisHierDataUnitSpec.bloog(LinkedVisHierDataUnitSpec.groovy:25)
+2013-06-21 08:00:29,767 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingMethodException: No signature of method: cow.LinkedVisHierData.addQuotes() is applicable for argument types: (java.lang.Integer) values: [0]
+	at cow.LinkedVisHierData.individualHierarchySection(LinkedVisHierData.groovy:40)
+	at cow.LinkedVisHierData.writeHierarchySection(LinkedVisHierData.groovy:67)
+	at cow.LinkedVisHierDataUnitSpec.test writeCategorySection(LinkedVisHierDataUnitSpec.groovy:39)
+2013-06-21 08:00:29,784 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingMethodException: No signature of method: cow.LinkedVisHierData.addQuotes() is applicable for argument types: (java.lang.Integer) values: [0]
+	at cow.LinkedVisHierData.individualHierarchySection(LinkedVisHierData.groovy:40)
+	at cow.LinkedVisHierData.writeHierarchySection(LinkedVisHierData.groovy:67)
+	at cow.LinkedVisHierDataUnitSpec.test writeCategorySection(LinkedVisHierDataUnitSpec.groovy:39)
+2013-06-21 08:00:29,835 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingMethodException: No signature of method: cow.LinkedVisHierData.addQuotes() is applicable for argument types: (java.lang.Integer) values: [0]
+	at cow.LinkedVisHierData.individualHierarchySection(LinkedVisHierData.groovy:40)
+	at cow.LinkedVisHierData.writeHierarchySection(LinkedVisHierData.groovy:67)
+	at cow.LinkedVisHierDataUnitSpec.test writeCategorySection(LinkedVisHierDataUnitSpec.groovy:39)
+2013-06-21 08:00:29,846 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingMethodException: No signature of method: cow.LinkedVisHierData.addQuotes() is applicable for argument types: (java.lang.Integer) values: [0]
+	at cow.LinkedVisHierData.individualHierarchySection(LinkedVisHierData.groovy:40)
+	at cow.LinkedVisHierData.writeHierarchySection(LinkedVisHierData.groovy:67)
+	at cow.LinkedVisHierDataUnitSpec.test writeCategorySection(LinkedVisHierDataUnitSpec.groovy:39)
+2013-06-21 08:00:29,904 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingMethodException: No signature of method: cow.LinkedVisHierData.addQuotes() is applicable for argument types: (java.lang.Integer) values: [0]
+	at cow.LinkedVisHierData.individualHierarchySection(LinkedVisHierData.groovy:40)
+	at cow.LinkedVisHierData.writeHierarchySection(LinkedVisHierData.groovy:67)
+	at cow.LinkedVisHierDataUnitSpec.test writeCategorySection(LinkedVisHierDataUnitSpec.groovy:39)
+2013-06-21 08:00:29,916 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingMethodException: No signature of method: cow.LinkedVisHierData.addQuotes() is applicable for argument types: (java.lang.Integer) values: [0]
+	at cow.LinkedVisHierData.individualHierarchySection(LinkedVisHierData.groovy:40)
+	at cow.LinkedVisHierData.writeHierarchySection(LinkedVisHierData.groovy:67)
+	at cow.LinkedVisHierDataUnitSpec.test writeCategorySection(LinkedVisHierDataUnitSpec.groovy:39)
+2013-06-21 08:31:51,807 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingMethodException: No signature of method: cow.LinkedVisHierData.writeCategorySection() is applicable for argument types: () values: []
+Possible solutions: createCategorySection()
+	at cow.LinkedVisHierDataUnitSpec.test writeHierSection(LinkedVisHierDataUnitSpec.groovy:44)
+2013-06-21 08:31:51,831 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingMethodException: No signature of method: cow.LinkedVisHierData.writeCategorySection() is applicable for argument types: () values: []
+Possible solutions: createCategorySection()
+	at cow.LinkedVisHierDataUnitSpec.test writeHierSection(LinkedVisHierDataUnitSpec.groovy:44)
+2013-06-21 08:31:51,882 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingMethodException: No signature of method: cow.LinkedVisHierData.writeCategorySection() is applicable for argument types: () values: []
+Possible solutions: createCategorySection()
+	at cow.LinkedVisHierDataUnitSpec.test writeHierSection(LinkedVisHierDataUnitSpec.groovy:44)
+2013-06-21 08:31:51,883 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingMethodException: No signature of method: cow.LinkedVisHierData.writeCategorySection() is applicable for argument types: () values: []
+Possible solutions: createCategorySection()
+	at cow.LinkedVisHierDataUnitSpec.test writeHierSection(LinkedVisHierDataUnitSpec.groovy:44)
+2013-06-21 08:31:51,893 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingMethodException: No signature of method: cow.LinkedVisHierData.writeCategorySection() is applicable for argument types: () values: []
+Possible solutions: createCategorySection()
+	at cow.LinkedVisHierDataUnitSpec.test writeHierSection(LinkedVisHierDataUnitSpec.groovy:44)
+2013-06-21 08:31:51,893 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingMethodException: No signature of method: cow.LinkedVisHierData.writeCategorySection() is applicable for argument types: () values: []
+Possible solutions: createCategorySection()
+	at cow.LinkedVisHierDataUnitSpec.test writeHierSection(LinkedVisHierDataUnitSpec.groovy:44)
+2013-06-21 08:42:03,643 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingMethodException: No signature of method: java.lang.String.call() is applicable for argument types: () values: []
+Possible solutions: wait(), any(), wait(long), any(groovy.lang.Closure), take(int), each(groovy.lang.Closure)
+	at cow.LinkedVisHierDataUnitSpec.test writeHierSection(LinkedVisHierDataUnitSpec.groovy:41)
+2013-06-21 08:42:03,666 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingMethodException: No signature of method: java.lang.String.call() is applicable for argument types: () values: []
+Possible solutions: wait(), any(), wait(long), any(groovy.lang.Closure), take(int), each(groovy.lang.Closure)
+	at cow.LinkedVisHierDataUnitSpec.test writeHierSection(LinkedVisHierDataUnitSpec.groovy:41)
+2013-06-21 08:42:03,716 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingMethodException: No signature of method: java.lang.String.call() is applicable for argument types: () values: []
+Possible solutions: wait(), any(), wait(long), any(groovy.lang.Closure), take(int), each(groovy.lang.Closure)
+	at cow.LinkedVisHierDataUnitSpec.test writeHierSection(LinkedVisHierDataUnitSpec.groovy:41)
+2013-06-21 08:42:03,728 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingMethodException: No signature of method: java.lang.String.call() is applicable for argument types: () values: []
+Possible solutions: wait(), any(), wait(long), any(groovy.lang.Closure), take(int), each(groovy.lang.Closure)
+	at cow.LinkedVisHierDataUnitSpec.test writeHierSection(LinkedVisHierDataUnitSpec.groovy:41)
+2013-06-21 08:42:03,747 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingMethodException: No signature of method: java.lang.String.call() is applicable for argument types: () values: []
+Possible solutions: wait(), any(), wait(long), any(groovy.lang.Closure), take(int), each(groovy.lang.Closure)
+	at cow.LinkedVisHierDataUnitSpec.test writeHierSection(LinkedVisHierDataUnitSpec.groovy:41)
+2013-06-21 08:42:03,749 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingMethodException: No signature of method: java.lang.String.call() is applicable for argument types: () values: []
+Possible solutions: wait(), any(), wait(long), any(groovy.lang.Closure), take(int), each(groovy.lang.Closure)
+	at cow.LinkedVisHierDataUnitSpec.test writeHierSection(LinkedVisHierDataUnitSpec.groovy:41)
+2013-06-21 13:45:47,578 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingPropertyException: No such property: createCategorySection for class: cow.LinkedVisHierData
+	at cow.LinkedVisHierData.createCombinedListing(LinkedVisHierData.groovy:259)
+	at cow.LinkedVisHierDataUnitSpec.test createCombinedListing(LinkedVisHierDataUnitSpec.groovy:75)
+2013-06-21 13:45:47,589 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingPropertyException: No such property: createCategorySection for class: cow.LinkedVisHierData
+	at cow.LinkedVisHierData.createCombinedListing(LinkedVisHierData.groovy:259)
+	at cow.LinkedVisHierDataUnitSpec.test createCombinedListing(LinkedVisHierDataUnitSpec.groovy:75)
+2013-06-21 13:45:47,593 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingPropertyException: No such property: createCategorySection for class: cow.LinkedVisHierData
+	at cow.LinkedVisHierData.createCombinedListing(LinkedVisHierData.groovy:259)
+	at cow.LinkedVisHierDataUnitSpec.test createCombinedListing(LinkedVisHierDataUnitSpec.groovy:75)
+2013-06-21 13:45:47,593 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingPropertyException: No such property: createCategorySection for class: cow.LinkedVisHierData
+	at cow.LinkedVisHierData.createCombinedListing(LinkedVisHierData.groovy:259)
+	at cow.LinkedVisHierDataUnitSpec.test createCombinedListing(LinkedVisHierDataUnitSpec.groovy:75)
+2013-06-21 13:45:47,616 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingPropertyException: No such property: createCategorySection for class: cow.LinkedVisHierData
+	at cow.LinkedVisHierData.createCombinedListing(LinkedVisHierData.groovy:259)
+	at cow.LinkedVisHierDataUnitSpec.test createCombinedListing(LinkedVisHierDataUnitSpec.groovy:75)
+2013-06-21 13:45:47,616 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingPropertyException: No such property: createCategorySection for class: cow.LinkedVisHierData
+	at cow.LinkedVisHierData.createCombinedListing(LinkedVisHierData.groovy:259)
+	at cow.LinkedVisHierDataUnitSpec.test createCombinedListing(LinkedVisHierDataUnitSpec.groovy:75)
+2013-06-21 13:48:27,006 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingPropertyException: No such property: createCategorySection for class: cow.LinkedVisHierData
+	at cow.LinkedVisHierData.createCombinedListing(LinkedVisHierData.groovy:259)
+	at cow.LinkedVisHierDataUnitSpec.test createCombinedListing(LinkedVisHierDataUnitSpec.groovy:75)
+2013-06-21 13:48:27,009 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingPropertyException: No such property: createCategorySection for class: cow.LinkedVisHierData
+	at cow.LinkedVisHierData.createCombinedListing(LinkedVisHierData.groovy:259)
+	at cow.LinkedVisHierDataUnitSpec.test createCombinedListing(LinkedVisHierDataUnitSpec.groovy:75)
+2013-06-21 13:48:27,013 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingPropertyException: No such property: createCategorySection for class: cow.LinkedVisHierData
+	at cow.LinkedVisHierData.createCombinedListing(LinkedVisHierData.groovy:259)
+	at cow.LinkedVisHierDataUnitSpec.test createCombinedListing(LinkedVisHierDataUnitSpec.groovy:75)
+2013-06-21 13:48:27,013 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingPropertyException: No such property: createCategorySection for class: cow.LinkedVisHierData
+	at cow.LinkedVisHierData.createCombinedListing(LinkedVisHierData.groovy:259)
+	at cow.LinkedVisHierDataUnitSpec.test createCombinedListing(LinkedVisHierDataUnitSpec.groovy:75)
+2013-06-21 13:48:27,019 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingPropertyException: No such property: createCategorySection for class: cow.LinkedVisHierData
+	at cow.LinkedVisHierData.createCombinedListing(LinkedVisHierData.groovy:259)
+	at cow.LinkedVisHierDataUnitSpec.test createCombinedListing(LinkedVisHierDataUnitSpec.groovy:75)
+2013-06-21 13:48:27,019 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.lang.MissingPropertyException: No such property: createCategorySection for class: cow.LinkedVisHierData
+	at cow.LinkedVisHierData.createCombinedListing(LinkedVisHierData.groovy:259)
+	at cow.LinkedVisHierDataUnitSpec.test createCombinedListing(LinkedVisHierDataUnitSpec.groovy:75)
+2013-06-21 13:59:14,628 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.json.JsonException: Expected a value or a closing square bracket ']' on line: 1 column: 13.
+But got ':' instead.
+	at groovy.json.JsonSlurper.parseArray(JsonSlurper.java:147)
+	at groovy.json.JsonSlurper.parse(JsonSlurper.java:77)
+	at groovy.json.JsonSlurper.parseText(JsonSlurper.java:59)
+	at cow.LinkedVisHierDataUnitSpec.test createCombinedListing(LinkedVisHierDataUnitSpec.groovy:79)
+2013-06-21 13:59:14,630 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.json.JsonException: Expected a value or a closing square bracket ']' on line: 1 column: 13.
+But got ':' instead.
+	at cow.LinkedVisHierDataUnitSpec.test createCombinedListing(LinkedVisHierDataUnitSpec.groovy:79)
+2013-06-21 13:59:14,633 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.json.JsonException: Expected a value or a closing square bracket ']' on line: 1 column: 13.
+But got ':' instead.
+	at cow.LinkedVisHierDataUnitSpec.test createCombinedListing(LinkedVisHierDataUnitSpec.groovy:79)
+2013-06-21 13:59:14,633 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.json.JsonException: Expected a value or a closing square bracket ']' on line: 1 column: 13.
+But got ':' instead.
+	at cow.LinkedVisHierDataUnitSpec.test createCombinedListing(LinkedVisHierDataUnitSpec.groovy:79)
+2013-06-21 13:59:14,640 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.json.JsonException: Expected a value or a closing square bracket ']' on line: 1 column: 13.
+But got ':' instead.
+	at cow.LinkedVisHierDataUnitSpec.test createCombinedListing(LinkedVisHierDataUnitSpec.groovy:79)
+2013-06-21 13:59:14,640 [main] ERROR StackTrace  - Full Stack Trace:
+groovy.json.JsonException: Expected a value or a closing square bracket ']' on line: 1 column: 13.
+But got ':' instead.
+	at cow.LinkedVisHierDataUnitSpec.test createCombinedListing(LinkedVisHierDataUnitSpec.groovy:79)
+2013-06-21 14:00:17,971 [main] ERROR StackTrace  - Full Stack Trace:
+Condition not satisfied:
+
+userJson.getClass().name == 'java.util.ArrayList'
+|        |          |    |
+|        |          |    false
+|        |          |    8 differences (57% similarity)
+|        |          |    java.util.(H--)a(shMap)
+|        |          |    java.util.(Arr)a(yList)
+|        |          java.util.HashMap
+|        class java.util.HashMap
+[Category:[[Structure:[:], CatRef:0, HierType:Graph], [Structure:[:], CatRef:1, HierType:Tree], [Structure:[:], CatRef:2, HierType:Tree], [Structure:[:], CatRef:3, HierType:Tree]], AssayCross:[[AssayRef:0, data:[3:Ion channel NompC, 2:protein-small molecule interaction assay, 1:cell-based format, 0:none]], [AssayRef:2, data:[3:none, 2:protein expression assay, 1:cell-based format, 0:regulation of gene expression]], [AssayRef:15, data:[3:none, 2:direct enzyme activity assay, 1:single protein format, 0:bontoxilysin activity]], [AssayRef:1, data:[3:Regulator of G-protein signaling 4, 2:protein-protein interaction assay, 1:single protein format, 0:plectin-1]], [AssayRef:3, data:[3:none, 2:none, 1:whole-cell lysate format, 0:none]], [AssayRef:4, data:[3:none, 2:protein expression assay, 1:cell-based format, 0:regulation of gene expression]], [AssayRef:6, data:[3:none, 2:functional assay, 1:cell-based format, 0:bontoxilysin activity]], [AssayRef:5, data:[3:none, 2:fluorescence interference assay, 1:biochemical format, 0:none]], [AssayRef:7, data:[3:none, 2:protein-protein interaction assay, 1:biochemical format, 0:plectin-1]], [AssayRef:8, data:[3:Regulator of G-protein signaling 8, 2:protein-protein interaction assay, 1:single protein format, 0:plectin-1]], [AssayRef:9, data:[3:none, 2:direct enzyme activity assay, 1:biochemical format, 0:bontoxilysin activity]], [AssayRef:10, data:[3:Ion channel NompC, 2:protein-small molecule interaction assay, 1:cell-based format, 0:kinase activity]], [AssayRef:11, data:[3:none, 2:reporter-gene assay, 1:cell-based format, 0:none]], [AssayRef:12, data:[3:Multidrug resistance protein 1, 2:transporter assay, 1:cell-based format, 0:cell death]], [AssayRef:13, data:[3:none, 2:protein expression assay, 1:cell-based format, 0:regulation of gene expression]], [AssayRef:14, data:[3:none, 2:gene-expression assay, 1:cell-based format, 0:immunological synapse formation]]], Assays:[[AssayId:1017, AssayIdx:0, AssayName:Radiotracer Incision Assay (RIA) for Inhibitors of Human Apurinic/apyrimidinic Endonuclease 1 (APE1)], [AssayId:1730, AssayIdx:1, AssayName:Inhibitors of Bloom's syndrome helicase: Efflux Ratio Profiling Assay], [AssayId:1732, AssayIdx:2, AssayName:Inhibitors of Bloom's syndrome helicase: Aqueous Profiling Assay], [AssayId:1733, AssayIdx:3, AssayName:Inhibitors of Bloom's syndrome helicase: Metabolic Stability Profiling], [AssayId:1735, AssayIdx:4, AssayName:Inhibitors of APE1: Caco-2 Cell Permeability Profiling], [AssayId:1612, AssayIdx:5, AssayName:Inhibitors of APE1: Mouse Plasma Stability Profiling], [AssayId:1651, AssayIdx:6, AssayName:Inhibitors of APE1: Metabolic Stability Profiling], [AssayId:1604, AssayIdx:7, AssayName:Inhibitors of APE1: Aqueous Solubility Profiling], [AssayId:2483, AssayIdx:8, AssayName:qHTS Assay for Inhibitors of Bloom's syndrome helicase (BLM)], [AssayId:2472, AssayIdx:9, AssayName:qHTS Assay for Inhibitors of the Human Apurinic/apyrimidinic Endonuclease 1 (APE1)], [AssayId:2623, AssayIdx:10, AssayName:qHTS FP-Based Assay for Inhibitors of the Human Apurinic/apyrimidinic Endonuclease 1 (APE1)], [AssayId:3402, AssayIdx:11, AssayName:qHTS Assay for Inhibitors of BRCT-Phosphoprotein Interaction (Green Fluorophore)], [AssayId:3418, AssayIdx:12, AssayName:qHTS Assay for Inhibitors of BRCT-Phosphoprotein Interaction (Red Fluorophore)], [AssayId:3594, AssayIdx:13, AssayName:Homologous recombination_Rad 51_dose response_2], [AssayId:3874, AssayIdx:14, AssayName:Homologous recombination - Rad 51], [AssayId:537, AssayIdx:15, AssayName:Late stage assay provider results from the probe development effort to identify inhibitors of Wee1 degradation: luminescence-based cell-based assay to identify inhibitors of Wee1 degradation]]]
+
+	at cow.LinkedVisHierDataUnitSpec.test createCombinedListing(LinkedVisHierDataUnitSpec.groovy:80)
+2013-06-21 14:00:17,991 [main] ERROR StackTrace  - Full Stack Trace:
+Condition not satisfied:
+
+userJson.getClass().name == 'java.util.ArrayList'
+|        |          |    |
+|        |          |    false
+|        |          |    8 differences (57% similarity)
+|        |          |    java.util.(H--)a(shMap)
+|        |          |    java.util.(Arr)a(yList)
+|        |          java.util.HashMap
+|        class java.util.HashMap
+[Category:[[Structure:[:], CatRef:0, HierType:Graph], [Structure:[:], CatRef:1, HierType:Tree], [Structure:[:], CatRef:2, HierType:Tree], [Structure:[:], CatRef:3, HierType:Tree]], AssayCross:[[AssayRef:0, data:[3:Ion channel NompC, 2:protein-small molecule interaction assay, 1:cell-based format, 0:none]], [AssayRef:2, data:[3:none, 2:protein expression assay, 1:cell-based format, 0:regulation of gene expression]], [AssayRef:15, data:[3:none, 2:direct enzyme activity assay, 1:single protein format, 0:bontoxilysin activity]], [AssayRef:1, data:[3:Regulator of G-protein signaling 4, 2:protein-protein interaction assay, 1:single protein format, 0:plectin-1]], [AssayRef:3, data:[3:none, 2:none, 1:whole-cell lysate format, 0:none]], [AssayRef:4, data:[3:none, 2:protein expression assay, 1:cell-based format, 0:regulation of gene expression]], [AssayRef:6, data:[3:none, 2:functional assay, 1:cell-based format, 0:bontoxilysin activity]], [AssayRef:5, data:[3:none, 2:fluorescence interference assay, 1:biochemical format, 0:none]], [AssayRef:7, data:[3:none, 2:protein-protein interaction assay, 1:biochemical format, 0:plectin-1]], [AssayRef:8, data:[3:Regulator of G-protein signaling 8, 2:protein-protein interaction assay, 1:single protein format, 0:plectin-1]], [AssayRef:9, data:[3:none, 2:direct enzyme activity assay, 1:biochemical format, 0:bontoxilysin activity]], [AssayRef:10, data:[3:Ion channel NompC, 2:protein-small molecule interaction assay, 1:cell-based format, 0:kinase activity]], [AssayRef:11, data:[3:none, 2:reporter-gene assay, 1:cell-based format, 0:none]], [AssayRef:12, data:[3:Multidrug resistance protein 1, 2:transporter assay, 1:cell-based format, 0:cell death]], [AssayRef:13, data:[3:none, 2:protein expression assay, 1:cell-based format, 0:regulation of gene expression]], [AssayRef:14, data:[3:none, 2:gene-expression assay, 1:cell-based format, 0:immunological synapse formation]]], Assays:[[AssayId:1017, AssayIdx:0, AssayName:Radiotracer Incision Assay (RIA) for Inhibitors of Human Apurinic/apyrimidinic Endonuclease 1 (APE1)], [AssayId:1730, AssayIdx:1, AssayName:Inhibitors of Bloom's syndrome helicase: Efflux Ratio Profiling Assay], [AssayId:1732, AssayIdx:2, AssayName:Inhibitors of Bloom's syndrome helicase: Aqueous Profiling Assay], [AssayId:1733, AssayIdx:3, AssayName:Inhibitors of Bloom's syndrome helicase: Metabolic Stability Profiling], [AssayId:1735, AssayIdx:4, AssayName:Inhibitors of APE1: Caco-2 Cell Permeability Profiling], [AssayId:1612, AssayIdx:5, AssayName:Inhibitors of APE1: Mouse Plasma Stability Profiling], [AssayId:1651, AssayIdx:6, AssayName:Inhibitors of APE1: Metabolic Stability Profiling], [AssayId:1604, AssayIdx:7, AssayName:Inhibitors of APE1: Aqueous Solubility Profiling], [AssayId:2483, AssayIdx:8, AssayName:qHTS Assay for Inhibitors of Bloom's syndrome helicase (BLM)], [AssayId:2472, AssayIdx:9, AssayName:qHTS Assay for Inhibitors of the Human Apurinic/apyrimidinic Endonuclease 1 (APE1)], [AssayId:2623, AssayIdx:10, AssayName:qHTS FP-Based Assay for Inhibitors of the Human Apurinic/apyrimidinic Endonuclease 1 (APE1)], [AssayId:3402, AssayIdx:11, AssayName:qHTS Assay for Inhibitors of BRCT-Phosphoprotein Interaction (Green Fluorophore)], [AssayId:3418, AssayIdx:12, AssayName:qHTS Assay for Inhibitors of BRCT-Phosphoprotein Interaction (Red Fluorophore)], [AssayId:3594, AssayIdx:13, AssayName:Homologous recombination_Rad 51_dose response_2], [AssayId:3874, AssayIdx:14, AssayName:Homologous recombination - Rad 51], [AssayId:537, AssayIdx:15, AssayName:Late stage assay provider results from the probe development effort to identify inhibitors of Wee1 degradation: luminescence-based cell-based assay to identify inhibitors of Wee1 degradation]]]
+
+	at cow.LinkedVisHierDataUnitSpec.test createCombinedListing(LinkedVisHierDataUnitSpec.groovy:80)
+2013-06-21 14:00:18,021 [main] ERROR StackTrace  - Full Stack Trace:
+junit.framework.AssertionFailedError: Condition not satisfied:
+
+userJson.getClass().name == 'java.util.ArrayList'
+|        |          |    |
+|        |          |    false
+|        |          |    8 differences (57% similarity)
+|        |          |    java.util.(H--)a(shMap)
+|        |          |    java.util.(Arr)a(yList)
+|        |          java.util.HashMap
+|        class java.util.HashMap
+[Category:[[Structure:[:], CatRef:0, HierType:Graph], [Structure:[:], CatRef:1, HierType:Tree], [Structure:[:], CatRef:2, HierType:Tree], [Structure:[:], CatRef:3, HierType:Tree]], AssayCross:[[AssayRef:0, data:[3:Ion channel NompC, 2:protein-small molecule interaction assay, 1:cell-based format, 0:none]], [AssayRef:2, data:[3:none, 2:protein expression assay, 1:cell-based format, 0:regulation of gene expression]], [AssayRef:15, data:[3:none, 2:direct enzyme activity assay, 1:single protein format, 0:bontoxilysin activity]], [AssayRef:1, data:[3:Regulator of G-protein signaling 4, 2:protein-protein interaction assay, 1:single protein format, 0:plectin-1]], [AssayRef:3, data:[3:none, 2:none, 1:whole-cell lysate format, 0:none]], [AssayRef:4, data:[3:none, 2:protein expression assay, 1:cell-based format, 0:regulation of gene expression]], [AssayRef:6, data:[3:none, 2:functional assay, 1:cell-based format, 0:bontoxilysin activity]], [AssayRef:5, data:[3:none, 2:fluorescence interference assay, 1:biochemical format, 0:none]], [AssayRef:7, data:[3:none, 2:protein-protein interaction assay, 1:biochemical format, 0:plectin-1]], [AssayRef:8, data:[3:Regulator of G-protein signaling 8, 2:protein-protein interaction assay, 1:single protein format, 0:plectin-1]], [AssayRef:9, data:[3:none, 2:direct enzyme activity assay, 1:biochemical format, 0:bontoxilysin activity]], [AssayRef:10, data:[3:Ion channel NompC, 2:protein-small molecule interaction assay, 1:cell-based format, 0:kinase activity]], [AssayRef:11, data:[3:none, 2:reporter-gene assay, 1:cell-based format, 0:none]], [AssayRef:12, data:[3:Multidrug resistance protein 1, 2:transporter assay, 1:cell-based format, 0:cell death]], [AssayRef:13, data:[3:none, 2:protein expression assay, 1:cell-based format, 0:regulation of gene expression]], [AssayRef:14, data:[3:none, 2:gene-expression assay, 1:cell-based format, 0:immunological synapse formation]]], Assays:[[AssayId:1017, AssayIdx:0, AssayName:Radiotracer Incision Assay (RIA) for Inhibitors of Human Apurinic/apyrimidinic Endonuclease 1 (APE1)], [AssayId:1730, AssayIdx:1, AssayName:Inhibitors of Bloom's syndrome helicase: Efflux Ratio Profiling Assay], [AssayId:1732, AssayIdx:2, AssayName:Inhibitors of Bloom's syndrome helicase: Aqueous Profiling Assay], [AssayId:1733, AssayIdx:3, AssayName:Inhibitors of Bloom's syndrome helicase: Metabolic Stability Profiling], [AssayId:1735, AssayIdx:4, AssayName:Inhibitors of APE1: Caco-2 Cell Permeability Profiling], [AssayId:1612, AssayIdx:5, AssayName:Inhibitors of APE1: Mouse Plasma Stability Profiling], [AssayId:1651, AssayIdx:6, AssayName:Inhibitors of APE1: Metabolic Stability Profiling], [AssayId:1604, AssayIdx:7, AssayName:Inhibitors of APE1: Aqueous Solubility Profiling], [AssayId:2483, AssayIdx:8, AssayName:qHTS Assay for Inhibitors of Bloom's syndrome helicase (BLM)], [AssayId:2472, AssayIdx:9, AssayName:qHTS Assay for Inhibitors of the Human Apurinic/apyrimidinic Endonuclease 1 (APE1)], [AssayId:2623, AssayIdx:10, AssayName:qHTS FP-Based Assay for Inhibitors of the Human Apurinic/apyrimidinic Endonuclease 1 (APE1)], [AssayId:3402, AssayIdx:11, AssayName:qHTS Assay for Inhibitors of BRCT-Phosphoprotein Interaction (Green Fluorophore)], [AssayId:3418, AssayIdx:12, AssayName:qHTS Assay for Inhibitors of BRCT-Phosphoprotein Interaction (Red Fluorophore)], [AssayId:3594, AssayIdx:13, AssayName:Homologous recombination_Rad 51_dose response_2], [AssayId:3874, AssayIdx:14, AssayName:Homologous recombination - Rad 51], [AssayId:537, AssayIdx:15, AssayName:Late stage assay provider results from the probe development effort to identify inhibitors of Wee1 degradation: luminescence-based cell-based assay to identify inhibitors of Wee1 degradation]]]
+
+	at cow.LinkedVisHierDataUnitSpec.test createCombinedListing(LinkedVisHierDataUnitSpec.groovy:80)
+2013-06-21 14:00:18,021 [main] ERROR StackTrace  - Full Stack Trace:
+junit.framework.AssertionFailedError: Condition not satisfied:
+
+userJson.getClass().name == 'java.util.ArrayList'
+|        |          |    |
+|        |          |    false
+|        |          |    8 differences (57% similarity)
+|        |          |    java.util.(H--)a(shMap)
+|        |          |    java.util.(Arr)a(yList)
+|        |          java.util.HashMap
+|        class java.util.HashMap
+[Category:[[Structure:[:], CatRef:0, HierType:Graph], [Structure:[:], CatRef:1, HierType:Tree], [Structure:[:], CatRef:2, HierType:Tree], [Structure:[:], CatRef:3, HierType:Tree]], AssayCross:[[AssayRef:0, data:[3:Ion channel NompC, 2:protein-small molecule interaction assay, 1:cell-based format, 0:none]], [AssayRef:2, data:[3:none, 2:protein expression assay, 1:cell-based format, 0:regulation of gene expression]], [AssayRef:15, data:[3:none, 2:direct enzyme activity assay, 1:single protein format, 0:bontoxilysin activity]], [AssayRef:1, data:[3:Regulator of G-protein signaling 4, 2:protein-protein interaction assay, 1:single protein format, 0:plectin-1]], [AssayRef:3, data:[3:none, 2:none, 1:whole-cell lysate format, 0:none]], [AssayRef:4, data:[3:none, 2:protein expression assay, 1:cell-based format, 0:regulation of gene expression]], [AssayRef:6, data:[3:none, 2:functional assay, 1:cell-based format, 0:bontoxilysin activity]], [AssayRef:5, data:[3:none, 2:fluorescence interference assay, 1:biochemical format, 0:none]], [AssayRef:7, data:[3:none, 2:protein-protein interaction assay, 1:biochemical format, 0:plectin-1]], [AssayRef:8, data:[3:Regulator of G-protein signaling 8, 2:protein-protein interaction assay, 1:single protein format, 0:plectin-1]], [AssayRef:9, data:[3:none, 2:direct enzyme activity assay, 1:biochemical format, 0:bontoxilysin activity]], [AssayRef:10, data:[3:Ion channel NompC, 2:protein-small molecule interaction assay, 1:cell-based format, 0:kinase activity]], [AssayRef:11, data:[3:none, 2:reporter-gene assay, 1:cell-based format, 0:none]], [AssayRef:12, data:[3:Multidrug resistance protein 1, 2:transporter assay, 1:cell-based format, 0:cell death]], [AssayRef:13, data:[3:none, 2:protein expression assay, 1:cell-based format, 0:regulation of gene expression]], [AssayRef:14, data:[3:none, 2:gene-expression assay, 1:cell-based format, 0:immunological synapse formation]]], Assays:[[AssayId:1017, AssayIdx:0, AssayName:Radiotracer Incision Assay (RIA) for Inhibitors of Human Apurinic/apyrimidinic Endonuclease 1 (APE1)], [AssayId:1730, AssayIdx:1, AssayName:Inhibitors of Bloom's syndrome helicase: Efflux Ratio Profiling Assay], [AssayId:1732, AssayIdx:2, AssayName:Inhibitors of Bloom's syndrome helicase: Aqueous Profiling Assay], [AssayId:1733, AssayIdx:3, AssayName:Inhibitors of Bloom's syndrome helicase: Metabolic Stability Profiling], [AssayId:1735, AssayIdx:4, AssayName:Inhibitors of APE1: Caco-2 Cell Permeability Profiling], [AssayId:1612, AssayIdx:5, AssayName:Inhibitors of APE1: Mouse Plasma Stability Profiling], [AssayId:1651, AssayIdx:6, AssayName:Inhibitors of APE1: Metabolic Stability Profiling], [AssayId:1604, AssayIdx:7, AssayName:Inhibitors of APE1: Aqueous Solubility Profiling], [AssayId:2483, AssayIdx:8, AssayName:qHTS Assay for Inhibitors of Bloom's syndrome helicase (BLM)], [AssayId:2472, AssayIdx:9, AssayName:qHTS Assay for Inhibitors of the Human Apurinic/apyrimidinic Endonuclease 1 (APE1)], [AssayId:2623, AssayIdx:10, AssayName:qHTS FP-Based Assay for Inhibitors of the Human Apurinic/apyrimidinic Endonuclease 1 (APE1)], [AssayId:3402, AssayIdx:11, AssayName:qHTS Assay for Inhibitors of BRCT-Phosphoprotein Interaction (Green Fluorophore)], [AssayId:3418, AssayIdx:12, AssayName:qHTS Assay for Inhibitors of BRCT-Phosphoprotein Interaction (Red Fluorophore)], [AssayId:3594, AssayIdx:13, AssayName:Homologous recombination_Rad 51_dose response_2], [AssayId:3874, AssayIdx:14, AssayName:Homologous recombination - Rad 51], [AssayId:537, AssayIdx:15, AssayName:Late stage assay provider results from the probe development effort to identify inhibitors of Wee1 degradation: luminescence-based cell-based assay to identify inhibitors of Wee1 degradation]]]
+
+	at cow.LinkedVisHierDataUnitSpec.test createCombinedListing(LinkedVisHierDataUnitSpec.groovy:80)
+2013-06-21 14:00:18,027 [main] ERROR StackTrace  - Full Stack Trace:
+junit.framework.AssertionFailedError: Condition not satisfied:
+
+userJson.getClass().name == 'java.util.ArrayList'
+|        |          |    |
+|        |          |    false
+|        |          |    8 differences (57% similarity)
+|        |          |    java.util.(H--)a(shMap)
+|        |          |    java.util.(Arr)a(yList)
+|        |          java.util.HashMap
+|        class java.util.HashMap
+[Category:[[Structure:[:], CatRef:0, HierType:Graph], [Structure:[:], CatRef:1, HierType:Tree], [Structure:[:], CatRef:2, HierType:Tree], [Structure:[:], CatRef:3, HierType:Tree]], AssayCross:[[AssayRef:0, data:[3:Ion channel NompC, 2:protein-small molecule interaction assay, 1:cell-based format, 0:none]], [AssayRef:2, data:[3:none, 2:protein expression assay, 1:cell-based format, 0:regulation of gene expression]], [AssayRef:15, data:[3:none, 2:direct enzyme activity assay, 1:single protein format, 0:bontoxilysin activity]], [AssayRef:1, data:[3:Regulator of G-protein signaling 4, 2:protein-protein interaction assay, 1:single protein format, 0:plectin-1]], [AssayRef:3, data:[3:none, 2:none, 1:whole-cell lysate format, 0:none]], [AssayRef:4, data:[3:none, 2:protein expression assay, 1:cell-based format, 0:regulation of gene expression]], [AssayRef:6, data:[3:none, 2:functional assay, 1:cell-based format, 0:bontoxilysin activity]], [AssayRef:5, data:[3:none, 2:fluorescence interference assay, 1:biochemical format, 0:none]], [AssayRef:7, data:[3:none, 2:protein-protein interaction assay, 1:biochemical format, 0:plectin-1]], [AssayRef:8, data:[3:Regulator of G-protein signaling 8, 2:protein-protein interaction assay, 1:single protein format, 0:plectin-1]], [AssayRef:9, data:[3:none, 2:direct enzyme activity assay, 1:biochemical format, 0:bontoxilysin activity]], [AssayRef:10, data:[3:Ion channel NompC, 2:protein-small molecule interaction assay, 1:cell-based format, 0:kinase activity]], [AssayRef:11, data:[3:none, 2:reporter-gene assay, 1:cell-based format, 0:none]], [AssayRef:12, data:[3:Multidrug resistance protein 1, 2:transporter assay, 1:cell-based format, 0:cell death]], [AssayRef:13, data:[3:none, 2:protein expression assay, 1:cell-based format, 0:regulation of gene expression]], [AssayRef:14, data:[3:none, 2:gene-expression assay, 1:cell-based format, 0:immunological synapse formation]]], Assays:[[AssayId:1017, AssayIdx:0, AssayName:Radiotracer Incision Assay (RIA) for Inhibitors of Human Apurinic/apyrimidinic Endonuclease 1 (APE1)], [AssayId:1730, AssayIdx:1, AssayName:Inhibitors of Bloom's syndrome helicase: Efflux Ratio Profiling Assay], [AssayId:1732, AssayIdx:2, AssayName:Inhibitors of Bloom's syndrome helicase: Aqueous Profiling Assay], [AssayId:1733, AssayIdx:3, AssayName:Inhibitors of Bloom's syndrome helicase: Metabolic Stability Profiling], [AssayId:1735, AssayIdx:4, AssayName:Inhibitors of APE1: Caco-2 Cell Permeability Profiling], [AssayId:1612, AssayIdx:5, AssayName:Inhibitors of APE1: Mouse Plasma Stability Profiling], [AssayId:1651, AssayIdx:6, AssayName:Inhibitors of APE1: Metabolic Stability Profiling], [AssayId:1604, AssayIdx:7, AssayName:Inhibitors of APE1: Aqueous Solubility Profiling], [AssayId:2483, AssayIdx:8, AssayName:qHTS Assay for Inhibitors of Bloom's syndrome helicase (BLM)], [AssayId:2472, AssayIdx:9, AssayName:qHTS Assay for Inhibitors of the Human Apurinic/apyrimidinic Endonuclease 1 (APE1)], [AssayId:2623, AssayIdx:10, AssayName:qHTS FP-Based Assay for Inhibitors of the Human Apurinic/apyrimidinic Endonuclease 1 (APE1)], [AssayId:3402, AssayIdx:11, AssayName:qHTS Assay for Inhibitors of BRCT-Phosphoprotein Interaction (Green Fluorophore)], [AssayId:3418, AssayIdx:12, AssayName:qHTS Assay for Inhibitors of BRCT-Phosphoprotein Interaction (Red Fluorophore)], [AssayId:3594, AssayIdx:13, AssayName:Homologous recombination_Rad 51_dose response_2], [AssayId:3874, AssayIdx:14, AssayName:Homologous recombination - Rad 51], [AssayId:537, AssayIdx:15, AssayName:Late stage assay provider results from the probe development effort to identify inhibitors of Wee1 degradation: luminescence-based cell-based assay to identify inhibitors of Wee1 degradation]]]
+
+	at cow.LinkedVisHierDataUnitSpec.test createCombinedListing(LinkedVisHierDataUnitSpec.groovy:80)
+2013-06-21 14:00:18,027 [main] ERROR StackTrace  - Full Stack Trace:
+junit.framework.AssertionFailedError: Condition not satisfied:
+
+userJson.getClass().name == 'java.util.ArrayList'
+|        |          |    |
+|        |          |    false
+|        |          |    8 differences (57% similarity)
+|        |          |    java.util.(H--)a(shMap)
+|        |          |    java.util.(Arr)a(yList)
+|        |          java.util.HashMap
+|        class java.util.HashMap
+[Category:[[Structure:[:], CatRef:0, HierType:Graph], [Structure:[:], CatRef:1, HierType:Tree], [Structure:[:], CatRef:2, HierType:Tree], [Structure:[:], CatRef:3, HierType:Tree]], AssayCross:[[AssayRef:0, data:[3:Ion channel NompC, 2:protein-small molecule interaction assay, 1:cell-based format, 0:none]], [AssayRef:2, data:[3:none, 2:protein expression assay, 1:cell-based format, 0:regulation of gene expression]], [AssayRef:15, data:[3:none, 2:direct enzyme activity assay, 1:single protein format, 0:bontoxilysin activity]], [AssayRef:1, data:[3:Regulator of G-protein signaling 4, 2:protein-protein interaction assay, 1:single protein format, 0:plectin-1]], [AssayRef:3, data:[3:none, 2:none, 1:whole-cell lysate format, 0:none]], [AssayRef:4, data:[3:none, 2:protein expression assay, 1:cell-based format, 0:regulation of gene expression]], [AssayRef:6, data:[3:none, 2:functional assay, 1:cell-based format, 0:bontoxilysin activity]], [AssayRef:5, data:[3:none, 2:fluorescence interference assay, 1:biochemical format, 0:none]], [AssayRef:7, data:[3:none, 2:protein-protein interaction assay, 1:biochemical format, 0:plectin-1]], [AssayRef:8, data:[3:Regulator of G-protein signaling 8, 2:protein-protein interaction assay, 1:single protein format, 0:plectin-1]], [AssayRef:9, data:[3:none, 2:direct enzyme activity assay, 1:biochemical format, 0:bontoxilysin activity]], [AssayRef:10, data:[3:Ion channel NompC, 2:protein-small molecule interaction assay, 1:cell-based format, 0:kinase activity]], [AssayRef:11, data:[3:none, 2:reporter-gene assay, 1:cell-based format, 0:none]], [AssayRef:12, data:[3:Multidrug resistance protein 1, 2:transporter assay, 1:cell-based format, 0:cell death]], [AssayRef:13, data:[3:none, 2:protein expression assay, 1:cell-based format, 0:regulation of gene expression]], [AssayRef:14, data:[3:none, 2:gene-expression assay, 1:cell-based format, 0:immunological synapse formation]]], Assays:[[AssayId:1017, AssayIdx:0, AssayName:Radiotracer Incision Assay (RIA) for Inhibitors of Human Apurinic/apyrimidinic Endonuclease 1 (APE1)], [AssayId:1730, AssayIdx:1, AssayName:Inhibitors of Bloom's syndrome helicase: Efflux Ratio Profiling Assay], [AssayId:1732, AssayIdx:2, AssayName:Inhibitors of Bloom's syndrome helicase: Aqueous Profiling Assay], [AssayId:1733, AssayIdx:3, AssayName:Inhibitors of Bloom's syndrome helicase: Metabolic Stability Profiling], [AssayId:1735, AssayIdx:4, AssayName:Inhibitors of APE1: Caco-2 Cell Permeability Profiling], [AssayId:1612, AssayIdx:5, AssayName:Inhibitors of APE1: Mouse Plasma Stability Profiling], [AssayId:1651, AssayIdx:6, AssayName:Inhibitors of APE1: Metabolic Stability Profiling], [AssayId:1604, AssayIdx:7, AssayName:Inhibitors of APE1: Aqueous Solubility Profiling], [AssayId:2483, AssayIdx:8, AssayName:qHTS Assay for Inhibitors of Bloom's syndrome helicase (BLM)], [AssayId:2472, AssayIdx:9, AssayName:qHTS Assay for Inhibitors of the Human Apurinic/apyrimidinic Endonuclease 1 (APE1)], [AssayId:2623, AssayIdx:10, AssayName:qHTS FP-Based Assay for Inhibitors of the Human Apurinic/apyrimidinic Endonuclease 1 (APE1)], [AssayId:3402, AssayIdx:11, AssayName:qHTS Assay for Inhibitors of BRCT-Phosphoprotein Interaction (Green Fluorophore)], [AssayId:3418, AssayIdx:12, AssayName:qHTS Assay for Inhibitors of BRCT-Phosphoprotein Interaction (Red Fluorophore)], [AssayId:3594, AssayIdx:13, AssayName:Homologous recombination_Rad 51_dose response_2], [AssayId:3874, AssayIdx:14, AssayName:Homologous recombination - Rad 51], [AssayId:537, AssayIdx:15, AssayName:Late stage assay provider results from the probe development effort to identify inhibitors of Wee1 degradation: luminescence-based cell-based assay to identify inhibitors of Wee1 degradation]]]
+
+	at cow.LinkedVisHierDataUnitSpec.test createCombinedListing(LinkedVisHierDataUnitSpec.groovy:80)

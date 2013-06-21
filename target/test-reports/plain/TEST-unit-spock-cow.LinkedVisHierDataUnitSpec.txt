@@ -1,7 +1,15 @@
 Testsuite: cow.LinkedVisHierDataUnitSpec
-Tests run: 1, Failures: 0, Errors: 0, Time elapsed: 87.223 sec
+Tests run: 5, Failures: 0, Errors: 0, Time elapsed: 0.279 sec
 ------------- Standard Error -----------------
---Output from bloog--
+--Output from test writeCategorySection--
+--Output from test writeHierSection--
+--Output from test writeAssaysSection--
+--Output from test createAssayCrossSection--
+--Output from test createCombinedListing--
 ------------- ---------------- ---------------
 
-Testcase: bloog took 87.188 sec
+Testcase: test writeCategorySection took 0.092 sec
+Testcase: test writeHierSection took 0.016 sec
+Testcase: test writeAssaysSection took 0.029 sec
+Testcase: test createAssayCrossSection took 0.038 sec
+Testcase: test createCombinedListing took 0.067 sec

@@ -18,17 +18,69 @@ class LinkedVisHierDataUnitSpec  extends Specification {
     }
 
 
-    void "bloog"() {
+    void "test writeCategorySection"() {
         when:
-        int i = 1
         cow.LinkedVisHierData linkedVisHierData = new cow.LinkedVisHierData()
-        println  linkedVisHierData.writeCategorySection ()
+        String categorySectionJson =  linkedVisHierData.createCategorySection()
+//        println  categorySectionJson
 
         then:
-        i == 1
-        def userJson = new JsonSlurper().parseText(linkedVisHierData.writeCategorySection () )
+        def userJson = new JsonSlurper().parseText(categorySectionJson )
         assert  userJson.getClass().name == 'java.util.ArrayList'
     }
+
+
+
+    void "test writeHierSection"() {
+        when:
+        cow.LinkedVisHierData linkedVisHierData = new cow.LinkedVisHierData()
+        String hierarchySectionJson =  linkedVisHierData.createHierarchySection()
+//        println  hierarchySectionJson
+
+        then:
+        def userJson = new JsonSlurper().parseText(hierarchySectionJson )
+        assert  userJson.getClass().name == 'java.util.ArrayList'
+    }
+
+
+    void "test writeAssaysSection"() {
+        when:
+        cow.LinkedVisHierData linkedVisHierData = new cow.LinkedVisHierData()
+        String assaysSectionJson =  linkedVisHierData.createAssaysSection()
+//        println  assaysSectionJson
+
+        then:
+        def userJson = new JsonSlurper().parseText(assaysSectionJson )
+        assert  userJson.getClass().name == 'java.util.ArrayList'
+    }
+
+
+    void "test createAssayCrossSection"() {
+        when:
+        cow.LinkedVisHierData linkedVisHierData = new cow.LinkedVisHierData()
+        String assaysSectionJson =  linkedVisHierData.createAssayCrossSection()
+//        println  assaysSectionJson
+
+        then:
+        def userJson = new JsonSlurper().parseText(assaysSectionJson )
+        assert  userJson.getClass().name == 'java.util.ArrayList'
+    }
+
+
+
+
+    void "test createCombinedListing"() {
+        when:
+        cow.LinkedVisHierData linkedVisHierData = new cow.LinkedVisHierData()
+        String assaysSectionJson =  linkedVisHierData.createCombinedListing()
+        println  assaysSectionJson
+
+        then:
+        def userJson = new JsonSlurper().parseText(assaysSectionJson )
+        assert  userJson.getClass().name == 'java.util.HashMap'
+    }
+
+
 
 
 
