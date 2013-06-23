@@ -253,7 +253,7 @@ public class LinkedVisHierData {
         StringBuilder stringBuilder = new StringBuilder()
         stringBuilder << openObject << endOfLine
         stringBuilder << addQuotes('Category') << colonUnit << createCategorySection() << comma << endOfLine
-        stringBuilder << addQuotes('Category') << colonUnit << createHierarchySection() << comma << endOfLine
+        stringBuilder << addQuotes('Hierarchy') << colonUnit << createHierarchySection() << comma << endOfLine
         stringBuilder << addQuotes('Assays') << colonUnit << createAssaysSection() << comma << endOfLine
         stringBuilder << addQuotes('AssayCross') << colonUnit << createAssayCrossSection() << endOfLine
         stringBuilder << closeObject

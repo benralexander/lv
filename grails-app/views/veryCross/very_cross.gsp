@@ -292,7 +292,7 @@
                 displayWidgetY = 320, // expanded widget Y location.
                 displayWidgetWidth = 1000, // expanded widget Y width.
                 displayWidgetHeight = 1000, // expanded widget Y height.
-                bigPie = (displayWidgetWidth/2)-displayWidgetX, // size of pie in display mode
+                bigPie = (displayWidgetWidth / 2) - displayWidgetX, // size of pie in display mode
 
         //  I need to have a color for every possible pie slice. Since the color map is largely arbitrary, d3 does not
         //   seem to provide An easy way to say "please give me another color unlike when you've given me before".  Note
@@ -424,21 +424,21 @@
         var displayManipulator = (function () {
             var rememberClickEffectors = [],
                     disableAllPieClickEffectors = function () {
-                        for (var widgetCounter = 0; widgetCounter< totalWidgetNumber;widgetCounter++){
-                            rememberClickEffectors [widgetCounter]  =   d3.selectAll('#a'+widgetCounter+'-chart>svg>g>.pie-slice>path').on('click');
-                            d3.selectAll('#a'+widgetCounter+'-chart>svg>g>.pie-slice>path').on('click',null);
+                        for (var widgetCounter = 0; widgetCounter < totalWidgetNumber; widgetCounter++) {
+                            rememberClickEffectors [widgetCounter] = d3.selectAll('#a' + widgetCounter + '-chart>svg>g>.pie-slice>path').on('click');
+                            d3.selectAll('#a' + widgetCounter + '-chart>svg>g>.pie-slice>path').on('click', null);
                         }
                     },
                     reenableAllPieClickEffectors = function () {
-                        if (rememberClickEffectors === undefined)  {
+                        if (rememberClickEffectors === undefined) {
                             alert(' JavaScript error--an attempt was made to reenableAllPieClickEffectors before originally disabling those ClickEffectors');
-                        }  else {
-                            for (var widgetCounter = 0; widgetCounter< totalWidgetNumber;widgetCounter++){
-                                d3.selectAll('#a'+widgetCounter+'-chart>svg>g>.pie-slice>path').on('click',rememberClickEffectors [widgetCounter]);
+                        } else {
+                            for (var widgetCounter = 0; widgetCounter < totalWidgetNumber; widgetCounter++) {
+                                d3.selectAll('#a' + widgetCounter + '-chart>svg>g>.pie-slice>path').on('click', rememberClickEffectors [widgetCounter]);
                             }
                         }
                     } ,
-                    eraseAnyOrphanedTooltips = function (){
+                    eraseAnyOrphanedTooltips = function () {
                         var orphanedTooltips = d3.selectAll('.toolTextAppearance');
                         if (!(orphanedTooltips === undefined)) {
                             orphanedTooltips.style('opacity', 0);
@@ -454,7 +454,7 @@
                                     return 1;
                                 }),
                                 displayDataGroup = function (d) {
-                                    var returnValue =  d.data.key.toString() + " (" + d.data.value+")";
+                                    var returnValue = d.data.key.toString() + " (" + d.data.value + ")";
                                     returnValue = returnValue.replace("http://amigo.geneontology.org/cgi-bin/amigo/term_details?term=", "[GO]");
                                     returnValue = returnValue.replace("http://www.ncbi.nlm.nih.gov/gquery/?term=", "[NCBI]");
                                     return returnValue;
@@ -483,7 +483,7 @@
                                 },
                                 dimensionVariableGroupTotal = function (d) {
                                     return dimensionVariable.groupAll();
-                                } ;
+                                };
 
                         var theTable = dc.dataTable("#" + id)
                                 .dimension(dimensionVariable)
@@ -507,10 +507,10 @@
                                 .sortBy(function (d) {
                                     return d.GO_biological_process_term;
                                 });
-//                        This datecount  function below doesn't seem to work for me. What's wrong?
-//                        dc.dataCount("#data-count")
-//                                .dimension(dimensionVariable)
-//                                .group(dimensionVariableGroupTotal);
+                        //                        This datecount  function below doesn't seem to work for me. What's wrong?
+                        //                        dc.dataCount("#data-count")
+                        //                                .dimension(dimensionVariable)
+                        //                                .group(dimensionVariableGroupTotal);
 
                         return  theTable;
                     },
@@ -524,12 +524,12 @@
                     moveDataTableOutOfTheWay = function (dataTable) {
                         dataTable.transition()
                                 .duration(500)
-                                .style("top", 50+displayWidgetY + displayWidgetHeight + "px");  // Extra spaces for 'click to contract' button
+                                .style("top", 50 + displayWidgetY + displayWidgetHeight + "px");  // Extra spaces for 'click to contract' button
                     },
 
                     moveDataTableBackToItsOriginalPosition = function (dataTable) {
                         dataTable.transition()
-                                .delay (1000)
+                                .delay(1000)
                                 .duration(500)
                                 .style("top", "300px");  // Extra spaces for 'click to contract' button
                     },
@@ -560,22 +560,22 @@
                         shiftBackgroundWidgets(background3, expandedPos[2].x);
 
                         //   Turn off the text label based on click event for background widgets
-                        background1.selectAll('.pieChart>svg>g>.pie-slice').style('pointer-events','none');
-                        background2.selectAll('.pieChart>svg>g>.pie-slice').style('pointer-events','none');
-                        background3.selectAll('.pieChart>svg>g>.pie-slice').style('pointer-events','none');
+                        background1.selectAll('.pieChart>svg>g>.pie-slice').style('pointer-events', 'none');
+                        background2.selectAll('.pieChart>svg>g>.pie-slice').style('pointer-events', 'none');
+                        background3.selectAll('.pieChart>svg>g>.pie-slice').style('pointer-events', 'none');
 
                         //  Turn off the expander button, since the user needs to contract the expanded
                         //  widget before they try to expand the new one. It would be nice to click that
                         //  button for them, but D three does not support that sort of activation is you are
                         //  using bound data. I should probably connect to those data dynamically to get around
                         //  this problem.
-                        background1.selectAll('.expandButton').style('pointer-events','none').style('opacity',0.5);
-                        background2.selectAll('.expandButton').style('pointer-events','none').style('opacity',0.5);
-                        background3.selectAll('.expandButton').style('pointer-events','none').style('opacity',0.5);
+                        background1.selectAll('.expandButton').style('pointer-events', 'none').style('opacity', 0.5);
+                        background2.selectAll('.expandButton').style('pointer-events', 'none').style('opacity', 0.5);
+                        background3.selectAll('.expandButton').style('pointer-events', 'none').style('opacity', 0.5);
 
                         origButton
                                 .text(textForContractingButton)
-                                .attr('class','contractButton')
+                                .attr('class', 'contractButton')
                                 .transition()
                                 .delay(1000)
                                 .duration(500)
@@ -599,28 +599,28 @@
                         shiftBackgroundWidgets(background1, background1.data()[0].orig.coords.x);
                         shiftBackgroundWidgets(background2, background2.data()[0].orig.coords.x);
                         shiftBackgroundWidgets(background3, background3.data()[0].orig.coords.x);
-                        background1.selectAll('.pieChart>svg>g>.pie-slice').style('pointer-events','auto');
-                        background2.selectAll('.pieChart>svg>g>.pie-slice').style('pointer-events','auto');
-                        background3.selectAll('.pieChart>svg>g>.pie-slice').style('pointer-events','auto');
+                        background1.selectAll('.pieChart>svg>g>.pie-slice').style('pointer-events', 'auto');
+                        background2.selectAll('.pieChart>svg>g>.pie-slice').style('pointer-events', 'auto');
+                        background3.selectAll('.pieChart>svg>g>.pie-slice').style('pointer-events', 'auto');
                         //  Turn back on the expander buttons
                         //  widget before they try to expand the new one. It would be nice to click that
                         //  button for them, but D three does not support that sort of activation is you are
                         //  using bound data. I should probably connect to those data dynamically to get around
                         //  this problem.
-                        background1.selectAll('.expandButton').style('pointer-events','auto').style('opacity',1);
-                        background2.selectAll('.expandButton').style('pointer-events','auto').style('opacity',1);
-                        background3.selectAll('.expandButton').style('pointer-events','auto').style('opacity',1);
+                        background1.selectAll('.expandButton').style('pointer-events', 'auto').style('opacity', 1);
+                        background2.selectAll('.expandButton').style('pointer-events', 'auto').style('opacity', 1);
+                        background3.selectAll('.expandButton').style('pointer-events', 'auto').style('opacity', 1);
 
                         var x = origButton
                                 .text(textForExpandingButton)
-                                .attr('class','expandButton')
+                                .attr('class', 'expandButton')
                                 .transition()
                                 .delay(1000)
                                 .duration(500)
                                 .style('opacity', 1);
                     },
 
-                    expandGraphicsArea = function (graphicsTarget,graphicsTitle) {
+                    expandGraphicsArea = function (graphicsTarget, graphicsTitle) {
 
                         var bigarc = d3.svg.arc()
                                 .innerRadius(innerRadiusWhenExpanded)
@@ -628,7 +628,7 @@
 
                         graphicsTarget
                                 .attr('width', displayWidgetWidth)
-                                .attr('height', displayWidgetHeight+50); // Extra room for the 'click to contract' button
+                                .attr('height', displayWidgetHeight + 50); // Extra room for the 'click to contract' button
 
                         graphicsTarget
                                 .select('g')
@@ -643,10 +643,10 @@
                                 .attr("d", bigarc)
                                 .attr("transform", "translate(368,375)");    // We need use explicit numbers here, not variables. This would be something to fix
 
-                        graphicsTitle.attr('class','expandedGraphTitle');
+                        graphicsTitle.attr('class', 'expandedGraphTitle');
                     },
 
-                    contractGraphicsArea = function (graphicsTarget,graphicsTitle) {
+                    contractGraphicsArea = function (graphicsTarget, graphicsTitle) {
 
                         var arc = d3.svg.arc()
                                 .innerRadius(innerRadius)
@@ -671,7 +671,7 @@
                                 .attr("d", arc)
                                 .attr("transform", "translate(0,0)");
 
-                        graphicsTitle.attr('class','graphTitle');
+                        graphicsTitle.attr('class', 'graphTitle');
 
                     },
                     removeTheSun = function () {
@@ -682,7 +682,7 @@
                                 .style('opacity', '0')
                     }
 
-            swapAPieForTheSun = function (pieDiv,sunburstContainer,expandedButtonNum,callbackToExpandOrContractOnButtonClick) {
+            swapAPieForTheSun = function (pieDiv, sunburstContainer, expandedButtonNum, callbackToExpandOrContractOnButtonClick) {
                 pieDiv.style('pointer-events', 'none')
                         .transition()
                         .delay(1000)
@@ -727,7 +727,7 @@
                                         height: displayWidgetHeight }
                                 }
                             }
-                            callbackToExpandOrContractOnButtonClick(substituteData,expandedButtonNum);
+                            callbackToExpandOrContractOnButtonClick(substituteData, expandedButtonNum);
                         });
                 var molecularStructure = d3.selectAll('.molstruct')
                         .transition()
@@ -741,23 +741,160 @@
 
             // Public API for this module
             return {
-                disableAllPieClickEffectors:disableAllPieClickEffectors,
-                reenableAllPieClickEffectors:reenableAllPieClickEffectors,
-                eraseAnyOrphanedTooltips:eraseAnyOrphanedTooltips,
-                contractGraphicsArea:contractGraphicsArea,
-                expandGraphicsArea:expandGraphicsArea,
-                resetOneAndResettleThree:resetOneAndResettleThree,
-                spotlightOneAndBackgroundThree:spotlightOneAndBackgroundThree,
-                expandDataAreaForAllPieCharts:expandDataAreaForAllPieCharts,
-                moveDataTableOutOfTheWay:moveDataTableOutOfTheWay,
-                moveDataTableBackToItsOriginalPosition:moveDataTableBackToItsOriginalPosition,
-                addDcTable:addDcTable,
-                addPieChart:addPieChart,
-                swapAPieForTheSun:swapAPieForTheSun
+                disableAllPieClickEffectors: disableAllPieClickEffectors,
+                reenableAllPieClickEffectors: reenableAllPieClickEffectors,
+                eraseAnyOrphanedTooltips: eraseAnyOrphanedTooltips,
+                contractGraphicsArea: contractGraphicsArea,
+                expandGraphicsArea: expandGraphicsArea,
+                resetOneAndResettleThree: resetOneAndResettleThree,
+                spotlightOneAndBackgroundThree: spotlightOneAndBackgroundThree,
+                expandDataAreaForAllPieCharts: expandDataAreaForAllPieCharts,
+                moveDataTableOutOfTheWay: moveDataTableOutOfTheWay,
+                moveDataTableBackToItsOriginalPosition: moveDataTableBackToItsOriginalPosition,
+                addDcTable: addDcTable,
+                addPieChart: addPieChart,
+                swapAPieForTheSun: swapAPieForTheSun
             };
         }() );
 
+        var linkedVizData = (function (){
+            var validator = {
 
+                // all available checks
+                types: {},
+
+                // error messages in the current
+                // validation session
+                messages: [],
+
+                // current validation config
+                // name: validation type
+                config: {},
+
+                // the interface method
+                // `data` is key => value pairs
+                validate: function (data) {
+
+                    var i, msg, type, checker, result_ok;
+
+                    // reset all messages
+                    this.messages = [];
+
+                    for (i in data) {
+
+                        if (data.hasOwnProperty(i)) {
+
+                            type = this.config[i];
+                            checker = this.types[type];
+
+                            if (!type) {
+                                continue; // no need to validate
+                            }
+                            if (!checker) { // uh-oh
+                                throw {
+                                    name: "ValidationError",
+                                    message: "No handler to validate type " + type
+                                };
+                            }
+
+                            result_ok = checker.validate(data[i]);
+                            if (!result_ok) {
+                                msg = "Invalid value for *" + i + "*, " + checker.instructions;
+                                this.messages.push(msg);
+                            }
+                        }
+                    }
+                    return this.hasErrors();
+                },
+
+                // helper
+                hasErrors: function () {
+                    return this.messages.length !== 0;
+                }
+            };
+
+
+
+            validator.types.isNonEmpty = {
+                validate: function (value) {
+                    return !!value;
+                },
+                instructions: "the value cannot be empty"
+            };
+
+            validator.types.isNumber = {
+                validate: function (value) {
+                    return !isNaN(Number(value));
+                },
+                instructions: "the value can only be a valid number, e.g. 1, 3.14 or 2010"
+            };
+
+            validator.types.isAlphaNum = {
+                validate: function (value) {
+                    return !String(value).replace(/[a-z0-9]/ig, "").length;
+                },
+                instructions: "the value can only contain characters and numbers, no special symbols"
+            };
+            validator.types.categoryCheck = {
+                validate: function (value) {
+                    var returnVal = true;
+                    if (value.length!=4) {
+                        returnVal = false;
+                    }
+                    return returnVal;
+                },
+                instructions: "failed core category check"
+            };
+
+
+
+            validator.config = {
+                Category: 'categoryCheck',
+                Hierarchy: 'isNonEmpty',
+                Assays: 'isNonEmpty',
+                AssayCross: 'isNonEmpty'
+
+//                age: 'isNumber',
+//                username: 'isAlphaNum'
+            };
+
+
+            var data = {
+                first_name: "Super",
+                last_name: "Man",
+                age: "unknown",
+                username: "o_O"
+            };
+
+            var linkedData = {};
+
+            var parseData = function (incomingData)  {
+                linkedData =  incomingData;
+            };
+
+            var validateLinkedData = function ()  {
+                var returnVal = true;
+                validator.validate(linkedData);
+                if (validator.hasErrors()) {
+                    returnVal = false;
+                    console.log(validator.messages.join("\n"));
+                }
+                return returnVal;
+            };
+
+
+            //            validator.validate(data);
+            //            if (validator.hasErrors()) {
+            //                console.log(validator.messages.join("\n"));
+            //            }
+
+            return {
+                parseData:parseData,
+                validateLinkedData:validateLinkedData,
+                validate:validator.validate
+            }
+
+        }());
         //
         //   Get the data and make the plots using dc.js.  Use this as an opportunity to encapsulate any methods that are
         //    used strictly locally
@@ -812,11 +949,11 @@
                                     d3.select('#a' + unexpandedWidget[2]),
                                     origButton,
                                     expandedPos);
-                            expandContractButton = d3.select('#a' + expandedWidget+'-chart>.graphTitle')
-                            displayManipulator.expandGraphicsArea( d3.select('#a' + expandedWidget).select('.pieChart>svg'),
-                                    expandContractButton );
-                            if (expandContractButton.text() === 'Protein target'){
-                                displayManipulator.swapAPieForTheSun(d3.select('#a' + expandedWidget),d3.selectAll('#suburst_container'),expandedWidget,handleExpandOrContractClick);
+                            expandContractButton = d3.select('#a' + expandedWidget + '-chart>.graphTitle')
+                            displayManipulator.expandGraphicsArea(d3.select('#a' + expandedWidget).select('.pieChart>svg'),
+                                    expandContractButton);
+                            if (expandContractButton.text() === 'Protein target') {
+                                displayManipulator.swapAPieForTheSun(d3.select('#a' + expandedWidget), d3.selectAll('#suburst_container'), expandedWidget, handleExpandOrContractClick);
                             }
 
                         }
@@ -824,8 +961,8 @@
                         else if (widgetPosition.expandedWidget() == d.index) {
                             expandedWidget = widgetPosition.expandedWidget();
                             unexpandedWidget = widgetPosition.unexpandedWidgets();
-                            displayManipulator.contractGraphicsArea( d3.select('#a' + x).select('.pieChart>svg'),
-                                    d3.select('#a' + expandedWidget+'-chart>.expandedGraphTitle'));
+                            displayManipulator.contractGraphicsArea(d3.select('#a' + x).select('.pieChart>svg'),
+                                    d3.select('#a' + expandedWidget + '-chart>.expandedGraphTitle'));
                             displayManipulator.resetOneAndResettleThree(d, d3.select('#a' + expandedWidget),
                                     d3.select('#a' + unexpandedWidget[0]),
                                     d3.select('#a' + unexpandedWidget[1]),
@@ -856,130 +993,134 @@
                         sunburstContainer.append("div")
                                 .text(textForContractingButton)
                                 .attr('class', 'contractButton')
-                                .attr('id','sunburstContractor')
+                                .attr('id', 'sunburstContractor')
                                 .data(buttondata);
 
                     },
 
-              verifyLinkedData = function(){
-                  console.log('hi ho');
-                  d3.json("http://localhost:8028/cow/veryCross/feedMeLinkedData", function (incomingData) {
-                      // create an empty list, Just in case we get null data
-                      var assays = [];
-                      console.log(incomingData);
-
-                  });// d3.json
-              },
+                    verifyLinkedData = function () {
+                        console.log('hi ho');
+                        d3.json("http://localhost:8028/cow/veryCross/feedMeLinkedData", function (incomingData) {
+                            // create an empty list, Just in case we get null data
+                            var assays = [];
+                            console.log(incomingData);
+                            linkedVizData.parseData(incomingData);
+                            if (!linkedVizData.validateLinkedData(incomingData)){
+                                console.log(' we have trouble with incoming linked data');
+                                throw new Exception (' bad data');
+                            }
+                        });// d3.json
+                    },
             //   A fairly high-level method, used to call the other calls that get everything launched.
-             prepareThePies = function () {
+                    prepareThePies = function () {
 
-                //
-                // the following data structure defines where everything sits on the page. It is attached
-                //  to the data, and so it gets passed around to various callbacks. If you want to adjust
-                // how this page looks, You'll probably need to change the values held below in  buttondata.
-                //
-                var buttondata = [
-                    {    index: 0,
-                        orig: {
-                            coords: {
-                                x: compressedPos[0].x,
-                                y: compressedPos[0].y },
-                            size: {
-                                width: widgetWidthWithoutSpacing,
-                                height: widgetHeightWithTitle }
-                        },
-                        display: {
-                            coords: {
-                                x: displayWidgetX,
-                                y: displayWidgetY },
-                            size: {
-                                width: displayWidgetWidth,
-                                height: displayWidgetHeight }
-                        }
-                    },
-                    {    index: 1,
-                        orig: {
-                            coords: {
-                                x: compressedPos[1].x,
-                                y: compressedPos[1].y },
-                            size: {
-                                width: widgetWidthWithoutSpacing,
-                                height: widgetHeightWithTitle }
-                        },
-                        display: {
-                            coords: {
-                                x: displayWidgetX,
-                                y: displayWidgetY },
-                            size: {
-                                width: displayWidgetWidth,
-                                height: displayWidgetHeight }
-                        }
-                    },
-                    {    index: 2,
-                        orig: {
-                            coords: {
-                                x: compressedPos[2].x,
-                                y: compressedPos[2].y },
-                            size: {
-                                width: widgetWidthWithoutSpacing,
-                                height: widgetHeightWithTitle }
-                        },
-                        display: {
-                            coords: {
-                                x: displayWidgetX,
-                                y: displayWidgetY },
-                            size: {
-                                width: displayWidgetWidth,
-                                height: displayWidgetHeight }
-                        }
-                    },
-                    {   index: 3,
-                        orig: {
-                            coords: {
-                                x: compressedPos[3].x,
-                                y: compressedPos[3].y },
-                            size: {
-                                width: widgetWidthWithoutSpacing,
-                                height: widgetHeightWithTitle }
-                        },
-                        display: {
-                            coords: {
-                                x: displayWidgetX,
-                                y: displayWidgetY },
-                            size: {
-                                width: displayWidgetWidth,
-                                height: displayWidgetHeight }
-                        }
-                    }
-                ];
+                        //
+                        // the following data structure defines where everything sits on the page. It is attached
+                        //  to the data, and so it gets passed around to various callbacks. If you want to adjust
+                        // how this page looks, You'll probably need to change the values held below in  buttondata.
+                        //
+                        var buttondata = [
+                            {    index: 0,
+                                orig: {
+                                    coords: {
+                                        x: compressedPos[0].x,
+                                        y: compressedPos[0].y },
+                                    size: {
+                                        width: widgetWidthWithoutSpacing,
+                                        height: widgetHeightWithTitle }
+                                },
+                                display: {
+                                    coords: {
+                                        x: displayWidgetX,
+                                        y: displayWidgetY },
+                                    size: {
+                                        width: displayWidgetWidth,
+                                        height: displayWidgetHeight }
+                                }
+                            },
+                            {    index: 1,
+                                orig: {
+                                    coords: {
+                                        x: compressedPos[1].x,
+                                        y: compressedPos[1].y },
+                                    size: {
+                                        width: widgetWidthWithoutSpacing,
+                                        height: widgetHeightWithTitle }
+                                },
+                                display: {
+                                    coords: {
+                                        x: displayWidgetX,
+                                        y: displayWidgetY },
+                                    size: {
+                                        width: displayWidgetWidth,
+                                        height: displayWidgetHeight }
+                                }
+                            },
+                            {    index: 2,
+                                orig: {
+                                    coords: {
+                                        x: compressedPos[2].x,
+                                        y: compressedPos[2].y },
+                                    size: {
+                                        width: widgetWidthWithoutSpacing,
+                                        height: widgetHeightWithTitle }
+                                },
+                                display: {
+                                    coords: {
+                                        x: displayWidgetX,
+                                        y: displayWidgetY },
+                                    size: {
+                                        width: displayWidgetWidth,
+                                        height: displayWidgetHeight }
+                                }
+                            },
+                            {   index: 3,
+                                orig: {
+                                    coords: {
+                                        x: compressedPos[3].x,
+                                        y: compressedPos[3].y },
+                                    size: {
+                                        width: widgetWidthWithoutSpacing,
+                                        height: widgetHeightWithTitle }
+                                },
+                                display: {
+                                    coords: {
+                                        x: displayWidgetX,
+                                        y: displayWidgetY },
+                                    size: {
+                                        width: displayWidgetWidth,
+                                        height: displayWidgetHeight }
+                                }
+                            }
+                        ];
 
-                // Retrieve the data do whatever we want to do with it
-                d3.json("http://localhost:8028/cow/veryCross/feedMeJson", function (incomingData) {
-                    // create an empty list, Just in case we get null data
-                    var assays = [];
+                        // Retrieve the data do whatever we want to do with it
+                        d3.json("http://localhost:8028/cow/veryCross/feedMeJson", function (incomingData) {
+                            // create an empty list, Just in case we get null data
+                            var assays = [];
 
-                    // Clean up the data.  De-dup, and assign
-                    assays = readInData(incomingData);
+                            // Clean up the data.  De-dup, and assign
+                            assays = readInData(incomingData);
 
-                    // Create the crossfilter for the relevant dimensions and groups.
-                    assay = crossfilter(assays);
+                            // Create the crossfilter for the relevant dimensions and groups.
+                            assay = crossfilter(assays);
 
-                    // Build everything were going to display
-                    allDataDcTable = displayManipulator.addDcTable(assay, 'data-table', 'assayId');
-                    biologicalProcessPieChart = displayManipulator.addPieChart(assay, 'a0-chart', 'GO_biological_process_term', colors, pieChartWidth, pieChartRadius, innerRadius);
-                    assayFormatPieChart = displayManipulator.addPieChart(assay, 'a1-chart', 'assay_format', colors, pieChartWidth, pieChartRadius, innerRadius);
-                    assayIdDimensionPieChart = displayManipulator.addPieChart(assay, 'a2-chart', 'protein_target', colors, pieChartWidth, pieChartRadius, innerRadius);
-                    assayTypePieChart = displayManipulator.addPieChart(assay, 'a3-chart', 'assay_type', colors, pieChartWidth, pieChartRadius, innerRadius);
+                            // Build everything were going to display
+                            allDataDcTable = displayManipulator.addDcTable(assay, 'data-table', 'assayId');
+                            biologicalProcessPieChart = displayManipulator.addPieChart(assay, 'a0-chart', 'GO_biological_process_term', colors, pieChartWidth, pieChartRadius, innerRadius);
+                            assayFormatPieChart = displayManipulator.addPieChart(assay, 'a1-chart', 'assay_format', colors, pieChartWidth, pieChartRadius, innerRadius);
+                            assayIdDimensionPieChart = displayManipulator.addPieChart(assay, 'a2-chart', 'protein_target', colors, pieChartWidth, pieChartRadius, innerRadius);
+                            assayTypePieChart = displayManipulator.addPieChart(assay, 'a3-chart', 'assay_type', colors, pieChartWidth, pieChartRadius, innerRadius);
 
-                    // We should be ready, display it
-                    dc.renderAll();
+                            // We should be ready, display it
+                            dc.renderAll();
 
-                    // Finally, attach some data along with buttons and callbacks to the pie charts we've built
-                    attachButtonsToThePieContainers('.pieChartContainer', handleExpandOrContractClick, buttondata,  d3.selectAll('#suburst_container'));
+                            // Finally, attach some data along with buttons and callbacks to the pie charts we've built
+                            attachButtonsToThePieContainers('.pieChartContainer', handleExpandOrContractClick, buttondata, d3.selectAll('#suburst_container'));
 
 
-                });// d3.json
-            }; //prepareThePies
+                        });// d3.json
+                    }; //prepareThePies
             return {
                 verifyLinkedData: verifyLinkedData,
                 prepareThePies: prepareThePies
@@ -987,16 +1128,11 @@
         }())
 
 
-
-
-
-
         // **********************************************************
         // The highest level call.  Everything starts from here.
         // **********************************************************
         generateLinkedPies.prepareThePies();
         generateLinkedPies.verifyLinkedData();  // generateLinkedData();verifyLinkedData
-
 
 
     }());
