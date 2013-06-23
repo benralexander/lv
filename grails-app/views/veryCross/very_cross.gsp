@@ -859,11 +859,19 @@
                                 .attr('id','sunburstContractor')
                                 .data(buttondata);
 
-                    };
+                    },
 
+              verifyLinkedData = function(){
+                  console.log('hi ho');
+                  d3.json("http://localhost:8028/cow/veryCross/feedMeLinkedData", function (incomingData) {
+                      // create an empty list, Just in case we get null data
+                      var assays = [];
+                      console.log(incomingData);
 
+                  });// d3.json
+              },
             //   A fairly high-level method, used to call the other calls that get everything launched.
-            prepareThePies = function () {
+             prepareThePies = function () {
 
                 //
                 // the following data structure defines where everything sits on the page. It is attached
@@ -973,15 +981,22 @@
                 });// d3.json
             }; //prepareThePies
             return {
+                verifyLinkedData: verifyLinkedData,
                 prepareThePies: prepareThePies
             }
-        }())//,
+        }())
+
+
+
+
 
 
         // **********************************************************
         // The highest level call.  Everything starts from here.
         // **********************************************************
         generateLinkedPies.prepareThePies();
+        generateLinkedPies.verifyLinkedData();  // generateLinkedData();verifyLinkedData
+
 
 
     }());

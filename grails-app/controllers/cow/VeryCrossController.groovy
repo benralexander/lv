@@ -1,12 +1,19 @@
 package cow
 
+import cow.LinkedVisHierData
+
 class VeryCrossController {
 
     def index() {
         render(view: 'very_cross')
     }
     def very_cross() { }
-    def feedMeJson(){
+    def feedMeLinkedData(){
+        cow.LinkedVisHierData linkedVisHierData = new cow.LinkedVisHierData()
+        String assaysSectionJson =  linkedVisHierData.createCombinedListing()
+        render (assaysSectionJson)
+    }
+        def feedMeJson(){
 render ("""[
     {
         "assayId": "533",

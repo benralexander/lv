@@ -37,7 +37,7 @@ public class LinkedVisHierData {
             stringBuilder << shortSpaceUnit << addQuotes('CatIdx') << colonUnit << categoryIndex << comma << endOfLine
             stringBuilder << mediumSpaceUnit << addQuotes('CatName') << colonUnit << addQuotes(categoryName) << comma  << endOfLine
             stringBuilder << mediumSpaceUnit << addQuotes('CatDescr') << colonUnit << addQuotes(categoryDescription) << comma  << endOfLine
-            stringBuilder << mediumSpaceUnit << addQuotes('CatIdent') << colonUnit << addQuotes(categoryIdentifier) << comma  << endOfLine
+            stringBuilder << mediumSpaceUnit << addQuotes('CatIdent') << colonUnit << addQuotes(categoryIdentifier)  << endOfLine
             stringBuilder << closeObject
             return  stringBuilder.toString()
         }
@@ -68,7 +68,7 @@ public class LinkedVisHierData {
             stringBuilder << openObject
             stringBuilder << shortSpaceUnit << addQuotes('CatRef') << colonUnit << categoryReference << comma << endOfLine
             stringBuilder << mediumSpaceUnit << addQuotes('HierType') << colonUnit << addQuotes(hierarchyType) << comma << endOfLine
-            stringBuilder << mediumSpaceUnit << addQuotes('Structure') << colonUnit << structure << comma << endOfLine
+            stringBuilder << mediumSpaceUnit << addQuotes('Structure') << colonUnit << structure << endOfLine
             stringBuilder << closeObject
             return stringBuilder.toString()
         }
@@ -107,7 +107,7 @@ public class LinkedVisHierData {
             stringBuilder << openObject
             stringBuilder << shortSpaceUnit << addQuotes('AssayIdx') << colonUnit << assayIndex << comma << endOfLine
             stringBuilder << mediumSpaceUnit << addQuotes('AssayName') << colonUnit << addQuotes(assayName) << comma << endOfLine
-            stringBuilder << mediumSpaceUnit << addQuotes('AssayId') << colonUnit << assayId << comma << endOfLine
+            stringBuilder << mediumSpaceUnit << addQuotes('AssayId') << colonUnit << assayId << endOfLine
             stringBuilder << closeObject
             return stringBuilder.toString()
         }
@@ -173,7 +173,7 @@ public class LinkedVisHierData {
             stringBuilder << longSpaceUnit << addQuotes('0') << colonUnit << addQuotes(biologicalProcess) << comma  << endOfLine
             stringBuilder << longSpaceUnit << addQuotes('1') << colonUnit << addQuotes(assayFormat) << comma  << endOfLine
             stringBuilder << longSpaceUnit << addQuotes('2') << colonUnit << addQuotes(assayType) << comma  << endOfLine
-            stringBuilder << longSpaceUnit << addQuotes('3') << colonUnit << addQuotes(proteinTarget) << comma  << endOfLine
+            stringBuilder << longSpaceUnit << addQuotes('3') << colonUnit << addQuotes(proteinTarget)  << endOfLine
             stringBuilder << mediumSpaceUnit << closeObject << endOfLine
             stringBuilder << closeObject
             return  stringBuilder.toString()
