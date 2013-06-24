@@ -1,5 +1,0 @@
---Output from test writeCategorySection--
---Output from test writeHierSection--
---Output from test writeAssaysSection--
---Output from test createAssayCrossSection--
---Output from test createCombinedListing--
