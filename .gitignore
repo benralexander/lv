@@ -4,3 +4,4 @@
 *.iws
 /target/test-reports/*.xml
 **/test-reports
+stacktrace.log

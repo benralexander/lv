@@ -24,6 +24,28 @@ public class LinkedVisHierData {
     }
 
 
+    private final String  proteinTargetTree = """
+ [{"name":"/", "ac":"0", "inac":"0", "children": [
+        {"name":"signaling molecule", "ac":"1", "inac":"0", "size":1},
+        {"name":"enzyme modulator", "ac":"3", "inac":"4", "children": [
+            {"name":"G-protein modulator", "ac":"1", "inac":"0", "size":1},
+            {"name":"G-protein", "ac":"1", "inac":"3", "children": [
+                {"name":"heterotrimeric G-protein", "ac":"0", "inac":"1", "size":1},
+                {"name":"small GTPase", "ac":"1", "inac":"1", "size":2}
+            ]}
+        ]},
+        {"name":"transporter", "ac":"0", "inac":"8", "children": [
+            {"name":"ATP-binding cassette", "ac":"0", "inac":"2", "size":2},
+            {"name":"ion channel", "ac":"0", "inac":"6", "children": [
+                {"name":"anion channel", "ac":"0", "inac":"2", "size":2},
+                {"name":"voltage-gated ion channel", "ac":"0", "inac":"3", "children": [
+                    {"name":"voltage-gated potassium channel", "ac":"0", "inac":"2", "size":2}
+                ]}
+            ]}
+        ]}
+]}]"""
+
+
     public class CategorySection {
         List accumulatingIndex = []
 
@@ -83,7 +105,7 @@ public class LinkedVisHierData {
                     comma << endOfLine
             stringBuilder << individualHierarchySection(1, 'Tree', '{}') <<
                     comma << endOfLine
-            stringBuilder << individualHierarchySection(2, 'Tree', '{}') <<
+            stringBuilder << individualHierarchySection(2, 'Tree', '{'+addQuotes('struct')+colonUnit+proteinTargetTree.toString() +'}') <<
                     comma << endOfLine
             stringBuilder << individualHierarchySection(3, 'Tree', '{}')
             stringBuilder << closeGroup

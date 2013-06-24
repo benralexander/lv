@@ -835,63 +835,161 @@
                 },
                 instructions: "the value can only contain characters and numbers, no special symbols"
             };
+            // make sure that every element inside the category group passes some basic tests
             validator.types.categoryCheck = {
                 validate: function (value) {
                     var returnVal = true;
                     if (value.length!=4) {
                         returnVal = false;
                     }
+                    if (returnVal){
+                       for (var loopCount = 0;loopCount < value.length ; loopCount++  ) {
+                           if (returnVal) { returnVal =  !isNaN(Number(value[loopCount].CatIdx));  }
+                           if (returnVal) { returnVal =  !String(value[loopCount].CatName).replace(/[a-z0-9\s]/ig, "").length;  }
+                           if (returnVal) { returnVal =  !String(value[loopCount].CatDescr).replace(/[a-z0-9\s]/ig, "").length;  }
+                           if (returnVal) { returnVal =  !String(value[loopCount].CatIdentity).replace(/[a-z0-9_]/ig, "").length;  }
+                       }
+                    }
                     return returnVal;
                 },
                 instructions: "failed core category check"
             };
+            // make sure that every element inside the hierarchy group passes some basic tests
+            validator.types.hierarchyCheck = {
+                validate: function (value) {
+                    var returnVal = true;
+                    if (value.length!=4) {
+                        returnVal = false;
+                    }
+                    if (returnVal){
+                        for (var loopCount = 0;loopCount < value.length ; loopCount++  ) {
+                            if (returnVal) { returnVal =  !isNaN(Number(value[loopCount].CatRef));  }
+                            if (returnVal) { returnVal =  ((value[loopCount].HierType==='Graph') ||
+                                                           (value[loopCount].HierType==='Tree'));  }
+                        }
+                    }
+                    return returnVal;
+                },
+                instructions: "failed core hierarchy check"
+            };
+            // make sure that every element inside the hierarchy group passes some basic tests
+            validator.types.assayCheck = {
+                validate: function (value) {
+                    var returnVal = true;
+
+                    if (returnVal){
+                        for (var loopCount = 0;loopCount < value.length ; loopCount++  ) {
+                            if (returnVal) { returnVal =  !isNaN(Number(value[loopCount].AssayIdx));  }
+                            if (returnVal) {
+                                var  currentAssayIdx = Number(value[loopCount].AssayIdx);
+                                returnVal = (assayIdList.indexOf(currentAssayIdx)<0);
+                                if (!returnVal) {
+                                    additionalErrorInfo += ('repeated assay IDX='+currentAssayIdx);
+                                } else {
+                                    assayIdList.push(currentAssayIdx);
+                                }
+                            }
+                            if (returnVal) { returnVal =  !String(value[loopCount].AssayName).replace(/[a-z0-9\s\'\(\)\/_:-]/ig, "").length;
+                                             if (!returnVal) {additionalErrorInfo += ('undesirable character='+String(value[loopCount].AssayName).replace(/[a-z0-9\s\'\(\)\/_:-]/ig, ""));}}
+                            if (!returnVal) alert(value[loopCount].AssayName);
+                            if (returnVal) { returnVal =  !isNaN(Number(value[loopCount].AssayId));  }
+                            if (!returnVal)  {
+                                break;
+                            }
+
+                        }
+
+                    }
+                    return returnVal;
+                },
+                instructions: "failed core assay check"
+            };
+            // make sure that every element inside the hierarchy group passes some basic tests
+            validator.types.assayCrossCheck = {
+                validate: function (value) {
+                    var returnVal = true;
+                    if (returnVal){
+                        for (var loopCount = 0;loopCount < value.length ; loopCount++  ) {
+                            if (returnVal) {
+                                var assayReferenceNumber = Number(value[loopCount].AssayRef);
+                                returnVal =  !isNaN(assayReferenceNumber);
+                                if (assayIdList.indexOf(assayReferenceNumber) < 0) {
+                                    returnVal = false;
+                                }
+                            }
+                             if (!returnVal)  {
+                                break;
+                            }
+
+                        }
+
+                    }
+                    return returnVal;
+                },
+                instructions: "failed core assay check"
+            };
+
 
 
 
             validator.config = {
                 Category: 'categoryCheck',
-                Hierarchy: 'isNonEmpty',
-                Assays: 'isNonEmpty',
-                AssayCross: 'isNonEmpty'
-
-//                age: 'isNumber',
-//                username: 'isAlphaNum'
+                Hierarchy: 'hierarchyCheck',
+                Assays: 'assayCheck',
+                AssayCross: 'assayCrossCheck'
             };
 
+            var linkedData = {},
 
-            var data = {
-                first_name: "Super",
-                last_name: "Man",
-                age: "unknown",
-                username: "o_O"
-            };
+            additionalErrorInfo = "",
 
-            var linkedData = {};
+            assayIdList = [],
 
-            var parseData = function (incomingData)  {
+            parseData = function (incomingData)  {
                 linkedData =  incomingData;
-            };
-
-            var validateLinkedData = function ()  {
+            },
+            numberOfWidgets = function ()  {
+               return linkedData.Category.length;
+            },
+            validateLinkedData = function ()  {
                 var returnVal = true;
                 validator.validate(linkedData);
                 if (validator.hasErrors()) {
                     returnVal = false;
-                    console.log(validator.messages.join("\n"));
+                    var errorMessageReport =  validator.messages.join("\n");
+                    console.log(errorMessageReport);
+                    alert (errorMessageReport) ;
+                }
+                return returnVal;
+            },
+
+            appendConditionalStatusFields = function ()  {
+                var returnVal = true;
+                // Make a way to keep track of which elements of been selected as part of the drill down, sunburst visualization
+                for (var loopCount = 0;loopCount < linkedData.Hierarchy.length ; loopCount++  ) {
+                    var hierarchyPointer =  linkedData.Hierarchy[loopCount];
+                    if (hierarchyPointer.HierType === 'Tree') {
+                        hierarchyPointer.Structure['rootName']='/';
+                    } else if (hierarchyPointer.HierType === 'Graph') {
+                        hierarchyPointer.Structure['rootName']='/';
+                    }
+                }
+                // Make a way to keep track of which elements have been selected through the cross-linking, pie-based selection mechanism
+                for (var loopCount = 0;loopCount < linkedData.AssayCross.length ; loopCount++  ) {
+                    var AssayCrossPointer =  linkedData.AssayCross[loopCount];
+                    AssayCrossPointer ["AssaySelected"]  = 1;
                 }
                 return returnVal;
             };
 
 
-            //            validator.validate(data);
-            //            if (validator.hasErrors()) {
-            //                console.log(validator.messages.join("\n"));
-            //            }
 
             return {
                 parseData:parseData,
+                appendConditionalStatusFields:appendConditionalStatusFields,
                 validateLinkedData:validateLinkedData,
-                validate:validator.validate
+                numberOfWidgets: numberOfWidgets
+//                validate:validator.validate
             }
 
         }());
@@ -1002,12 +1100,12 @@
                         console.log('hi ho');
                         d3.json("http://localhost:8028/cow/veryCross/feedMeLinkedData", function (incomingData) {
                             // create an empty list, Just in case we get null data
-                            var assays = [];
-                            console.log(incomingData);
                             linkedVizData.parseData(incomingData);
-                            if (!linkedVizData.validateLinkedData(incomingData)){
+                            if (!linkedVizData.validateLinkedData()){
                                 console.log(' we have trouble with incoming linked data');
-                                throw new Exception (' bad data');
+                                throw new Exception ('bad data');
+                            }  else {
+                                linkedVizData.appendConditionalStatusFields()
                             }
                         });// d3.json
                     },
