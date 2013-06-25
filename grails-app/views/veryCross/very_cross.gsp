@@ -483,6 +483,40 @@
                     }
                     return returnVal;
                 },
+                findAssayId = function (assayRef)  {
+                    // TODO we need to really look these up, presumably when we read the data and the first.
+                    return linkedData.Assays[assayRef].AssayId;
+                }
+                retrieveLinkedData = function ()  {
+                    var developingAssayList = [];
+                    var weHaveDataToDisplay = false;
+                    if (!(linkedData.AssayCross ===null)) {
+                        var totalNumberOfAssayCrosses = linkedData.AssayCross.length;
+                        for (var i = 0; i < totalNumberOfAssayCrosses; i++){
+                            if (linkedData.AssayCross[i] != null){
+                                weHaveDataToDisplay = true;
+                                break;
+                            }
+                        }
+                        if (weHaveDataToDisplay)  {
+                            for (var i = 0; i < totalNumberOfAssayCrosses; i++){
+                                var assayCross = linkedData.AssayCross[i];
+                                if (assayCross != null){
+                                    developingAssayList.push({
+                                        index: i,
+                                        assayId: findAssayId(assayCross.AssayRef),
+                                        GO_biological_process_term: assayCross.data[0],
+                                        assay_format: assayCross.data[1],
+                                        assay_type: assayCross.data[2],
+                                        protein_target: assayCross.data[3]
+                                    });
+                                }
+                            }
+                        }
+                    }
+                    return  developingAssayList;
+                 },
+
 
                retrieveCurrentHierarchicalData = function (datatypeIndex)  {
                    var returnValue = {}; // this will be the current node in the tree
@@ -520,7 +554,8 @@
             appendConditionalStatusFields:appendConditionalStatusFields,
             validateLinkedData:validateLinkedData,
             numberOfWidgets: numberOfWidgets,
-            retrieveCurrentHierarchicalData:retrieveCurrentHierarchicalData
+            retrieveCurrentHierarchicalData:retrieveCurrentHierarchicalData,
+            retrieveLinkedData:retrieveLinkedData
 //                validate:validator.validate
         }
 
@@ -1061,30 +1096,112 @@
         //
         var generateLinkedPies = (function () {
 
-            // Private method used to pull the data in from the remote site
-            var readInData = function (incoming) {
 
-                        var processedAssays = {}; // Use for de-duplication
-                        var developingAssayList = []; // This will be the return value
-
-                        incoming.forEach(function (d, i) {
-
-                            // de-duplication step
-                            if (processedAssays[d.assayId] !== true) {
-                                processedAssays[d.assayId] = true;
-
-                                developingAssayList.push({
-                                    index: i,
-                                    assayId: d.assayId,
-                                    GO_biological_process_term: d.data.GO_biological_process_term,
-                                    assay_format: d.data.assay_format,
-                                    assay_type: d.data.assay_type,
-                                    protein_target: d.data.protein_target
-                                });
-                            }
-                        });
-                        return  developingAssayList;
+            var buttondata = [
+                {    index: 0,
+                    orig: {
+                        coords: {
+                            x: compressedPos[0].x,
+                            y: compressedPos[0].y },
+                        size: {
+                            width: widgetWidthWithoutSpacing,
+                            height: widgetHeightWithTitle }
                     },
+                    display: {
+                        coords: {
+                            x: displayWidgetX,
+                            y: displayWidgetY },
+                        size: {
+                            width: displayWidgetWidth,
+                            height: displayWidgetHeight }
+                    }
+                },
+                {    index: 1,
+                    orig: {
+                        coords: {
+                            x: compressedPos[1].x,
+                            y: compressedPos[1].y },
+                        size: {
+                            width: widgetWidthWithoutSpacing,
+                            height: widgetHeightWithTitle }
+                    },
+                    display: {
+                        coords: {
+                            x: displayWidgetX,
+                            y: displayWidgetY },
+                        size: {
+                            width: displayWidgetWidth,
+                            height: displayWidgetHeight }
+                    }
+                },
+                {    index: 2,
+                    orig: {
+                        coords: {
+                            x: compressedPos[2].x,
+                            y: compressedPos[2].y },
+                        size: {
+                            width: widgetWidthWithoutSpacing,
+                            height: widgetHeightWithTitle }
+                    },
+                    display: {
+                        coords: {
+                            x: displayWidgetX,
+                            y: displayWidgetY },
+                        size: {
+                            width: displayWidgetWidth,
+                            height: displayWidgetHeight }
+                    }
+                },
+                {   index: 3,
+                    orig: {
+                        coords: {
+                            x: compressedPos[3].x,
+                            y: compressedPos[3].y },
+                        size: {
+                            width: widgetWidthWithoutSpacing,
+                            height: widgetHeightWithTitle }
+                    },
+                    display: {
+                        coords: {
+                            x: displayWidgetX,
+                            y: displayWidgetY },
+                        size: {
+                            width: displayWidgetWidth,
+                            height: displayWidgetHeight }
+                    }
+                }
+            ];
+
+
+            // Private method used to pull the data in from the remote site
+//            var readInData = function (incoming) {
+//
+//                        var processedAssays = {}; // Use for de-duplication
+//                        var developingAssayList = []; // This will be the return value
+//
+//                        incoming.forEach(function (d, i) {
+//
+//                            // de-duplication step
+//                            if (processedAssays[d.assayId] !== true) {
+//                                processedAssays[d.assayId] = true;
+//
+//                                developingAssayList.push({
+//                                    index: i,
+//                                    assayId: d.assayId,
+//                                    GO_biological_process_term: d.data.GO_biological_process_term,
+//                                    assay_format: d.data.assay_format,
+//                                    assay_type: d.data.assay_type,
+//                                    protein_target: d.data.protein_target
+//                                });
+//                            }
+//                        });
+//                        return  developingAssayList;
+//                    },
+            var readInData = function () {
+
+                        return    linkedVizData.retrieveLinkedData();
+
+            },
 
 
             // Our main button handler callback
@@ -1170,8 +1287,38 @@
                             }  else {
                                 linkedVizData.appendConditionalStatusFields()
                             }
+                            presentLinkedData();
                         });// d3.json
+
                     },
+
+
+                    presentLinkedData = function () {
+                        // create an empty list, Just in case we get null data
+                        var assays = [];
+
+                        // Clean up the data.  De-dup, and assign
+                        assays = readInData();
+
+                        // Create the crossfilter for the relevant dimensions and groups.
+                        assay = crossfilter(assays);
+
+                        // Build everything were going to display
+                        allDataDcTable = displayManipulator.addDcTable(assay, 'data-table', 'assayId');
+                        biologicalProcessPieChart = displayManipulator.addPieChart(assay, 'a0-chart', 'GO_biological_process_term', colors, pieChartWidth, pieChartRadius, innerRadius);
+                        assayFormatPieChart = displayManipulator.addPieChart(assay, 'a1-chart', 'assay_format', colors, pieChartWidth, pieChartRadius, innerRadius);
+                        assayIdDimensionPieChart = displayManipulator.addPieChart(assay, 'a2-chart', 'protein_target', colors, pieChartWidth, pieChartRadius, innerRadius);
+                        assayTypePieChart = displayManipulator.addPieChart(assay, 'a3-chart', 'assay_type', colors, pieChartWidth, pieChartRadius, innerRadius);
+
+                        // We should be ready, display it
+                        dc.renderAll();
+
+                        // Finally, attach some data along with buttons and callbacks to the pie charts we've built
+                        attachButtonsToThePieContainers('.pieChartContainer', handleExpandOrContractClick, buttondata, d3.selectAll('#suburst_container'));
+
+
+                    },
+
             //   A fairly high-level method, used to call the other calls that get everything launched.
                     prepareThePies = function () {
 
@@ -1180,111 +1327,39 @@
                         //  to the data, and so it gets passed around to various callbacks. If you want to adjust
                         // how this page looks, You'll probably need to change the values held below in  buttondata.
                         //
-                        var buttondata = [
-                            {    index: 0,
-                                orig: {
-                                    coords: {
-                                        x: compressedPos[0].x,
-                                        y: compressedPos[0].y },
-                                    size: {
-                                        width: widgetWidthWithoutSpacing,
-                                        height: widgetHeightWithTitle }
-                                },
-                                display: {
-                                    coords: {
-                                        x: displayWidgetX,
-                                        y: displayWidgetY },
-                                    size: {
-                                        width: displayWidgetWidth,
-                                        height: displayWidgetHeight }
-                                }
-                            },
-                            {    index: 1,
-                                orig: {
-                                    coords: {
-                                        x: compressedPos[1].x,
-                                        y: compressedPos[1].y },
-                                    size: {
-                                        width: widgetWidthWithoutSpacing,
-                                        height: widgetHeightWithTitle }
-                                },
-                                display: {
-                                    coords: {
-                                        x: displayWidgetX,
-                                        y: displayWidgetY },
-                                    size: {
-                                        width: displayWidgetWidth,
-                                        height: displayWidgetHeight }
-                                }
-                            },
-                            {    index: 2,
-                                orig: {
-                                    coords: {
-                                        x: compressedPos[2].x,
-                                        y: compressedPos[2].y },
-                                    size: {
-                                        width: widgetWidthWithoutSpacing,
-                                        height: widgetHeightWithTitle }
-                                },
-                                display: {
-                                    coords: {
-                                        x: displayWidgetX,
-                                        y: displayWidgetY },
-                                    size: {
-                                        width: displayWidgetWidth,
-                                        height: displayWidgetHeight }
-                                }
-                            },
-                            {   index: 3,
-                                orig: {
-                                    coords: {
-                                        x: compressedPos[3].x,
-                                        y: compressedPos[3].y },
-                                    size: {
-                                        width: widgetWidthWithoutSpacing,
-                                        height: widgetHeightWithTitle }
-                                },
-                                display: {
-                                    coords: {
-                                        x: displayWidgetX,
-                                        y: displayWidgetY },
-                                    size: {
-                                        width: displayWidgetWidth,
-                                        height: displayWidgetHeight }
-                                }
-                            }
-                        ];
 
                         // Retrieve the data do whatever we want to do with it
-                        d3.json("http://localhost:8028/cow/veryCross/feedMeJson", function (incomingData) {
-                            // create an empty list, Just in case we get null data
-                            var assays = [];
-
-                            // Clean up the data.  De-dup, and assign
-                            assays = readInData(incomingData);
-
-                            // Create the crossfilter for the relevant dimensions and groups.
-                            assay = crossfilter(assays);
-
-                            // Build everything were going to display
-                            allDataDcTable = displayManipulator.addDcTable(assay, 'data-table', 'assayId');
-                            biologicalProcessPieChart = displayManipulator.addPieChart(assay, 'a0-chart', 'GO_biological_process_term', colors, pieChartWidth, pieChartRadius, innerRadius);
-                            assayFormatPieChart = displayManipulator.addPieChart(assay, 'a1-chart', 'assay_format', colors, pieChartWidth, pieChartRadius, innerRadius);
-                            assayIdDimensionPieChart = displayManipulator.addPieChart(assay, 'a2-chart', 'protein_target', colors, pieChartWidth, pieChartRadius, innerRadius);
-                            assayTypePieChart = displayManipulator.addPieChart(assay, 'a3-chart', 'assay_type', colors, pieChartWidth, pieChartRadius, innerRadius);
-
-                            // We should be ready, display it
-                            dc.renderAll();
-
-                            // Finally, attach some data along with buttons and callbacks to the pie charts we've built
-                            attachButtonsToThePieContainers('.pieChartContainer', handleExpandOrContractClick, buttondata, d3.selectAll('#suburst_container'));
-
-
-                        });// d3.json
+//                        d3.json("http://localhost:8028/cow/veryCross/feedMeJson", function (incomingData) {
+//                          presentLinkedData = function () {
+//                            // create an empty list, Just in case we get null data
+//                            var assays = [];
+//
+//                            // Clean up the data.  De-dup, and assign
+//                            assays = readInData(incomingData);
+//
+//                            // Create the crossfilter for the relevant dimensions and groups.
+//                            assay = crossfilter(assays);
+//
+//                            // Build everything were going to display
+//                            allDataDcTable = displayManipulator.addDcTable(assay, 'data-table', 'assayId');
+//                            biologicalProcessPieChart = displayManipulator.addPieChart(assay, 'a0-chart', 'GO_biological_process_term', colors, pieChartWidth, pieChartRadius, innerRadius);
+//                            assayFormatPieChart = displayManipulator.addPieChart(assay, 'a1-chart', 'assay_format', colors, pieChartWidth, pieChartRadius, innerRadius);
+//                            assayIdDimensionPieChart = displayManipulator.addPieChart(assay, 'a2-chart', 'protein_target', colors, pieChartWidth, pieChartRadius, innerRadius);
+//                            assayTypePieChart = displayManipulator.addPieChart(assay, 'a3-chart', 'assay_type', colors, pieChartWidth, pieChartRadius, innerRadius);
+//
+//                            // We should be ready, display it
+//                            dc.renderAll();
+//
+//                            // Finally, attach some data along with buttons and callbacks to the pie charts we've built
+//                            attachButtonsToThePieContainers('.pieChartContainer', handleExpandOrContractClick, buttondata, d3.selectAll('#suburst_container'));
+//
+//
+//                        }
                     }; //prepareThePies
             return {
                 verifyLinkedData: verifyLinkedData,
-                prepareThePies: prepareThePies
+                prepareThePies: prepareThePies,
+                presentLinkedData: presentLinkedData
             }
         }())
 
@@ -1292,8 +1367,9 @@
         // **********************************************************
         // The highest level call.  Everything starts from here.
         // **********************************************************
-        generateLinkedPies.prepareThePies();
         generateLinkedPies.verifyLinkedData();  // generateLinkedData();verifyLinkedData
+        generateLinkedPies.prepareThePies();
+       // generateLinkedPies.presentLinkedData ();
 
 
     }());
