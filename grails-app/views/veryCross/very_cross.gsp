@@ -710,6 +710,21 @@
                             orphanedTooltips.style('opacity', 0);
                         }
                     },
+                    cleanUpAnyGraphicsWeAreDoneWith = function () {
+                        var potentialOrphanedGraphics = d3.select('div#sunburstdiv>svg');
+                        if ((!(potentialOrphanedGraphics === null))&&
+                            (!(potentialOrphanedGraphics[0] === null))&&
+                            (!(potentialOrphanedGraphics[0][0] === null)))       {
+                            potentialOrphanedGraphics.remove();
+                        }
+
+                        var potentialOrphanedLegend = d3.select('div#sunburstlegend');
+                        if ((!(potentialOrphanedLegend === null))&&
+                            (!(potentialOrphanedLegend[0] === null))&&
+                            (!(potentialOrphanedLegend[0][0] === null))) {
+                            potentialOrphanedLegend.remove();
+                        }
+                    },
 
             // convenience routine for adding a pie chart
                     addPieChart = function (crossFilterVariable, id, key, colors, localPieChartWidth, localPieChartRadius, localInnerRadius) {
@@ -959,9 +974,9 @@
                         .delay(1000)
                         .duration(500)
                         .style('opacity', '1');
-                //                        if ($data[0].children !== undefined) {
                 if (linkedVizData.retrieveCurrentHierarchicalData(2).children !== undefined) {
                     createASunburst( 1000, 1000,5,1000,continuousColorScale,'div#sunburstdiv', 672376 );
+                    createALegend(120, 200,100,continuousColorScale,'div#legendGoesHere',minimumValue, maximumValue);
                     d3.selectAll('#suburst_container').style('pointer-events', null);
                 } else {
                     d3.select('div#sunburstdiv')
@@ -1026,6 +1041,7 @@
                 disableAllPieClickEffectors: disableAllPieClickEffectors,
                 reenableAllPieClickEffectors: reenableAllPieClickEffectors,
                 eraseAnyOrphanedTooltips: eraseAnyOrphanedTooltips,
+                cleanUpAnyGraphicsWeAreDoneWith: cleanUpAnyGraphicsWeAreDoneWith,
                 contractGraphicsArea: contractGraphicsArea,
                 expandGraphicsArea: expandGraphicsArea,
                 resetOneAndResettleThree: resetOneAndResettleThree,
@@ -1117,6 +1133,7 @@
                             displayManipulator.moveDataTableBackToItsOriginalPosition(d3.select('#data-table'));
                             displayManipulator.reenableAllPieClickEffectors();
                             displayManipulator.eraseAnyOrphanedTooltips();
+                            displayManipulator.cleanUpAnyGraphicsWeAreDoneWith();
                         }
 
                     },
@@ -1722,7 +1739,6 @@
 
 
             var path = svg.datum(linkedVizData.retrieveCurrentHierarchicalData(2)).selectAll("path")
-//            var path = svg.datum($data[0]).selectAll("path")
                     .data(partition.nodes)
                     .enter().append("path")
                     .attr("d", arc)
@@ -1742,8 +1758,6 @@
 
 
             var text = svg.datum(linkedVizData.retrieveCurrentHierarchicalData(2)).selectAll("text").data(partition.nodes);
-//            var text = svg.datum($data[0]).selectAll("text").data(partition.nodes);
-
 
             // Interpolate the scales!
             function click(d) {
