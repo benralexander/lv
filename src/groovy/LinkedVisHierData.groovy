@@ -209,37 +209,37 @@ public class LinkedVisHierData {
         public final String writeAssayCrossSection() {
             StringBuilder stringBuilder = new StringBuilder()
             stringBuilder << openGroup << endOfLine
-            stringBuilder <<  individualAssayCross (0,'none','cell-based format','protein-small molecule interaction assay','Ion channel NompC') <<
+            stringBuilder <<  individualAssayCross (0,'none','cell-based format','protein-small molecule interaction assay','signaling molecule') <<
                     comma << endOfLine
-            stringBuilder <<  individualAssayCross (2,'regulation of gene expression','cell-based format','protein expression assay','none') <<
+            stringBuilder <<  individualAssayCross (2,'regulation of gene expression','cell-based format','protein expression assay','enzyme modulator') <<
                     comma << endOfLine
-            stringBuilder <<  individualAssayCross (15,'bontoxilysin activity','single protein format','direct enzyme activity assay','none') <<
+            stringBuilder <<  individualAssayCross (15,'bontoxilysin activity','single protein format','direct enzyme activity assay','transporter') <<
                     comma << endOfLine
-            stringBuilder <<  individualAssayCross (1,'plectin-1','single protein format','protein-protein interaction assay','Regulator of G-protein signaling 4') <<
+            stringBuilder <<  individualAssayCross (1,'plectin-1','single protein format','protein-protein interaction assay','enzyme modulator') <<
                     comma << endOfLine
-            stringBuilder <<  individualAssayCross (3,'none','whole-cell lysate format','none','none') <<
+            stringBuilder <<  individualAssayCross (3,'none','whole-cell lysate format','none','enzyme modulator') <<
                     comma << endOfLine
-            stringBuilder <<  individualAssayCross (4,'regulation of gene expression','cell-based format','protein expression assay','none') <<
+            stringBuilder <<  individualAssayCross (4,'regulation of gene expression','cell-based format','protein expression assay','enzyme modulator') <<
                     comma << endOfLine
-            stringBuilder <<  individualAssayCross (6,'bontoxilysin activity','cell-based format','functional assay','none') <<
+            stringBuilder <<  individualAssayCross (6,'bontoxilysin activity','cell-based format','functional assay','enzyme modulator') <<
                     comma << endOfLine
-            stringBuilder <<  individualAssayCross (5,'none','biochemical format','fluorescence interference assay','none') <<
+            stringBuilder <<  individualAssayCross (5,'none','biochemical format','fluorescence interference assay','enzyme modulator') <<
                     comma << endOfLine
-            stringBuilder <<  individualAssayCross (7,'plectin-1','biochemical format','protein-protein interaction assay','none') <<
+            stringBuilder <<  individualAssayCross (7,'plectin-1','biochemical format','protein-protein interaction assay','enzyme modulator') <<
                     comma << endOfLine
-            stringBuilder <<  individualAssayCross (8,'plectin-1','single protein format','protein-protein interaction assay','Regulator of G-protein signaling 8') <<
+            stringBuilder <<  individualAssayCross (8,'plectin-1','single protein format','protein-protein interaction assay','transporter') <<
                     comma << endOfLine
-            stringBuilder <<  individualAssayCross (9,'bontoxilysin activity','biochemical format','direct enzyme activity assay','none') <<
+            stringBuilder <<  individualAssayCross (9,'bontoxilysin activity','biochemical format','direct enzyme activity assay','transporter') <<
                     comma << endOfLine
-            stringBuilder <<  individualAssayCross (10,'kinase activity','cell-based format','protein-small molecule interaction assay','Ion channel NompC') <<
+            stringBuilder <<  individualAssayCross (10,'kinase activity','cell-based format','protein-small molecule interaction assay','transporter') <<
                     comma << endOfLine
-            stringBuilder <<  individualAssayCross (11,'none','cell-based format','reporter-gene assay','none') <<
+            stringBuilder <<  individualAssayCross (11,'none','cell-based format','reporter-gene assay','transporter') <<
                     comma << endOfLine
-            stringBuilder <<  individualAssayCross (12,'cell death','cell-based format','transporter assay','Multidrug resistance protein 1') <<
+            stringBuilder <<  individualAssayCross (12,'cell death','cell-based format','transporter assay','transporter') <<
                     comma << endOfLine
-            stringBuilder <<  individualAssayCross (13,'regulation of gene expression','cell-based format','protein expression assay','none') <<
+            stringBuilder <<  individualAssayCross (13,'regulation of gene expression','cell-based format','protein expression assay','transporter') <<
                     comma << endOfLine
-            stringBuilder <<  individualAssayCross (14,'immunological synapse formation','cell-based format','gene-expression assay','none')
+            stringBuilder <<  individualAssayCross (14,'immunological synapse formation','cell-based format','gene-expression assay','transporter')
             stringBuilder << closeGroup
             return stringBuilder.toString()
         }

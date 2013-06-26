@@ -622,8 +622,11 @@
             setMembershipIndicatorToValue(retrievedNode,1);
             // Now we need a list of all the nodes that are turned on
             var activatedAssayList = generateUniqueListOfActivatedAssays(hierarchyId);
+            assayIndex.filterFunction(function(d){return (activatedAssayList.indexOf(d)>-1);});
+            dc.redrawAll();
             return activatedAssayList;
-        }
+        }//,
+         //       filteredHierarchyData =
 
         return {
             parseData:parseData,
