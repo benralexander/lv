@@ -476,7 +476,7 @@
                             if ( (!(hierarchyPointer.Structure===undefined))&&
                                  (!(hierarchyPointer.Structure.struct===undefined))&&
                                     (hierarchyPointer.Structure.struct.length>0))
-                                addAMembershipIndicator(hierarchyPointer.Structure.struct[0]);
+                                addAMembershipIndicator(hierarchyPointer.Structure.struct[0],loopCount);
                         } else if (hierarchyPointer.HierType === 'Graph') {
                             hierarchyPointer.Structure['rootName']='/';
                         }
@@ -535,25 +535,26 @@
                    }
                },
 
-                addAMembershipIndicator  = function (currentNode)  {
-                        if (currentNode  === undefined) {
-                            //couldn't find it down this branch.
-                            return undefined;
-                        }
+                // Recursive descent: We do this one at the beginning to add both a membership
+                //  indicator ( which gets set on an off pending on what the user clicks ) and
+                //  a tree identifier ( since we have multiple sunburst trees and we need to be
+                //  able to tell them apart in the click handler )
+                addAMembershipIndicator  = function (currentNode, treeIdentifier)  {
                          if (!(currentNode.children === undefined)) {
                             for (var i = 0; i < currentNode.children.length; i++) {
-                                addAMembershipIndicator(currentNode.children[i]);
+                                addAMembershipIndicator(currentNode.children[i],treeIdentifier);
                                 currentNode["member"] = 1;
+                                currentNode["treeid"] = treeIdentifier;
                             }
                         }  else {
                              currentNode["member"] = 1;
+                             currentNode["treeid"] = treeIdentifier;
                          }
                     },
+
+                // Recursive descent: set the membership of every node at or below the current node
+                //  to 'value'
                 setMembershipIndicatorToValue  = function (currentNode,value)  {
-                    if (currentNode  === undefined) {
-                        //couldn't find it down this branch.
-                        return undefined;
-                    }
                     if (!(currentNode.children === undefined)) {
                         for (var i = 0; i < currentNode.children.length; i++) {
                             setMembershipIndicatorToValue(currentNode.children[i], value);
@@ -564,19 +565,16 @@
                     }
                 },
 
-
+        // Recursive descent: find a node by name
         findNodeInTreeByName = function (currentNode,nameWeAreLookingFor)  {
-                  if (currentNode  === undefined) {
-                      //couldn't find it down this branch.
-                      return undefined;
-                  }
                   if (currentNode.name === nameWeAreLookingFor) {
                       return   currentNode;
                   }
                   if (!(currentNode.children === undefined)) {
                       for (var i = 0; i < currentNode.children.length; i++) {
-                          var currentAttempt = findNodeInTreeByName("+currentNode.children[i]+","+nameWeAreLookingFor+");
-                          if (!(currentAttempt===undefined))  {
+                          var currentAttempt = findNodeInTreeByName(currentNode.children[i],nameWeAreLookingFor);
+                          if ( (!( currentAttempt===undefined))&&
+                               ( currentAttempt.name === nameWeAreLookingFor) )  {
                               return  currentAttempt;
                           }
 //                          setTimeout("findNodeInTreeByName("+currentNode+","+nameWeAreLookingFor+")",1);
@@ -584,8 +582,10 @@
                   }
               },
 
-        adjustMembershipBasedOnSunburstClick  = function (nodeName)   {
+        adjustMembershipBasedOnSunburstClick  = function (nodeName,possibleNode,hierarchyId)   {
             // This is where we mark things as clicked!
+            var retrievedNode =   findNodeInTreeByName (linkedData.Hierarchy[hierarchyId].Structure.struct [0],nodeName);
+            console.log(retrievedNode.name);
         }
 
         return {
@@ -594,7 +594,8 @@
             validateLinkedData:validateLinkedData,
             numberOfWidgets: numberOfWidgets,
             retrieveCurrentHierarchicalData:retrieveCurrentHierarchicalData,
-            retrieveLinkedData:retrieveLinkedData
+            retrieveLinkedData:retrieveLinkedData,
+            adjustMembershipBasedOnSunburstClick:adjustMembershipBasedOnSunburstClick
 //                validate:validator.validate
         }
 
@@ -1881,7 +1882,7 @@
             // Interpolate the scales!
             function click(d) {
                 adjustSunburstCursor(d);
-                linkedVizData.adjustMembershipBasedOnSunburstClick (d.name);
+                linkedVizData.adjustMembershipBasedOnSunburstClick (d.name, d, d.treeid);
                 path.transition()
                         .duration(duration)
                         .attrTween("d", sunburstAnimation.arcTween(d));
@@ -1976,59 +1977,60 @@
     </script>
 
 
-    <script>var $data = [{"name":"/", "ac":"0", "inac":"0", "children": [
-        {"name":"signaling molecule", "ac":"3", "inac":"4", "size":6},
-        {"name":"hydrolase", "ac":"1", "inac":"1", "size":2},
-        {"name":"nucleic acid binding", "ac":"1", "inac":"3", "children": [
-            {"name":"helicase", "ac":"1", "inac":"0", "children": [
-                {"name":"DNA helicase", "ac":"1", "inac":"0", "size":1}
-            ]},
-            {"name":"DNA binding protein", "ac":"1", "inac":"2", "children": [
-                {"name":"DNA strand-pairing protein", "ac":"0", "inac":"1", "size":1}
-            ]},
-            {"name":"nuclease", "ac":"0", "inac":"1", "children": [
-                {"name":"exodeoxyribonuclease", "ac":"0", "inac":"1", "size":1},
-                {"name":"endodeoxyribonuclease", "ac":"0", "inac":"1", "size":1}
-            ]},
-            {"name":"RNA binding protein", "ac":"0", "inac":"1", "size":1}
-        ]},
-        {"name":"enzyme modulator", "ac":"0", "inac":"8", "children": [
-            {"name":"G-protein modulator", "ac":"0", "inac":"5", "size":5},
-            {"name":"G-protein", "ac":"0", "inac":"3", "children": [
-                {"name":"heterotrimeric G-protein", "ac":"0", "inac":"1", "size":1},
-                {"name":"small GTPase", "ac":"0", "inac":"2", "size":2}
-            ]}
-        ]},
-        {"name":"transporter", "ac":"0", "inac":"8", "children": [
-            {"name":"ATP-binding cassette (ABC) transporter", "ac":"0", "inac":"2", "size":2},
-            {"name":"ion channel", "ac":"0", "inac":"7", "children": [
-                {"name":"anion channel", "ac":"0", "inac":"1", "size":1},
-                {"name":"potassium channel", "ac":"0", "inac":"5", "size":5},
-                {"name":"voltage-gated ion channel", "ac":"0", "inac":"5", "children": [
-                    {"name":"voltage-gated potassium channel", "ac":"0", "inac":"5", "size":5}
-                ]}
-            ]}
-        ]},
-        {"name":"cell adhesion molecule", "ac":"0", "inac":"4", "children": [
-            {"name":"cadherin", "ac":"0", "inac":"1", "size":1}
-        ]},
-        {"name":"cell junction protein", "ac":"0", "inac":"1", "size":1},
-        {"name":"receptor", "ac":"0", "inac":"4", "children": [
-            {"name":"G-protein coupled receptor", "ac":"0", "inac":"3", "size":3}
-        ]},
-        {"name":"membrane traffic protein", "ac":"0", "inac":"1", "size":1},
-        {"name":"transferase", "ac":"0", "inac":"2", "children": [
-            {"name":"kinase", "ac":"0", "inac":"2", "children": [
-                {"name":"protein kinase", "ac":"0", "inac":"1", "children": [
-                    {"name":"non-receptor serine/threonine protein kinase", "ac":"0", "inac":"1", "size":1}
-                ]},
-                {"name":"carbohydrate kinase", "ac":"0", "inac":"1", "size":1}
-            ]}
-        ]},
-        {"name":"extracellular matrix protein", "ac":"0", "inac":"1", "children": [
-            {"name":"extracellular matrix glycoprotein", "ac":"0", "inac":"1", "size":1}
-        ]}
-    ]}]
+    <script>
+//        var $data = [{"name":"/", "ac":"0", "inac":"0", "children": [
+//        {"name":"signaling molecule", "ac":"3", "inac":"4", "size":6},
+//        {"name":"hydrolase", "ac":"1", "inac":"1", "size":2},
+//        {"name":"nucleic acid binding", "ac":"1", "inac":"3", "children": [
+//            {"name":"helicase", "ac":"1", "inac":"0", "children": [
+//                {"name":"DNA helicase", "ac":"1", "inac":"0", "size":1}
+//            ]},
+//            {"name":"DNA binding protein", "ac":"1", "inac":"2", "children": [
+//                {"name":"DNA strand-pairing protein", "ac":"0", "inac":"1", "size":1}
+//            ]},
+//            {"name":"nuclease", "ac":"0", "inac":"1", "children": [
+//                {"name":"exodeoxyribonuclease", "ac":"0", "inac":"1", "size":1},
+//                {"name":"endodeoxyribonuclease", "ac":"0", "inac":"1", "size":1}
+//            ]},
+//            {"name":"RNA binding protein", "ac":"0", "inac":"1", "size":1}
+//        ]},
+//        {"name":"enzyme modulator", "ac":"0", "inac":"8", "children": [
+//            {"name":"G-protein modulator", "ac":"0", "inac":"5", "size":5},
+//            {"name":"G-protein", "ac":"0", "inac":"3", "children": [
+//                {"name":"heterotrimeric G-protein", "ac":"0", "inac":"1", "size":1},
+//                {"name":"small GTPase", "ac":"0", "inac":"2", "size":2}
+//            ]}
+//        ]},
+//        {"name":"transporter", "ac":"0", "inac":"8", "children": [
+//            {"name":"ATP-binding cassette (ABC) transporter", "ac":"0", "inac":"2", "size":2},
+//            {"name":"ion channel", "ac":"0", "inac":"7", "children": [
+//                {"name":"anion channel", "ac":"0", "inac":"1", "size":1},
+//                {"name":"potassium channel", "ac":"0", "inac":"5", "size":5},
+//                {"name":"voltage-gated ion channel", "ac":"0", "inac":"5", "children": [
+//                    {"name":"voltage-gated potassium channel", "ac":"0", "inac":"5", "size":5}
+//                ]}
+//            ]}
+//        ]},
+//        {"name":"cell adhesion molecule", "ac":"0", "inac":"4", "children": [
+//            {"name":"cadherin", "ac":"0", "inac":"1", "size":1}
+//        ]},
+//        {"name":"cell junction protein", "ac":"0", "inac":"1", "size":1},
+//        {"name":"receptor", "ac":"0", "inac":"4", "children": [
+//            {"name":"G-protein coupled receptor", "ac":"0", "inac":"3", "size":3}
+//        ]},
+//        {"name":"membrane traffic protein", "ac":"0", "inac":"1", "size":1},
+//        {"name":"transferase", "ac":"0", "inac":"2", "children": [
+//            {"name":"kinase", "ac":"0", "inac":"2", "children": [
+//                {"name":"protein kinase", "ac":"0", "inac":"1", "children": [
+//                    {"name":"non-receptor serine/threonine protein kinase", "ac":"0", "inac":"1", "size":1}
+//                ]},
+//                {"name":"carbohydrate kinase", "ac":"0", "inac":"1", "size":1}
+//            ]}
+//        ]},
+//        {"name":"extracellular matrix protein", "ac":"0", "inac":"1", "children": [
+//            {"name":"extracellular matrix glycoprotein", "ac":"0", "inac":"1", "size":1}
+//        ]}
+//    ]}]
     var minimumValue=0;
     var maximumValue=1;
 
