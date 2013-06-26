@@ -26,20 +26,20 @@ public class LinkedVisHierData {
 
     private final String  proteinTargetTree = """
  [{"name":"/", "ac":"0", "inac":"0", "children": [
-        {"name":"signaling molecule", "ac":"1", "inac":"0", "size":1},
-        {"name":"enzyme modulator", "ac":"3", "inac":"4", "children": [
-            {"name":"G-protein modulator", "ac":"1", "inac":"0", "size":1},
-            {"name":"G-protein", "ac":"1", "inac":"3", "children": [
-                {"name":"heterotrimeric G-protein", "ac":"0", "inac":"1", "size":1},
-                {"name":"small GTPase", "ac":"1", "inac":"1", "size":2}
+        {"name":"signaling molecule", "ac":"1", "inac":"0",  "assays": [0], "size":1 },
+        {"name":"enzyme modulator", "ac":"3", "inac":"4", "assays": [2,4], "children": [
+            {"name":"G-protein modulator", "ac":"1", "inac":"0", "assays": [7], "size":1},
+            {"name":"G-protein", "ac":"1", "inac":"3", "assays": [5], "children": [
+                {"name":"heterotrimeric G-protein", "ac":"0", "inac":"1", "assays": [1], "size":1},
+                {"name":"small GTPase", "ac":"1", "inac":"1", "assays": [3,6], "size":2}
             ]}
         ]},
-        {"name":"transporter", "ac":"0", "inac":"8", "children": [
-            {"name":"ATP-binding cassette", "ac":"0", "inac":"2", "size":2},
-            {"name":"ion channel", "ac":"0", "inac":"6", "children": [
-                {"name":"anion channel", "ac":"0", "inac":"2", "size":2},
-                {"name":"voltage-gated ion channel", "ac":"0", "inac":"3", "children": [
-                    {"name":"voltage-gated potassium channel", "ac":"0", "inac":"2", "size":2}
+        {"name":"transporter", "ac":"0", "inac":"8", "assays": [], "children": [
+            {"name":"ATP-binding cassette", "ac":"0", "inac":"2", "assays": [12,13], "size":2},
+            {"name":"ion channel", "ac":"0", "inac":"6", "assays": [11], "children": [
+                {"name":"anion channel", "ac":"0", "inac":"2", "assays": [10,14], "size":2},
+                {"name":"voltage-gated ion channel", "ac":"0", "inac":"3", "assays": [9], "children": [
+                    {"name":"voltage-gated potassium channel", "ac":"0", "inac":"2", "assays": [8,15], "size":2}
                 ]}
             ]}
         ]}
@@ -121,6 +121,8 @@ public class LinkedVisHierData {
 
         private final String individualAssaySection( int assayIndex,
                                                      String assayName,
+                                                     int assayActives,
+                                                     int assayInactives,
                                                      int assayId ) {
             indexUniquenessCheck (assayIndex,accumulatingIndex1,'Assay index 1')
             indexUniquenessCheck (assayIndex,accumulatingIndex2,'Assay ID')
@@ -129,6 +131,8 @@ public class LinkedVisHierData {
             stringBuilder << openObject
             stringBuilder << shortSpaceUnit << addQuotes('AssayIdx') << colonUnit << assayIndex << comma << endOfLine
             stringBuilder << mediumSpaceUnit << addQuotes('AssayName') << colonUnit << addQuotes(assayName) << comma << endOfLine
+            stringBuilder << mediumSpaceUnit << addQuotes('AssayAc') << colonUnit << assayActives << comma << endOfLine
+            stringBuilder << mediumSpaceUnit << addQuotes('AssayIn') << colonUnit << assayInactives << comma << endOfLine
             stringBuilder << mediumSpaceUnit << addQuotes('AssayId') << colonUnit << assayId << endOfLine
             stringBuilder << closeObject
             return stringBuilder.toString()
@@ -140,37 +144,37 @@ public class LinkedVisHierData {
         public final String writeAssaySection() {
             StringBuilder stringBuilder = new StringBuilder()
             stringBuilder << openGroup << endOfLine
-            stringBuilder << individualAssaySection(0, 'Radiotracer Incision Assay (RIA) for Inhibitors of Human Apurinic/apyrimidinic Endonuclease 1 (APE1)', 1017) <<
+            stringBuilder << individualAssaySection(0, 'Radiotracer Incision Assay (RIA) for Inhibitors of Human Apurinic/apyrimidinic Endonuclease 1 (APE1)', 1, 0, 1017) <<
                     comma << endOfLine
-            stringBuilder << individualAssaySection(1, 'Inhibitors of Bloom\'s syndrome helicase: Efflux Ratio Profiling Assay', 1730) <<
+            stringBuilder << individualAssaySection(1, 'Inhibitors of Bloom\'s syndrome helicase: Efflux Ratio Profiling Assay', 0, 1, 1730) <<
                     comma << endOfLine
-            stringBuilder << individualAssaySection(2, 'Inhibitors of Bloom\'s syndrome helicase: Aqueous Profiling Assay', 1732) <<
+            stringBuilder << individualAssaySection(2, 'Inhibitors of Bloom\'s syndrome helicase: Aqueous Profiling Assay', 1, 0, 1732) <<
                     comma << endOfLine
-            stringBuilder << individualAssaySection(3, 'Inhibitors of Bloom\'s syndrome helicase: Metabolic Stability Profiling', 1733) <<
+            stringBuilder << individualAssaySection(3, 'Inhibitors of Bloom\'s syndrome helicase: Metabolic Stability Profiling', 1, 0, 1733) <<
                     comma << endOfLine
-            stringBuilder << individualAssaySection(4, 'Inhibitors of APE1: Caco-2 Cell Permeability Profiling', 1735) <<
+            stringBuilder << individualAssaySection(4, 'Inhibitors of APE1: Caco-2 Cell Permeability Profiling', 0, 1, 1735) <<
                     comma << endOfLine
-            stringBuilder << individualAssaySection(5, 'Inhibitors of APE1: Mouse Plasma Stability Profiling', 1612) <<
+            stringBuilder << individualAssaySection(5, 'Inhibitors of APE1: Mouse Plasma Stability Profiling', 0, 1, 1612) <<
                     comma << endOfLine
-            stringBuilder << individualAssaySection(6, 'Inhibitors of APE1: Metabolic Stability Profiling', 1651) <<
+            stringBuilder << individualAssaySection(6, 'Inhibitors of APE1: Metabolic Stability Profiling', 0, 1, 1651) <<
                     comma << endOfLine
-            stringBuilder << individualAssaySection(7, 'Inhibitors of APE1: Aqueous Solubility Profiling', 1604) <<
+            stringBuilder << individualAssaySection(7, 'Inhibitors of APE1: Aqueous Solubility Profiling', 1, 0, 1604) <<
                     comma << endOfLine
-            stringBuilder << individualAssaySection(8, 'qHTS Assay for Inhibitors of Bloom\'s syndrome helicase (BLM)', 2483) <<
+            stringBuilder << individualAssaySection(8, 'qHTS Assay for Inhibitors of Bloom\'s syndrome helicase (BLM)', 0, 1, 2483) <<
                     comma << endOfLine
-            stringBuilder << individualAssaySection(9, 'qHTS Assay for Inhibitors of the Human Apurinic/apyrimidinic Endonuclease 1 (APE1)', 2472) <<
+            stringBuilder << individualAssaySection(9, 'qHTS Assay for Inhibitors of the Human Apurinic/apyrimidinic Endonuclease 1 (APE1)', 0, 1, 2472) <<
                     comma << endOfLine
-            stringBuilder << individualAssaySection(10, 'qHTS FP-Based Assay for Inhibitors of the Human Apurinic/apyrimidinic Endonuclease 1 (APE1)', 2623) <<
+            stringBuilder << individualAssaySection(10, 'qHTS FP-Based Assay for Inhibitors of the Human Apurinic/apyrimidinic Endonuclease 1 (APE1)', 0, 1, 2623) <<
                     comma << endOfLine
-            stringBuilder << individualAssaySection(11, 'qHTS Assay for Inhibitors of BRCT-Phosphoprotein Interaction (Green Fluorophore)', 3402) <<
+            stringBuilder << individualAssaySection(11, 'qHTS Assay for Inhibitors of BRCT-Phosphoprotein Interaction (Green Fluorophore)', 0, 1, 3402) <<
                     comma << endOfLine
-            stringBuilder << individualAssaySection(12, 'qHTS Assay for Inhibitors of BRCT-Phosphoprotein Interaction (Red Fluorophore)', 3418) <<
+            stringBuilder << individualAssaySection(12, 'qHTS Assay for Inhibitors of BRCT-Phosphoprotein Interaction (Red Fluorophore)', 0, 1, 3418) <<
                     comma << endOfLine
-            stringBuilder << individualAssaySection(13, 'Homologous recombination_Rad 51_dose response_2', 3594) <<
+            stringBuilder << individualAssaySection(13, 'Homologous recombination_Rad 51_dose response_2', 0, 1, 3594) <<
                     comma << endOfLine
-            stringBuilder << individualAssaySection(14, 'Homologous recombination - Rad 51', 3874) <<
+            stringBuilder << individualAssaySection(14, 'Homologous recombination - Rad 51', 0, 1, 3874) <<
                     comma << endOfLine
-            stringBuilder << individualAssaySection(15, 'Late stage assay provider results from the probe development effort to identify inhibitors of Wee1 degradation: luminescence-based cell-based assay to identify inhibitors of Wee1 degradation', 537)
+            stringBuilder << individualAssaySection(15, 'Late stage assay provider results from the probe development effort to identify inhibitors of Wee1 degradation: luminescence-based cell-based assay to identify inhibitors of Wee1 degradation', 0, 1, 537)
 
             stringBuilder << closeGroup
             return stringBuilder.toString()
