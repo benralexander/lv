@@ -508,7 +508,7 @@
                                 var assayCross = linkedData.AssayCross[i];
                                 if (assayCross != null){
                                     developingAssayList.push({
-                                        index: i,
+                                        index: assayCross.AssayRef,
                                         assayId: findAssayId(assayCross.AssayRef),
                                         GO_biological_process_term: assayCross.data[0],
                                         assay_format: assayCross.data[1],
@@ -625,8 +625,92 @@
             assayIndex.filterFunction(function(d){return (activatedAssayList.indexOf(d)>-1);});
             dc.redrawAll();
             return activatedAssayList;
-        }//,
-         //       filteredHierarchyData =
+        },
+        filteredHierarchyData = function (hierarchyId)   {
+            var originalTree = retrieveCurrentHierarchicalData(hierarchyId);
+            var listOfActiveAssays = retrieveListOfActiveAssays ();
+            var revisedTree = copyThisTree (originalTree,listOfActiveAssays);
+            return revisedTree;
+        },
+        copyThisTree  = function (currentNode,listOfActiveAssays)  {
+                if (!(currentNode.children === undefined)) {
+                    var newNodeWithKids = {};
+                    newNodeWithKids["name"] =  currentNode.name;
+                    newNodeWithKids["ac"] =  currentNode.ac;
+                    newNodeWithKids["inac"] =   currentNode.inac;
+                    newNodeWithKids["member"] =   currentNode.member;
+                    newNodeWithKids["treeid"] =  currentNode.treeid;
+                    if (!(currentNode.assays === undefined)) {
+                        newNodeWithKids["assays"] = [];
+                        for (var i = 0; i < currentNode.assays.length; i++){
+                            newNodeWithKids["assays"].push(currentNode.assays[i]);
+                        }
+                    }
+                    newNodeWithKids["children"] = [];
+                    for (var i = 0; i < currentNode.children.length; i++) {
+                        if (youOrAnyOfYourChildrenWorthSaving(currentNode.children[i],listOfActiveAssays)) {
+                            newNodeWithKids["children"].push(copyThisTree(currentNode.children[i],listOfActiveAssays));
+                        }
+                    }
+                    // special case. If none of your kids were worth saving then add a size parameter.  You might perhaps
+                    //  be a valuable node, my friend, even if all your children are worthless.
+                    if (currentNode.children.length==0) {
+                        newNode["size"] = 1; // TODO: can I come up with a better size parameter?
+                    }
+                    return newNodeWithKids;
+                }  else {
+                    var newNode = {};
+                    newNode["name"] =  currentNode.name;
+                    newNode["ac"] =  currentNode.ac;
+                    newNode["inac"] =   currentNode.inac;
+                    newNode["member"] =   currentNode.member;
+                    newNode["treeid"] =  currentNode.treeid;
+                    if (!(currentNode.assays === undefined)) {
+                        newNode["assays"] = [];
+                        for (var i = 0; i < currentNode.assays.length; i++){
+                            newNode["assays"].push(currentNode.assays[i]);
+                        }
+                    }
+                    newNode["size"] =  currentNode.size;
+                    return newNode;
+                }
+            },
+        youOrAnyOfYourChildrenWorthSaving  = function(currentNode,thoseWorthSaving){
+            var worthSaving = false;
+            if (thoseWorthSaving.length>0){
+                if (!(currentNode.assays === undefined)) {
+                    for (var j = 0; j < currentNode.assays.length; j++){
+                        if(thoseWorthSaving.indexOf(currentNode.assays[j])>-1){
+                            worthSaving = true;
+                            return worthSaving;
+                        }
+                    }
+                }
+                if (!(currentNode.children === undefined)) {
+                    for (var j = 0; j < currentNode.children.length; j++) {
+                        for (var i = 0; i < currentNode.children.length; i++) {
+                            worthSaving = youOrAnyOfYourChildrenWorthSaving(currentNode.children[i], thoseWorthSaving);
+                            if (worthSaving)  {
+                                return true;
+                            }
+                        }
+                     }
+                }
+            }
+            return worthSaving;
+        },
+        adjustedPartitionSize = function(d){
+            return d.size;
+        },
+        retrieveListOfActiveAssays = function (){
+           var listOfAssayCrossObjects =  assayIndex.top(1000);
+           var listOfAssayRef = [];
+           for (var i = 0; i < listOfAssayCrossObjects.length; i++ )  {
+              listOfAssayRef.push(listOfAssayCrossObjects[i].index);
+           }
+           return listOfAssayRef;
+        }
+
 
         return {
             parseData:parseData,
@@ -635,8 +719,9 @@
             numberOfWidgets: numberOfWidgets,
             retrieveCurrentHierarchicalData:retrieveCurrentHierarchicalData,
             retrieveLinkedData:retrieveLinkedData,
-            adjustMembershipBasedOnSunburstClick:adjustMembershipBasedOnSunburstClick
-//                validate:validator.validate
+            adjustMembershipBasedOnSunburstClick:adjustMembershipBasedOnSunburstClick,
+            filteredHierarchyData:filteredHierarchyData,
+            adjustedPartitionSize:adjustedPartitionSize
         }
 
     }());
@@ -1798,7 +1883,8 @@
 
             var partition = d3.layout.partition()
                     .value(function (d) {
-                        return d.size;
+                        return linkedVizData.adjustedPartitionSize(d);
+//                        return d.size;
                     });
 
             var arc = d3.svg.arc()
@@ -1897,8 +1983,9 @@
                 }
             }
 
+            var hierarchyData = linkedVizData.filteredHierarchyData(2);
 
-            var path = svg.datum(linkedVizData.retrieveCurrentHierarchicalData(2)).selectAll("path")
+            var path = svg.datum(hierarchyData).selectAll("path")
                     .data(partition.nodes)
                     .enter().append("path")
                     .attr("d", arc)
@@ -1917,7 +2004,7 @@
                     .on("mouseout",tooltipHandler.mouseOut );
 
 
-            var text = svg.datum(linkedVizData.retrieveCurrentHierarchicalData(2)).selectAll("text").data(partition.nodes);
+            var text = svg.datum(hierarchyData).selectAll("text").data(partition.nodes);
 
             // Interpolate the scales!
             function click(d) {
