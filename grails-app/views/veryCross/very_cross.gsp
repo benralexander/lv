@@ -258,7 +258,8 @@
     <link rel="stylesheet" type="text/css" href="${resource(dir: 'css', file: 'style.css')}" />
 
 <script>
-
+    var assay = {};
+    var assayIndex = {};
     var linkedVizData = (function (){
         var validator = {
 
@@ -472,6 +473,10 @@
                         var hierarchyPointer =  linkedData.Hierarchy[loopCount];
                         if (hierarchyPointer.HierType === 'Tree') {
                             hierarchyPointer.Structure['rootName']='/';
+                            if ( (!(hierarchyPointer.Structure===undefined))&&
+                                 (!(hierarchyPointer.Structure.struct===undefined))&&
+                                    (hierarchyPointer.Structure.struct.length>0))
+                                addAMembershipIndicator(hierarchyPointer.Structure.struct[0]);
                         } else if (hierarchyPointer.HierType === 'Graph') {
                             hierarchyPointer.Structure['rootName']='/';
                         }
@@ -530,7 +535,37 @@
                    }
                },
 
-              findNodeInTreeByName = function (currentNode,nameWeAreLookingFor)  {
+                addAMembershipIndicator  = function (currentNode)  {
+                        if (currentNode  === undefined) {
+                            //couldn't find it down this branch.
+                            return undefined;
+                        }
+                         if (!(currentNode.children === undefined)) {
+                            for (var i = 0; i < currentNode.children.length; i++) {
+                                addAMembershipIndicator(currentNode.children[i]);
+                                currentNode["member"] = 1;
+                            }
+                        }  else {
+                             currentNode["member"] = 1;
+                         }
+                    },
+                setMembershipIndicatorToValue  = function (currentNode,value)  {
+                    if (currentNode  === undefined) {
+                        //couldn't find it down this branch.
+                        return undefined;
+                    }
+                    if (!(currentNode.children === undefined)) {
+                        for (var i = 0; i < currentNode.children.length; i++) {
+                            setMembershipIndicatorToValue(currentNode.children[i], value);
+                            currentNode.member = value;
+                        }
+                    }  else {
+                        currentNode.member = value;
+                    }
+                },
+
+
+        findNodeInTreeByName = function (currentNode,nameWeAreLookingFor)  {
                   if (currentNode  === undefined) {
                       //couldn't find it down this branch.
                       return undefined;
@@ -540,14 +575,18 @@
                   }
                   if (!(currentNode.children === undefined)) {
                       for (var i = 0; i < currentNode.children.length; i++) {
-                          var currentAttempt = findNodeInTreeByName("+currentNode+","+nameWeAreLookingFor+");
+                          var currentAttempt = findNodeInTreeByName("+currentNode.children[i]+","+nameWeAreLookingFor+");
                           if (!(currentAttempt===undefined))  {
                               return  currentAttempt;
                           }
 //                          setTimeout("findNodeInTreeByName("+currentNode+","+nameWeAreLookingFor+")",1);
                       }
                   }
-              }
+              },
+
+        adjustMembershipBasedOnSunburstClick  = function (nodeName)   {
+            // This is where we mark things as clicked!
+        }
 
         return {
             parseData:parseData,
@@ -1310,6 +1349,10 @@
                         assayIdDimensionPieChart = displayManipulator.addPieChart(assay, 'a2-chart', 'protein_target', colors, pieChartWidth, pieChartRadius, innerRadius);
                         assayTypePieChart = displayManipulator.addPieChart(assay, 'a3-chart', 'assay_type', colors, pieChartWidth, pieChartRadius, innerRadius);
 
+                        assayIndex = assay.dimension(function (d) {
+                            return d['index'];
+                        });
+
                         // We should be ready, display it
                         dc.renderAll();
 
@@ -1838,6 +1881,7 @@
             // Interpolate the scales!
             function click(d) {
                 adjustSunburstCursor(d);
+                linkedVizData.adjustMembershipBasedOnSunburstClick (d.name);
                 path.transition()
                         .duration(duration)
                         .attrTween("d", sunburstAnimation.arcTween(d));
@@ -2002,23 +2046,6 @@
             <div id="sunburstdiv">
 
                 <div id="sunburstdiv_empty">
-                    <script>
-////                        if ($data[0].children !== undefined) {
-//                        if (linkedVizData.retrieveCurrentHierarchicalData(2).children !== undefined) {
-//                            createASunburst( 1000, 1000,5,1000,continuousColorScale,'div#sunburstdiv', 672376 );
-//                        } else {
-//                            d3.select('div#sunburstdiv')
-//                                    .append('div')
-//                                    .attr("width", 1000)
-//                                    .attr("height", 1000 )
-//                                    .style("padding-top", '200px' )
-//                                    .style("text-align", 'center' )
-//                                    .append("h1")
-//                                    .html("No off-embargo assay data are  available for this compound." +
-//                                            "Please either choose a different compound, or else come" +
-//                                            " back later when more assay data may have accumulated.");
-//                        }
-                    </script>
 
                 </div>
             </div>
@@ -2029,12 +2056,6 @@
             <div style="float:right;">
                 <div id="legendGoesHere"></div>
 
-                <script>
-//                    if ($data[0].children !== undefined) {
-//                        if (linkedVizData.retrieveCurrentHierarchicalData(2).children !== undefined) {
-//                        createALegend(120, 200,100,continuousColorScale,'div#legendGoesHere',minimumValue, maximumValue);
-//                    }
-                </script>
             </div>
 
             <div style="text-align: center; vertical-align: bottom;">
