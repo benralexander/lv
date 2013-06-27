@@ -183,7 +183,6 @@
     }
 
 
-    @charset "UTF-8";
     #sunburstplaceholder {
         font-family:  sans-serif;
         font-size: 12px;
@@ -255,7 +254,6 @@
 
 
     </style>
-    <link rel="stylesheet" type="text/css" href="${resource(dir: 'css', file: 'style.css')}" />
 
 <script>
     var assay = {};
@@ -794,6 +792,8 @@
             var hierarchyOfChoice = linkedData.Hierarchy[hierarchyId];
             return (!(hierarchyOfChoice.Structure.struct === undefined));
         },
+        // It is certainly a bother to identify a node's parent if you don't have a parent pointer. The code below starts at the root
+        //  and recursively descends until it finds the node that is the parent of the nodeThatIsTheBasisForOurSearch
          parentIdentificationTool  = function(currentNode,nodeThatIsTheBasisForOurSearch){
             if (!(currentNode === undefined)) {
                 // If you have children then you might be the one
@@ -820,7 +820,9 @@
                 }
             }
             return(null);
-        }
+         }
+//                ,
+//         provideAListOfEveryoneWhoIsnotPointingAtTheirRoot = '
 
 
         return {
@@ -1037,6 +1039,13 @@
                             (!(potentialOrphanedLegend[0] === null))&&
                             (!(potentialOrphanedLegend[0][0] === null))) {
                             potentialOrphanedLegend.remove();
+                        }
+                    },
+                    createAResetButtonIfWeSwitchedARoot = function () {
+                        // Instead of looking to see which widget is closing let's just check them all, and create a reset button
+                        // whenever the root is not equal to the user-specified Global parent
+                        for( var i=0 ; i<X ; i++ ) {
+
                         }
                     },
 
@@ -1604,48 +1613,10 @@
                         attachButtonsToThePieContainers('.pieChartContainer', handleExpandOrContractClick, buttondata, d3.selectAll('#suburst_container'));
 
 
-                    },
+                    };
 
-            //   A fairly high-level method, used to call the other calls that get everything launched.
-                    prepareThePies = function () {
-
-                        //
-                        // the following data structure defines where everything sits on the page. It is attached
-                        //  to the data, and so it gets passed around to various callbacks. If you want to adjust
-                        // how this page looks, You'll probably need to change the values held below in  buttondata.
-                        //
-
-                        // Retrieve the data do whatever we want to do with it
-//                        d3.json("http://localhost:8028/cow/veryCross/feedMeJson", function (incomingData) {
-//                          presentLinkedData = function () {
-//                            // create an empty list, Just in case we get null data
-//                            var assays = [];
-//
-//                            // Clean up the data.  De-dup, and assign
-//                            assays = readInData(incomingData);
-//
-//                            // Create the crossfilter for the relevant dimensions and groups.
-//                            assay = crossfilter(assays);
-//
-//                            // Build everything were going to display
-//                            allDataDcTable = displayManipulator.addDcTable(assay, 'data-table', 'assayId');
-//                            biologicalProcessPieChart = displayManipulator.addPieChart(assay, 'a0-chart', 'GO_biological_process_term', colors, pieChartWidth, pieChartRadius, innerRadius);
-//                            assayFormatPieChart = displayManipulator.addPieChart(assay, 'a1-chart', 'assay_format', colors, pieChartWidth, pieChartRadius, innerRadius);
-//                            assayIdDimensionPieChart = displayManipulator.addPieChart(assay, 'a2-chart', 'protein_target', colors, pieChartWidth, pieChartRadius, innerRadius);
-//                            assayTypePieChart = displayManipulator.addPieChart(assay, 'a3-chart', 'assay_type', colors, pieChartWidth, pieChartRadius, innerRadius);
-//
-//                            // We should be ready, display it
-//                            dc.renderAll();
-//
-//                            // Finally, attach some data along with buttons and callbacks to the pie charts we've built
-//                            attachButtonsToThePieContainers('.pieChartContainer', handleExpandOrContractClick, buttondata, d3.selectAll('#suburst_container'));
-//
-//
-//                        }
-                    }; //prepareThePies
-            return {
+             return {
                 verifyLinkedData: verifyLinkedData,
-                prepareThePies: prepareThePies,
                 presentLinkedData: presentLinkedData
             }
         }())
@@ -1655,8 +1626,7 @@
         // The highest level call.  Everything starts from here.
         // **********************************************************
         generateLinkedPies.verifyLinkedData();  // generateLinkedData();verifyLinkedData
-        generateLinkedPies.prepareThePies();
-       // generateLinkedPies.presentLinkedData ();
+        generateLinkedPies.presentLinkedData ();
 
 
     }());
