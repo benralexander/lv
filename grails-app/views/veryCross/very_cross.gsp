@@ -709,8 +709,13 @@
               listOfAssayRef.push(listOfAssayCrossObjects[i].index);
            }
            return listOfAssayRef;
+        },
+        resetRootForHierarchy = function (currentNode,hierarchyId){
+           var hierarchyOfChoice = linkedData.Hierarchy[hierarchyId];
+           if (!(hierarchyOfChoice.Structure === undefined)) {
+               hierarchyOfChoice.Structure.rootName = currentNode.name;
+           }
         }
-
 
         return {
             parseData:parseData,
@@ -721,7 +726,8 @@
             retrieveLinkedData:retrieveLinkedData,
             adjustMembershipBasedOnSunburstClick:adjustMembershipBasedOnSunburstClick,
             filteredHierarchyData:filteredHierarchyData,
-            adjustedPartitionSize:adjustedPartitionSize
+            adjustedPartitionSize:adjustedPartitionSize,
+            resetRootForHierarchy:resetRootForHierarchy
         }
 
     }());
@@ -2010,6 +2016,7 @@
             function click(d) {
                 adjustSunburstCursor(d);
                 linkedVizData.adjustMembershipBasedOnSunburstClick (d.name, d, d.treeid);
+                linkedVizData.resetRootForHierarchy (d, d.treeid) ;
                 path.transition()
                         .duration(duration)
                         .attrTween("d", sunburstAnimation.arcTween(d));
