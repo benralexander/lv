@@ -780,12 +780,46 @@
         resetRootForHierarchy = function (currentNode,hierarchyId){
            var hierarchyOfChoice = linkedData.Hierarchy[hierarchyId];
            if (!(hierarchyOfChoice.Structure === undefined)) {
-               hierarchyOfChoice.Structure.rootName = currentNode.name;
+               // We want to actually the parent of the currently selected node. It isn't always trivial to find your parent, but we can try...
+               var potentialParent = parentIdentificationTool (hierarchyOfChoice.Structure.struct [0],currentNode);
+               if (!(potentialParent ===null)) {   // We found the parent, make the assignment
+                   hierarchyOfChoice.Structure.rootName = potentialParent.name;
+               } else {    // Could not find the parent, stick with the existing node.  This should only happen if they picked the root.
+                   hierarchyOfChoice.Structure.rootName = currentNode.name;
+               }
+
            }
         },
         extendedHierarchyDataExists = function (hierarchyId){
             var hierarchyOfChoice = linkedData.Hierarchy[hierarchyId];
             return (!(hierarchyOfChoice.Structure.struct === undefined));
+        },
+         parentIdentificationTool  = function(currentNode,nodeThatIsTheBasisForOurSearch){
+            if (!(currentNode === undefined)) {
+                // If you have children then you might be the one
+                if  (!(currentNode.children === undefined)){
+                    // Are you the parent we are searching for?
+                    for (var i = 0; i < currentNode.children.length; i++) {
+                        var child =  currentNode.children [i];
+                        if (!(child === undefined)) {
+                            if (child.name === nodeThatIsTheBasisForOurSearch.name) {
+                                return currentNode;
+                            }
+                        }
+                    }
+                    //  You want the parent we want exactly, but maybe one of your kids is the one
+                    for (var i = 0; i < currentNode.children.length; i++) {
+                        var child =  currentNode.children [i];
+                        if (!(child === undefined)) {
+                            var potentialParent = parentIdentificationTool (child,nodeThatIsTheBasisForOurSearch);
+                            if (!(potentialParent === null)) {
+                                return  potentialParent;
+                            }
+                        }
+                    }
+                }
+            }
+            return(null);
         }
 
 
