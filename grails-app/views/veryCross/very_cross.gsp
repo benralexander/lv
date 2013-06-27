@@ -645,6 +645,14 @@
             updateActiveInactiveCounts (revisedTree, activeInactiveCounts);
             return revisedTree;
         },
+        cleanupOriginalHierarchyData = function (hierarchyId)   {
+            var originalTree = retrieveCurrentHierarchicalData(hierarchyId);
+            var listOfActiveAssays = retrieveListOfActiveAssays ();
+            var activeInactiveCounts = {active: 0, inactive: 0};
+            updateActiveInactiveCounts (originalTree, activeInactiveCounts);
+            return originalTree;
+        },
+
         updateActiveInactiveCounts  = function (currentNode,activeInactiveCounts)  {
             if (!(currentNode.children === undefined)) {
                 // first go through all the children, and add up everything we get
@@ -665,6 +673,7 @@
                 // we have the numbers we wanted. Store them in the tree, and then passed on to the caller
                 currentNode.ac = activeInactiveCounts.active;
                 currentNode.inac = activeInactiveCounts.inactive;
+                currentNode.size =  activeInactiveCounts.active+activeInactiveCounts.inactive;
                 return activeInactiveCounts;
             }  else {
                 if ((!(currentNode.assays === undefined)) &&
@@ -677,6 +686,7 @@
                 }
                 currentNode.ac = activeInactiveCounts.active;
                 currentNode.inac = activeInactiveCounts.inactive;
+                currentNode.size =  activeInactiveCounts.active+activeInactiveCounts.inactive;
                 return activeInactiveCounts;
             }
         },
@@ -706,8 +716,8 @@
                 }
                 // special case. If none of your kids were worth saving then add a size parameter.  You might perhaps
                 //  be a valuable node, my friend, even if all your children are worthless.
-                if (currentNode.children.length==0) {
-                    newNode["size"] = 1; // TODO: can I come up with a better size parameter?
+                if (newNodeWithKids.children.length==0) {
+                    newNodeWithKids["size"] = currentNode.ac+currentNode.inac;
                 }
                 return newNodeWithKids;
             }  else {
@@ -727,7 +737,7 @@
                     }
                 }
                 newNode["ac"] =  currentNode.ac;
-                newNode["inac"] =   currentNode.inac;
+                newNode["inac"] =  currentNode.inac;
                 newNode["size"] =  currentNode.size;
                 return newNode;
             }
@@ -784,7 +794,8 @@
             adjustMembershipBasedOnSunburstClick:adjustMembershipBasedOnSunburstClick,
             filteredHierarchyData:filteredHierarchyData,
             adjustedPartitionSize:adjustedPartitionSize,
-            resetRootForHierarchy:resetRootForHierarchy
+            resetRootForHierarchy:resetRootForHierarchy,
+            cleanupOriginalHierarchyData:cleanupOriginalHierarchyData
         }
 
     }());
@@ -1045,6 +1056,9 @@
                                     },
                                     function (d) {
                                         return d.assay_type;
+                                    },
+                                    function(d) {
+                                        return d.assayId;
                                     }
                                 ])
                                 .order(d3.ascending)
@@ -1516,6 +1530,7 @@
                                 linkedVizData.appendConditionalStatusFields()
                             }
                             presentLinkedData();
+                            linkedVizData.cleanupOriginalHierarchyData(2);
                         });// d3.json
 
                     },
@@ -1677,10 +1692,11 @@
 <table id="data-table" class="table table-hover dc-data-table"  style="position:absolute; left: 0px; top: 300px;">
     <thead>
     <tr class="header">
-        <th style='width: 25%' class="data-table-th">Biological process</th>
-        <th style='width: 25%' class="data-table-th">Assay format</th>
-        <th style='width: 25%' class="data-table-th">Proteins target</th>
-        <th style='width: 25%' class="data-table-th">Assay type</th>
+        <th style='width: 23%' class="data-table-th">Biological process</th>
+        <th style='width: 23%' class="data-table-th">Assay format</th>
+        <th style='width: 23%' class="data-table-th">Proteins target</th>
+        <th style='width: 23%' class="data-table-th">Assay type</th>
+        <th style='width: 8%' class="data-table-th">ID</th>
     </tr>
     </thead>
 </table>
