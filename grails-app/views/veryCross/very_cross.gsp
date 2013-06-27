@@ -489,8 +489,19 @@
                     return returnVal;
                 },
                 findAssayId = function (assayRef)  {
-                    // TODO we need to really look these up, presumably when we read the data and the first.
-                    return linkedData.Assays[assayRef].AssayId;
+                    // new way, which may be more robust
+                    var listOfAllAssayIdxs = [];
+                    for (var i=0 ; i<linkedData.Assays.length ; i++) {
+                        listOfAllAssayIdxs.push (linkedData.Assays[i].AssayIdx);
+                    }
+                    var indexOfMatch = listOfAllAssayIdxs.indexOf(assayRef);
+                    if  (!(indexOfMatch === -1)) {
+                        return linkedData.Assays[indexOfMatch].AssayId;
+                    }  else {
+                        return -1;
+                    }
+                    //old way, which seemed to basically work
+                    //return linkedData.Assays[assayRef].AssayId;
                 },
                 retrieveLinkedData = function ()  {
                     var developingAssayList = [];
@@ -630,51 +641,97 @@
             var originalTree = retrieveCurrentHierarchicalData(hierarchyId);
             var listOfActiveAssays = retrieveListOfActiveAssays ();
             var revisedTree = copyThisTree (originalTree,listOfActiveAssays);
+            var activeInactiveCounts = {active: 0, inactive: 0};
+            updateActiveInactiveCounts (revisedTree, activeInactiveCounts);
             return revisedTree;
         },
-        copyThisTree  = function (currentNode,listOfActiveAssays)  {
-                if (!(currentNode.children === undefined)) {
-                    var newNodeWithKids = {};
-                    newNodeWithKids["name"] =  currentNode.name;
-                    newNodeWithKids["ac"] =  currentNode.ac;
-                    newNodeWithKids["inac"] =   currentNode.inac;
-                    newNodeWithKids["member"] =   currentNode.member;
-                    newNodeWithKids["treeid"] =  currentNode.treeid;
-                    if (!(currentNode.assays === undefined)) {
-                        newNodeWithKids["assays"] = [];
-                        for (var i = 0; i < currentNode.assays.length; i++){
-                            newNodeWithKids["assays"].push(currentNode.assays[i]);
-                        }
-                    }
-                    newNodeWithKids["children"] = [];
-                    for (var i = 0; i < currentNode.children.length; i++) {
-                        if (youOrAnyOfYourChildrenWorthSaving(currentNode.children[i],listOfActiveAssays)) {
-                            newNodeWithKids["children"].push(copyThisTree(currentNode.children[i],listOfActiveAssays));
-                        }
-                    }
-                    // special case. If none of your kids were worth saving then add a size parameter.  You might perhaps
-                    //  be a valuable node, my friend, even if all your children are worthless.
-                    if (currentNode.children.length==0) {
-                        newNode["size"] = 1; // TODO: can I come up with a better size parameter?
-                    }
-                    return newNodeWithKids;
-                }  else {
-                    var newNode = {};
-                    newNode["name"] =  currentNode.name;
-                    newNode["ac"] =  currentNode.ac;
-                    newNode["inac"] =   currentNode.inac;
-                    newNode["member"] =   currentNode.member;
-                    newNode["treeid"] =  currentNode.treeid;
-                    if (!(currentNode.assays === undefined)) {
-                        newNode["assays"] = [];
-                        for (var i = 0; i < currentNode.assays.length; i++){
-                            newNode["assays"].push(currentNode.assays[i]);
-                        }
-                    }
-                    newNode["size"] =  currentNode.size;
-                    return newNode;
+        updateActiveInactiveCounts  = function (currentNode,activeInactiveCounts)  {
+            if (!(currentNode.children === undefined)) {
+                // first go through all the children, and add up everything we get
+                for (var i = 0; i < currentNode.children.length; i++) {
+                    var newActiveInactiveCount = updateActiveInactiveCounts(currentNode.children[i],{active: 0, inactive: 0});
+                    activeInactiveCounts.active += newActiveInactiveCount.active;
+                    activeInactiveCounts.inactive += newActiveInactiveCount.inactive;
                 }
-            },
+                // now add in anything directly associated with this node
+                if ((!(currentNode.assays === undefined)) &&
+                     (currentNode.assays.length > 0)){
+                    for (var i = 0; i < currentNode.assays.length; i++){
+                        var assayAssociatedWithThisNode = currentNode.assays[i];// assayref, so treat as index
+                        activeInactiveCounts.active += linkedData.Assays[assayAssociatedWithThisNode].AssayAc;
+                        activeInactiveCounts.inactive += linkedData.Assays[assayAssociatedWithThisNode].AssayIn;
+                    }
+                }
+                // we have the numbers we wanted. Store them in the tree, and then passed on to the caller
+                currentNode.ac = activeInactiveCounts.active;
+                currentNode.inac = activeInactiveCounts.inactive;
+                return activeInactiveCounts;
+            }  else {
+                if ((!(currentNode.assays === undefined)) &&
+                        (currentNode.assays.length > 0)){
+                    for (var i = 0; i < currentNode.assays.length; i++){
+                        var assayAssociatedWithThisNode = currentNode.assays[i];// assayref, so treat as index
+                        activeInactiveCounts.active = activeInactiveCounts.active + linkedData.Assays[assayAssociatedWithThisNode].AssayAc;
+                        activeInactiveCounts.inactive = activeInactiveCounts.inactive + linkedData.Assays[assayAssociatedWithThisNode].AssayIn;
+                    }
+                }
+                currentNode.ac = activeInactiveCounts.active;
+                currentNode.inac = activeInactiveCounts.inactive;
+                return activeInactiveCounts;
+            }
+        },
+        copyThisTree  = function (currentNode,listOfActiveAssays)  {
+            if (!(currentNode.children === undefined)) {
+                var newNodeWithKids = {};
+                newNodeWithKids["name"] =  currentNode.name;
+                newNodeWithKids["member"] =   currentNode.member;
+                newNodeWithKids["treeid"] =  currentNode.treeid;
+                if (!(currentNode.assays === undefined)) {
+                    newNodeWithKids["assays"] = [];
+                    for (var i = 0; i < currentNode.assays.length; i++){
+                        // only copy in an assay if it is known to be active
+                        var assayPreviouslyAssociatedWithThisNode = currentNode.assays[i];
+                        if (listOfActiveAssays.indexOf(assayPreviouslyAssociatedWithThisNode) > -1){
+                            newNodeWithKids["assays"].push(assayPreviouslyAssociatedWithThisNode);
+                        }
+                    }
+                }
+                newNodeWithKids["ac"] =  currentNode.ac;
+                newNodeWithKids["inac"] =   currentNode.inac;
+                newNodeWithKids["children"] = [];
+                for (var i = 0; i < currentNode.children.length; i++) {
+                    if (youOrAnyOfYourChildrenWorthSaving(currentNode.children[i],listOfActiveAssays)) {
+                        newNodeWithKids["children"].push(copyThisTree(currentNode.children[i],listOfActiveAssays));
+                    }
+                }
+                // special case. If none of your kids were worth saving then add a size parameter.  You might perhaps
+                //  be a valuable node, my friend, even if all your children are worthless.
+                if (currentNode.children.length==0) {
+                    newNode["size"] = 1; // TODO: can I come up with a better size parameter?
+                }
+                return newNodeWithKids;
+            }  else {
+                var newNode = {};
+                newNode["name"] =  currentNode.name;
+                newNode["member"] =   currentNode.member;
+                newNode["treeid"] =  currentNode.treeid;
+                if (!(currentNode.assays === undefined)) {
+                    newNode["assays"] = [];
+                    for (var i = 0; i < currentNode.assays.length; i++){
+                        // only copy in an assay if it is known to be active
+                        var assayPreviouslyAssociatedWithThisNode = currentNode.assays[i];
+                        if (listOfActiveAssays.indexOf(assayPreviouslyAssociatedWithThisNode) > -1){
+                            newNode["assays"].push(assayPreviouslyAssociatedWithThisNode);
+                        }
+
+                    }
+                }
+                newNode["ac"] =  currentNode.ac;
+                newNode["inac"] =   currentNode.inac;
+                newNode["size"] =  currentNode.size;
+                return newNode;
+            }
+        },
         youOrAnyOfYourChildrenWorthSaving  = function(currentNode,thoseWorthSaving){
             var worthSaving = false;
             if (thoseWorthSaving.length>0){
