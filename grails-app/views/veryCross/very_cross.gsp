@@ -782,7 +782,12 @@
            if (!(hierarchyOfChoice.Structure === undefined)) {
                hierarchyOfChoice.Structure.rootName = currentNode.name;
            }
+        },
+        extendedHierarchyDataExists = function (hierarchyId){
+            var hierarchyOfChoice = linkedData.Hierarchy[hierarchyId];
+            return (!(hierarchyOfChoice.Structure.struct === undefined));
         }
+
 
         return {
             parseData:parseData,
@@ -795,7 +800,8 @@
             filteredHierarchyData:filteredHierarchyData,
             adjustedPartitionSize:adjustedPartitionSize,
             resetRootForHierarchy:resetRootForHierarchy,
-            cleanupOriginalHierarchyData:cleanupOriginalHierarchyData
+            cleanupOriginalHierarchyData:cleanupOriginalHierarchyData,
+            extendedHierarchyDataExists:extendedHierarchyDataExists
         }
 
     }());
@@ -1251,8 +1257,8 @@
                         .delay(1000)
                         .duration(500)
                         .style('opacity', '1');
-                if (linkedVizData.retrieveCurrentHierarchicalData(2).children !== undefined) {
-                    createASunburst( 1000, 1000,5,1000,continuousColorScale,'div#sunburstdiv', 672376 );
+                if (linkedVizData.retrieveCurrentHierarchicalData(expandedButtonNum).children !== undefined) {
+                    createASunburst( 1000, 1000,5,1000,continuousColorScale,'div#sunburstdiv', 672376, expandedButtonNum );
                     createALegend(120, 200,100,continuousColorScale,'div#legendGoesHere',minimumValue, maximumValue);
                     d3.selectAll('#suburst_container').style('pointer-events', null);
                 } else {
@@ -1471,7 +1477,7 @@
                             expandContractButton = d3.select('#a' + expandedWidget + '-chart>.graphTitle')
                             displayManipulator.expandGraphicsArea(d3.select('#a' + expandedWidget).select('.pieChart>svg'),
                                     expandContractButton);
-                            if (expandContractButton.text() === 'Protein target') {
+                            if (linkedVizData.extendedHierarchyDataExists(expandedWidget)){
                                 displayManipulator.swapAPieForTheSun(d3.select('#a' + expandedWidget), d3.selectAll('#suburst_container'), expandedWidget, handleExpandOrContractClick);
                             }
 
@@ -1874,7 +1880,7 @@
 
 
 
-        function createASunburst(width, height, padding, duration, colorScale, domSelector, cid) {
+        function createASunburst(width, height, padding, duration, colorScale, domSelector, cid, widgetIndex) {
 
             var tooltipHandler  = new TooltipHandler ();
             var colorManagementRoutines = new ColorManagementRoutines(colorScale);
@@ -2062,7 +2068,7 @@
                 }
             }
 
-            var hierarchyData = linkedVizData.filteredHierarchyData(2);
+            var hierarchyData = linkedVizData.filteredHierarchyData(widgetIndex);
 
             var path = svg.datum(hierarchyData).selectAll("path")
                     .data(partition.nodes)

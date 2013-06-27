@@ -23,27 +23,44 @@ public class LinkedVisHierData {
         }
     }
 
-
     private final String  proteinTargetTree = """
- [{"name":"/", "ac":"0", "inac":"0", "children": [
-        {"name":"signaling molecule", "ac":"1", "inac":"0",  "assays": [0], "size":1 },
-        {"name":"enzyme modulator", "ac":"3", "inac":"4", "assays": [2,4], "children": [
-            {"name":"G-protein modulator", "ac":"1", "inac":"0", "assays": [7], "size":1},
-            {"name":"G-protein", "ac":"1", "inac":"3", "assays": [5], "children": [
-                {"name":"heterotrimeric G-protein", "ac":"0", "inac":"1", "assays": [1], "size":1},
-                {"name":"small GTPase", "ac":"1", "inac":"1", "assays": [3,6], "size":2}
+ [{"name":"/", "children": [
+        {"name":"signaling molecule", "assays": [0] },
+        {"name":"enzyme modulator", "assays": [2,4], "children": [
+            {"name":"G-protein modulator", "assays": [7]},
+            {"name":"G-protein", "assays": [5], "children": [
+                {"name":"heterotrimeric G-protein", "assays": [1]},
+                {"name":"small GTPase", "assays": [3,6]}
             ]}
         ]},
-        {"name":"transporter", "ac":"0", "inac":"8", "assays": [], "children": [
-            {"name":"ATP-binding cassette", "ac":"0", "inac":"2", "assays": [12,13], "size":2},
-            {"name":"ion channel", "ac":"0", "inac":"6", "assays": [11], "children": [
-                {"name":"anion channel", "ac":"0", "inac":"2", "assays": [10,14], "size":2},
-                {"name":"voltage-gated ion channel", "ac":"0", "inac":"3", "assays": [9], "children": [
-                    {"name":"voltage-gated potassium channel", "ac":"0", "inac":"2", "assays": [8,15], "size":2}
+        {"name":"transporter", "assays": [], "children": [
+            {"name":"ATP-binding cassette", "assays": [12,13]},
+            {"name":"ion channel", "assays": [11], "children": [
+                {"name":"anion channel", "assays": [10,14]},
+                {"name":"voltage-gated ion channel", "assays": [9], "children": [
+                    {"name":"voltage-gated potassium channel", "assays": [8,15]}
                 ]}
             ]}
         ]}
 ]}]"""
+
+
+
+    private final String  assayFormatTree = """
+ [{"name":"/", "children": [
+        {"name":"cell-based format", "assays": [0,2,4,6,10, 11, 12, 13, 14] },
+        {"name":"cell-free format", "assays": [], "children": [
+            {"name":"whole-cell lysate format", "assays": [3]}
+        ]},
+        {"name":"biochemical format", "assays": [5, 7, 9], "children": [
+            {"name":"protein format", "assays": [], "children": [
+                {"name":"single protein format", "assays": [1, 8, 15]}
+            ]}
+        ]}
+]}]"""
+
+
+
 
 
     public class CategorySection {
@@ -103,7 +120,7 @@ public class LinkedVisHierData {
             stringBuilder << openGroup << endOfLine
             stringBuilder << individualHierarchySection(0, 'Graph', '{}') <<
                     comma << endOfLine
-            stringBuilder << individualHierarchySection(1, 'Tree', '{}') <<
+            stringBuilder << individualHierarchySection(1, 'Tree', '{'+addQuotes('struct')+colonUnit+assayFormatTree.toString() +'}') <<
                     comma << endOfLine
             stringBuilder << individualHierarchySection(2, 'Tree', '{'+addQuotes('struct')+colonUnit+proteinTargetTree.toString() +'}') <<
                     comma << endOfLine
