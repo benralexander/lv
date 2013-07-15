@@ -1568,9 +1568,10 @@
                     },
 
                     verifyLinkedData = function () {
-                        console.log('hi ho');
+                        console.log('start verifyLinkedData');
                         d3.json("http://localhost:8028/cow/veryCross/feedMeLinkedData", function (incomingData) {
                             // create an empty list, Just in case we get null data
+                            console.log('start read json');
                             linkedVizData.parseData(incomingData);
                             if (!linkedVizData.validateLinkedData()){
                                 console.log(' we have trouble with incoming linked data');
@@ -1580,12 +1581,14 @@
                             }
                             presentLinkedData();
                             linkedVizData.cleanupOriginalHierarchyData(2);
+                            console.log('end read json');
                         });// d3.json
-
+                        console.log('end verifyLinkedData');
                     },
 
 
                     presentLinkedData = function () {
+                        console.log('start presentLinkedData');
                         // create an empty list, Just in case we get null data
                         var assays = [];
 
@@ -1611,7 +1614,7 @@
 
                         // Finally, attach some data along with buttons and callbacks to the pie charts we've built
                         attachButtonsToThePieContainers('.pieChartContainer', handleExpandOrContractClick, buttondata, d3.selectAll('#suburst_container'));
-
+                        console.log('end presentLinkedData');
 
                     };
 
@@ -1626,7 +1629,7 @@
         // The highest level call.  Everything starts from here.
         // **********************************************************
         generateLinkedPies.verifyLinkedData();  // generateLinkedData();verifyLinkedData
-        generateLinkedPies.presentLinkedData ();
+//        generateLinkedPies.presentLinkedData ();
 
 
     }());
