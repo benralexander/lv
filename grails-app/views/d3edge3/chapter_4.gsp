@@ -36,7 +36,7 @@
     <div class="row">
         <div class="span12">
             <div>
-               <html:render file="snippet.html"/>
+                <html:render file="snippet.html"/>
             </div>
         </div>
     </div>
