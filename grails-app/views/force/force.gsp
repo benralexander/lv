@@ -7,130 +7,72 @@
     %{--<script type="text/javascript" src="http://mbostock.github.com/d3/d3.js?1.25.0"></script>--}%
     %{--<script type="text/javascript" src="http://mbostock.github.com/d3/d3.geom.js?1.25.0"></script>--}%
     %{--<script type="text/javascript" src="http://mbostock.github.com/d3/d3.layout.js?1.25.0"></script>--}%
-    <style type="text/css">
+    <style>
 
-    circle.node {
-        cursor: pointer;
-        stroke: #3182bd;
-        stroke-width: 1.5px;
-    }
+.link {
+    stroke: #ccc;
+}
 
-    line.link {
-        fill: none;
-        stroke: #9ecae1;
-        stroke-width: 1.5px;
-    }
-
+.node text {
+    pointer-events: none;
+    font: 10px sans-serif;
+}
     </style>
 </head>
 <body>
 <div id="chart"></div>
 <script type="text/javascript">
+    var width = 960,
+            height = 500
 
-    var w = 960,
-            h = 500,
-            node,
-            link,
-            root;
+    var svg = d3.select("body").append("svg")
+            .attr("width", width)
+            .attr("height", height);
 
     var force = d3.layout.force()
-            .on("tick", tick)
-            .size([w, h]);
+            .gravity(.05)
+            .distance(100)
+            .charge(-100)
+            .size([width, height]);
 
-    var vis = d3.select("#chart").append("svg:svg")
-            .attr("width", w)
-            .attr("height", h);
-
-    d3.json("http://localhost:8028/cow/histogram/feedMeJson", function(json) {
-        root = json;
-        update();
-    });
-
-    function update() {
-        var nodes = flatten(root),
-                links = d3.layout.tree().links(nodes);
-
-        // Restart the force layout.
+    d3.json("http://localhost:8028/cow/force/feedMeJson", function(error, json) {
         force
-                .nodes(nodes)
-                .links(links)
+                .nodes(json.nodes)
+                .links(json.links)
                 .start();
 
-        // Update the links…
-        link = vis.selectAll("line.link")
-                .data(links, function(d) { return d.target.id; });
+        var link = svg.selectAll(".link")
+                .data(json.links)
+                .enter().append("line")
+                .attr("class", "link");
 
-        // Enter any new links.
-        link.enter().insert("svg:line", ".node")
-                .attr("class", "link")
-                .attr("x1", function(d) { return d.source.x; })
-                .attr("y1", function(d) { return d.source.y; })
-                .attr("x2", function(d) { return d.target.x; })
-                .attr("y2", function(d) { return d.target.y; });
-
-        // Exit any old links.
-        link.exit().remove();
-
-        // Update the nodes…
-        node = vis.selectAll("circle.node")
-                .data(nodes, function(d) { return d.id; })
-                .style("fill", color);
-
-        // Enter any new nodes.
-        node.enter().append("svg:circle")
+        var node = svg.selectAll(".node")
+                .data(json.nodes)
+                .enter().append("g")
                 .attr("class", "node")
-                .attr("cx", function(d) { return d.x; })
-                .attr("cy", function(d) { return d.y; })
-                .attr("r", function(d) { return Math.sqrt(d.size) / 10 || 4.5; })
-                .style("fill", color)
-                .on("click", click)
                 .call(force.drag);
 
-        // Exit any old nodes.
-        node.exit().remove();
-    }
+        node.append("image")
+                .attr("xlink:href", "https://github.com/favicon.ico")
+                .attr("x", -8)
+                .attr("y", -8)
+                .attr("width", 16)
+                .attr("height", 16);
 
-    function tick() {
-        link.attr("x1", function(d) { return d.source.x; })
-                .attr("y1", function(d) { return d.source.y; })
-                .attr("x2", function(d) { return d.target.x; })
-                .attr("y2", function(d) { return d.target.y; });
+        node.append("text")
+                .attr("dx", 12)
+                .attr("dy", ".35em")
+                .text(function(d) { return d.name });
 
-        node.attr("cx", function(d) { return d.x; })
-                .attr("cy", function(d) { return d.y; });
-    }
+        force.on("tick", function() {
+            link.attr("x1", function(d) { return d.source.x; })
+                    .attr("y1", function(d) { return d.source.y; })
+                    .attr("x2", function(d) { return d.target.x; })
+                    .attr("y2", function(d) { return d.target.y; });
 
-    // Color leaf nodes orange, and packages white or blue.
-    function color(d) {
-        return d._children ? "#3182bd" : d.children ? "#c6dbef" : "#fd8d3c";
-    }
-
-    // Toggle children on click.
-    function click(d) {
-        if (d.children) {
-            d._children = d.children;
-            d.children = null;
-        } else {
-            d.children = d._children;
-            d._children = null;
-        }
-        update();
-    }
-
-    // Returns a list of all nodes under the root.
-    function flatten(root) {
-        var nodes = [], i = 0;
-
-        function recurse(node) {
-            if (node.children) node.children.forEach(recurse);
-            if (!node.id) node.id = ++i;
-            nodes.push(node);
-        }
-
-        recurse(root);
-        return nodes;
-    }
-
+            node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+        });
+    });
 </script>
 </body>
 </html>
