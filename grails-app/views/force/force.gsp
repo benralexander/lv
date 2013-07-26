@@ -41,8 +41,8 @@ circle.node {
             .charge(-100)
             .size([width, height]);
 
-    d3.json("http://localhost:8028/cow/force/feedMeJson", function(error, json) {
-        update (json) ;
+    d3.json("http://localhost:8028/cow/force/feedMeJson", function (error, json) {
+        update(json);
     });
 
     function update(json) {
@@ -63,41 +63,24 @@ circle.node {
                 .attr("class", "node")
                 .call(force.drag);
 
-        node.append("image")
-                .attr("xlink:href", "https://github.com/favicon.ico")
-                .attr("x", -8)
-                .attr("y", -8)
-                .attr("width", 16)
-                .attr("height", 16);
-//        node.append("svg:circle")
-//                .attr("cx", function(d) {
-//                    return d.x; })
-//                .attr("cy", function(d) { return d.y; })
-//                .attr("r", 8)
-//                .style("fill", function(d, i) { return d3.rgb('#ff00cc'); })
-//                .style("stroke", function(d, i) { return return d3.rgb('#00ffcc'); })
-//                .style("stroke-width", 1.5)
-//                .call(force.drag);
+        node.append("svg:circle")
+                .attr("cx", 0)
+                .attr("cy", 0)
+                .attr("r", 8)
+                .style("fill", function (d, i) {
+                    return '#ff00cc';
+                })
+                .style("stroke", function (d, i) {
+                    return '#00ffcc';
+                })
+        ;
 
-
-
-
-
-
-        // Enter any new nodes.
-//        node.append("svg:circle")
-//               .attr("class", "node")
-//                .attr("cx", function(d) { return d.x; })
-//                .attr("cy", function(d) { return d.y; })
-//                .attr("r", function(d) { return Math.sqrt(d.size) / 10 || 4.5; });
-//               .style("fill", color)
-//                .on("click", click);
-////                .call(force.drag);
 
         // Color leaf nodes orange, and packages white or blue.
         function color(d) {
             return d._children ? "#3182bd" : d.children ? "#c6dbef" : "#fd8d3c";
         }
+
         // Toggle children on click.
         function click(d) {
             if (d.children) {
@@ -111,21 +94,34 @@ circle.node {
         }
 
 
-
         node.append("text")
                 .attr("dx", 12)
                 .attr("dy", ".35em")
-                .text(function(d) { return d.name });
+                .text(function (d) {
+                    return d.name
+                });
 
-        force.on("tick", function() {
-            link.attr("x1", function(d) { return d.source.x; })
-                    .attr("y1", function(d) { return d.source.y; })
-                    .attr("x2", function(d) { return d.target.x; })
-                    .attr("y2", function(d) { return d.target.y; });
+        var tick = function () {
+            link.attr("x1", function (d) {
+                return d.source.x;
+            })
+            .attr("y1", function (d) {
+                return d.source.y;
+            })
+            .attr("x2", function (d) {
+                return d.target.x;
+            })
+            .attr("y2", function (d) {
+                return d.target.y;
+            });
 
-            node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-        });
-    } ;
+            node.attr("transform", function (d) {
+                return "translate(" + d.x + "," + d.y + ")";
+            });
+        }
+        force.on("tick", tick);
+    }
+    ;
 </script>
 </body>
 </html>
