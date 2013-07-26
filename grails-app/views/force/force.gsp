@@ -17,13 +17,19 @@
     pointer-events: none;
     font: 10px sans-serif;
 }
-    </style>
+circle.node {
+    cursor: pointer;
+    stroke: #3182bd;
+    stroke-width: 1.5px;
+}
+
+</style>
 </head>
 <body>
 <div id="chart"></div>
 <script type="text/javascript">
     var width = 960,
-            height = 500
+            height = 500;
 
     var svg = d3.select("body").append("svg")
             .attr("width", width)
@@ -36,6 +42,11 @@
             .size([width, height]);
 
     d3.json("http://localhost:8028/cow/force/feedMeJson", function(error, json) {
+        update (json) ;
+    });
+
+    function update(json) {
+
         force
                 .nodes(json.nodes)
                 .links(json.links)
@@ -58,6 +69,48 @@
                 .attr("y", -8)
                 .attr("width", 16)
                 .attr("height", 16);
+//        node.append("svg:circle")
+//                .attr("cx", function(d) {
+//                    return d.x; })
+//                .attr("cy", function(d) { return d.y; })
+//                .attr("r", 8)
+//                .style("fill", function(d, i) { return d3.rgb('#ff00cc'); })
+//                .style("stroke", function(d, i) { return return d3.rgb('#00ffcc'); })
+//                .style("stroke-width", 1.5)
+//                .call(force.drag);
+
+
+
+
+
+
+        // Enter any new nodes.
+//        node.append("svg:circle")
+//               .attr("class", "node")
+//                .attr("cx", function(d) { return d.x; })
+//                .attr("cy", function(d) { return d.y; })
+//                .attr("r", function(d) { return Math.sqrt(d.size) / 10 || 4.5; });
+//               .style("fill", color)
+//                .on("click", click);
+////                .call(force.drag);
+
+        // Color leaf nodes orange, and packages white or blue.
+        function color(d) {
+            return d._children ? "#3182bd" : d.children ? "#c6dbef" : "#fd8d3c";
+        }
+        // Toggle children on click.
+        function click(d) {
+            if (d.children) {
+                d._children = d.children;
+                d.children = null;
+            } else {
+                d.children = d._children;
+                d._children = null;
+            }
+            update();
+        }
+
+
 
         node.append("text")
                 .attr("dx", 12)
@@ -72,7 +125,7 @@
 
             node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
         });
-    });
+    } ;
 </script>
 </body>
 </html>
