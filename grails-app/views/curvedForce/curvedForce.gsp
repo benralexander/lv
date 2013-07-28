@@ -77,7 +77,7 @@ text {
 
                 var force = d3.layout.force()
                         .size([width, height])
-                        .linkDistance(60)
+                        .linkDistance(260)
                         .charge(-300),
 
                 svg = d3.select(this).append("svg")
@@ -85,13 +85,17 @@ text {
                         .attr("height", height),
 
                 // Set the range
-                v = d3.scale.linear().range([0, 100]);
+                v = d3.scale.linear().range([0, 100]),
+
+                // Set the range
+                verticalPlacement = d3.scale.linear().range([20, height-20]);
+
 
                 /***
                 *   Call for the data, and perform all the functions that are data dependent.
                 */
-                d3.json("http://localhost:8028/cow/curvedForce/feedMeJson", function (error, indata) {
-                    nodePlotInternals(indata);
+                d3.json("http://localhost:8028/cow/curvedForce/feedMeJson", function (error, inData) {
+                    nodePlotInternals(inData);
                 });
 
 
@@ -100,35 +104,26 @@ text {
                  * This is the meaty part of building this force layout diagram
                  * @param links
                  */
-                function nodePlotInternals(links) {
+                function nodePlotInternals(inData) {
 
                     var nodes = {};
 
-                    // Compute the distinct nodes from the links.
-//                    links.forEach(function (link) {
-//                        link.source = nodes[link.source] ||
-//                                (nodes[link.source] = {name: link.source});
-//                        link.target = nodes[link.target] ||
-//                                (nodes[link.target] = {name: link.target});
-//                        link.value = +link.value;
-//                    });
-
-//                     force.nodes(d3.values(nodes))
-//                             .links(links)
-//                             .on("tick", tick)
-//                             .start();
-                     force.nodes(links.nodes)
-                             .links(links.links)
+                     force.nodes(inData.nodes)
+                             .links(inData.links)
                              .on("tick", tick)
                              .start();
 
                     // Scale the range of the data
-                    v.domain([0, d3.max(links.links, function (d) {
+                    v.domain([0, d3.max(inData.links, function (d) {
                         return d.value;
                     })]);
 
+                     verticalPlacement.domain([0, d3.max(inData.nodes, function (d) {
+                         return d.level;
+                     })]);
+
                     // asign a type per value to encode opacity
-                    links.links.forEach(function (link) {
+                     inData.links.forEach(function (link) {
                         if (v(link.value) <= 25) {
                             link.type = "twofive";
                         } else if (v(link.value) <= 50 && v(link.value) > 25) {
@@ -189,19 +184,21 @@ text {
                     function tick() {
                         path.attr("d", function (d) {
                             var dx = d.target.x - d.source.x,
-                                    dy = d.target.y - d.source.y,
+                                //    dy = d.target.y - d.source.y,
+                                    dy = verticalPlacement(d.target.level) - verticalPlacement(d.source.level),
                                     dr = Math.sqrt(dx * dx + dy * dy);
                             return "M" +
                                     d.source.x + "," +
-                                    d.source.y + "A" +
+                                    verticalPlacement(d.source.level) + "A" +
                                     dr + "," + dr + " 0 0,1 " +
                                     d.target.x + "," +
-                                    d.target.y;
+                                    verticalPlacement(d.target.level);
                         });
 
                         node
                                 .attr("transform", function (d) {
-                                    return "translate(" + d.x + "," + d.y + ")";
+//                                    return "translate(" + d.x + "," + d.y + ")";
+                                    return "translate(" + d.x + "," + verticalPlacement(d.level) + ")";
                                 });
                     }
 
@@ -273,7 +270,7 @@ text {
 
 
     var directedGraph = d3.custom.directedGraph();
-    directedGraph.width(400).height(400);
+    directedGraph.width(800).height(800);
     directedGraph(d3.select("body>#chart"));
 
 </script>
