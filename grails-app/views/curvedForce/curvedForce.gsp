@@ -90,8 +90,8 @@ text {
                 /***
                 *   Call for the data, and perform all the functions that are data dependent.
                 */
-                d3.json("http://localhost:8028/cow/curvedForce/feedMeJson", function (error, links) {
-                    nodePlotInternals(links)
+                d3.json("http://localhost:8028/cow/curvedForce/feedMeJson", function (error, indata) {
+                    nodePlotInternals(indata);
                 });
 
 
@@ -105,26 +105,30 @@ text {
                     var nodes = {};
 
                     // Compute the distinct nodes from the links.
-                    links.forEach(function (link) {
-                        link.source = nodes[link.source] ||
-                                (nodes[link.source] = {name: link.source});
-                        link.target = nodes[link.target] ||
-                                (nodes[link.target] = {name: link.target});
-                        link.value = +link.value;
-                    });
+//                    links.forEach(function (link) {
+//                        link.source = nodes[link.source] ||
+//                                (nodes[link.source] = {name: link.source});
+//                        link.target = nodes[link.target] ||
+//                                (nodes[link.target] = {name: link.target});
+//                        link.value = +link.value;
+//                    });
 
-                    force.nodes(d3.values(nodes))
-                            .links(links)
-                            .on("tick", tick)
-                            .start();
+//                     force.nodes(d3.values(nodes))
+//                             .links(links)
+//                             .on("tick", tick)
+//                             .start();
+                     force.nodes(links.nodes)
+                             .links(links.links)
+                             .on("tick", tick)
+                             .start();
 
                     // Scale the range of the data
-                    v.domain([0, d3.max(links, function (d) {
+                    v.domain([0, d3.max(links.links, function (d) {
                         return d.value;
                     })]);
 
                     // asign a type per value to encode opacity
-                    links.forEach(function (link) {
+                    links.links.forEach(function (link) {
                         if (v(link.value) <= 25) {
                             link.type = "twofive";
                         } else if (v(link.value) <= 50 && v(link.value) > 25) {
