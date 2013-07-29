@@ -172,7 +172,6 @@ text {
 
                      inData.links.forEach(function (link){link.drawMe=true;});
 
-                     // var a = inData.nodes.filter(fi)
                      nodesOnTheSameLevelShouldRepelEachOther(minimumLevel,maximumLevel,inData);
 
                      force.nodes(inData.nodes)
@@ -265,21 +264,6 @@ text {
                             .html(function(d){return '<div class="nodeText">'+d.name+'</div>';});
 
 
-
-//                     node.append("div")
-//                             .classed ("nodeText", true)
-//                             .html('foo');
-
-
-
-//                     node.append("text")
-//                             .attr("x", 12)
-//                             .attr("dy", ".35em")
-//                             .text(function (d) {
-//                                 return d.name;
-//                             });
-
-
                      // add the curvy lines
                     function tick() {
                         path.attr("d", function (d) {
@@ -309,20 +293,31 @@ text {
             * Callbacks go here.  They are private to the directedGraph module
             */
 
-            // action to take on mouse click
+                // action to take on mouse click
             function click() {
                 d3.select(this).select("text").transition()
                         .duration(750)
-                        .attr("x", 22)
-                        .style("fill", "steelblue")
-                        .style("stroke", "lightsteelblue")
-                        .style("stroke-width", ".5px")
-                        .style("font", "20px sans-serif");
+                        .attr("width", 220);
                 d3.select(this).select("circle").transition()
                         .duration(750)
                         .attr("r", 16)
                         .style("fill", "lightsteelblue");
             }
+
+//            // action to take on mouse click
+//            function click() {
+//                d3.select(this).select("text").transition()
+//                        .duration(750)
+//                        .attr("x", 22)
+//                        .style("fill", "steelblue")
+//                        .style("stroke", "lightsteelblue")
+//                        .style("stroke-width", ".5px")
+//                        .style("font", "20px sans-serif");
+//                d3.select(this).select("circle").transition()
+//                        .duration(750)
+//                        .attr("r", 16)
+//                        .style("fill", "lightsteelblue");
+//            }
 
             // action to take on mouse double click
             function dblclick() {
