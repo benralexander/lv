@@ -75,10 +75,32 @@ text {
             // So it can loop through this selection with d3.each
             _selection.each(function (_data) {
 
+                var linkDistance = function(link){
+                    if ( link.drawMe=== true ) {
+                        return 100;
+                    } else if  ( link.drawMe=== false ) {
+                        return 500;
+                    }  else if  ( link.drawMe=== undefined ) {
+                        return 1000;
+                    }
+
+                } ;
+                var charge = function(link){
+                    if ( link.drawMe=== true ) {
+                        return -1;
+                    } else if  ( link.drawMe=== false ) {
+                        return -30;
+                    }  else if  ( link.drawMe=== undefined ) {
+                        return 1000;
+                    }
+
+                } ;
+
                 var force = d3.layout.force()
                         .size([width, height])
-                        .linkDistance(260)
-                        .charge(-300),
+                                .linkDistance(linkDistance)
+//                                .theta(58)
+                        .charge(charge),
 
                 svg = d3.select(this).append("svg")
                         .attr("width", width)
@@ -99,6 +121,31 @@ text {
                 });
 
 
+                var createLinksBetweenNodesOnTheSameLevel = function (allLinks,nodesOnOneLevel){
+                    var nodesThatHaveAlreadyBeenTreated = [];
+                    nodesOnOneLevel.forEach(function (node) {
+                        for ( var i = 0 ; i < nodesThatHaveAlreadyBeenTreated.length ; i++ ){
+                            var treatedNode = nodesThatHaveAlreadyBeenTreated[i];
+                            var newLink = {};
+                            newLink.source = node.index;
+                            newLink.target = treatedNode.index;
+                            newLink.value = 2;
+                            newLink.drawMe = false;
+                            allLinks.push(newLink);
+                        }
+                        nodesThatHaveAlreadyBeenTreated.push(node);
+                    });
+                }
+
+
+                var nodesOnTheSameLevelShouldRepelEachOther = function (minimumLevel,maximumLevel,nodesAndLinks )  {
+                      for(var currentLevel = minimumLevel; currentLevel <= maximumLevel; currentLevel++ )   {
+                         var nodesThatShareALevel = nodesAndLinks.nodes.filter(function (d){
+                             return d.level==currentLevel;
+                         });
+                          createLinksBetweenNodesOnTheSameLevel(nodesAndLinks.links,nodesThatShareALevel);
+                     }
+                 }
 
                  /***
                  * This is the meaty part of building this force layout diagram
@@ -108,19 +155,38 @@ text {
 
                     var nodes = {};
 
+                     var minimumLevel = d3.min (inData.nodes, function (d){
+                         return d.level;
+                     } );
+                     var maximumLevel = d3.max (inData.nodes, function (d){
+                         return d.level;
+                     } );
+
+                     inData.links.forEach(function (link){link.drawMe=true;});
+
+                     // var a = inData.nodes.filter(fi)
+                     nodesOnTheSameLevelShouldRepelEachOther(minimumLevel,maximumLevel,inData);
+
                      force.nodes(inData.nodes)
                              .links(inData.links)
                              .on("tick", tick)
                              .start();
 
-                    // Scale the range of the data
+                     // Scale the range of the data
                     v.domain([0, d3.max(inData.links, function (d) {
                         return d.value;
                     })]);
 
-                     verticalPlacement.domain([0, d3.max(inData.nodes, function (d) {
-                         return d.level;
-                     })]);
+                     verticalPlacement.domain([0, maximumLevel]);
+
+
+                     var createLinksBetweenNodesOnTheSameLevel = function (link){
+                         link.source = nodes [link.source]  ||
+                                 (nodes [link.source] = {name:link.source});
+                         link.target = nodes [link.target]  ||
+                                 (nodes [link.target] = {name:link.target});
+                         link.value = +link.value;
+                     }
 
                     // asign a type per value to encode opacity
                      inData.links.forEach(function (link) {
@@ -156,8 +222,14 @@ text {
                             .enter().append("svg:path")
                             .attr("class", function (d) {
                                 return "link " + d.type;
-                            })
-                            .attr("marker-end", "url(#end)");
+                            });
+//                     path.attr("marker-end", "url(#end)");
+
+                     var drawablePaths = path.filter(function(d, i) { return (d.drawMe === true); });
+                     var nondrawablePaths = path.filter(function(d, i) { return (d.drawMe === false); });
+                     nondrawablePaths.attr('stroke-opacity',0);
+
+                     drawablePaths.attr("marker-end", "url(#end)");
 
                     // define the nodes
                     var node = svg.selectAll(".node")
@@ -173,18 +245,18 @@ text {
                             .attr("r", 5);
 
                     // add the text
-                    node.append("text")
-                            .attr("x", 12)
-                            .attr("dy", ".35em")
-                            .text(function (d) {
-                                return d.name;
-                            });
+//                    node.append("text")
+//                            .attr("x", 12)
+//                            .attr("dy", ".35em")
+//                            .text(function (d) {
+//                                return d.name;
+//                            });
 
                     // add the curvy lines
                     function tick() {
                         path.attr("d", function (d) {
                             var dx = d.target.x - d.source.x,
-                                //    dy = d.target.y - d.source.y,
+                            //    dy = d.target.y - d.source.y,
                                     dy = verticalPlacement(d.target.level) - verticalPlacement(d.source.level),
                                     dr = Math.sqrt(dx * dx + dy * dy);
                             return "M" +
