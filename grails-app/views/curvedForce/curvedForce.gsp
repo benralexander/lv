@@ -10,16 +10,14 @@
 <html>
 <head>
   <title></title>
+    <meta charset="utf-8">
+    <script src="../js/d3.js"></script>
 </head>
-<body>
-
-</body>
-</html>
 
 
-<!DOCTYPE html>
-<meta charset="utf-8">
-<script src="../js/d3.js"></script>
+%{--<!DOCTYPE html>--}%
+%{--<meta charset="utf-8">--}%
+%{--<script src="../js/d3.js"></script>--}%
 <style>
 
 path.link {
@@ -55,7 +53,16 @@ text {
     font: 10px sans-serif;
     pointer-events: none;
 }
-
+.nodeText
+{
+    padding-right: 2px;
+    width: 90px;
+    height: 100%;
+    float: left;
+    font-size: 8pt;
+    border: 0;
+    overflow-y: auto;
+}
 </style>
 <body>
 <div id="chart"></div>
@@ -65,7 +72,9 @@ text {
 
     d3.custom.directedGraph = function module() {
         var width = 960,
-                height = 500;
+                height = 500,
+                nodeWidth = 100,
+                nodeHeight = 30;
 
         /***
          * All the work of building the node plot goes inside the 'exports' function
@@ -98,9 +107,8 @@ text {
 
                 var force = d3.layout.force()
                         .size([width, height])
-                                .linkDistance(linkDistance)
-//                                .theta(58)
-                        .charge(charge),
+                        .linkDistance(linkDistance)
+                        .charge(-30),
 
                 svg = d3.select(this).append("svg")
                         .attr("width", width)
@@ -110,7 +118,7 @@ text {
                 v = d3.scale.linear().range([0, 100]),
 
                 // Set the range
-                verticalPlacement = d3.scale.linear().range([20, height-20]);
+                verticalPlacement = d3.scale.linear().range([10, height-40]);
 
 
                 /***
@@ -223,7 +231,6 @@ text {
                             .attr("class", function (d) {
                                 return "link " + d.type;
                             });
-//                     path.attr("marker-end", "url(#end)");
 
                      var drawablePaths = path.filter(function(d, i) { return (d.drawMe === true); });
                      var nondrawablePaths = path.filter(function(d, i) { return (d.drawMe === false); });
@@ -241,35 +248,54 @@ text {
                             .call(force.drag);
 
                     // add the nodes
-                    node.append("circle")
-                            .attr("r", 5);
+//                    node.append("circle")
+//                            .attr("r", 5);
+                     node.append("rect")
+                             .attr("width", nodeWidth)
+                             .attr("height", nodeHeight)
+                             .style("fill", d3.rgb(255,255,255))
+                             .style("stroke", d3.rgb(0,0,0));
 
-                    // add the text
-//                    node.append("text")
-//                            .attr("x", 12)
-//                            .attr("dy", ".35em")
-//                            .text(function (d) {
-//                                return d.name;
-//                            });
 
-                    // add the curvy lines
+                     // add the text
+                    node.append("foreignObject")
+                             .attr("width", nodeWidth)
+                            .attr("height", nodeHeight)
+                            .append("xhtml:body")
+                            .html(function(d){return '<div class="nodeText">'+d.name+'</div>';});
+
+
+
+//                     node.append("div")
+//                             .classed ("nodeText", true)
+//                             .html('foo');
+
+
+
+//                     node.append("text")
+//                             .attr("x", 12)
+//                             .attr("dy", ".35em")
+//                             .text(function (d) {
+//                                 return d.name;
+//                             });
+
+
+                     // add the curvy lines
                     function tick() {
                         path.attr("d", function (d) {
                             var dx = d.target.x - d.source.x,
-                            //    dy = d.target.y - d.source.y,
                                     dy = verticalPlacement(d.target.level) - verticalPlacement(d.source.level),
                                     dr = Math.sqrt(dx * dx + dy * dy);
                             return "M" +
-                                    d.source.x + "," +
-                                    verticalPlacement(d.source.level) + "A" +
+                                    (d.source.x+nodeWidth) + "," +
+                                    (verticalPlacement(d.source.level)+nodeHeight) + "A" +
                                     dr + "," + dr + " 0 0,1 " +
-                                    d.target.x + "," +
+                                    (d.target.x+nodeWidth) + "," +
                                     verticalPlacement(d.target.level);
                         });
 
                         node
                                 .attr("transform", function (d) {
-//                                    return "translate(" + d.x + "," + d.y + ")";
                                     return "translate(" + d.x + "," + verticalPlacement(d.level) + ")";
                                 });
                     }
