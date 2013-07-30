@@ -25,12 +25,24 @@
                 assayTypePieChart,
                 allDataDcTable,
                 widgetsGoHere,
-                widgetWidthWithoutSpacing=24,
+                widgetWidthWithoutSpacing=21,
                 widgetHeightWithTitle=240,
                 displayWidgetX=0,
                 displayWidgetY=300,
                 displayWidgetWidth=1000,
                 displayWidgetHeight=1000,
+                compressedPos = [
+                    {'x': '0.5', 'y': 10},
+                    {'x': '22.5', 'y': 10},
+                    {'x': '44.5', 'y': 10},
+                    {'x': '66.5', 'y': 10}
+                ],
+                expandedPos = [
+                    {'x': '6', 'y': 10},
+                    {'x': '37', 'y': 10},
+                    {'x': '69', 'y': 10}
+                ],
+
 
 
         // standard setters.   We need to save these variables
@@ -333,6 +345,33 @@
         background: -moz-linear-gradient(top, #3F8EB5 0%, #1D76A0 100%); /* firefox */
         background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3F8EB5), color-stop(100%,#1D76A0)); /* webkit */
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3F8EB5', endColorstr='#1D76A0',GradientType=0 );
+    }
+    .drillLabel {
+        font-family: Arial, Helvetica, Sans-Serif;
+        text-decoration: none;
+        width: auto;
+        font-size: 16px;
+        font-weight: bold;
+    }
+    .drill{
+        /*float: left;*/
+        border: 1px solid #000000;
+        background: #ccc;
+        color: #000;
+        font-family: Arial, Helvetica, Sans-Serif;
+        text-decoration: none;
+        width: auto;
+        font-size: 14px;
+        padding-left: 10px;
+        padding-right: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+        text-align: center;
+        display: block;
+    }
+    .resetDrillButtons{
+        position: absolute;
+        padding-left: 5px;
     }
     .contractButton{
         position:absolute;
@@ -1351,9 +1390,84 @@
                    '#e7ba52', '#e7cb94', '#843c39', '#ad494a', '#d6616b', '#e7969c', '#7b4173', '#a55194', '#ce6dbd', '#de9ed6',
                    '#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a', '#d62728', '#ff9896', '#9467bd', '#c5b0d5',
                    '#8c564b', '#c49c94', '#e377c2', '#f7b6d2', '#7f7f7f', '#c7c7c7', '#bcbd22', '#dbdb8d', '#17becf', '#9edae5',
-                   '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'];
+                   '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'],
+       blueColors = [
+           '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#393b79', '#5254a3', '#6b6ecf', '#9c9ede', '#17becf', '#9edae5', '#1f77b4', '#aec7e8', '#B4FCFF','#82B6FA', '#00FFFF',
+           '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#393b79', '#5254a3', '#6b6ecf', '#9c9ede', '#17becf', '#9edae5', '#1f77b4', '#aec7e8', '#B4FCFF','#82B6FA', '#00FFFF',
+           '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#393b79', '#5254a3', '#6b6ecf', '#9c9ede', '#17becf', '#9edae5', '#1f77b4', '#aec7e8', '#B4FCFF','#82B6FA', '#00FFFF',
+           '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#393b79', '#5254a3', '#6b6ecf', '#9c9ede', '#17becf', '#9edae5', '#1f77b4', '#aec7e8', '#B4FCFF','#82B6FA', '#00FFFF',
+           '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#393b79', '#5254a3', '#6b6ecf', '#9c9ede', '#17becf', '#9edae5', '#1f77b4', '#aec7e8', '#B4FCFF','#82B6FA', '#00FFFF',
+           '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#393b79', '#5254a3', '#6b6ecf', '#9c9ede', '#17becf', '#9edae5', '#1f77b4', '#aec7e8', '#B4FCFF','#82B6FA', '#00FFFF',
+           '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#393b79', '#5254a3', '#6b6ecf', '#9c9ede', '#17becf', '#9edae5', '#1f77b4', '#aec7e8', '#B4FCFF','#82B6FA', '#00FFFF',
+           '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#393b79', '#5254a3', '#6b6ecf', '#9c9ede', '#17becf', '#9edae5', '#1f77b4', '#aec7e8', '#B4FCFF','#82B6FA', '#00FFFF',
+           '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#393b79', '#5254a3', '#6b6ecf', '#9c9ede', '#17becf', '#9edae5', '#1f77b4', '#aec7e8', '#B4FCFF','#82B6FA', '#00FFFF',
+           '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#393b79', '#5254a3', '#6b6ecf', '#9c9ede', '#17becf', '#9edae5', '#1f77b4', '#aec7e8', '#B4FCFF','#82B6FA', '#00FFFF',
+           '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#393b79', '#5254a3', '#6b6ecf', '#9c9ede', '#17becf', '#9edae5', '#1f77b4', '#aec7e8', '#B4FCFF','#82B6FA', '#00FFFF',
+           '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#393b79', '#5254a3', '#6b6ecf', '#9c9ede', '#17becf', '#9edae5', '#1f77b4', '#aec7e8', '#B4FCFF','#82B6FA', '#00FFFF',
+           '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#393b79', '#5254a3', '#6b6ecf', '#9c9ede', '#17becf', '#9edae5', '#1f77b4', '#aec7e8', '#B4FCFF','#82B6FA', '#00FFFF',
+           '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#393b79', '#5254a3', '#6b6ecf', '#9c9ede', '#17becf', '#9edae5', '#1f77b4', '#aec7e8', '#B4FCFF','#82B6FA', '#00FFFF',
+           '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#393b79', '#5254a3', '#6b6ecf', '#9c9ede', '#17becf', '#9edae5', '#1f77b4', '#aec7e8', '#B4FCFF','#82B6FA', '#00FFFF',
+           '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#393b79', '#5254a3', '#6b6ecf', '#9c9ede', '#17becf', '#9edae5', '#1f77b4', '#aec7e8', '#B4FCFF','#82B6FA', '#00FFFF'],
 
-       // below are some names and text strings
+
+       reddishColors = [
+           '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#ad494a', '#d6616b', '#e7969c', '#ff7f0e', '#d62728', '#ff9896', '#EF6546','#E6933C', '#FFA500',
+           '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#ad494a', '#d6616b', '#e7969c', '#ff7f0e', '#d62728', '#ff9896', '#EF6546','#E6933C', '#FFA500',
+           '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#ad494a', '#d6616b', '#e7969c', '#ff7f0e', '#d62728', '#ff9896', '#EF6546','#E6933C', '#FFA500',
+           '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#ad494a', '#d6616b', '#e7969c', '#ff7f0e', '#d62728', '#ff9896', '#EF6546','#E6933C', '#FFA500',
+           '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#ad494a', '#d6616b', '#e7969c', '#ff7f0e', '#d62728', '#ff9896', '#EF6546','#E6933C', '#FFA500',
+           '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#ad494a', '#d6616b', '#e7969c', '#ff7f0e', '#d62728', '#ff9896', '#EF6546','#E6933C', '#FFA500',
+           '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#ad494a', '#d6616b', '#e7969c', '#ff7f0e', '#d62728', '#ff9896', '#EF6546','#E6933C', '#FFA500',
+           '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#ad494a', '#d6616b', '#e7969c', '#ff7f0e', '#d62728', '#ff9896', '#EF6546','#E6933C', '#FFA500',
+           '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#ad494a', '#d6616b', '#e7969c', '#ff7f0e', '#d62728', '#ff9896', '#EF6546','#E6933C', '#FFA500',
+           '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#ad494a', '#d6616b', '#e7969c', '#ff7f0e', '#d62728', '#ff9896', '#EF6546','#E6933C', '#FFA500',
+           '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#ad494a', '#d6616b', '#e7969c', '#ff7f0e', '#d62728', '#ff9896', '#EF6546','#E6933C', '#FFA500',
+           '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#ad494a', '#d6616b', '#e7969c', '#ff7f0e', '#d62728', '#ff9896', '#EF6546','#E6933C', '#FFA500',
+           '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#ad494a', '#d6616b', '#e7969c', '#ff7f0e', '#d62728', '#ff9896', '#EF6546','#E6933C', '#FFA500',
+           '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#ad494a', '#d6616b', '#e7969c', '#ff7f0e', '#d62728', '#ff9896', '#EF6546','#E6933C', '#FFA500',
+           '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#ad494a', '#d6616b', '#e7969c', '#ff7f0e', '#d62728', '#ff9896', '#EF6546','#E6933C', '#FFA500',
+           '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#ad494a', '#d6616b', '#e7969c', '#ff7f0e', '#d62728', '#ff9896', '#EF6546','#E6933C', '#FFA500',
+           '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#ad494a', '#d6616b', '#e7969c', '#ff7f0e', '#d62728', '#ff9896', '#EF6546','#E6933C', '#FFA500',
+           '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#ad494a', '#d6616b', '#e7969c', '#ff7f0e', '#d62728', '#ff9896', '#EF6546','#E6933C', '#FFA500'],
+
+       greenishColors = [
+           '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#637939', '#8ca252', '#b5cf6b', '#cedb9c', '#2ca02c', '#98df8a', '#EDDA74','#00E100',
+           '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#637939', '#8ca252', '#b5cf6b', '#cedb9c', '#2ca02c', '#98df8a', '#EDDA74','#00E100',
+           '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#637939', '#8ca252', '#b5cf6b', '#cedb9c', '#2ca02c', '#98df8a', '#EDDA74','#00E100',
+           '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#637939', '#8ca252', '#b5cf6b', '#cedb9c', '#2ca02c', '#98df8a', '#EDDA74','#00E100',
+           '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#637939', '#8ca252', '#b5cf6b', '#cedb9c', '#2ca02c', '#98df8a', '#EDDA74','#00E100',
+           '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#637939', '#8ca252', '#b5cf6b', '#cedb9c', '#2ca02c', '#98df8a', '#EDDA74','#00E100',
+           '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#637939', '#8ca252', '#b5cf6b', '#cedb9c', '#2ca02c', '#98df8a', '#EDDA74','#00E100',
+           '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#637939', '#8ca252', '#b5cf6b', '#cedb9c', '#2ca02c', '#98df8a', '#EDDA74','#00E100',
+           '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#637939', '#8ca252', '#b5cf6b', '#cedb9c', '#2ca02c', '#98df8a', '#EDDA74','#00E100',
+           '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#637939', '#8ca252', '#b5cf6b', '#cedb9c', '#2ca02c', '#98df8a', '#EDDA74','#00E100',
+           '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#637939', '#8ca252', '#b5cf6b', '#cedb9c', '#2ca02c', '#98df8a', '#EDDA74','#00E100',
+           '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#637939', '#8ca252', '#b5cf6b', '#cedb9c', '#2ca02c', '#98df8a', '#EDDA74','#00E100',
+           '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#637939', '#8ca252', '#b5cf6b', '#cedb9c', '#2ca02c', '#98df8a', '#EDDA74','#00E100',
+           '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#637939', '#8ca252', '#b5cf6b', '#cedb9c', '#2ca02c', '#98df8a', '#EDDA74','#00E100',
+           '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#637939', '#8ca252', '#b5cf6b', '#cedb9c', '#2ca02c', '#98df8a', '#EDDA74','#00E100'],
+
+
+       brownishColors = [
+           '#8c6d31', '#bd9e39', '#e7ba52', '#e7cb94', '#bcbd22', '#dbdb8d', '#bcbd22', '#fdd0a2', '#F7E47E','#FFFFA6', '#CFBC56','#EDDA74',
+           '#8c6d31', '#bd9e39', '#e7ba52', '#e7cb94', '#bcbd22', '#dbdb8d', '#bcbd22', '#fdd0a2', '#F7E47E','#FFFFA6', '#CFBC56','#EDDA74',
+           '#8c6d31', '#bd9e39', '#e7ba52', '#e7cb94', '#bcbd22', '#dbdb8d', '#bcbd22', '#fdd0a2', '#F7E47E','#FFFFA6', '#CFBC56','#EDDA74',
+           '#8c6d31', '#bd9e39', '#e7ba52', '#e7cb94', '#bcbd22', '#dbdb8d', '#bcbd22', '#fdd0a2', '#F7E47E','#FFFFA6', '#CFBC56','#EDDA74',
+           '#8c6d31', '#bd9e39', '#e7ba52', '#e7cb94', '#bcbd22', '#dbdb8d', '#bcbd22', '#fdd0a2', '#F7E47E','#FFFFA6', '#CFBC56','#EDDA74',
+           '#8c6d31', '#bd9e39', '#e7ba52', '#e7cb94', '#bcbd22', '#dbdb8d', '#bcbd22', '#fdd0a2', '#F7E47E','#FFFFA6', '#CFBC56','#EDDA74',
+           '#8c6d31', '#bd9e39', '#e7ba52', '#e7cb94', '#bcbd22', '#dbdb8d', '#bcbd22', '#fdd0a2', '#F7E47E','#FFFFA6', '#CFBC56','#EDDA74',
+           '#8c6d31', '#bd9e39', '#e7ba52', '#e7cb94', '#bcbd22', '#dbdb8d', '#bcbd22', '#fdd0a2', '#F7E47E','#FFFFA6', '#CFBC56','#EDDA74',
+           '#8c6d31', '#bd9e39', '#e7ba52', '#e7cb94', '#bcbd22', '#dbdb8d', '#bcbd22', '#fdd0a2', '#F7E47E','#FFFFA6', '#CFBC56','#EDDA74',
+           '#8c6d31', '#bd9e39', '#e7ba52', '#e7cb94', '#bcbd22', '#dbdb8d', '#bcbd22', '#fdd0a2', '#F7E47E','#FFFFA6', '#CFBC56','#EDDA74',
+           '#8c6d31', '#bd9e39', '#e7ba52', '#e7cb94', '#bcbd22', '#dbdb8d', '#bcbd22', '#fdd0a2', '#F7E47E','#FFFFA6', '#CFBC56','#EDDA74',
+           '#8c6d31', '#bd9e39', '#e7ba52', '#e7cb94', '#bcbd22', '#dbdb8d', '#bcbd22', '#fdd0a2', '#F7E47E','#FFFFA6', '#CFBC56','#EDDA74',
+           '#8c6d31', '#bd9e39', '#e7ba52', '#e7cb94', '#bcbd22', '#dbdb8d', '#bcbd22', '#fdd0a2', '#F7E47E','#FFFFA6', '#CFBC56','#EDDA74',
+           '#8c6d31', '#bd9e39', '#e7ba52', '#e7cb94', '#bcbd22', '#dbdb8d', '#bcbd22', '#fdd0a2', '#F7E47E','#FFFFA6', '#CFBC56','#EDDA74',
+           '#8c6d31', '#bd9e39', '#e7ba52', '#e7cb94', '#bcbd22', '#dbdb8d', '#bcbd22', '#fdd0a2', '#F7E47E','#FFFFA6', '#CFBC56','#EDDA74'],
+
+
+
+           // below are some names and text strings
        piename = ['a0', 'a1', 'a2', 'a3'], // internal names for the widgets
                textForExpandingButton = 'Drill down', // text on button to expand to full display
                textForContractingButton = 'click to contract', //text on button to contract unexpended widget
@@ -1527,6 +1641,22 @@
                                    return returnValue;
                                };
 
+                       var colorSet = {};
+                       switch(id){
+                           case 'a0-chart':
+                               colorSet=blueColors;
+                               break;
+                           case 'a1-chart':
+                               colorSet=greenishColors ;
+                               break;
+                           case 'a2-chart':
+                               colorSet=reddishColors ;
+                               break;
+                           case 'a3-chart':
+                               colorSet=brownishColors ;
+                               break;
+                           default:;
+                       }
 
                        return dc.pieChart("#" + id)
                                .width(localPieChartWidth)
@@ -1536,7 +1666,7 @@
                                .innerRadius(localInnerRadius)
                                .dimension(dimensionVariable)
                                .group(dimensionVariableGroup)
-                               .colors(colors)
+                               .colors(colorSet)
                                .label(displayDataGroup)
                                .renderTitle(true);
                    },
@@ -2222,7 +2352,7 @@
 
     <div id = "pieCharts" class="pieCharts">
 
-        <div id = "a0"  class = "pieChartContainer" style="left: 0%; top: 10px; width: 24%;  height: 300px;">
+        <div id = "a0"  class = "pieChartContainer" style="left: 0.5%; top: 10px; width: 21%;  height: 300px;">
             <div id="a0-chart" class="pieChart">
                 <span class="graphTitle">Biological process</span>
                 <a class="reset" href="javascript:sharedStructures.resetBiologicalProcessPieChart();" style="display: none;">reset</a>
@@ -2232,7 +2362,7 @@
 
         </div>
 
-        <div id = "a1"  class = "pieChartContainer" style="left: 25%; top: 10px; width: 24%; height: 300px;">
+        <div id = "a1"  class = "pieChartContainer" style="left: 22.5%; top: 10px; width: 21%; height: 300px;">
             <div id="a1-chart" class="pieChart">
                 <span class="graphTitle">Assay format</span>
                 <a class="reset" href="javascript:sharedStructures.resetAssayFormatPieChart();" style="display: none;">reset</a>
@@ -2242,7 +2372,7 @@
 
         </div>
 
-        <div id = "a2"  class = "pieChartContainer" style="left: 50%; top: 10px;  width: 24%; height: 300px;">
+        <div id = "a2"  class = "pieChartContainer" style="left: 44.5%; top: 10px;  width: 21%; height: 300px;">
             <div id="a2-chart" class="pieChart">
                 <span class="graphTitle">Protein target</span>
                 <a class="reset" href="javascript:sharedStructures.resetAssayIdDimensionPieChart();" style="display: none;">reset</a>
@@ -2252,7 +2382,7 @@
 
         </div>
 
-        <div id = "a3"  class = "pieChartContainer" style="left: 75%; top: 10px; width: 24%; height: 300px;">
+        <div id = "a3"  class = "pieChartContainer" style="left: 66.5%; top: 10px; width: 21%; height: 300px;">
             <div id="a3-chart" class="pieChart">
                 <span class="graphTitle">Assay type</span>
                 <a class="reset" href="javascript:sharedStructures.resetAssayTypePieChart();" style="display: none;">reset</a>
@@ -2261,8 +2391,11 @@
             </div>
 
         </div>
+        <div id = "a4"  class = "resetDrillButtons" style="left: 88.5%; top: 10px; width: 11.5%; height: 300px;">
+        </div>
 
-    </div>
+
+</div>
 
 
 
@@ -2280,11 +2413,11 @@
 <table id="data-table" class="dc-data-table bordered"  style="position:absolute; left: 0px; top: 300px;">
     <thead>
     <tr >
-        <th style='width: 25%' class="columnsAssociatedWithPies data-table-th">Biological process</th>
-        <th style='width: 25%' class="columnsAssociatedWithPies data-table-th">Assay format</th>
-        <th style='width: 25%' class="columnsAssociatedWithPies data-table-th">Proteins target</th>
-        <th style='width: 24%' class="columnsAssociatedWithPies data-table-th">Assay type</th>
-        <th style='width: 1%' class="data-table-th">ID</th>
+        <th style='left: 0%; width: 21.5%;' class="columnsAssociatedWithPies data-table-th">Biological process</th>
+        <th style='left: 22.5%; width: 21%;' class="columnsAssociatedWithPies data-table-th">Assay format</th>
+        <th style='left: 44.5%; width: 21%;' class="columnsAssociatedWithPies data-table-th">Proteins target</th>
+        <th style='left: 66.5%; width: 21%;' class="columnsAssociatedWithPies data-table-th">Assay type</th>
+        <th style='left: 88.5%; width: 11.5%;' class="data-table-th">ID</th>
     </tr>
     </thead>
 </table>
