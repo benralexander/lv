@@ -374,7 +374,7 @@
         padding-left: 5px;
     }
     .contractButton{
-        position:absolute;
+        position:relative;
         float: right;
         border: 1px solid #5d9046;
         background: #67AA25;
@@ -383,11 +383,12 @@
         text-decoration: none;
         width: 150px;
         font-size: 14px;
+        vertical-align: top;
         font-weight: bold;
         padding-right: 0px;
-        padding-bottom: 0px;
+        padding-top: 0px;
         margin-right: 0px;
-        margin-bottom: 0px;
+        margin-top: 0px;
         right: 0px;
         bottom: 0px;
         text-align: center;
@@ -1847,29 +1848,29 @@
                        d3.select('#a' +backgroundIndex2).selectAll('.expandButton').style('pointer-events', 'none').style('opacity', 0.5);
                        d3.select('#a' +backgroundIndex3).selectAll('.expandButton').style('pointer-events', 'none').style('opacity', 0.5);
 
-
-                       origButton
-                               .text(textForContractingButton)
-                               .attr('class', 'contractButton')
-                               .transition()
-                               .delay(1000)
-                               .duration(500)
+                       d3.select('#sunburstContractor')
                                .style('opacity', 1);
+//                       if (!contractingButtonDiv.empty ()) {
+//                           contractingButtonDiv.style('opacity', 1);
+//                       } else {
+//                           contractingButtonDiv.append('div')
+//                                   .attr('class', 'contractButton')
+//                                   .attr('id', 'hierarchyContractor')
+//                                   .transition()
+//                                   .delay(1000)
+//                                   .duration(500)
+//                                   .style('opacity', 1);
+//                       }
+//                       origButton
+//                               .text(textForContractingButton)
+//                               .attr('class', 'contractButton')
+//                               .transition()
+//                               .delay(1000)
+//                               .duration(500)
+//                               .style('opacity', 1);
                    },
 
                    resetOneAndResettleThree = function (index, spotlight, backgroundIndex1, backgroundIndex2, backgroundIndex3, origButton, expandedPos) {
-                       // first handle the spotlight element and then the three backup singers
-//                       spotlight.transition()
-//                               .duration(500)
-//                               .style('height', d.orig.size.height + "px")
-//                               .style('width', d.orig.size.width + "%")
-//                               .style('padding-left', '5px')
-//                               .transition()
-//                               .duration(500)
-//                               .style("left", d.orig.coords.x + "%")
-//                               .transition()
-//                               .duration(500)
-//                               .style("top", d.orig.coords.y + "px");
 
                        var widgetsGoHere = sharedStructures.widgetsGoHere();
 
@@ -2089,80 +2090,6 @@
                { index: 1 },
                { index: 2 },
                { index: 3 }]  ;
-//               0,1,2,3];
-//               {    index: 0,
-//                   orig: {
-//                       coords: {
-//                           x: compressedPos[0].x,
-//                           y: compressedPos[0].y },
-//                       size: {
-//                           width: widgetWidthWithoutSpacing,
-//                           height: widgetHeightWithTitle }
-//                   },
-//                   display: {
-//                       coords: {
-//                           x: displayWidgetX,
-//                           y: displayWidgetY },
-//                       size: {
-//                           width: displayWidgetWidth,
-//                           height: displayWidgetHeight }
-//                   }
-//               },
-//               {    index: 1,
-//                   orig: {
-//                       coords: {
-//                           x: compressedPos[1].x,
-//                           y: compressedPos[1].y },
-//                       size: {
-//                           width: widgetWidthWithoutSpacing,
-//                           height: widgetHeightWithTitle }
-//                   },
-//                   display: {
-//                       coords: {
-//                           x: displayWidgetX,
-//                           y: displayWidgetY },
-//                       size: {
-//                           width: displayWidgetWidth,
-//                           height: displayWidgetHeight }
-//                   }
-//               },
-//               {    index: 2,
-//                   orig: {
-//                       coords: {
-//                           x: compressedPos[2].x,
-//                           y: compressedPos[2].y },
-//                       size: {
-//                           width: widgetWidthWithoutSpacing,
-//                           height: widgetHeightWithTitle }
-//                   },
-//                   display: {
-//                       coords: {
-//                           x: displayWidgetX,
-//                           y: displayWidgetY },
-//                       size: {
-//                           width: displayWidgetWidth,
-//                           height: displayWidgetHeight }
-//                   }
-//               },
-//               {   index: 3,
-//                   orig: {
-//                       coords: {
-//                           x: compressedPos[3].x,
-//                           y: compressedPos[3].y },
-//                       size: {
-//                           width: widgetWidthWithoutSpacing,
-//                           height: widgetHeightWithTitle }
-//                   },
-//                   display: {
-//                       coords: {
-//                           x: displayWidgetX,
-//                           y: displayWidgetY },
-//                       size: {
-//                           width: displayWidgetWidth,
-//                           height: displayWidgetHeight }
-//                   }
-//               }
-//           ];
 
 
            // Private method used to pull the data in from the remote site
@@ -2253,13 +2180,15 @@
                            }
                        }
 
-
-                       // Add a button for causing an expanded hierarchy disappear
-                       sunburstContainer.append("div")
+                       sunburstContainer.select('#sunburstContractor')
                                .text(textForContractingButton)
-                               .attr('class', 'contractButton')
-                               .attr('id', 'sunburstContractor') ;
-//                               .data(buttondata);
+                               .style('opacity','0');
+//                       // Add a button for causing an expanded hierarchy disappear
+//                       sunburstContainer.insert("div")
+//                               .text(textForContractingButton)
+//                               .attr('class', 'contractButton')
+//                               .attr('id', 'sunburstContractor') ;
+//
 
                    },
 
@@ -2267,7 +2196,6 @@
                        console.log('beginning Linked Hierarchy with cid = '+cid+'.');
 
                        d3.json("http://localhost:8028/cow/veryCross/feedMeLinkedData", function (incomingData) {
-
 
 
 //                       d3.json("/bardwebclient/bardWebInterface/linkedData/"+cid, function (incomingData) {
@@ -2425,7 +2353,7 @@
 <div id="widthTest" class="legendLine"></div>
 
 <div id="suburst_container" class="container-fluid" style="position:absolute; left: 10px; top: 1000px;">
-    <div class="row-fluid">
+    <div id="subcontainer" class="row-fluid">
         <div class="span6">
 
 
@@ -3011,8 +2939,15 @@
 
         </div>
 
-        <div class="span3" style="padding-top: 50px;  height: 600px;">
-            <div style="float:right;">
+        <div class="span3" style="height: 600px;">
+
+            <div style="vertical-align: top;">
+                <div  style="opacity: 0" id="sunburstContractor" class ='contractButton' ></div>
+            </div>
+
+
+
+            <div style="float:right;padding-top:200px;">
                 <div id="legendGoesHere"></div>
 
             </div>
@@ -3037,6 +2972,7 @@
             </div>
 
         </div>
+
     </div>
 </div>
 <script>
