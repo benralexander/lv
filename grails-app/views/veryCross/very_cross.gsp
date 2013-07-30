@@ -107,11 +107,11 @@
 
     <title>Linked pies</title>
 
-<script src="../js/jquery-1.7.1.min.js"></script>
+<script src="../js/jquery-2.0.3.min.js"></script>
 <script src="../js/crossfilter.js"></script>
 <script src="../js/d3.js"></script>
 <script src="../js/bootstrap.js"></script>
-    <script src="../js/dc.js"></script>
+<script src="../js/dc.js"></script>
 <link rel="stylesheet" type="text/css" href="${resource(dir: 'css', file: 'dc.css')}" />
 <link rel="stylesheet" type="text/css" href="${resource(dir: 'css', file: 'bootstrap.css')}" />
     <style>
@@ -140,8 +140,9 @@
     }
     .pieChartContainer{
         position: absolute;
-        border:  2px solid black;
-        padding-left: 5px;
+        /*border:  2px solid black;*/
+        /*padding-left: 5px;*/
+
         border-radius: 8px;
         -moz-border-radius: 8px;
         -webkit-border-radius: 8px;
@@ -210,7 +211,7 @@
         font-size: 14pt;
         border: 1px solid #6C6C6C;
         margin-top: 20px;
-        margin-left: 10px;
+        margin-left: 0px;
         border-spacing: 0px;
     }
     table#data-table tr:first-child td {
@@ -218,7 +219,6 @@
         padding: 0;
     }
     .expandButton{
-        float: right;
         border: 1px solid #5d9046;
         background: #67AA25;
         color: #fff;
@@ -232,7 +232,7 @@
         margin-right: 0px;
         margin-bottom: 0px;
         right: 0px;
-        bottom: 0px;
+        top: 0px;
         text-align: center;
         display: block;
         border-radius: 4px;
@@ -347,6 +347,83 @@
         cursor:auto;
     }
 
+    .bordered {
+        border: solid #ccc 1px;
+        -moz-border-radius: 6px;
+        -webkit-border-radius: 6px;
+        border-radius: 6px;
+        -webkit-box-shadow: 0 1px 1px #ccc;
+        -moz-box-shadow: 0 1px 1px #ccc;
+        box-shadow: 0 1px 1px #ccc;
+    }
+
+    .bordered tr:hover {
+        background: #fbf8e9;
+        -o-transition: all 0.1s ease-in-out;
+        -webkit-transition: all 0.1s ease-in-out;
+        -moz-transition: all 0.1s ease-in-out;
+        -ms-transition: all 0.1s ease-in-out;
+        transition: all 0.1s ease-in-out;
+    }
+
+    .bordered td, .bordered th {
+        border-left: 1px solid #111;
+        border-top: 1px solid #111;
+        padding: 10px;
+        text-align: left;
+    }
+
+    /*.bordered th {*/
+        /*background-color: #dce9f9;*/
+        /*background-image: -webkit-gradient(linear, left top, left bottom, from(#ebf3fc), to(#dce9f9));*/
+        /*background-image: -webkit-linear-gradient(top, #ebf3fc, #dce9f9);*/
+        /*background-image:    -moz-linear-gradient(top, #ebf3fc, #dce9f9);*/
+        /*background-image:     -ms-linear-gradient(top, #ebf3fc, #dce9f9);*/
+        /*background-image:      -o-linear-gradient(top, #ebf3fc, #dce9f9);*/
+        /*background-image:         linear-gradient(top, #ebf3fc, #dce9f9);*/
+        /*-webkit-box-shadow: 0 1px 0 rgba(255,255,255,.8) inset;*/
+        /*-moz-box-shadow:0 1px 0 rgba(255,255,255,.8) inset;*/
+        /*box-shadow: 0 1px 0 rgba(255,255,255,.8) inset;*/
+        /*border-top: none;*/
+        /*text-shadow: 0 1px 0 rgba(255,255,255,.5);*/
+    /*}*/
+
+    .bordered td:first-child, .bordered th:first-child {
+        border-left: none;
+    }
+
+    .bordered th:first-child {
+        -moz-border-radius: 6px 0 0 0;
+        -webkit-border-radius: 6px 0 0 0;
+        border-radius: 6px 0 0 0;
+    }
+
+    .bordered th:last-child {
+        -moz-border-radius: 0 6px 0 0;
+        -webkit-border-radius: 0 6px 0 0;
+        border-radius: 0 6px 0 0;
+    }
+
+    .bordered th:only-child{
+        -moz-border-radius: 6px 6px 0 0;
+        -webkit-border-radius: 6px 6px 0 0;
+        border-radius: 6px 6px 0 0;
+    }
+
+    .bordered tr:last-child td:first-child {
+        -moz-border-radius: 0 0 0 6px;
+        -webkit-border-radius: 0 0 0 6px;
+        border-radius: 0 0 0 6px;
+    }
+
+    .bordered tr:last-child td:last-child {
+        -moz-border-radius: 0 0 6px 0;
+        -webkit-border-radius: 0 0 6px 0;
+        border-radius: 0 0 6px 0;
+    }
+    .columnsAssociatedWithPies {
+
+    }
 
 
 
@@ -1209,10 +1286,10 @@
 //                   {'x': (widgetWidth * 2) + (quarterWidgetWidth * 3), 'y': 10}
 //               ],
                compressedPos = [
-                   {'x': '0', 'y': 10},
-                   {'x': '25', 'y': 10},
-                   {'x': '50', 'y': 10},
-                   {'x': '75', 'y': 10}
+                   {'x': '0.5', 'y': 10},
+                   {'x': '25.5', 'y': 10},
+                   {'x': '50.5', 'y': 10},
+                   {'x': '75.5', 'y': 10}
                ],
                expandedPos = [
                    {'x': '6', 'y': 10},
@@ -2133,17 +2210,18 @@
 
 %{--</script>--}%
 
-<table id="data-table" class="table table-hover dc-data-table"  style="position:absolute; left: 0px; top: 300px;">
+<table id="data-table" class="dc-data-table bordered"  style="position:absolute; left: 0px; top: 300px;">
     <thead>
-    <tr class="header">
-        <th style='width: 23%' class="data-table-th">Biological process</th>
-        <th style='width: 23%' class="data-table-th">Assay format</th>
-        <th style='width: 23%' class="data-table-th">Proteins target</th>
-        <th style='width: 23%' class="data-table-th">Assay type</th>
-        <th style='width: 8%' class="data-table-th">ID</th>
+    <tr >
+        <th style='width: 25%' class="columnsAssociatedWithPies data-table-th">Biological process</th>
+        <th style='width: 25%' class="columnsAssociatedWithPies data-table-th">Assay format</th>
+        <th style='width: 25%' class="columnsAssociatedWithPies data-table-th">Proteins target</th>
+        <th style='width: 24%' class="columnsAssociatedWithPies data-table-th">Assay type</th>
+        <th style='width: 1%' class="data-table-th">ID</th>
     </tr>
     </thead>
 </table>
+
 <div id="widthTest" class="legendLine"></div>
 
 <div id="suburst_container" class="container-fluid" style="position:absolute; left: 10px; top: 1000px;">
