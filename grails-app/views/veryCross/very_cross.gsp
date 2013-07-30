@@ -24,6 +24,14 @@
                 assayIdDimensionPieChart,
                 assayTypePieChart,
                 allDataDcTable,
+                widgetsGoHere,
+                widgetWidthWithoutSpacing=24,
+                widgetHeightWithTitle=240,
+                displayWidgetX=0,
+                displayWidgetY=300,
+                displayWidgetWidth=1000,
+                displayWidgetHeight=1000,
+
 
         // standard setters.   We need to save these variables
                 setBiologicalProcessPieChart = function (localBiologicalProcessPieChart) {
@@ -72,7 +80,84 @@
                 },
                 getAssayIndex = function () {
                     return assayIndex;
-                } ;
+                },
+                widgetsGoHere = function (){
+                    var placementInfo = [
+                        {    index: 0,
+                            orig: {
+                                coords: {
+                                    x: compressedPos[0].x,
+                                    y: compressedPos[0].y },
+                                size: {
+                                    width: widgetWidthWithoutSpacing,
+                                    height: widgetHeightWithTitle }
+                            },
+                            display: {
+                                coords: {
+                                    x: displayWidgetX,
+                                    y: displayWidgetY },
+                                size: {
+                                    width: displayWidgetWidth,
+                                    height: displayWidgetHeight }
+                            }
+                        },
+                        {    index: 1,
+                            orig: {
+                                coords: {
+                                    x: compressedPos[1].x,
+                                    y: compressedPos[1].y },
+                                size: {
+                                    width: widgetWidthWithoutSpacing,
+                                    height: widgetHeightWithTitle }
+                            },
+                            display: {
+                                coords: {
+                                    x: displayWidgetX,
+                                    y: displayWidgetY },
+                                size: {
+                                    width: displayWidgetWidth,
+                                    height: displayWidgetHeight }
+                            }
+                        },
+                        {    index: 2,
+                            orig: {
+                                coords: {
+                                    x: compressedPos[2].x,
+                                    y: compressedPos[2].y },
+                                size: {
+                                    width: widgetWidthWithoutSpacing,
+                                    height: widgetHeightWithTitle }
+                            },
+                            display: {
+                                coords: {
+                                    x: displayWidgetX,
+                                    y: displayWidgetY },
+                                size: {
+                                    width: displayWidgetWidth,
+                                    height: displayWidgetHeight }
+                            }
+                        },
+                        {   index: 3,
+                            orig: {
+                                coords: {
+                                    x: compressedPos[3].x,
+                                    y: compressedPos[3].y },
+                                size: {
+                                    width: widgetWidthWithoutSpacing,
+                                    height: widgetHeightWithTitle }
+                            },
+                            display: {
+                                coords: {
+                                    x: displayWidgetX,
+                                    y: displayWidgetY },
+                                size: {
+                                    width: displayWidgetWidth,
+                                    height: displayWidgetHeight }
+                            }
+                        }
+                    ];
+                    return placementInfo;
+                };
 
 
         return {
@@ -94,8 +179,9 @@
             getAssayIndex: getAssayIndex,
             setAssayIndex: setAssayIndex,
 
-            setAssay:setAssay
+            setAssay:setAssay,
 
+            widgetsGoHere:widgetsGoHere
         };
     }());  // sharedStructures
 
@@ -210,7 +296,7 @@
         font-family: 'Cabin';
         font-size: 14pt;
         border: 1px solid #6C6C6C;
-        margin-top: 20px;
+        margin-top: 0;
         margin-left: 0px;
         border-spacing: 0px;
     }
@@ -219,12 +305,13 @@
         padding: 0;
     }
     .expandButton{
+        float: right;
         border: 1px solid #5d9046;
         background: #67AA25;
         color: #fff;
         font-family: Arial, Helvetica, Sans-Serif;
         text-decoration: none;
-        width: 100px;
+        width: 70px;
         font-size: 10px;
         font-weight: bold;
         padding-right: 0px;
@@ -1268,7 +1355,7 @@
 
        // below are some names and text strings
        piename = ['a0', 'a1', 'a2', 'a3'], // internal names for the widgets
-               textForExpandingButton = 'click to expand', // text on button to expand to full display
+               textForExpandingButton = 'Drill down', // text on button to expand to full display
                textForContractingButton = 'click to contract', //text on button to contract unexpended widget
 
            //  This next set of variables are only for convenience.  They are derived strictly from those above,
@@ -1584,16 +1671,18 @@
                    },
 
 
-                   spotlightOneAndBackgroundThree = function (d, spotlight, background1, background2, background3, origButton, expandedPos) {
+                   spotlightOneAndBackgroundThree = function (index, spotlight, backgroundIndex1, backgroundIndex2, backgroundIndex3, origButton, expandedPos) {
 
                        deactivateDrillDownResetButtons();
 
+
+                       var widgetsGoHere = sharedStructures.widgetsGoHere();
                        // first handle the spotlight element and then the three backup singers
                        // movedown
                        spotlight
                                .transition()
                                .duration(200)
-                               .style("top", d.display.coords.y + "px");
+                               .style("top", widgetsGoHere[index].display.coords.y + "px");
 
                          // moveover
                        spotlight
@@ -1607,26 +1696,26 @@
                                .transition()
                              .delay(400)
                                .duration(200)
-                               .style('height', d.display.size.height + "px")
-                               .style('max-width', d.display.size.width + "px")
+                               .style('height', widgetsGoHere[index].display.size.height + "px")
+                               .style('max-width', widgetsGoHere[index].display.size.width + "px")
                                .style('width', '100%');
-                       shiftBackgroundWidgets(background1, expandedPos[0].x);
-                       shiftBackgroundWidgets(background2, expandedPos[1].x);
-                       shiftBackgroundWidgets(background3, expandedPos[2].x);
+                       shiftBackgroundWidgets(d3.select('#a' +backgroundIndex1), expandedPos[0].x);
+                       shiftBackgroundWidgets(d3.select('#a' +backgroundIndex2), expandedPos[1].x);
+                       shiftBackgroundWidgets(d3.select('#a' +backgroundIndex3), expandedPos[2].x);
 
                        //   Turn off the text label based on click event for background widgets
-                       background1.selectAll('.pieChart>svg>g>.pie-slice').style('pointer-events', 'none');
-                       background2.selectAll('.pieChart>svg>g>.pie-slice').style('pointer-events', 'none');
-                       background3.selectAll('.pieChart>svg>g>.pie-slice').style('pointer-events', 'none');
+                       d3.select('#a' +backgroundIndex1).selectAll('.pieChart>svg>g>.pie-slice').style('pointer-events', 'none');
+                       d3.select('#a' +backgroundIndex2).selectAll('.pieChart>svg>g>.pie-slice').style('pointer-events', 'none');
+                       d3.select('#a' +backgroundIndex3).selectAll('.pieChart>svg>g>.pie-slice').style('pointer-events', 'none');
 
                        //  Turn off the expander button, since the user needs to contract the expanded
                        //  widget before they try to expand the new one. It would be nice to click that
                        //  button for them, but D three does not support that sort of activation is you are
                        //  using bound data. I should probably connect to those data dynamically to get around
                        //  this problem.
-                       background1.selectAll('.expandButton').style('pointer-events', 'none').style('opacity', 0.5);
-                       background2.selectAll('.expandButton').style('pointer-events', 'none').style('opacity', 0.5);
-                       background3.selectAll('.expandButton').style('pointer-events', 'none').style('opacity', 0.5);
+                       d3.select('#a' +backgroundIndex1).selectAll('.expandButton').style('pointer-events', 'none').style('opacity', 0.5);
+                       d3.select('#a' +backgroundIndex2).selectAll('.expandButton').style('pointer-events', 'none').style('opacity', 0.5);
+                       d3.select('#a' +backgroundIndex3).selectAll('.expandButton').style('pointer-events', 'none').style('opacity', 0.5);
 
 
                        origButton
@@ -1638,7 +1727,7 @@
                                .style('opacity', 1);
                    },
 
-                   resetOneAndResettleThree = function (d, spotlight, background1, background2, background3, origButton, expandedPos) {
+                   resetOneAndResettleThree = function (index, spotlight, backgroundIndex1, backgroundIndex2, backgroundIndex3, origButton, expandedPos) {
                        // first handle the spotlight element and then the three backup singers
 //                       spotlight.transition()
 //                               .duration(500)
@@ -1652,54 +1741,53 @@
 //                               .duration(500)
 //                               .style("top", d.orig.coords.y + "px");
 
+                       var widgetsGoHere = sharedStructures.widgetsGoHere();
+
                        //shrink
                        spotlight.transition()
                                .duration(400)
-                               .style('height', d.orig.size.height + "px")
-                               .style('width', d.orig.size.width + "%")
+                               .style('height', widgetsGoHere[index].orig.size.height + "px")
+                               .style('width', widgetsGoHere[index].orig.size.width + "%")
                                .style('padding-left', '5px');
 
                        //move back to your original X position
                        spotlight.transition()
                                .delay(400)
                                .duration(200)
-                               .style("left", d.orig.coords.x + "%");
+                               .style("left", widgetsGoHere[index].orig.coords.x + "%");
 
                        //move back to your original Y position
                        spotlight.transition()
                                .delay(600)
                                .duration(400)
-                               .style("top", d.orig.coords.y + "px");
+                               .style("top", widgetsGoHere[index].orig.coords.y + "px");
 
 
-                       shiftBackgroundWidgets(background1, background1.data()[0].orig.coords.x);
-                       shiftBackgroundWidgets(background2, background2.data()[0].orig.coords.x);
-                       shiftBackgroundWidgets(background3, background3.data()[0].orig.coords.x);
-                       background1.selectAll('.pieChart>svg>g>.pie-slice').style('pointer-events', 'auto');
-                       background2.selectAll('.pieChart>svg>g>.pie-slice').style('pointer-events', 'auto');
-                       background3.selectAll('.pieChart>svg>g>.pie-slice').style('pointer-events', 'auto');
+                       shiftBackgroundWidgets(d3.select('#a'+backgroundIndex1), widgetsGoHere[backgroundIndex1].orig.coords.x);
+                       shiftBackgroundWidgets(d3.select('#a'+backgroundIndex2), widgetsGoHere[backgroundIndex2].orig.coords.x);
+                       shiftBackgroundWidgets(d3.select('#a'+backgroundIndex3), widgetsGoHere[backgroundIndex3].orig.coords.x);
+                       d3.select('#a'+backgroundIndex1).selectAll('.pieChart>svg>g>.pie-slice').style('pointer-events', 'auto');
+                       d3.select('#a'+backgroundIndex2).selectAll('.pieChart>svg>g>.pie-slice').style('pointer-events', 'auto');
+                       d3.select('#a'+backgroundIndex3).selectAll('.pieChart>svg>g>.pie-slice').style('pointer-events', 'auto');
                        //  Turn back on the expander buttons
                        //  widget before they try to expand the new one. It would be nice to click that
                        //  button for them, but D three does not support that sort of activation is you are
                        //  using bound data. I should probably connect to those data dynamically to get around
                        //  this problem.
-                       var dataSetNumber = parseInt(background1.attr('id').match(/\d/));
-                       if (!(linkedVizData.extendedHierarchyDataExists(dataSetNumber))) {
-                           d3.select('#expbutton' + dataSetNumber).style('pointer-events', 'none').style('opacity', 0.5);
+                       if (!(linkedVizData.extendedHierarchyDataExists(backgroundIndex1))) {
+                           d3.select('#expbutton' + backgroundIndex1).style('pointer-events', 'none').style('opacity', 0.5);
                        } else {
-                           d3.select('#expbutton' + dataSetNumber).style('pointer-events', 'auto').style('opacity', 1);
+                           d3.select('#expbutton' + backgroundIndex1).style('pointer-events', 'auto').style('opacity', 1);
                        }
-                       dataSetNumber = parseInt(background2.attr('id').match(/\d/));
-                       if (!(linkedVizData.extendedHierarchyDataExists(dataSetNumber))) {
-                           d3.select('#expbutton' + dataSetNumber).style('pointer-events', 'none').style('opacity', 0.5);
+                       if (!(linkedVizData.extendedHierarchyDataExists(backgroundIndex2))) {
+                           d3.select('#expbutton' + backgroundIndex2).style('pointer-events', 'none').style('opacity', 0.5);
                        } else {
-                           d3.select('#expbutton' + dataSetNumber).style('pointer-events', 'auto').style('opacity', 1);
+                           d3.select('#expbutton' + backgroundIndex2).style('pointer-events', 'auto').style('opacity', 1);
                        }
-                       dataSetNumber = parseInt(background3.attr('id').match(/\d/));
-                       if (!(linkedVizData.extendedHierarchyDataExists(dataSetNumber))) {
-                           d3.select('#expbutton' + dataSetNumber).style('pointer-events', 'none').style('opacity', 0.5);
+                       if (!(linkedVizData.extendedHierarchyDataExists(backgroundIndex3))) {
+                           d3.select('#expbutton' + backgroundIndex3).style('pointer-events', 'none').style('opacity', 0.5);
                        } else {
-                           d3.select('#expbutton' + dataSetNumber).style('pointer-events', 'auto').style('opacity', 1);
+                           d3.select('#expbutton' + backgroundIndex3).style('pointer-events', 'auto').style('opacity', 1);
                        }
 
 
@@ -1820,40 +1908,14 @@
                                            " back later when more assay data may have accumulated.");
                        }
                        d3.select('#sunburstContractor')
-                           // This next step gets a little bit ugly.  What we want to do is make the
-                           // Sunburst disappear, and then have the pie charts rearrange themselves like always.
-                           // Unfortunately D3 does not provide a standardized way to execute a click ( thereby
-                           // Initiating the associated callback ) if you have data associated with your object,
-                           // Which we most certainly do. Therefore I have to mix up my own copy of the data
-                           // that the callback routine for one of the pie charts would receive, and then explicitly
-                           // execute the callback method. There has to be a better way to get the desired effect,
-                           // though for what it's worth this approach is fully functional ( just butt-ugly, that's all)
                                .on('click', function (d) {
                                    sunburstContainer.style('pointer-events', 'none')
                                            .style('opacity', '0');
                                    pieDiv.style('pointer-events', null)
                                            .style('opacity', '1');
-                                   var molecularStructure = d3.selectAll('.molstruct')
+                                   d3.selectAll('.molstruct')
                                            .style('opacity', '0');
-                                   var substituteData = {    index: expandedButtonNum,
-                                       orig: {
-                                           coords: {
-                                               x: compressedPos[expandedButtonNum].x,
-                                               y: compressedPos[expandedButtonNum].y },
-                                           size: {
-                                               width: widgetWidthWithoutSpacing,
-                                               height: widgetHeightWithTitle }
-                                       },
-                                       display: {
-                                           coords: {
-                                               x: displayWidgetX,
-                                               y: displayWidgetY },
-                                           size: {
-                                               width: displayWidgetWidth,
-                                               height: displayWidgetHeight }
-                                       }
-                                   }
-                                   callbackToExpandOrContractOnButtonClick(substituteData, expandedButtonNum);
+                                    callbackToExpandOrContractOnButtonClick({    index: expandedButtonNum }, expandedButtonNum);
                                });
                        var molecularStructure = d3.selectAll('.molstruct')
                                .transition()
@@ -1893,79 +1955,84 @@
 
 
            var buttondata = [
-               {    index: 0,
-                   orig: {
-                       coords: {
-                           x: compressedPos[0].x,
-                           y: compressedPos[0].y },
-                       size: {
-                           width: widgetWidthWithoutSpacing,
-                           height: widgetHeightWithTitle }
-                   },
-                   display: {
-                       coords: {
-                           x: displayWidgetX,
-                           y: displayWidgetY },
-                       size: {
-                           width: displayWidgetWidth,
-                           height: displayWidgetHeight }
-                   }
-               },
-               {    index: 1,
-                   orig: {
-                       coords: {
-                           x: compressedPos[1].x,
-                           y: compressedPos[1].y },
-                       size: {
-                           width: widgetWidthWithoutSpacing,
-                           height: widgetHeightWithTitle }
-                   },
-                   display: {
-                       coords: {
-                           x: displayWidgetX,
-                           y: displayWidgetY },
-                       size: {
-                           width: displayWidgetWidth,
-                           height: displayWidgetHeight }
-                   }
-               },
-               {    index: 2,
-                   orig: {
-                       coords: {
-                           x: compressedPos[2].x,
-                           y: compressedPos[2].y },
-                       size: {
-                           width: widgetWidthWithoutSpacing,
-                           height: widgetHeightWithTitle }
-                   },
-                   display: {
-                       coords: {
-                           x: displayWidgetX,
-                           y: displayWidgetY },
-                       size: {
-                           width: displayWidgetWidth,
-                           height: displayWidgetHeight }
-                   }
-               },
-               {   index: 3,
-                   orig: {
-                       coords: {
-                           x: compressedPos[3].x,
-                           y: compressedPos[3].y },
-                       size: {
-                           width: widgetWidthWithoutSpacing,
-                           height: widgetHeightWithTitle }
-                   },
-                   display: {
-                       coords: {
-                           x: displayWidgetX,
-                           y: displayWidgetY },
-                       size: {
-                           width: displayWidgetWidth,
-                           height: displayWidgetHeight }
-                   }
-               }
-           ];
+               { index: 0 },
+               { index: 1 },
+               { index: 2 },
+               { index: 3 }]  ;
+//               0,1,2,3];
+//               {    index: 0,
+//                   orig: {
+//                       coords: {
+//                           x: compressedPos[0].x,
+//                           y: compressedPos[0].y },
+//                       size: {
+//                           width: widgetWidthWithoutSpacing,
+//                           height: widgetHeightWithTitle }
+//                   },
+//                   display: {
+//                       coords: {
+//                           x: displayWidgetX,
+//                           y: displayWidgetY },
+//                       size: {
+//                           width: displayWidgetWidth,
+//                           height: displayWidgetHeight }
+//                   }
+//               },
+//               {    index: 1,
+//                   orig: {
+//                       coords: {
+//                           x: compressedPos[1].x,
+//                           y: compressedPos[1].y },
+//                       size: {
+//                           width: widgetWidthWithoutSpacing,
+//                           height: widgetHeightWithTitle }
+//                   },
+//                   display: {
+//                       coords: {
+//                           x: displayWidgetX,
+//                           y: displayWidgetY },
+//                       size: {
+//                           width: displayWidgetWidth,
+//                           height: displayWidgetHeight }
+//                   }
+//               },
+//               {    index: 2,
+//                   orig: {
+//                       coords: {
+//                           x: compressedPos[2].x,
+//                           y: compressedPos[2].y },
+//                       size: {
+//                           width: widgetWidthWithoutSpacing,
+//                           height: widgetHeightWithTitle }
+//                   },
+//                   display: {
+//                       coords: {
+//                           x: displayWidgetX,
+//                           y: displayWidgetY },
+//                       size: {
+//                           width: displayWidgetWidth,
+//                           height: displayWidgetHeight }
+//                   }
+//               },
+//               {   index: 3,
+//                   orig: {
+//                       coords: {
+//                           x: compressedPos[3].x,
+//                           y: compressedPos[3].y },
+//                       size: {
+//                           width: widgetWidthWithoutSpacing,
+//                           height: widgetHeightWithTitle }
+//                   },
+//                   display: {
+//                       coords: {
+//                           x: displayWidgetX,
+//                           y: displayWidgetY },
+//                       size: {
+//                           width: displayWidgetWidth,
+//                           height: displayWidgetHeight }
+//                   }
+//               }
+//           ];
 
 
            // Private method used to pull the data in from the remote site
@@ -1992,10 +2059,10 @@
                            widgetPosition.expandThisWidget(d.index);
                            expandedWidget = widgetPosition.expandedWidget();
                            unexpandedWidget = widgetPosition.unexpandedWidgets();
-                           displayManipulator.spotlightOneAndBackgroundThree(d, d3.select('#a' + expandedWidget),
-                                   d3.select('#a' + unexpandedWidget[0]),
-                                   d3.select('#a' + unexpandedWidget[1]),
-                                   d3.select('#a' + unexpandedWidget[2]),
+                           displayManipulator.spotlightOneAndBackgroundThree(d.index, d3.select('#a' + expandedWidget),
+                                   unexpandedWidget[0],
+                                   unexpandedWidget[1],
+                                    unexpandedWidget[2],
                                    origButton,
                                    expandedPos);
                            expandContractButton = d3.select('#a' + expandedWidget + '-chart>.graphTitle')
@@ -2012,10 +2079,10 @@
                            unexpandedWidget = widgetPosition.unexpandedWidgets();
                            displayManipulator.contractGraphicsArea(d3.select('#a' + x).select('.pieChart>svg'),
                                    d3.select('#a' + expandedWidget + '-chart>.expandedGraphTitle'));
-                           displayManipulator.resetOneAndResettleThree(d, d3.select('#a' + expandedWidget),
-                                   d3.select('#a' + unexpandedWidget[0]),
-                                   d3.select('#a' + unexpandedWidget[1]),
-                                   d3.select('#a' + unexpandedWidget[2]),
+                           displayManipulator.resetOneAndResettleThree(d.index, d3.select('#a' + expandedWidget),
+                                   unexpandedWidget[0],
+                                   unexpandedWidget[1],
+                                   unexpandedWidget[2],
                                    origButton,
                                    expandedPos);
                            widgetPosition.unexpandAllWidgets();
@@ -2057,12 +2124,12 @@
                        }
 
 
-                       // Add a button for causing misunderstood disappear
+                       // Add a button for causing an expanded hierarchy disappear
                        sunburstContainer.append("div")
                                .text(textForContractingButton)
                                .attr('class', 'contractButton')
-                               .attr('id', 'sunburstContractor')
-                               .data(buttondata);
+                               .attr('id', 'sunburstContractor') ;
+//                               .data(buttondata);
 
                    },
 
@@ -2115,7 +2182,7 @@
                        dc.renderAll();
 
                        // Finally, attach some data along with buttons and callbacks to the pie charts we've built
-                       attachButtonsToThePieContainers('.pieChartContainer', handleExpandOrContractClick, buttondata, d3.selectAll('#suburst_container'));
+                       attachButtonsToThePieContainers('.columnsAssociatedWithPies', handleExpandOrContractClick, buttondata, d3.selectAll('#suburst_container'));
 
 
                    };
@@ -2158,7 +2225,7 @@
         <div id = "a0"  class = "pieChartContainer" style="left: 0%; top: 10px; width: 24%;  height: 300px;">
             <div id="a0-chart" class="pieChart">
                 <span class="graphTitle">Biological process</span>
-                <a class="reset" href="javascript:biologicalProcessPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+                <a class="reset" href="javascript:sharedStructures.resetBiologicalProcessPieChart();" style="display: none;">reset</a>
                 <span class="reset" style="display: none;"></span>
                 <div class = "clearfix"></div>
             </div>
@@ -2168,7 +2235,7 @@
         <div id = "a1"  class = "pieChartContainer" style="left: 25%; top: 10px; width: 24%; height: 300px;">
             <div id="a1-chart" class="pieChart">
                 <span class="graphTitle">Assay format</span>
-                <a class="reset" href="javascript:assayFormatPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+                <a class="reset" href="javascript:sharedStructures.resetAssayFormatPieChart();" style="display: none;">reset</a>
                 <span class="reset" style="display: none;"></span>
                 <div class = "clearfix"></div>
             </div>
@@ -2178,7 +2245,7 @@
         <div id = "a2"  class = "pieChartContainer" style="left: 50%; top: 10px;  width: 24%; height: 300px;">
             <div id="a2-chart" class="pieChart">
                 <span class="graphTitle">Protein target</span>
-                <a class="reset" href="javascript:assayIdDimensionPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+                <a class="reset" href="javascript:sharedStructures.resetAssayIdDimensionPieChart();" style="display: none;">reset</a>
                 <span class="reset" style="display: none;"></span>
                 <div class = "clearfix"></div>
             </div>
@@ -2188,7 +2255,7 @@
         <div id = "a3"  class = "pieChartContainer" style="left: 75%; top: 10px; width: 24%; height: 300px;">
             <div id="a3-chart" class="pieChart">
                 <span class="graphTitle">Assay type</span>
-                <a class="reset" href="javascript:assayTypePieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+                <a class="reset" href="javascript:sharedStructures.resetAssayTypePieChart();" style="display: none;">reset</a>
                 <span class="reset" style="display: none;"></span>
                 <div class = "clearfix"></div>
             </div>
