@@ -108,10 +108,12 @@
     <title>Linked pies</title>
 
     <script src="../js/crossfilter.js"></script>
-    <script src="../js/d3.js"></script>
+<script src="../js/d3.js"></script>
+<script src="../js/bootstrap.js"></script>
     <script src="../js/dc.js"></script>
    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-   <link rel="stylesheet" type="text/css" href="${resource(dir: 'css', file: 'dc.css')}" />
+<link rel="stylesheet" type="text/css" href="${resource(dir: 'css', file: 'dc.css')}" />
+<link rel="stylesheet" type="text/css" href="${resource(dir: 'css', file: 'bootstrap.css')}" />
     <style>
     body{
         margin: 0 auto;
@@ -131,7 +133,7 @@
 
     #pieCharts{
         position: absolute;
-        width: 1100px;
+        width: 100%;
         height: 300px;
         left: 0px;
         top: 0px;
@@ -275,6 +277,7 @@
         background: -moz-linear-gradient(top, #3F8EB5 0%, #1D76A0 100%); /* firefox */
         background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3F8EB5), color-stop(100%,#1D76A0)); /* webkit */
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3F8EB5', endColorstr='#1D76A0',GradientType=0 );
+        z-index: 10;
     }
 
 
@@ -1182,16 +1185,27 @@
            //  This next set of variables are only for convenience.  They are derived strictly from those above,
            //   and they are consumed below in preference to those above.  The idea was to conceptually simplify
            //   some of the variables above and to those that describe either compressed or uncompressed widgets.
+//               compressedPos = [
+//                   {'x': margin.left + ((widgetWidth + widgetSpacing) * 0), 'y': 10},
+//                   {'x': margin.left + ((widgetWidth + widgetSpacing) * 1), 'y': 10},
+//                   {'x': margin.left + ((widgetWidth + widgetSpacing) * 2), 'y': 10},
+//                   {'x': margin.left + ((widgetWidth + widgetSpacing) * 3), 'y': 10}
+//               ],
+//               expandedPos = [
+//                   {'x': (widgetWidth * 0) + (quarterWidgetWidth * 1), 'y': 10},
+//                   {'x': (widgetWidth * 1) + (quarterWidgetWidth * 2), 'y': 10},
+//                   {'x': (widgetWidth * 2) + (quarterWidgetWidth * 3), 'y': 10}
+//               ],
                compressedPos = [
-                   {'x': margin.left + ((widgetWidth + widgetSpacing) * 0), 'y': 10},
-                   {'x': margin.left + ((widgetWidth + widgetSpacing) * 1), 'y': 10},
-                   {'x': margin.left + ((widgetWidth + widgetSpacing) * 2), 'y': 10},
-                   {'x': margin.left + ((widgetWidth + widgetSpacing) * 3), 'y': 10}
+                   {'x': '0', 'y': 10},
+                   {'x': '25', 'y': 10},
+                   {'x': '50', 'y': 10},
+                   {'x': '75', 'y': 10}
                ],
                expandedPos = [
-                   {'x': (widgetWidth * 0) + (quarterWidgetWidth * 1), 'y': 10},
-                   {'x': (widgetWidth * 1) + (quarterWidgetWidth * 2), 'y': 10},
-                   {'x': (widgetWidth * 2) + (quarterWidgetWidth * 3), 'y': 10}
+                   {'x': '6', 'y': 10},
+                   {'x': '37', 'y': 10},
+                   {'x': '69', 'y': 10}
                ],
 
            //  dc vars
@@ -1420,7 +1434,7 @@
                        domDescription
                                .transition()
                                .duration(1000)
-                               .style("left", horizontalPosition + "px");
+                               .style("left", horizontalPosition + "%");
                    },
 
 
@@ -1491,7 +1505,7 @@
                                .style("top", d.display.coords.y + "px")
                                .transition()
                                .duration(400)
-                               .style("left", d.display.coords.x + "px")
+                               .style("left", d.display.coords.x + "%")
                                .style('height', d.display.size.height + "px")
                                .style('width', d.display.size.width + "px");
                        shiftBackgroundWidgets(background1, expandedPos[0].x);
@@ -1531,7 +1545,7 @@
                                .style('padding-left', '5px')
                                .transition()
                                .duration(500)
-                               .style("left", d.orig.coords.x + "px")
+                               .style("left", d.orig.coords.x + "%")
                                .transition()
                                .duration(500)
                                .style("top", d.orig.coords.y + "px");
@@ -2019,7 +2033,7 @@
 
     <div id = "pieCharts" class="pieCharts">
 
-        <div id = "a0"  class = "pieChartContainer" style="left: 10px; top: 10px; width: 260px;  height: 300px;">
+        <div id = "a0"  class = "pieChartContainer" style="left: 0%; top: 10px; width: 24%;  height: 300px;">
             <div id="a0-chart" class="pieChart">
                 <span class="graphTitle">Biological process</span>
                 <a class="reset" href="javascript:biologicalProcessPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -2029,7 +2043,7 @@
 
         </div>
 
-        <div id = "a1"  class = "pieChartContainer" style="left: 280px; top: 10px; width: 260px; height: 300px;">
+        <div id = "a1"  class = "pieChartContainer" style="left: 25%; top: 10px; width: 24%; height: 300px;">
             <div id="a1-chart" class="pieChart">
                 <span class="graphTitle">Assay format</span>
                 <a class="reset" href="javascript:assayFormatPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -2039,7 +2053,7 @@
 
         </div>
 
-        <div id = "a2"  class = "pieChartContainer" style="left: 550px; top: 10px;  width: 260px; height: 300px;">
+        <div id = "a2"  class = "pieChartContainer" style="left: 50%; top: 10px;  width: 24%; height: 300px;">
             <div id="a2-chart" class="pieChart">
                 <span class="graphTitle">Protein target</span>
                 <a class="reset" href="javascript:assayIdDimensionPieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -2049,7 +2063,7 @@
 
         </div>
 
-        <div id = "a3"  class = "pieChartContainer" style="left: 820px; top: 10px; width: 260px; height: 300px;">
+        <div id = "a3"  class = "pieChartContainer" style="left: 75%; top: 10px; width: 24%; height: 300px;">
             <div id="a3-chart" class="pieChart">
                 <span class="graphTitle">Assay type</span>
                 <a class="reset" href="javascript:assayTypePieChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -2670,9 +2684,6 @@
 
             <div id="sunburstdiv">
 
-                <div id="sunburstdiv_empty">
-
-                </div>
             </div>
 
         </div>
