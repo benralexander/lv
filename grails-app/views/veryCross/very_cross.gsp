@@ -107,11 +107,11 @@
 
     <title>Linked pies</title>
 
-    <script src="../js/crossfilter.js"></script>
+<script src="../js/jquery-1.7.1.min.js"></script>
+<script src="../js/crossfilter.js"></script>
 <script src="../js/d3.js"></script>
 <script src="../js/bootstrap.js"></script>
     <script src="../js/dc.js"></script>
-   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="${resource(dir: 'css', file: 'dc.css')}" />
 <link rel="stylesheet" type="text/css" href="${resource(dir: 'css', file: 'bootstrap.css')}" />
     <style>
@@ -1125,6 +1125,18 @@
        //  Variables to describe the layout of the whole page, with special attention
        //   to the unexpanded widgets
        //
+//       var grandWidth = 1052,// width of the entire display
+//               totalWidgetNumber = 4, // how many widgets are we dealing with
+//               widgetHeight = 270, // how tall is each individual widget
+//               widgetSpacing = 7, // how much vertical space between widgets
+//               margin = {top: 30, right: 20, bottom: 30, left: 10},  // boundaries of displayable area
+//               width = grandWidth - margin.left - margin.right, // displayable width
+//               height = widgetHeight - margin.top - margin.bottom, // displayable height
+//               widgetWidth = grandWidth / totalWidgetNumber,   // each individual widget width
+//               quarterWidgetWidth = widgetWidth / 4,   // useful spacer
+//               allowThisMuchExtraSpaceInWidgetForATitle = 30, // the title in your widget
+//               widgetWidthWithoutSpacing = widgetWidth - (widgetSpacing * 0.5),
+//               widgetHeightWithTitle = widgetHeight + allowThisMuchExtraSpaceInWidgetForATitle, // final widget width
        var grandWidth = 1052,// width of the entire display
                totalWidgetNumber = 4, // how many widgets are we dealing with
                widgetHeight = 270, // how tall is each individual widget
@@ -1132,14 +1144,14 @@
                margin = {top: 30, right: 20, bottom: 30, left: 10},  // boundaries of displayable area
                width = grandWidth - margin.left - margin.right, // displayable width
                height = widgetHeight - margin.top - margin.bottom, // displayable height
-               widgetWidth = grandWidth / totalWidgetNumber,   // each individual widget width
+               widgetWidth = 25,//grandWidth / totalWidgetNumber,   // each individual widget width
                quarterWidgetWidth = widgetWidth / 4,   // useful spacer
                allowThisMuchExtraSpaceInWidgetForATitle = 30, // the title in your widget
-               widgetWidthWithoutSpacing = widgetWidth - (widgetSpacing * 0.5),
+               widgetWidthWithoutSpacing = 24,//widgetWidth - (widgetSpacing * 0.5),
                widgetHeightWithTitle = widgetHeight + allowThisMuchExtraSpaceInWidgetForATitle, // final widget width
 
        // We have to explicitly pass in the size of the pie charts, so describe those here
-               pieChartWidth = widgetWidth - 13,  // how wide is the pie chart
+               pieChartWidth = 250,// widgetWidth - 13,  // how wide is the pie chart
                pieChartRadius = pieChartWidth / 2, // pie chart reuse
                innerRadius = 30, // open circle in pie
                innerRadiusWhenExpanded = 100, // open circle in pie
@@ -1417,13 +1429,15 @@
 
 
                    moveDataTableOutOfTheWay = function (dataTable) {
-                       dataTable.transition()
+                       dataTable
+                               .transition()
                                .duration(500)
                                .style("top", 50 + displayWidgetY + displayWidgetHeight + "px");  // Extra spaces for 'click to contract' button
                    },
 
                    moveDataTableBackToItsOriginalPosition = function (dataTable) {
-                       dataTable.transition()
+                       dataTable
+                               .transition()
                                .delay(1000)
                                .duration(500)
                                .style("top", "300px");  // Extra spaces for 'click to contract' button
@@ -1498,16 +1512,27 @@
                        deactivateDrillDownResetButtons();
 
                        // first handle the spotlight element and then the three backup singers
+                       // movedown
                        spotlight
-                               .style('padding-left', 10 + "px")
                                .transition()
                                .duration(200)
-                               .style("top", d.display.coords.y + "px")
+                               .style("top", d.display.coords.y + "px");
+
+                         // moveover
+                       spotlight
                                .transition()
-                               .duration(400)
-                               .style("left", d.display.coords.x + "%")
+                               .delay(200)
+                               .duration(200)
+                           //    .style("left", d.display.coords.x + "%");
+                       .style("left", "10px");
+
+                     spotlight
+                               .transition()
+                             .delay(400)
+                               .duration(200)
                                .style('height', d.display.size.height + "px")
-                               .style('width', d.display.size.width + "px");
+                               .style('max-width', d.display.size.width + "px")
+                               .style('width', '100%');
                        shiftBackgroundWidgets(background1, expandedPos[0].x);
                        shiftBackgroundWidgets(background2, expandedPos[1].x);
                        shiftBackgroundWidgets(background3, expandedPos[2].x);
@@ -1538,17 +1563,37 @@
 
                    resetOneAndResettleThree = function (d, spotlight, background1, background2, background3, origButton, expandedPos) {
                        // first handle the spotlight element and then the three backup singers
+//                       spotlight.transition()
+//                               .duration(500)
+//                               .style('height', d.orig.size.height + "px")
+//                               .style('width', d.orig.size.width + "%")
+//                               .style('padding-left', '5px')
+//                               .transition()
+//                               .duration(500)
+//                               .style("left", d.orig.coords.x + "%")
+//                               .transition()
+//                               .duration(500)
+//                               .style("top", d.orig.coords.y + "px");
+
+                       //shrink
                        spotlight.transition()
-                               .duration(500)
+                               .duration(400)
                                .style('height', d.orig.size.height + "px")
-                               .style('width', d.orig.size.width + "px")
-                               .style('padding-left', '5px')
-                               .transition()
-                               .duration(500)
-                               .style("left", d.orig.coords.x + "%")
-                               .transition()
-                               .duration(500)
+                               .style('width', d.orig.size.width + "%")
+                               .style('padding-left', '5px');
+
+                       //move back to your original X position
+                       spotlight.transition()
+                               .delay(400)
+                               .duration(200)
+                               .style("left", d.orig.coords.x + "%");
+
+                       //move back to your original Y position
+                       spotlight.transition()
+                               .delay(600)
+                               .duration(400)
                                .style("top", d.orig.coords.y + "px");
+
 
                        shiftBackgroundWidgets(background1, background1.data()[0].orig.coords.x);
                        shiftBackgroundWidgets(background2, background2.data()[0].orig.coords.x);
