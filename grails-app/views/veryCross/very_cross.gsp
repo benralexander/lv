@@ -264,40 +264,20 @@
     }
 
 
-    .data-table-th {
-        background: #146D8F;
-        color: #FFFFFF;
-        font-weight: 600;
-        font-size: 160%;
-        text-align: left;
-    }
+    /*table#data-table td, th  {*/
+        /*text-align: left;*/
+        /*margin: 0;*/
+        /*outline: 0 none;*/
+        /*list-style: none;*/
+        /*border-spacing: 0px;*/
+        /*border-bottom: 1px solid #6C6C6C;*/
+        /*font-family: 'Open Sans';*/
+        /*font-size: 18px;*/
+        /*font-weight: bold;*/
+        /*max-height: 20px;*/
+        /*width: 97px;*/
+    /*}*/
 
-    table#data-table td, th  {
-        text-align: left;
-        margin: 0;
-        outline: 0 none;
-        list-style: none;
-        border-spacing: 0px;
-        border-bottom: 1px solid #6C6C6C;
-        font-family: 'Open Sans';
-        font-size: 18px;
-        font-weight: bold;
-        max-height: 20px;
-        width: 97px;
-    }
-
-    table#data-table tr:nth-child(odd) {
-        background: #e1e1e1;
-    }
-
-    table#data-table tr:nth-child(even) {
-        background: #FFF;
-    }
-
-
-    table#data-table tr:hover {
-        background-color: #a3a3a3;
-    }
 
     table{
         clear: both;
@@ -494,26 +474,42 @@
     }
 
     .bordered td, .bordered th {
-        border-left: 1px solid #111;
+        border-left: 2px solid #111;
         border-top: 1px solid #111;
         padding: 10px;
         text-align: left;
+        margin: 0;
+        outline: 0 none;
+        list-style: none;
+        border-spacing: 0px;
+        border-bottom: 1px solid #6C6C6C;
+        font-family: 'Open Sans';
+        font-size: 18px;
+        font-weight: normal;
+        max-height: 20px;
+        /*width: 97px;*/
+        }
+
+
+
+    .bordered th {
+        background-color: #dce9f9;
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#ebf3fc), to(#dce9f9));
+        background-image: -webkit-linear-gradient(top, #ebf3fc, #dce9f9);
+        background-image:    -moz-linear-gradient(top, #ebf3fc, #dce9f9);
+        background-image:     -ms-linear-gradient(top, #ebf3fc, #dce9f9);
+        background-image:      -o-linear-gradient(top, #ebf3fc, #dce9f9);
+        background-image:         linear-gradient(top, #ebf3fc, #dce9f9);
+        -webkit-box-shadow: 0 1px 0 rgba(255,255,255,.8) inset;
+        -moz-box-shadow:0 1px 0 rgba(255,255,255,.8) inset;
+        box-shadow: 0 1px 0 rgba(255,255,255,.8) inset;
+        border-top: none;
+        text-shadow: 0 1px 0 rgba(255,255,255,.5);
+        color: #111111;
+        font-weight: 200;
+        font-size: 120%;
     }
 
-    /*.bordered th {*/
-        /*background-color: #dce9f9;*/
-        /*background-image: -webkit-gradient(linear, left top, left bottom, from(#ebf3fc), to(#dce9f9));*/
-        /*background-image: -webkit-linear-gradient(top, #ebf3fc, #dce9f9);*/
-        /*background-image:    -moz-linear-gradient(top, #ebf3fc, #dce9f9);*/
-        /*background-image:     -ms-linear-gradient(top, #ebf3fc, #dce9f9);*/
-        /*background-image:      -o-linear-gradient(top, #ebf3fc, #dce9f9);*/
-        /*background-image:         linear-gradient(top, #ebf3fc, #dce9f9);*/
-        /*-webkit-box-shadow: 0 1px 0 rgba(255,255,255,.8) inset;*/
-        /*-moz-box-shadow:0 1px 0 rgba(255,255,255,.8) inset;*/
-        /*box-shadow: 0 1px 0 rgba(255,255,255,.8) inset;*/
-        /*border-top: none;*/
-        /*text-shadow: 0 1px 0 rgba(255,255,255,.5);*/
-    /*}*/
 
     .bordered td:first-child, .bordered th:first-child {
         border-left: none;
@@ -548,6 +544,19 @@
         -webkit-border-radius: 0 0 6px 0;
         border-radius: 0 0 6px 0;
     }
+    .bordered tr:nth-child(odd) {
+        background: #f0ffff;
+        }
+
+    .bordered tr:nth-child(even) {
+        background: #FFF;
+        }
+
+
+    .bordered tr:hover {
+        background-color: #cff;
+        }
+
     .columnsAssociatedWithPies {
 
     }
@@ -2341,11 +2350,11 @@
 <table id="data-table" class="dc-data-table bordered"  style="position:absolute; left: 0px; top: 300px;">
     <thead>
     <tr >
-        <th style='left: 0%; width: 21.5%;' class="columnsAssociatedWithPies data-table-th">Biological process</th>
-        <th style='left: 22.5%; width: 21%;' class="columnsAssociatedWithPies data-table-th">Assay format</th>
-        <th style='left: 44.5%; width: 21%;' class="columnsAssociatedWithPies data-table-th">Proteins target</th>
-        <th style='left: 66.5%; width: 21%;' class="columnsAssociatedWithPies data-table-th">Assay type</th>
-        <th style='left: 88.5%; width: 11.5%;' class="data-table-th">ID</th>
+        <th style='left: 0%; width: 21.5%;' class="columnsAssociatedWithPies">Biological process</th>
+        <th style='left: 22.5%; width: 21%;' class="columnsAssociatedWithPies">Assay format</th>
+        <th style='left: 44.5%; width: 21%;' class="columnsAssociatedWithPies">Proteins target</th>
+        <th style='left: 66.5%; width: 21%;' class="columnsAssociatedWithPies">Assay type</th>
+        <th style='left: 88.5%; width: 11.5%;' >ID</th>
     </tr>
     </thead>
 </table>
