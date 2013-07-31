@@ -476,7 +476,7 @@
     .bordered td, .bordered th {
         border-left: 2px solid #111;
         border-top: 1px solid #111;
-        padding: 10px;
+        padding: 4px;
         text-align: left;
         margin: 0;
         outline: 0 none;
@@ -487,7 +487,6 @@
         font-size: 18px;
         font-weight: normal;
         max-height: 20px;
-        /*width: 97px;*/
         }
 
 
@@ -504,6 +503,7 @@
         -moz-box-shadow:0 1px 0 rgba(255,255,255,.8) inset;
         box-shadow: 0 1px 0 rgba(255,255,255,.8) inset;
         border-top: none;
+        padding: 10px;
         text-shadow: 0 1px 0 rgba(255,255,255,.5);
         color: #111111;
         font-weight: 200;
@@ -2311,7 +2311,7 @@
 
         <div id = "a2"  class = "pieChartContainer" style="left: 44.5%; top: 10px;  width: 21%; height: 300px;">
             <div id="a2-chart" class="pieChart">
-                <span class="graphTitle">Protein target</span>
+                <span class="graphTitle">Protein class</span>
                 <a class="reset" href="javascript:sharedStructures.resetAssayIdDimensionPieChart();" style="display: none;">reset</a>
                 <span class="reset" style="display: none;"></span>
                 <div class = "clearfix"></div>
@@ -2352,9 +2352,9 @@
     <tr >
         <th style='left: 0%; width: 21.5%;' class="columnsAssociatedWithPies">Biological process</th>
         <th style='left: 22.5%; width: 21%;' class="columnsAssociatedWithPies">Assay format</th>
-        <th style='left: 44.5%; width: 21%;' class="columnsAssociatedWithPies">Proteins target</th>
+        <th style='left: 44.5%; width: 21%;' class="columnsAssociatedWithPies">Protein class</th>
         <th style='left: 66.5%; width: 21%;' class="columnsAssociatedWithPies">Assay type</th>
-        <th style='left: 88.5%; width: 11.5%;' >ID</th>
+        <th style='left: 88.5%; width: 11.5%;' >ADID</th>
     </tr>
     </thead>
 </table>
@@ -2408,9 +2408,15 @@
             // Define a few private methods that we will use later
             //
             var zeroDynamicRange = function (rootLegendHolder,maximumValue) {
+                var  valueAdjustedForPrecision =  0;
+                if (!(maximumValue === undefined) &&
+                        ((typeof maximumValue) ==='number')) {
+                    valueAdjustedForPrecision =  maximumValue.toPrecision(3);
+                }
+
                 rootLegendHolder.append('div')
                         .attr('class', 'legendExplanation')
-                        .html('Dynamic range is 0.   All arcs had value <strong>'+maximumValue+'</strong> and the color scheme is therefore constant.');
+                        .html('Dynamic range is 0.   All arcs had value <strong>'+valueAdjustedForPrecision+'</strong> and the color scheme is therefore constant.');
             };
 
 
