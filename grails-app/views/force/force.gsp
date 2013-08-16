@@ -1,179 +1,195 @@
-
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-    <title>Force-Directed Graph</title>
+    <title>BARD</title>
+    <link href="../css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="../css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+
+
+    <script src="../js/crossfilter.js"></script>
     <script src="../js/d3.js"></script>
-    %{--<script type="text/javascript" src="http://mbostock.github.com/d3/d3.js?1.25.0"></script>--}%
-    %{--<script type="text/javascript" src="http://mbostock.github.com/d3/d3.geom.js?1.25.0"></script>--}%
-    %{--<script type="text/javascript" src="http://mbostock.github.com/d3/d3.layout.js?1.25.0"></script>--}%
+    <script src="../js/dc.js"></script>
     <style>
-
-.link {
-    stroke: #ccc;
-}
-
-.node text {
-    pointer-events: none;
-    font: 10px sans-serif;
-}
-circle.node {
-    cursor: pointer;
-    stroke: #3182bd;
-    stroke-width: 1.5px;
-}
-
-</style>
-</head>
-<body>
-<div id="chart"></div>
-<script type="text/javascript">
-    d3.custom = {};
-    d3.custom.nodePlot = function module() {
-        // adjustable parameters
-         var width = 960,
-             height = 500;
-
-        /***
-         * All the work of building the node plot goes inside the 'exports' function
-         * @param _selection
-         */
-        function exports(_selection) {
-            // So it can loop through this selection with d3.each
-            _selection.each(function (_data) {
-
-                var svg = d3.select(this).append("svg")
-                        .attr("width", width)
-                        .attr("height", height);
-
-                var force = d3.layout.force()
-                        .gravity(.05)
-                        .distance(100)
-                        .charge(-100)
-                        .size([width, height]);
-
-                d3.json("http://localhost:8028/cow/force/feedMeJson", function (error, json) {
-                    nodePlotInternals(json);
-                });
-
-
-                /***
-                 * This is the meaty part of building a force layout diagram
-                 * @param json
-                 */
-                function nodePlotInternals(json) {
-
-                    // define the nodes in the links and start the actual plot.  The 'start' causes the indexes in the link
-                    // to be substituted with real pointers to the nodes, so this is not a shareable data structure
-                    force.nodes(json.nodes)
-                            .links(json.links)
-                            .start();
-
-                    // so the links have been updated by the 'start' command. Well we better update them in the plot.
-                    var link = svg.selectAll(".link")
-                            .data(json.links)
-                            .enter().append("line")
-                            .attr("class", "link");
-
-                    // Now that the links of been added to the plot let's add the notes to the plot
-                    var node = svg.selectAll(".node")
-                            .data(json.nodes)
-                            .enter().append("g")
-                            .attr("class", "node")
-                            .call(force.drag);
-
-                    // Having built the nodes must decide what they should look like
-                    node.append("svg:circle")
-                            .attr("cx", 0)
-                            .attr("cy", 0)
-                            .attr("r", 8)
-                            .style("fill", function (d, i) {
-                                return '#ff00cc';
-                            })
-                            .style("stroke", function (d, i) {
-                                return '#00ffcc';
-                            });
-
-                    //
-                    node.append("text")
-                            .attr("dx", 12)
-                            .attr("dy", ".35em")
-                            .text(function (d) {
-                                return d.name
-                            });
-
-
-
-                    function tick() {
-                        path.attr("d", function(d) {
-                            var dx = d.target.x – d.source.x,
-                                    dy = d.target.y – d.source.y,
-                                    dr = Math.sqrt(dx * dx + dy * dy);
-                            return "M" +
-                                    d.source.x + "," +
-                                    d.source.y + "A" +
-                                    dr + "," + dr + " 0 0,1 " +
-                                    d.target.x + "," +
-                                    d.target.y;
-                        });
-                        node
-                                .attr("transform", function(d) {
-                                    return "translate(" + d.x + "," + d.y + ")"; });
-                    }
-
-
-
-                    // finally attach a tick function to allow the nodes to move around
-                    var tick = function () {
-                        link.attr("x1", function (d) {
-                            return d.source.x;
-                        })
-                                .attr("y1", function (d) {
-                                    return d.source.y;
-                                })
-                                .attr("x2", function (d) {
-                                    return d.target.x;
-                                })
-                                .attr("y2", function (d) {
-                                    return d.target.y;
-                                });
-
-                        node.attr("transform", function (d) {
-                            return "translate(" + d.x + "," + d.y + ")";
-                        });
-                    }
-
-                    // Having built the tech function, attach it to the force diagram
-                    force.on("tick", tick);
-
-                } // nodePlotInternals
-
-
-            });
+    #img0{
+        position: relative;
+    }
+    @media            (device-width: 320px)
+    {
+        .img0_text
+        {
+            font-family: Arial;
+            font-size: 20pt;
+            position: absolute;
+            max-width: 800px;
+            width: 66%;
+            text-align: center;
+            top: 50px;
+            margin-bottom: 10%;
         }
-
-        /***
-         * This is the section for externally getting/setting variables
-         */
-
-        exports.width = function(_x) {
-            if (!arguments.length) return width;
-            width = _x;
-            return this;
-        };
-
-        exports.height = function(_x) {
-            if (!arguments.length) return height;
-            height = _x;
-            return this;
-        };
-
-
-        return exports;
+    }
+    @media  (device-width : 1204px)
+    {
+        .img0_text
+        {
+            font-family: Arial;
+            font-size: 10pt;
+            position: absolute;
+            max-width: 800px;
+            width: 66%;
+            text-align: center;
+            top: 50px;
+            margin-bottom: 10%;
+        }
+         /*.img0_text*/
+         /*{*/
+             /*font-family: Arial;*/
+             /*font-size: 62%;*/
+             /*position: absolute;*/
+             /*max-width: 800px;*/
+             /*width: 66%;*/
+             /*text-align: center;*/
+             /*top: 50px;*/
+             /*margin-bottom: 10%;*/
+         /*}*/
 
     }
-    var nodePlot = d3.custom.nodePlot().width(400).height(400);
-    nodePlot(d3.select("body>#chart"));
-</script>
+    .img0_text .subtext
+    {
+        margin-top: 50px;
+        padding-left: 5%;
+        font-size: 14pt;
+        text-align: left;
+    }
+    </style>
+</head>
+
+<body>
+<script src="../js/jquery-2.0.3.min.js"></script>
+<script src="../js/bootstrap.js"></script>
+
+<div class="container-fluid">
+    <header class="row-fluid" id="bard_header">
+        <div class="span5">
+            <img src="../images/bard_logo_small.png" class="img-responsive" alt="Search and analyze your own way">
+        </div>
+
+        <div class="span7">
+
+        </div>
+    </header>
+
+    <section class="row-fluid" id="img0">
+        <div class="span12">
+            <img src="../images/top_image3.jpg" class="img-responsive" alt="Search and analyze your own way">
+            <div   class="row-fluid">
+                <div class="span8">
+                    <span  class="img0_text">
+                        Enhanced data and advanced tools to accelerate drug discovery
+                        <div   class="subtext">
+                            Introducing BARD, the powerful new bioassay database from the NIH Molecular Libraries Program.
+                            Now with unprecedented  efficiency, scientists can develop and test hypotheses on the influence of
+                            different chemical probes on biological functions
+                        </div>
+                    </span>
+
+
+                </div>
+                <div class="span4">
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <article class="row-fluid" id="searchBar">
+        <div class="span12">
+        </div>
+    </article>
+
+    <section class="row-fluid" id="news">
+        <div class="span12">
+            Here is the news
+
+        </div>
+    </section>
+
+
+
+
+
+
+
+    <aside class="row-fluid" id="bard_carousel">
+
+        <div id="carousel-example-generic" class="carousel slide hidden-phone" data-interval="false">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                <li data-target="#f" data-slide-to="1"></li>
+                <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+            </ol>
+
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner">
+                <div class="item active">
+                    <img src="../images/carosel1_0006_Slide%20Show%2001.jpg" class="img-responsive" alt="Public bioassay data">
+
+                    <div class="carousel-caption">
+                        Public bioassay data
+                    </div>
+                </div>
+
+                <div class="item" id="#f">
+                    <img src="../images/carosel2_0007_Slide%20Show%2002.jpg" class="img-responsive" alt="The power of a common language">
+
+                    <div class="carousel-caption">
+                        The power of a common language -- hurrah
+                    </div>
+                </div>
+
+                <div class="item">
+                    <img src="../images/carosel3_0008_Slide%20Show%2003.jpg" class="img-responsive" alt="Search and analyze your own way">
+
+                    <div class="carousel-caption">
+                        Search and analyze your own way-hurrah
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Controls -->
+            <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+                <span class="icon-prev"></span>
+            </a>
+            <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+                <span class="icon-next"></span>
+            </a>
+        </div>
+    </aside>
+
+
+    <article class="row-fluid" id="bardIsGrowing">
+        <div class="span12">
+        </div>
+    </article>
+
+
+
+    <nav class="row-fluid" id="bardLinks">
+        <div class="span12">
+        </div>
+    </nav>
+
+
+    <footer class="row-fluid" id="bardFooter">
+        <div class="span12">
+        </div>
+    </footer>
+
+
+
+</div>
 </body>
 </html>
