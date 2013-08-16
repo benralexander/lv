@@ -1,6 +1,28 @@
+<!doctype html>
 
-<html>
+<!--[if (lt IE 10) ]>
+<script>
+    document.write('<title>Out of date browser</title>');
+    console.log('Out of date browser. Bard is aborting presentation.');
+    document.write('<div style="text-align: left; word-wrap: break-word; border: 0; padding: 15px; width: 75%">'+
+                   '<img src="../images/bard_logo_small.png" alt="Bard logo">' +
+                   '<div style="text-align: left; word-wrap: break-word; border: 2px solid black; padding: 15px; width: 40%"> ' +
+                   '<p>Sorry, but BARD is currently limited in its browser support. The browsers we support include:' +
+                   '<ul>'+
+                        '   <li>Chrome</li>' +
+                        '   <li>Firefox</li>' +
+                        '   <li>Opera</li>' +
+                        '   <li>Internet Explorer (version 10 or higher only)</li>' +
+                   '</ul>'+
+                   '<p>We recommend switching to any of the above browsers in order to take advantage of BARD.' +
+                   '</div>'+
+                   '</div>');
+    document.write('<script type="text/undefined">') ;
+    document.write('<!--');
+</script>
+<!--<![endif]-->
 <head>
+
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <title>Force-Directed Graph</title>
     <script src="../js/d3.js"></script>

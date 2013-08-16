@@ -1338,18 +1338,6 @@
        //  Variables to describe the layout of the whole page, with special attention
        //   to the unexpanded widgets
        //
-//       var grandWidth = 1052,// width of the entire display
-//               totalWidgetNumber = 4, // how many widgets are we dealing with
-//               widgetHeight = 270, // how tall is each individual widget
-//               widgetSpacing = 7, // how much vertical space between widgets
-//               margin = {top: 30, right: 20, bottom: 30, left: 10},  // boundaries of displayable area
-//               width = grandWidth - margin.left - margin.right, // displayable width
-//               height = widgetHeight - margin.top - margin.bottom, // displayable height
-//               widgetWidth = grandWidth / totalWidgetNumber,   // each individual widget width
-//               quarterWidgetWidth = widgetWidth / 4,   // useful spacer
-//               allowThisMuchExtraSpaceInWidgetForATitle = 30, // the title in your widget
-//               widgetWidthWithoutSpacing = widgetWidth - (widgetSpacing * 0.5),
-//               widgetHeightWithTitle = widgetHeight + allowThisMuchExtraSpaceInWidgetForATitle, // final widget width
        var grandWidth = 1052,// width of the entire display
                totalWidgetNumber = 4, // how many widgets are we dealing with
                widgetHeight = 270, // how tall is each individual widget
@@ -1853,9 +1841,15 @@
                        //  button for them, but D three does not support that sort of activation is you are
                        //  using bound data. I should probably connect to those data dynamically to get around
                        //  this problem.
-                       d3.select('#a' +backgroundIndex1).selectAll('.expandButton').style('pointer-events', 'none').style('opacity', 0.5);
-                       d3.select('#a' +backgroundIndex2).selectAll('.expandButton').style('pointer-events', 'none').style('opacity', 0.5);
-                       d3.select('#a' +backgroundIndex3).selectAll('.expandButton').style('pointer-events', 'none').style('opacity', 0.5);
+
+                       d3.select('#expbutton' +backgroundIndex1).style('pointer-events', 'none').style('opacity', 0.5);
+                       d3.select('#expbutton' +backgroundIndex2).style('pointer-events', 'none').style('opacity', 0.5);
+                       d3.select('#expbutton' +backgroundIndex3).style('pointer-events', 'none').style('opacity', 0.5);
+
+
+//                       d3.select('#a' +backgroundIndex1).selectAll('.expandButton').style('pointer-events', 'none').style('opacity', 0.5);
+//                       d3.select('#a' +backgroundIndex2).selectAll('.expandButton').style('pointer-events', 'none').style('opacity', 0.5);
+//                       d3.select('#a' +backgroundIndex3).selectAll('.expandButton').style('pointer-events', 'none').style('opacity', 0.5);
 
                        d3.select('#sunburstContractor')
                                .style('opacity', 1);
@@ -2279,6 +2273,7 @@
 
 </head>
 <body>
+
 <div id = "graphs">
     %{--<div id="histogram">--}%
         %{--<span id = "histTitle" class="graphTitle">Histogram</span>--}%
