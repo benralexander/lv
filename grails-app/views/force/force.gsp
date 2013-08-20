@@ -98,11 +98,11 @@
             </div>
         </div>
     </section>
-    <section class="row">
-        <div class="col-lg-12  img-responsive">
-            <div  class="img-responsive"   id="img0_small">
+    %{--<section class="row">--}%
+        %{--<div class="col-lg-12  img-responsive">--}%
+            %{--<div  class="img-responsive"   id="img0_small">--}%
 
-            </div>
+            %{--</div>--}%
 
             %{--<div   class="row">--}%
                 %{--<div class="col-lg-8">--}%
@@ -117,12 +117,12 @@
                 %{--<div class="col-lg-4">--}%
                 %{--</div>--}%
             %{--</div>--}%
-        </div>
+        %{--</div>--}%
 
-    </section>
+    %{--</section>--}%
 
     <article class="row searchBar" id="searchBar">
-        <div class="col-lg-12">
+        <div class="col-lg-12" >
             <form role="form">
                 <div class="form-group">
                     <label for="searchInput">Search</label>
