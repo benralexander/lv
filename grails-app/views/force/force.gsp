@@ -5,186 +5,19 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <title>BARD</title>
     <link rel="stylesheet/less" type="text/css" href="../less/variables.less">
-    <script src="../less/less-1.4.1.min.js "></script>
+
     <link href="../css/bootstrap3.css" rel="stylesheet" media="screen">
-    %{--<link href="../css/bootstrap-responsive.css" rel="stylesheet" media="screen">--}%
+    %{--<script src="../less/less-1.4.2.js"></script>--}%
+        %{--<link href="../css/bootstrap-responsive.css" rel="stylesheet" media="screen">--}%
 
 
     <script src="../js/crossfilter.js"></script>
     <script src="../js/d3.js"></script>
     <script src="../js/dc.js"></script>
+    %{--<link rel="stylesheet/css" type="text/css" href="../less/force.css">--}%
+    <link rel="stylesheet" type="text/css" href="${resource(dir: 'less', file: 'force.css')}" />
+
     <style>
-    /*#img0{*/
-        /*position: relative;*/
-        /*font-family: Arial;*/
-        /*top: 50px;*/
-    /*}*/
-    .img0_text_shared
-    {
-        position: absolute;
-        width: 66%;
-        top: 50px;
-    }
-    .img0_text .subtext_shared
-    {
-        padding-left: 5%;
-        text-align: left;
-    }
-    .img0_text
-    {
-    font-size: 20pt;
-    max-width: 800px;
-    }
-    .img0_text .subtext
-    {
-    margin-top: 50px;
-    font-size: 14pt;
-    }
-    /*The following code exists to provide compatibility for IE 10/Windows Phone 8, as per*/
-    /*the note found in bootstrap 3 documentation at URL =   http://getbootstrap.com/getting-started/*/
-    @-webkit-viewport   { width: device-width; }
-    @-moz-viewport      { width: device-width; }
-    @-ms-viewport       { width: device-width; }
-    @-o-viewport        { width: device-width; }
-    @viewport           { width: device-width; }
-
-    #img0_small{
-        position: relative;
-        background-image:url('../images/top_image3.jpg');
-        font-family: Arial;
-        /*height: 100%;*/
-        background-size: 100% auto;
-        background-repeat: no-repeat;
-        /*height: 200px;*/
-        /*max-width: 100%;*/
-        /*height: auto;*/
-    }
-    #img0_big{
-        background-image:url('../images/imag0_01.jpg');
-        background-color:#cccccc;
-        background-size: 100% auto;
-        background-repeat: no-repeat;
-        /*height: 200px;*/
-        /*max-width: 100%;*/
-        /*height: auto;*/
-    }
-
-
-
-        /*The following code shows how the CSS for multiple devices should be handled for bootstrap 3 */
-        /* Small devices (tablets, 768px and up) */
-    /*@media only screen and  (min-width: @screen-tablet) {*/
-        @media only screen and  (min-width: 768px) {
-        #img0{
-            position: relative;
-            font-family: Arial;
-            top: 50px;
-        }
-    }
-
-        /* Medium devices (desktops, 992px and up) */
-        /*@media  only screen and (min-width: @screen-desktop) {*/
-        @media  only screen and (min-width: 992px) {
-            #img0{
-                position: relative;
-                font-family: Arial;
-                top: 50px;
-            }
-        }
-
-
-        /* Large devices (large desktops, 1200px and up) */
-    /*@media only screen and  (min-width: @screen-large-desktop) {*/
-        @media only screen and  (min-width: 1200px) {
-        #img0{
-            position: relative;
-            font-family: Arial;
-            top: 50px;
-        }
-
-    }
-    .searchBar
-    {
-        height: 150px;
-        width: 100%;
-        background: rgb(4,84,119); /* Old browsers */
-        background: -moz-linear-gradient(-45deg,  rgba(4,84,119,1) 0%, rgba(6,42,59,1) 36%); /* FF3.6+ */
-        background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(4,84,119,1)), color-stop(36%,rgba(6,42,59,1))); /* Chrome,Safari4+ */
-        background: -webkit-linear-gradient(-45deg,  rgba(4,84,119,1) 0%,rgba(6,42,59,1) 36%); /* Chrome10+,Safari5.1+ */
-        background: -o-linear-gradient(-45deg,  rgba(4,84,119,1) 0%,rgba(6,42,59,1) 36%); /* Opera 11.10+ */
-        background: -ms-linear-gradient(-45deg,  rgba(4,84,119,1) 0%,rgba(6,42,59,1) 36%); /* IE10+ */
-        background: linear-gradient(135deg,  rgba(4,84,119,1) 0%,rgba(6,42,59,1) 36%); /* W3C */
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#045477', endColorstr='#062a3b',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-
-    }
-    %{--@media only screen and (min-width: 1100px) {--}%
-        %{--.img0_text--}%
-        %{--{--}%
-            %{--font-size: 20pt;--}%
-            %{--max-width: 800px;--}%
-        %{--}--}%
-        %{--.img0_text .subtext--}%
-        %{--{--}%
-            %{--margin-top: 50px;--}%
-            %{--font-size: 14pt;--}%
-        %{--}--}%
-
-    %{--}--}%
-    %{--@media only screen and (max-width: 1100px) {--}%
-        %{--.img0_text--}%
-        %{--{--}%
-            %{--font-size: 18pt;--}%
-            %{--max-width: 800px;--}%
-        %{--}--}%
-        %{--.img0_text .subtext--}%
-        %{--{--}%
-            %{--margin-top: 40px;--}%
-            %{--font-size: 12pt;--}%
-        %{--}--}%
-
-    %{--}--}%
-    %{--@media only screen and (max-width: 800px) {--}%
-        %{--.img0_text--}%
-        %{--{--}%
-            %{--font-size: 16pt;--}%
-            %{--max-width: 600px;--}%
-            %{--top: 40px;--}%
-        %{--}--}%
-        %{--.img0_text .subtext--}%
-        %{--{--}%
-            %{--margin-top: 20px;--}%
-            %{--font-size: 10pt;--}%
-        %{--}--}%
-
-    %{--}--}%
-
-    %{--@media only screen and (max-width: 600px) {--}%
-        %{--.img0_text--}%
-        %{--{--}%
-            %{--font-size: 12pt;--}%
-            %{--max-width: 400px;--}%
-            %{--top: 20px;--}%
-        %{--}--}%
-        %{--.img0_text .subtext--}%
-        %{--{--}%
-            %{--margin-top: 10px;--}%
-            %{--font-size: 8pt;--}%
-        %{--}--}%
-
-    %{--}--}%
-    %{--@media only screen and (max-width: 400px) {--}%
-        %{--.img0_text--}%
-        %{--{--}%
-            %{--font-size: 10pt;--}%
-            %{--max-width: 300px;--}%
-            %{--top: 5px;--}%
-        %{--}--}%
-        %{--.img0_text .subtext--}%
-        %{--{--}%
-            %{--margin-top: 2px;--}%
-            %{--font-size: 8pt;--}%
-        %{--}--}%
-    %{--}--}%
     </style>
 </head>
 
@@ -212,7 +45,48 @@
             <img src="../images/bard_logo_small.png" class="img-responsive" alt="Search and analyze your own way">
         </div>
 
-        <div class="col-lg-7">
+        <div class="col-lg-7 img0">
+            <nav id="navbar-example" class="navbar navbar-default navbar-static" role="navigation">
+               <div class="collapse navbar-collapse bs-js-navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a id="drop1" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">About us <b class="caret"></b></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Details about Bard</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a id="drop2" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">How to <b class="caret"></b></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="drop2">
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">How to search</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Work with results</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Submit data</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Use securely</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Create and use plug-ins</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">Support<b class="caret"></b></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Community</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Report a bug</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Contact us</a></li>
+                                <li role="presentation" class="divider"></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Separated link</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown">
+                            <a href="#" id="drop4" role="button" class="dropdown-toggle" data-toggle="dropdown">Submissions<b class="caret"></b></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="drop4">
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Details about Submissions</a></li>
+                            </ul>
+
+                        </li>
+
+                    </ul>
+                 </div><!-- /.nav-collapse -->
+            </nav>
 
         </div>
     </header>
@@ -220,7 +94,7 @@
     <section class="row" >
         <div class="col-lg-12">
             <div  class="img-responsive" id="img0_big">
-
+                   <img src="../images/imag0_01.jpg"  class="img-responsive" />
             </div>
         </div>
     </section>
@@ -251,8 +125,8 @@
         <div class="col-lg-12">
             <form role="form">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                    <label for="searchInput">Search</label>
+                    <input type="text" class="form-control" id="searchInput" placeholder="Search input">
                 </div>
             </form>
         </div>

@@ -1,0 +1,125 @@
+/*#img0{*/
+/*position: relative;*/
+/*font-family: Arial;*/
+/*top: 50px;*/
+/*}*/
+.img0_text_shared {
+  position: absolute;
+  width: 66%;
+  top: 50px;
+}
+.img0_text .subtext_shared {
+  padding-left: 5%;
+  text-align: left;
+}
+.img0_text {
+  font-size: 20pt;
+  max-width: 800px;
+}
+.img0_text .subtext {
+  margin-top: 50px;
+  font-size: 14pt;
+}
+/*The following code exists to provide compatibility for IE 10/Windows Phone 8, as per*/
+/*the note found in bootstrap 3 documentation at URL =   http://getbootstrap.com/getting-started/*/
+@-webkit-viewport {
+  width: device-width;
+}
+@-moz-viewport {
+  width: device-width;
+}
+@-ms-viewport {
+  width: device-width;
+}
+@-o-viewport {
+  width: device-width;
+}
+@viewport {
+  width: device-width;
+}
+#img0_small {
+  position: relative;
+  background-image: url('../images/top_image3.jpg');
+  font-family: Arial;
+  /*height: 100%;*/
+
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  /*height: 200px;*/
+
+  /*max-width: 100%;*/
+
+  /*height: auto;*/
+
+}
+#img0_big {
+  background-image: url('../images/imag0_01.jpg');
+  background-color: #cccccc;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  /*height: 200px;*/
+
+  /*max-width: 100%;*/
+
+  /*height: auto;*/
+
+}
+/*The following code shows how the CSS for multiple devices should be handled for bootstrap 3 */
+/* Small devices (tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  /*@media only screen and  (min-width: 768px) {*/
+  #img0 {
+    position: relative;
+    border: 2px green solid;
+    font-family: Arial;
+    top: 50px;
+  }
+}
+/* Medium devices (desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  /*@media  only screen and (min-width: 992px) {*/
+  #img0 {
+    position: relative;
+    border: 2px blue solid;
+    font-family: Arial;
+    top: 50px;
+  }
+}
+/* Large devices (large desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+  /*@media only screen and  (min-width: 1200px) {*/
+  #img0 {
+    position: relative;
+    border: 2px purple solid;
+    font-family: Arial;
+    top: 50px;
+  }
+}
+.searchBar {
+  height: 150px;
+  width: 100%;
+  background: #045477;
+  /* Old browsers */
+
+  background: -moz-linear-gradient(-45deg, #045477 0%, #062a3b 36%);
+  /* FF3.6+ */
+
+  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #045477), color-stop(36%, #062a3b));
+  /* Chrome,Safari4+ */
+
+  background: -webkit-linear-gradient(-45deg, #045477 0%, #062a3b 36%);
+  /* Chrome10+,Safari5.1+ */
+
+  background: -o-linear-gradient(-45deg, #045477 0%, #062a3b 36%);
+  /* Opera 11.10+ */
+
+  background: -ms-linear-gradient(-45deg, #045477 0%, #062a3b 36%);
+  /* IE10+ */
+
+  background: linear-gradient(135deg, #045477 0%, #062a3b 36%);
+  /* W3C */
+
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#045477', endColorstr='#062a3b', GradientType=1);
+  /* IE6-9 fallback on horizontal gradient */
+
+}
