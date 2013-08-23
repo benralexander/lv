@@ -100,8 +100,6 @@
     .searchBar
     {
         height: 150px;
-        width: 100%;
-        margin-left: 15px;
         max-width: 1240px;
         background: rgb(4,84,119); /* Old browsers */
         background: -moz-linear-gradient(-45deg,  rgba(4,84,119,1) 0%, rgba(6,42,59,1) 36%); /* FF3.6+ */
@@ -111,7 +109,10 @@
         background: -ms-linear-gradient(-45deg,  rgba(4,84,119,1) 0%,rgba(6,42,59,1) 36%); /* IE10+ */
         background: linear-gradient(135deg,  rgba(4,84,119,1) 0%,rgba(6,42,59,1) 36%); /* W3C */
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#045477', endColorstr='#062a3b',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-
+    }
+    .searchBar  .inputArea {
+        border: 2px red solid;
+        vertical-align: middle;
     }
     </style>
 </head>
@@ -195,14 +196,15 @@
 
     </section>
 
-    <article class="row searchBar" id="searchBar">
-        <div class="col-lg-12" >
+    <article class="row-fluid searchBar" id="searchBar">
+        <div class="span12" >
+            <div class="form-group span4 offset4">
             <form role="form">
-                <div class="form-group">
-                    <label for="searchInput">Search</label>
-                    <input type="text" class="form-control" id="searchInput" placeholder="Search input">
-                </div>
+                    <label for="searchInput">SEARCH BARD</label>
+                    <input type="text" class="form-control inputArea" id="searchInput" placeholder="Search by Chemistry, Biology, Structure and More">
             </form>
+            </div>
+            <div class="span4"></div>
         </div>
     </article>
 
