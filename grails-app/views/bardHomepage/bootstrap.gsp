@@ -1,11 +1,6 @@
 <%--
-  Created by IntelliJ IDEA.
-  User: ben
-  Date: 8/23/13
-  Time: 1:15 PM
-  To change this template use File | Settings | File Templates.
+  Broad home page
 --%>
-
 <%@ page contentType="text/html;charset=UTF-8" %>
 
 <html lang="en">
@@ -36,27 +31,21 @@
         <nav class="nav-panel">
             <ul class="nav">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">About Us</a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">How To …</a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Overview</a></li>
-                        <li><a href="#">Evolution of Data</a></li>
-                        <li><a href="#">Team</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">How To</a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Link link</a></li>
-                        <li><a href="#">Link</a></li>
-                        <li><a href="#">Link link link</a></li>
+                        <li><a href="#">Search</a></li>
+                        <li><a href="#">Work with results</a></li>
+                        <li><a href="#">Submit data</a></li>
+                        <li><a href="#">Use securely</a></li>
+                        <li><a href="#">Create and use plug-ins</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Support</a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Link link link</a></li>
-                        <li><a href="#">Link link</a></li>
-                        <li><a href="#">Link</a></li>
+                        <li><a href="#">Community</a></li>
+                        <li><a href="#">Report a bug</a></li>
+                        <li><a href="#">Contact us</a></li>
                     </ul>
                 </li>
                 <li><a href="#">Submissions</a></li>
@@ -77,6 +66,7 @@
                     <p>Introducing BARD, the powerful new bioassay database from the NIH Molecular Libraries Program. Now with unprecedented efficiency, scientists can develop and testhypotheses on the influence of different chemical probes on biological functions.</p>
                     <a href="#" class="btn btn-primary">LEARN MORE</a>
                 </article>
+                <aside  class="span4"></aside>
             </div>
         </div>
     </div>
