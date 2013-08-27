@@ -3,9 +3,9 @@ package cow
 class BardHomepageController {
 
     def index() {
-        render(view: 'bootstrap')
+        render(view: 'BardHomepage')
     }
-    def bootstrap() { }
+    def BardHomepage() { }
 
 
 }
