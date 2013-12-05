@@ -111,14 +111,14 @@
                     <div class="span4">
                         <h3>Technology</h3>
                         <ul>
-                            <li><a href="#">Architecture &amp; Design</a></li>
+                            <li><a href="../scaledDownHomePage/bardtext_architecture">Architecture &amp; Design</a></li>
                             <li><a href="#">REST API</a></li>
-                            <li><a href="#">Source code on GitHub</a></li>
+                            <li><a href="#"  style="text-decoration:line-through;">Source code on GitHub <img src="../images/bardHomepage/comingSoon2.png" alt="coming soon"></a></li>
                         </ul>
                     </div>
 
                     <div class="span4 by">
-                        <strong class="logo-by"><a href="#" title="Powered by ChemAxon">Powered by ChemAxon</a></strong>
+                        <strong class="logo-by"><a href="http://www.chemaxon.com/" title="Powered by ChemAxon">Powered by ChemAxon</a></strong>
 
                         <p>&copy; 2013 BARD</p>
                     </div>
@@ -130,9 +130,9 @@
         <div class="footer-info">
             <div class="container-fluid">
                 <ul>
-                    <li><a href="#">National Institutes of Health</a></li>
+                    <li><a href="http://www.nih.gov/">National Institutes of Health</a></li>
                     <li><a href="#">U.S. Department of Health and Human Services</a></li>
-                    <li><a href="#">USA.gov – Government Made Easy</a></li>
+                    <li><a href="http://www.usa.gov/">USA.gov – Government Made Easy</a></li>
                 </ul>
             </div>
         </div>

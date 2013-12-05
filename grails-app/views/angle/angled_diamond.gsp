@@ -701,8 +701,118 @@
             {"name":"membrane traffic protein", "ac":"0", "inac":"1", "size":1}
         ]}]
 
-
-
+//        var $data = [
+//            {"name":"rootname", "children": [
+//                {"name":"transcription factor", "children": [
+//                    {"name":"zinc finger transcription factor", "size":1},
+//                    {"name":"nuclear hormone receptor", "size":1},
+//                    {"name":"transcription cofactor", "size":1},
+//                    {"name":"basic helix-loop-helix transcription factor", "size":1},
+//                ]},
+//                {"name":"nucleic acid binding", "children": [
+//                    {"name":"RNA binding protein", "children": [
+//                        {"name":"mRNA processing factor", "children": [
+//                            {"name":"mRNA splicing factor", "size":1},
+//                        ]},
+//                        {"name":"translation factor", "children": [
+//                            {"name":"translation elongation factor", "size":1},
+//                        ]},
+//                    ]},
+//                    {"name":"nuclease", "children": [
+//                        {"name":"exodeoxyribonuclease", "size":1},
+//                        {"name":"endodeoxyribonuclease", "size":1},
+//                    ]},
+//                    {"name":"DNA binding protein", "children": [
+//                        {"name":"chromatin/chromatin-binding protein", "size":1},
+//                    ]},
+//                    {"name":"helicase", "children": [
+//                        {"name":"DNA helicase", "size":1},
+//                    ]},
+//                ]},
+//                {"name":"receptor", "children": [
+//                    {"name":"G-protein coupled receptor", "size":1},
+//                    {"name":"protein kinase receptor", "size":1},
+//                    {"name":"cytokine receptor", "children": [
+//                        {"name":"tumor necrosis factor receptor", "size":1},
+//                    ]},
+//                ]},
+//                {"name":"cytoskeletal protein", "children": [
+//                    {"name":"actin family cytoskeletal protein", "children": [
+//                        {"name":"non-motor actin binding protein", "size":1},
+//                    ]},
+//                    {"name":"microtubule family cytoskeletal protein", "children": [
+//                        {"name":"non-motor microtubule binding protein", "size":1},
+//                    ]},
+//                ]},
+//                {"name":"hydrolase", "children": [
+//                    {"name":"protease", "children": [
+//                        {"name":"serine protease", "size":1},
+//                        {"name":"cysteine protease", "size":1},
+//                        {"name":"metalloprotease", "size":1},
+//                    ]},
+//                    {"name":"esterase", "size":1},
+//                ]},
+//                {"name":"transporter", "children": [
+//                    {"name":"ion channel", "children": [
+//                        {"name":"voltage-gated ion channel", "children": [
+//                            {"name":"voltage-gated potassium channel", "size":1},
+//                        ]},
+//                        {"name":"potassium channel", "size":1},
+//                    ]},
+//                ]},
+//                {"name":"ligase", "children": [
+//                    {"name":"ubiquitin-protein ligase", "size":1},
+//                ]},
+//                {"name":"signaling molecule", "children": [
+//                    {"name":"growth factor", "size":1},
+//                ]},
+//                {"name":"transferase", "children": [
+//                    {"name":"kinase", "children": [
+//                        {"name":"protein kinase", "children": [
+//                            {"name":"tyrosine protein kinase receptor", "size":1},
+//                            {"name":"non-receptor tyrosine protein kinase", "size":1},
+//                            {"name":"non-receptor serine/threonine protein kinase", "size":1},
+//                        ]},
+//                        {"name":"carbohydrate kinase", "size":1},
+//                    ]},
+//                    {"name":"acetyltransferase", "size":1},
+//                ]},
+//                {"name":"enzyme modulator", "children": [
+//                    {"name":"G-protein", "children": [
+//                        {"name":"small GTPase", "size":1},
+//                        {"name":"heterotrimeric G-protein", "size":1},
+//                    ]},
+//                    {"name":"kinase modulator", "children": [
+//                        {"name":"kinase activator", "size":1},
+//                    ]},
+//                    {"name":"G-protein modulator", "size":1},
+//                ]},
+//                {"name":"extracellular matrix protein", "children": [
+//                    {"name":"extracellular matrix glycoprotein", "size":1},
+//                ]},
+//                {"name":"cell adhesion molecule", "children": [
+//                    {"name":"cadherin", "size":1},
+//                ]},
+//                {"name":"oxidoreductase", "children": [
+//                    {"name":"oxygenase", "size":1},
+//                    {"name":"dehydrogenase", "size":1},
+//                    {"name":"oxidase", "size":1},
+//                    {"name":"reductase", "size":1},
+//                ]},
+//                {"name":"transfer/carrier protein", "children": [
+//                    {"name":"apolipoprotein", "size":1},
+//                ]},
+//                {"name":"defense/immunity protein", "children": [
+//                    {"name":"complement component", "size":1},
+//                ]},
+//                {"name":"cell junction protein", "size":1},
+//                {"name":"membrane traffic protein", "size":1},
+//                {"name":"chaperone", "size":1},
+//                {"name":"isomerase", "children": [
+//                    {"name":"epimerase/racemase", "size":1},
+//                ]},
+//            ]},
+//        ]
 
 
 

@@ -1,5 +1,5 @@
 <%--
-  about Bard  development team
+  about Bard architecture
 --%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 
@@ -43,7 +43,7 @@
         <div class="container-fluid">
             <div class="row-fluid">
                 <aside class="span2"></aside>
-                <article class="span8 head-holder"><h2>Development team:</h2></article>
+                <article class="span8 head-holder"><h2>Architecture &amp; Design:</h2></article>
                 <aside class="span2"></aside>
             </div>
 
@@ -60,21 +60,42 @@
                     <article class="span8">
 
                         <h3>
-                            A Collaboration Between NIH and Key Academic Centers
+                            Architecture
                         </h3>
 
                         <p>
-                            Launched in March of 2012, BARD is an initiative of the Molecular Libraries Program, a NIH Common Fund Program. After an iterative process that amalgamated multiple proposals, responsibility for various system components were awarded to these institutional members of the MLP network:                        </p>
-                            <ul>
-                                <li>Broad Institute</li>
-                                <li>NIH Chemical Genomics Center</li>
-                                <li>Sanford-Burnham Medical Research Institute</li>
-                                <li>The Scripps Research Institute</li>
-                                <li>University of Miami</li>
-                                <li>University of New Mexico</li>
-                                <li>Vanderbilt University</li>
-                            </ul>
-                         </p>
+                        <dl>
+                            <dt>Data Dictionary component</dt>
+                            <dd>used by Dictionary Curators to manage BARD’s hierarchical dictionary of terms
+                            </dd>
+
+                            <dt>Catalog of Assay Protocols component</dt>
+                            <dd>used by Data Generators to register assays and upload result data
+                            </dd>
+
+                            <dt>Warehouse component</dt>
+                            <dd>provides persistent storage of result data in a form that is fast and simple to query via a REST API.  Relies on the controlled terms from the dictionary for effective and accurate searching.  Links to data from GO and other sources.  Used by query tool components and by Informatics Data Consumers.  The API can be extended using plug-ins contributed by the community.
+                            </dd>
+
+                            <dt>Query tool components</dt>
+                            <dd>Web Query and Desktop Client – provide methods for novice and experienced users to browse and find the information they need.
+                            </dd>
+
+                        </dl>
+
+                    </p>
+
+                        <IMG SRC="../images/bardHomepage/BARD_architecture.png" ALIGN="top">
+
+                        <h3>
+                            Technology Stack
+                        </h3>
+
+                        <p>
+                        BARD has been developed to be as open source as possible, using commercial components only in limited cases where an open source solution did not meet our needs.  After the public launch, the BARD source code will be made available to the community for extension and re-use.
+                        </p>
+
+                        <IMG SRC="../images/bardHomepage/BARD_architecture.png" ALIGN="bottom">
 
                     </article>
                     <aside class="span2"></aside>
@@ -107,14 +128,15 @@
                     <div class="span4">
                         <h3>Technology</h3>
                         <ul>
-                            <li><a href="#">Architecture &amp; Design</a></li>
+                            <li><a href="../scaledDownHomePage/bardtext_architecture">Architecture &amp; Design</a></li>
                             <li><a href="#">REST API</a></li>
                             <li><a href="#"  style="text-decoration:line-through;">Source code on GitHub <img src="../images/bardHomepage/comingSoon2.png" alt="coming soon"></a></li>
                         </ul>
                     </div>
 
                     <div class="span4 by">
-                        <strong class="logo-by"><a href="http://www.chemaxon.com/" title="Powered by ChemAxon">Powered by ChemAxon</a></strong>
+                        <strong class="logo-by"><a href="http://www.chemaxon.com/"
+                                                   title="Powered by ChemAxon">Powered by ChemAxon</a></strong>
 
                         <p>&copy; 2013 BARD</p>
                     </div>

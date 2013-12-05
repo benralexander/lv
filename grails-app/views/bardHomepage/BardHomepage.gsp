@@ -25,7 +25,7 @@
 <div id="wrapper">
 
 %{--The control area at the top of the page is all contained within this header--}%
-<header class="navbar navbar-st   static-top  static-top" id="header">
+<header class="navbar navbar-static-top" id="header">
     <div class="container-fluid">
         <strong class="logo"><a href="#">BARD BioAssay Research Database</a></strong>
         <ul class="social-networks">

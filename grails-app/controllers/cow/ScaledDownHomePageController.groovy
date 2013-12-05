@@ -17,5 +17,13 @@ class ScaledDownHomePageController {
     def bardtext_rdm() {
         render(view: 'bardtext_rdm')
     }
+    def bardtext_architecture() {
+        render(view: 'bardtext_architecture')
+    }
+    def bardtext_restApi() {
+        render(view: 'bardtext_restApi')
+    }
+
+
     def ScaledDownHomePage() { }
 }
