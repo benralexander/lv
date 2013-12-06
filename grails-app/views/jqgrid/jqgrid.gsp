@@ -18,15 +18,15 @@
     <link rel="stylesheet" type="text/css" href="${resource(dir: 'css', file: 'jquery-ui.css')}" />
 
     <style>
-    body{
-        margin: 0 auto;
-        max-width: 1400px;
-    }
+        /*this override doesn't work'*/
+    /*input .ui-jqgrid {*/
+        /*height: 20px;*/
+    /*}*/
     </style>
     <script>
         function A(){
             $("#list2").jqGrid({
-                url:'feedMeJson?q=2',
+                url:'feedMeJson',
                 datatype: "json",
                 colNames:['ID','Date', 'Client','note', 'Amount','Tax','Total'],
                 colModel:[
@@ -39,9 +39,14 @@
                     {name:'total',index:'total', width:80,align:"right"}
                 ],
                 rowNum:10,
+//                rowTotal:10,
+//                scroll: 1,
+//                loadonce:true,
                 rowList:[5,10],
                 pager: '#pager2',
                 sortname: 'id',
+                width: "100%",
+                height: 200,
                 viewrecords: true,
                 sortorder: "desc",
                 caption:"JSON Example"

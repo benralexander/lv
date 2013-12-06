@@ -54,7 +54,7 @@ class JqgridController {
         render("""
 {
   "total": "20",
-  "page": "1",
+  "page": "2",
   "records": "10",
   "rows" :[
 {"id":"11","invdate":"2007-10-01","name":"test","note":"note","amount":"200.00","tax":"10.00","total":"210.00"},
