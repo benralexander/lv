@@ -38,6 +38,11 @@ class JqgridController {
     String simulatedRecord(int requestedPage,
                            int numberRowsRequested){
         //// "${TOTAL_NUMBER_SIMULATED_RECORDS/numberRowsRequested}"
+       // "total":        //  total pages for the query
+       // "page":   // current page of the query
+       // "records":    // total number of records for the query
+       // "rows" :[   // an array that contains the actual data
+
         String returnValue = """
 {
   "total": "66",

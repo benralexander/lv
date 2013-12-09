@@ -121,23 +121,22 @@
                 function AAA(){
                     $("#list2").jqGrid({
                         width: 600,
-                        hoverrows: false,
-                        viewrecords: true,
-                        "jsonReader":{
-                            "repeatitems":false,
-                            "subgrid":
-                            {"repeatitems":false}
-                        },
-                        "xmlReader":{"repeatitems":false,"subgrid":{"repeatitems":false}},
-                        gridview: true,
-                        url:'feedMeJson',
-                        datatype: "json",
-                        scroll: 1,
-                        rowNum:50,
-                        sortname: 'id',
                         height: 255,
-                        colNames:['id','Date', 'Client','note', 'Amount','Tax','Total'],
-                        colModel:[
+                        hoverrows: true, //  respond to mouse hover
+                        viewrecords: true,  // view information about paging
+                        // this next section is unnec since we adhere to th default(?)
+//                        "jsonReader":{  //
+//                            "repeatitems":false,
+//                            "subgrid":{"repeatitems":false}
+//                        },
+                        gridview: true,   // true==faster, BUT cannot use tree, subGrid, or the afterInsertRow event
+                        url:'feedMeJson', // callback URL to retrieve data
+                        datatype: "json", // type of data from server
+                        scroll: 1,  // 1 -> load only visible rows
+                        rowNum:50, // how many records do we want to view
+                        sortname: 'id', // default sorting name
+                        colNames:['id','Date', 'Client','note', 'Amount','Tax','Total'], // appears in the header row
+                        colModel:[ // all data in grid defined here
                             {name:'id',index:'id', width:55},
                             {name:'invdate',index:'invdate', width:130},
                             {name:'name',index:'name asc, invdate', width:100},
@@ -146,16 +145,17 @@
                             {name:'tax',index:'tax', width:80, align:"right"},
                             {name:'total',index:'total', width:80,align:"right"}
                         ],
-                        "postData":{"oper":"grid"},
                         "prmNames":{"page":"page","rows":"rows","sort":"sidx","order":"sord","search":"_search","nd":"nd","id":"id","filter":"filters","searchField":"searchField","searchOper":"searchOper","searchString":"searchString","oper":"oper","query":"grid","addoper":"add","editoper":"edit","deloper":"del","excel":"excel","subgrid":"subgrid","totalrows":"totalrows","autocomplete":"autocmpl"},
                         "loadError":function(xhr,status, err){
-                            try {jQuery.jgrid.info_dialog(
+                            try {
+                                alert('foo');
+                                jQuery.jgrid.info_dialog(
                                      jQuery.jgrid.errors.errcap,'<div class="ui-state-error">'+ xhr.responseText +'</div>',
                                      jQuery.jgrid.edit.bClose,{buttonalign:'right'}
                             );}
                             catch(e) { alert(xhr.responseText);}
                         },
-                        "pager":"#pager2",
+                        "pager":"#pager2",  // where does the pager user interface set
                         caption:"s"
                     });
                     $("#list2").jqGrid('navGrid','#pager2',{del:false,add:false,edit:false},{},{},{},{multipleSearch:true});
