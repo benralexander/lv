@@ -23,129 +23,111 @@
     /*input .ui-jqgrid {*/
         /*height: 20px;*/
     /*}*/
+
     </style>
     <script>
-                function A(){
-            $("#list2").jqGrid({
-                url:'feedMeJson',
-                datatype: "json",
-                colNames:['ID','Date', 'Client','note', 'Amount','Tax','Total'],
-                colModel:[
-                    {name:'id',index:'id', width:55},
-                    {name:'invdate',index:'invdate', width:130},
-                    {name:'name',index:'name asc, invdate', width:100},
-                    {name:'note',index:'note', width:150, sortable:false},
-                    {name:'amount',index:'amount', width:80, align:"right"},
-                    {name:'tax',index:'tax', width:80, align:"right"},
-                    {name:'total',index:'total', width:80,align:"right"}
-                ],
-                rowNum:10,
-//                rowTotal:10,
+
+        function  cellFormatter (cellvalue, options, rowObject) {
+            var rowIdInt = parseInt(options.rowId);
+            var rowIdModulus = (rowIdInt% 8)+1;
+            var imageReference = '../images/moles' +rowIdModulus +'.png';
+            return "<img src='" +imageReference + "' alt='" + cellvalue + "' title='" + cellvalue + "' />";
+        };
+
+
+
+
+//                function AA(){
+//            $("#list2").jqGrid({
+//                url:'feedMeJson',
+//                datatype: "json",
+//                height: 255,
+//                width: 600,
+//                colNames:['ID','Date', 'Client','note', 'Amount','Tax','Total'],
+//                colModel:[
+//                    {name:'id',index:'id', width:55, sorttype:"int"},
+//                    {name:'invdate',index:'invdate', width:130, sorttype:"date"},
+//                    {name:'name',index:'name asc', width:100, sorttype:"string"},
+//                    {name:'note',index:'note', width:150, sortable:false, formatter: cellFormatter },
+//                    {name:'amount',index:'amount', width:80, align:"right", sorttype:"float"},
+//                    {name:'tax',index:'tax', width:80, align:"right", sorttype:"float"},
+//                    {name:'total',index:'total', width:80,align:"right", sorttype:"float"}
+//                ],
+//                rowNum: 21,
+//                scroll:1,
+//                //rowTotal:2000,
+//                jsonReader: {
+//                    repeatitems : true,
+//                    cell:"",
+//                    id: "0"
+//                },
 //                scroll: 1,
 //                loadonce:true,
-                rowList:[5,10],
-                pager: '#pager2',
-                sortname: 'id',
-                width: "100%",
-                height: 200,
-                viewrecords: true,
-                sortorder: "desc",
-                caption:"JSON Example"
-            });
-            $("#list2").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false});
-        }
-
-        function AA(){
-            $("#list2").jqGrid({
-                url:'feedMeJson',
-                datatype: "json",
-                height: 255,
-                width: 600,
-                colNames:['ID','Date', 'Client','note', 'Amount','Tax','Total'],
-                colModel:[
-                    {name:'id',index:'id', width:55, sorttype:"int"},
-                    {name:'invdate',index:'invdate', width:130, sorttype:"date"},
-                    {name:'name',index:'name asc', width:100, sorttype:"string"},
-                    {name:'note',index:'note', width:150, sortable:false},
-                    {name:'amount',index:'amount', width:80, align:"right", sorttype:"float"},
-                    {name:'tax',index:'tax', width:80, align:"right", sorttype:"float"},
-                    {name:'total',index:'total', width:80,align:"right", sorttype:"float"}
-                ],
-                rowNum: 21,
-                scroll:1,
-                //rowTotal:2000,
-                jsonReader: {
-                    repeatitems : true,
-                    cell:"",
-                    id: "0"
-                },
-                scroll: 1,
-                loadonce:true,
-                mtype: "GET",
-                rownumbers: true,
-                rownumWidth: 40,
-                 pager: '#pager2',
-                sortname: 'id',
-                viewrecords: true,
-                sortorder: "asc",
-                virtualscroll:"true",
-                caption:""
-            });
-            //$("#list2").jqGrid('navGrid','#pager2',{del:false,add:false,edit:false},{},{},{},{multipleSearch:true});
-            $("#list2").jqGrid('navGrid','#pager2',  // Turn on the icons
-                    {edit:true,
-                        add:true,
-                        del:true,
-                        search:true,
-                        refresh:true,
-                        refreshstate:'current',
-                        view:true
-                    },
-                    // Edit dialog parameters
-                    {reloadAfterSubmit: false,
-                        closeAfterEdit: true
-                    },
-                    // Add dialog parameters
-                    {reloadAfterSubmit: true,
-                        closeAfterAdd: true
-                    },
-                    // Delete dialog parameters
-                    {reloadAfterSubmit: false},
-                    // Search dialog parameters
-                    {},
-                    // View dialog parameters
-                    {});
-        }
-
+//                mtype: "GET",
+//                rownumbers: true,
+//                rownumWidth: 40,
+//                 pager: '#pager2',
+//                sortname: 'id',
+//                viewrecords: true,
+//                sortorder: "asc",
+//                virtualscroll:"true",
+//                caption:""
+//            });
+//            //$("#list2").jqGrid('navGrid','#pager2',{del:false,add:false,edit:false},{},{},{},{multipleSearch:true});
+//            $("#list2").jqGrid('navGrid','#pager2',  // Turn on the icons
+//                    {edit:true,
+//                        add:true,
+//                        del:true,
+//                        search:true,
+//                        refresh:true,
+//                        refreshstate:'current',
+//                        view:true
+//                    },
+//                    // Edit dialog parameters
+//                    {reloadAfterSubmit: false,
+//                        closeAfterEdit: true
+//                    },
+//                    // Add dialog parameters
+//                    {reloadAfterSubmit: true,
+//                        closeAfterAdd: true
+//                    },
+//                    // Delete dialog parameters
+//                    {reloadAfterSubmit: false},
+//                    // Search dialog parameters
+//                    {},
+//                    // View dialog parameters
+//                    {});
+//        }
+//
 
                 function AAA(){
                     $("#list2").jqGrid({
-                        width: 600,
-                        height: 255,
+                        width: "100%",
+                        height: "900",
                         hoverrows: true, //  respond to mouse hover
                         viewrecords: true,  // view information about paging
                         // this next section is unnec since we adhere to th default(?)
-//                        "jsonReader":{  //
-//                            "repeatitems":false,
-//                            "subgrid":{"repeatitems":false}
-//                        },
-                        gridview: true,   // true==faster, BUT cannot use tree, subGrid, or the afterInsertRow event
+                        "jsonReader":{  //
+                            "repeatitems":false,
+                            "subgrid":{"repeatitems":false}
+                        },
+                        gridview: false,   // true==faster, BUT cannot use tree, subGrid, or the afterInsertRow event
                         url:'feedMeJson', // callback URL to retrieve data
                         datatype: "json", // type of data from server
                         scroll: 1,  // 1 -> load only visible rows
                         rowNum:50, // how many records do we want to view
                         sortname: 'id', // default sorting name
-                        colNames:['id','Date', 'Client','note', 'Amount','Tax','Total'], // appears in the header row
+                        colNames:['id',/*'Date',*/ 'Promiscuity','Structure', 'AC 50','EC 50','Percent inhibition'], // appears in the header row
                         colModel:[ // all data in grid defined here
-                            {name:'id',index:'id', width:55},
-                            {name:'invdate',index:'invdate', width:130},
+                            {name:'id',index:'id',  sortable:false, width:100},
+                            /*{name:'invdate',index:'invdate',  sortable:false, width:130, frozen: true}, */
                             {name:'name',index:'name asc, invdate', width:100},
-                            {name:'note',index:'note', width:150, sortable:false},
-                            {name:'amount',index:'amount', width:80, align:"right"},
-                            {name:'tax',index:'tax', width:80, align:"right"},
-                            {name:'total',index:'total', width:80,align:"right"}
+                            {name:'note',index:'note', width:150, sortable:false, formatter: cellFormatter},
+                            {name:'amount',index:'amount', width:180, align:"center"},
+                            {name:'tax',index:'tax', width:180, align:"center"},
+                            {name:'total',index:'total', width:180,align:"center"}
                         ],
-                        "prmNames":{"page":"page","rows":"rows","sort":"sidx","order":"sord","search":"_search","nd":"nd","id":"id","filter":"filters","searchField":"searchField","searchOper":"searchOper","searchString":"searchString","oper":"oper","query":"grid","addoper":"add","editoper":"edit","deloper":"del","excel":"excel","subgrid":"subgrid","totalrows":"totalrows","autocomplete":"autocmpl"},
+ //                       "prmNames":{"page":"page","rows":"rows","sort":"sidx","order":"sord","search":"_search","nd":"nd","id":"id","filter":"filters","searchField":"searchField","searchOper":"searchOper","searchString":"searchString","oper":"oper","query":"grid","addoper":"add","editoper":"edit","deloper":"del","excel":"excel","subgrid":"subgrid","totalrows":"totalrows","autocomplete":"autocmpl"},
                         "loadError":function(xhr,status, err){
                             try {
                                 alert('foo');
@@ -156,9 +138,18 @@
                             catch(e) { alert(xhr.responseText);}
                         },
                         "pager":"#pager2",  // where does the pager user interface set
+                        shrinkToFit: true,
+//                        height: 'auto',
                         caption:"s"
                     });
+                    jQuery("#list2").jqGrid('setGroupHeaders', {
+                        useColSpanStyle: true,
+                        groupHeaders:[
+                            {startColumnName: 'amount', numberOfColumns: 3, titleText: '<a href=\'/\'><em>ADID=232</em></a>'}
+                        ]
+                    });
                     $("#list2").jqGrid('navGrid','#pager2',{del:false,add:false,edit:false},{},{},{},{multipleSearch:true});
+
                 }
 
 
@@ -166,7 +157,7 @@
 </head>
 
 <body>
-<h1> Oh boy, here is my new table!</h1>
+<h1>Molecular spreadsheet premium!</h1>
 <table id="list2"></table>
 <div id="pager2"></div>
 <script>
@@ -174,9 +165,6 @@
 AAA();
     });
 </script>
-
-<h3> There it went – I hope that you saw it</h3>
-
 
 
 </body>

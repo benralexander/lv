@@ -27,7 +27,8 @@ class JqgridController {
             if ((firstIndex+i) < TOTAL_NUMBER_SIMULATED_RECORDS) {
                 String temporaryDate = "${rn(2000, 2012)}-${rn(1, 12)}-${rn(1, 12)}"
                 stringBuilder << "{\"id\":\"${indexCounter++}\",\"invdate\":\"${temporaryDate}\",\"name\":\"test${rn(0, 9)}\",\"note\":\"note${rn(0, 3)}\",\"amount\":\"${rn(1, 400)}.${rn(0, 99)}\",\"tax\":\"${rn(1, 10)}.00\",\"total\":\"210.00\"}"
-                if ((i + 1) < numberRowsRequested) {
+                if (((i + 1) < numberRowsRequested)&&
+                        ((firstIndex+i+1) < TOTAL_NUMBER_SIMULATED_RECORDS)){
                     stringBuilder << ","
                 }
             }
@@ -65,6 +66,7 @@ class JqgridController {
     }
     def jqgrid() { }
     def feedMeJson(){
+      //  sleep(1000)
         String stringRequestedPage = params.page ?: "1" // get the requested page
         String stringRowsWeWant = params.rows ?: "1" // get how many rows we want to have in the grid
         String indexRow = params.sidx ?: "id"// get index row name
