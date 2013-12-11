@@ -34,6 +34,9 @@
             return "<img src='" +imageReference + "' alt='" + cellvalue + "' title='" + cellvalue + "' />";
         };
 
+        function reloadGrid(){
+            $("#list2").trigger("reloadGrid");
+        };
 
 
 
@@ -102,20 +105,16 @@
 
                 function AAA(){
                     $("#list2").jqGrid({
+
+                        // size
                         width: "100%",
                         height: "900",
-                        hoverrows: true, //  respond to mouse hover
-                        viewrecords: true,  // view information about paging
-                        // this next section is unnec since we adhere to th default(?)
-                        "jsonReader":{  //
-                            "repeatitems":false,
-                            "subgrid":{"repeatitems":false}
-                        },
-                        gridview: false,   // true==faster, BUT cannot use tree, subGrid, or the afterInsertRow event
+
+                        // communication with the backend
                         url:'feedMeJson', // callback URL to retrieve data
                         datatype: "json", // type of data from server
-                        scroll: 1,  // 1 -> load only visible rows
-                        rowNum:50, // how many records do we want to view
+
+                        // data model
                         sortname: 'id', // default sorting name
                         colNames:['id',/*'Date',*/ 'Promiscuity','Structure', 'AC 50','EC 50','Percent inhibition'], // appears in the header row
                         colModel:[ // all data in grid defined here
@@ -127,7 +126,35 @@
                             {name:'tax',index:'tax', width:180, align:"center"},
                             {name:'total',index:'total', width:180,align:"center"}
                         ],
- //                       "prmNames":{"page":"page","rows":"rows","sort":"sidx","order":"sord","search":"_search","nd":"nd","id":"id","filter":"filters","searchField":"searchField","searchOper":"searchOper","searchString":"searchString","oper":"oper","query":"grid","addoper":"add","editoper":"edit","deloper":"del","excel":"excel","subgrid":"subgrid","totalrows":"totalrows","autocomplete":"autocmpl"},
+
+
+                        // dynamic behavior
+                        hoverrows: true, //  respond to mouse hover
+
+                        // this next section is unnec since we adhere to th default(?)
+//                        "jsonReader":{  //
+//                            "repeatitems":false,
+//                            "subgrid":{"repeatitems":false}
+//                        },
+                        gridview: true,   // true==faster, BUT cannot use tree, subGrid, or the afterInsertRow event
+
+                        //critical control over scrolling
+                        scroll: 1,  // 1 :  IMPORTANT: comment out this line and we go to ordinary paging. Leave this line in for virtual paging.
+                        rowNum:100, // how many records do we want to download at once
+
+                        // paging control
+                        viewrecords: true,  // view information about paging
+                        rowList:[10,50,100],  //options for paging
+                        recordpos: "right",  // location of the text indicating our position
+                        pgbuttons: true,   //  allow control over paging with buttons
+                        pginput: true,     //  allow 'go to page' option
+                        pgtext: "page {0} out of {1}", // text for page controller
+                        recordtext: "records [{0} - {1}] of {2}",  // text for record indicator
+                        emptyrecords: "No records to view",
+                        loadtext: "Loading...",
+
+
+                        //                       "prmNames":{"page":"page","rows":"rows","sort":"sidx","order":"sord","search":"_search","nd":"nd","id":"id","filter":"filters","searchField":"searchField","searchOper":"searchOper","searchString":"searchString","oper":"oper","query":"grid","addoper":"add","editoper":"edit","deloper":"del","excel":"excel","subgrid":"subgrid","totalrows":"totalrows","autocomplete":"autocmpl"},
                         "loadError":function(xhr,status, err){
                             try {
                                 alert('foo');
@@ -158,6 +185,7 @@
 
 <body>
 <h1>Molecular spreadsheet premium!</h1>
+
 <table id="list2"></table>
 <div id="pager2"></div>
 <script>
@@ -165,6 +193,9 @@
 AAA();
     });
 </script>
+<form>
+    <input type=button value='Reload' onclick="reloadGrid();" />
+</form>
 
 
 </body>
