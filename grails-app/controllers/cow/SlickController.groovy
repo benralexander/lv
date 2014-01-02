@@ -49,6 +49,8 @@ class SlickController {
   "total": "66",
   "fromPage": "${requestedPage}",
   "toPage": "${requestedPage+1}",
+  "start": "${requestedPage*numberRowsRequested}",
+  "length": "${numberRowsRequested}",
   "records": "${TOTAL_NUMBER_SIMULATED_RECORDS}",
   "rows" :[
 """.toString()

@@ -134,6 +134,7 @@
             function ensureData(from, to) {
                 if (req) {
                     req.abort();
+                    // this next for loop makes no sense at all to me. I will commented out and see what happens
                     for (var i = req.fromPage; i <= req.toPage; i++)
                         data[i * PAGESIZE] = undefined;
                 }
@@ -155,14 +156,19 @@
                 while (data[toPage * PAGESIZE] !== undefined && fromPage < toPage)
                     toPage--;
 
+                console.log ('from ='+ from +', to ='+ to+', fromPage ='+ fromPage +', toPage ='+ toPage+'.');
                 if (fromPage > toPage || ((fromPage == toPage) && data[fromPage * PAGESIZE] !== undefined)) {
                     // TODO:  look-ahead
+                    console.log ('.');
                     onDataLoaded.notify({from: from, to: to});
                     return;
                 }
 
-                var url = "http://api.thriftdb.com/api.hnsearch.com/items/_search?filter[fields][type][]=submission&q=" + searchstr + "&start=" + (fromPage * PAGESIZE) + "&limit=" + (((toPage - fromPage) * PAGESIZE) + PAGESIZE);
-                //var url = "feedMeJson?sidx=1&sord=asc&page=" + (fromPage) + "&rows=" + (((toPage - fromPage) * PAGESIZE) + PAGESIZE);
+                //var url = "http://api.thriftdb.com/api.hnsearch.com/items/_search?filter[fields][type][]=submission&q=" + searchstr + "&start=" + (fromPage * PAGESIZE) + "&limit=" + (((toPage - fromPage) * PAGESIZE) + PAGESIZE);
+//                var url = "feedMeJson?sidx=1&sord=asc&page=" + (fromPage) + "&rows=" + (((toPage - fromPage) * PAGESIZE) + PAGESIZE);
+                var url = "feedMeJson?sidx=1&sord=asc&page=0&rows=50";
+                console.log ('making a round-trip to '+url+'.');
+
 
                 if (sortcol != null) {
                     url += ("&sortby=" + sortcol + ((sortdir > 0) ? "+asc" : "+desc"));
@@ -178,15 +184,10 @@
 
                     onDataLoading.notify({from: from, to: to});
 
-                    req = $.jsonp({
-                        url: url,
-                        callbackParameter: "callback",
-                        cache: true,
-                        success: onSuccess,
-                        error: function () {
-                            onError(fromPage, toPage)
-                        }
-                    });
+                    req = $.getJSON(url,function(resp){
+                                onSuccess(resp);
+                            }
+                    );
                     req.fromPage = fromPage;
                     req.toPage = toPage;
                 }, 50);
@@ -198,21 +199,24 @@
             }
 
             function onSuccess(resp) {
-                var from = resp.request.start, to = from + resp.results.length;
-                data.length = Math.min(parseInt(resp.hits),1000); // limitation of the API
+                var from = parseInt( resp.start);
+                var to = from + parseInt( resp.length);
+                // old way. yuck.
+                data.length = Math.min(parseInt(resp.records),1000); // limitation of the API
 
-                for (var i = 0; i < resp.results.length; i++) {
-                    var item = resp.results[i].item;
+                //  first element of array is  null . How can we fix this problem?
+//                if (data.length > 0 && data[data.length-1]==null){
+//                    data.splice(0,1);
+//                }
+                for (var i = 0; i < resp.rows.length; i++) {
+                    // old way.
+                    data[from+i] = { num:resp.rows[i].id,
+                                     story:resp.rows[i].name,
+                                     points:resp.rows[i].amount };
+                    data[from+i].index = from+i;
 
-                    // Old IE versions can't parse ISO dates, so change to universally-supported format.
-                    item.create_ts = item.create_ts.replace(/^(\d+)-(\d+)-(\d+)T(\d+:\d+:\d+)Z$/, "$2/$3/$1 $4 UTC");
-                    item.create_ts = new Date(item.create_ts);
-
-                    data[from + i] = item;
-                    data[from + i].index = from + i;
-                }
-
-                req = null;
+                 }
+                 req = null;
 
                 onDataLoaded.notify({from: from, to: to});
             }
@@ -271,13 +275,14 @@
     var loader = new Slick.Data.RemoteModel();
 
     var storyTitleFormatter = function (row, cell, value, columnDef, dataContext) {
-        s ="<b><a href='" + dataContext["url"] + "' target=_blank>" +
-                dataContext["title"] + "</a></b><br/>";
-        desc = dataContext["text"];
-        if (desc) { // on Hackernews many stories don't have a description
-            s += desc;
-        }
-        return s;
+//        s ="<b><a href='" + dataContext["url"] + "' target=_blank>" +
+//                dataContext["title"] + "</a></b><br/>";
+//        desc = dataContext["text"];
+//        if (desc) { // on Hackernews many stories don't have a description
+//            s += desc;
+//        }
+//        return s;
+        return dataContext.story;
     };
 
     var dateFormatter = function (row, cell, value, columnDef, dataContext) {
@@ -286,9 +291,9 @@
 
 
     var columns = [
-        {id: "num", name: "#", field: "index", width: 40},
+        {id: "num", name: "#", field: "num", width: 40},
         {id: "story", name: "Story", width: 520, formatter: storyTitleFormatter, cssClass: "cell-story"},
-        {id: "date", name: "Date", field: "create_ts", width: 60, formatter: dateFormatter, sortable: true},
+//        {id: "date", name: "Date", field: "create_ts", width: 60, formatter: dateFormatter, sortable: true},
         {id: "points", name: "Points", field: "points", width: 60, sortable: true}
     ];
 
@@ -300,7 +305,7 @@
     };
 
     var loadingIndicator = null;
-
+    var data = [] ;
 
     $(function () {
         grid = new Slick.Grid("#myGrid", loader.data, columns, options);
