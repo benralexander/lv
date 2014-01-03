@@ -42,26 +42,10 @@
     </style>
 </head>
 <body>
-%{--<table width="100%">--}%
-    %{--<tr>--}%
-        %{--<td valign="top" width="50%">--}%
-            %{--<div id="myGrid" style="width:600px;height:500px;"></div>--}%
-        %{--</td>--}%
-        %{--<td valign="top">--}%
-            %{--<h2>Demonstrates:</h2>--}%
-            %{--<ul>--}%
-                %{--<li>basic grid with minimal configuration</li>--}%
-            %{--</ul>--}%
-            %{--<h2>View Source:</h2>--}%
-            %{--<ul>--}%
-                %{--<li><A href="https://github.com/mleibman/SlickGrid/blob/gh-pages/examples/example1-simple.html" target="_sourcewindow"> View the source for this example on Github</a></li>--}%
-            %{--</ul>--}%
-        %{--</td>--}%
-    %{--</tr>--}%
-%{--</table>--}%
+
 <div style="width:700px;float:left;">
     <div class="grid-header" style="width:100%">
-        <label>Hackernews stories</label>
+        <label>Molecular spreadsheet</label>
         <span style="float:right;display:inline-block;">
             Search:
             <input type="text" id="txtSearch" value="github">
@@ -161,8 +145,7 @@
                     return;
                 }
 
-//                var url = "feedMeJson?sidx=1&sord=asc&page=" + (fromPage) + "&rows=" + (((toPage - fromPage) * PAGESIZE) + PAGESIZE);
-                var url = "feedMeJson?sidx=1&sord=asc&page=" + (fromPage) + "&rows=50";
+                var url = "feedMeJson?sidx=1&sord=asc&page=" + (fromPage) + "&rows=" + (((toPage - fromPage) * PAGESIZE) + PAGESIZE);
                 console.log ('making a round-trip to '+url+'.');
 
 
@@ -194,10 +177,15 @@
                 alert("error loading pages " + fromPage + " to " + toPage);
             }
 
+            // pull the information out of our Ajax return call and push it into 'data', which is our
+            //  the externally visible variable we use for transfer.
             function onSuccess(resp) {
                 var from = parseInt( resp.start);
                 var to = from + parseInt( resp.length);
-                data.length = Math.min(parseInt(resp.records),1000); // limitation of the API
+                // if you want to limit the number of records we handle, this is the place to do it
+                // As an example:
+                // data.length = Math.min(parseInt(resp.records),1000); // limitation of the API
+                data.length = parseInt(resp.records);
 
                 //  first element of array is  null . How can we fix this problem?
                 for (var i = 0; i < resp.rows.length; i++) {
@@ -285,8 +273,8 @@
     // the names specified by the field named 'field'  must match  those provided in the
     //  variable 'data' in the remoteModel portion of the code (look for the onSuccess method)
     var columns = [
-        {id: "num", name: "#", field: "num", width: 40},
-        {id: "story", name: "Story", width: 520, formatter: storyTitleFormatter, cssClass: "cell-story"},
+        {id: "num", name: "ID", field: "num", width: 40},
+        {id: "story", name: "Promiscuity", width: 520, formatter: storyTitleFormatter, cssClass: "cell-story"},
 //        {id: "date", name: "Date", field: "create_ts", width: 60, formatter: dateFormatter, sortable: true},
         {id: "points", name: "Points", field: "points", width: 60, sortable: true}
     ];
