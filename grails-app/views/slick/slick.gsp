@@ -138,17 +138,21 @@
                     toPage--;
 
  //               console.log ('calculated->from ='+ from +', to ='+ to+', fromPage ='+ fromPage +', toPage ='+ toPage+'.');
-                if (fromPage > toPage || ((fromPage == toPage) && data[fromPage * PAGESIZE] !== undefined)) {
+                if (fromPage > toPage || ((fromPage == toPage) && (data[fromPage * PAGESIZE] !== undefined &&
+                        data[fromPage * PAGESIZE] !== null))) {
                     // TODO:  look-ahead
-                    console.log ('.');
                     onDataLoaded.notify({from: from, to: to});
                     return;
                 }
 
-                var rowsRequested= (((toPage - fromPage) * PAGESIZE) + PAGESIZE);
-//                var url = "feedMeJson?sidx=1&sord=asc&page=" + (fromPage) + "&rows=" + (((toPage - fromPage) * PAGESIZE) + PAGESIZE);
-                var url = "feedMeJson?sidx=1&sord=asc&page=" + (fromPage) + "&rows=" + rowsRequested;
-                console.log ('making a round-trip. requesting page='+(fromPage)+', rows='+(rowsRequested)+'.');
+              //  var rowsRequested= (((toPage - fromPage) * PAGESIZE) + PAGESIZE);
+                var rowsRequested= 50;
+                var requestedStart =  (fromPage*rowsRequested);
+                var requestedEnd = requestedStart +  rowsRequested;
+                 var url = "feedMeJson?sidx=1&sord=asc&start=" + requestedStart + "&end=" + requestedEnd;
+//                console.log ('making a round-trip. requesting page='+(fromPage)+', rows='+(rowsRequested)+
+//                        ', start='+(requestedStart)+', end='+(requestedEnd)+
+//                        ', toPage='+(toPage)+', fromPage='+(fromPage)+'.');
 
 
                 if (sortcol != null) {
@@ -183,12 +187,12 @@
             //  the externally visible variable we use for transfer.
             function onSuccess(resp) {
                 var from = parseInt( resp.start);
-                var to = from + parseInt( resp.end);
+                var to = parseInt( resp.end);
                 // if you want to limit the number of records we handle, this is the place to do it
                 // As an example:
                 // data.length = Math.min(parseInt(resp.records),1000); // limitation of the API
                 data.length = parseInt(resp.records);
-                console.log ('received->start ='+ from +', end ='+ to+', records ='+ data.length +'.');
+//                console.log ('received->start ='+ from +', end ='+ to+', records ='+ data.length +'.');
 
 
                 //  first element of array is  null . How can we fix this problem?
@@ -258,6 +262,7 @@
     // control the data grid on the browser, dependent on the underlying model
     var grid;
     var loader = new Slick.Data.RemoteModel();
+    var runawayRecursionDetector = 0;
 
     var storyTitleFormatter = function (row, cell, value, columnDef, dataContext) {
 //        s ="<b><a href='" + dataContext["url"] + "' target=_blank>" +
@@ -270,6 +275,22 @@
         return dataContext.story;
     };
 
+    var molecularStructureFormatter = function (row, cell, value, columnDef, dataContext) {
+        var rowIdInt = parseInt(row);
+        var rowIdModulus = (rowIdInt% 8)+1;
+        var imageReference = '../images/moles' +rowIdModulus +'.png';
+        return "<img src='" +imageReference + "' alt='" + value + "' title='" + value + "' />";
+    };
+
+//    function  cellFormatter (cellvalue, options, rowObject) {
+//        var rowIdInt = parseInt(options.rowId);
+//        var rowIdModulus = (rowIdInt% 8)+1;
+//        var imageReference = '../images/moles' +rowIdModulus +'.png';
+//        return "<img src='" +imageReference + "' alt='" + cellvalue + "' title='" + cellvalue + "' />";
+//    };
+
+
+
     var dateFormatter = function (row, cell, value, columnDef, dataContext) {
         return (value.getMonth()+1) + "/" + value.getDate() + "/" + value.getFullYear();
     };
@@ -278,20 +299,22 @@
     //  variable 'data' in the remoteModel portion of the code (look for the onSuccess method)
     var columns = [
         {id: "num", name: "ID", field: "num", width: 40},
-        {id: "story", name: "Promiscuity", width: 520, formatter: storyTitleFormatter, cssClass: "cell-story"},
+        {id: "story", name: "Promiscuity", width: 80, formatter: storyTitleFormatter, cssClass: "cell-story"},
+        {id: "story", name: "Structure", width: 470, formatter: molecularStructureFormatter, cssClass: "cell-story"},
+
 //        {id: "date", name: "Date", field: "create_ts", width: 60, formatter: dateFormatter, sortable: true},
         {id: "points", name: "Points", field: "points", width: 60, sortable: true}
     ];
 
     var options = {
-        rowHeight: 64,
+        rowHeight: 100,
         editable: false,
         enableAddRow: false,
         enableCellNavigation: false
     };
 
     var loadingIndicator = null;
-    var data = [] ;
+//    var data = [] ;
 
     $(function () {
         grid = new Slick.Grid("#myGrid", loader.data, columns, options);
@@ -329,7 +352,34 @@
             grid.updateRowCount();
             grid.render();
 
+            //  Now we have to perform a check. Since the browser is reacting asynchronously to the data returned by the server,
+            //  and since the user is allowed to scroll all over the table in whatever way they like, it is possible to end up
+            //  with one or more lines in the data structure that aren't filled.  Therefore I am plum and hear the following kludgy
+            //  workaround: run over the whole data structure and see if we ended up with any nulls (presumably when one incoming
+            //  record interrupted another before he could be stored).  If so then interrogate the table to find out the viewport,
+            //  and perform another round-trip to make sure at the least that we have data for every place the user can currently see.
+            //  Note that this involves throwing a new event from inside the handler for the event we are throwing -- obviously
+            //  a recipe for recursive ctack overflow if for some reason that particular row really SHOULD be null.  Therefore
+            //  wwe also use a variable that is scoped outside of this routine as a runaway recursion detector, to make certain
+            //  that the browser doesn't fall into an infinite loop.  A blank row is ugly, to be sure, but a crashing browser
+            //  is far uglier.
+            if (typeof loader.data.length !== undefined) {
+                var numberOfNulls  = 0;
+                for (var loop = 0;loop<loader.data.length;loop++){
+                    if (loader.data[loop]=== null ){
+                        numberOfNulls++;
+                    }
+                }
+                if ((numberOfNulls>0)  && (runawayRecursionDetector < 1)) {
+                    console.log ('... And nulls existed');
+                    runawayRecursionDetector = 1;
+                    var vp = grid.getViewport();
+                    loader.ensureData(vp.top, vp.bottom);
+                }
+            }
+
             loadingIndicator.fadeOut();
+            runawayRecursionDetector = 0;
         });
 
         $("#txtSearch").keyup(function (e) {
