@@ -87,12 +87,9 @@
 <script src="../js/slick/slick.grid.js"></script>
 
 <script>
+    // describe the data model we maintain on the browser
     (function ($) {
-        /***
-         * A sample AJAX data store implementation.
-         * Right now, it's hooked up to load Hackernews stories, but can
-         * easily be extended to support any JSONP-compatible backend that accepts paging parameters.
-         */
+
         function RemoteModel() {
             // private
             var PAGESIZE = 50;
@@ -164,9 +161,8 @@
                     return;
                 }
 
-                //var url = "http://api.thriftdb.com/api.hnsearch.com/items/_search?filter[fields][type][]=submission&q=" + searchstr + "&start=" + (fromPage * PAGESIZE) + "&limit=" + (((toPage - fromPage) * PAGESIZE) + PAGESIZE);
 //                var url = "feedMeJson?sidx=1&sord=asc&page=" + (fromPage) + "&rows=" + (((toPage - fromPage) * PAGESIZE) + PAGESIZE);
-                var url = "feedMeJson?sidx=1&sord=asc&page=0&rows=50";
+                var url = "feedMeJson?sidx=1&sord=asc&page=" + (fromPage) + "&rows=50";
                 console.log ('making a round-trip to '+url+'.');
 
 
@@ -201,15 +197,11 @@
             function onSuccess(resp) {
                 var from = parseInt( resp.start);
                 var to = from + parseInt( resp.length);
-                // old way. yuck.
                 data.length = Math.min(parseInt(resp.records),1000); // limitation of the API
 
                 //  first element of array is  null . How can we fix this problem?
-//                if (data.length > 0 && data[data.length-1]==null){
-//                    data.splice(0,1);
-//                }
                 for (var i = 0; i < resp.rows.length; i++) {
-                    // old way.
+                    // Here are the pieces of information we will pass to the grid.
                     data[from+i] = { num:resp.rows[i].id,
                                      story:resp.rows[i].name,
                                      points:resp.rows[i].amount };
@@ -271,6 +263,7 @@
 
 
 <script>
+    // control the data grid on the browser, dependent on the underlying model
     var grid;
     var loader = new Slick.Data.RemoteModel();
 
@@ -289,7 +282,8 @@
         return (value.getMonth()+1) + "/" + value.getDate() + "/" + value.getFullYear();
     };
 
-
+    // the names specified by the field named 'field'  must match  those provided in the
+    //  variable 'data' in the remoteModel portion of the code (look for the onSuccess method)
     var columns = [
         {id: "num", name: "#", field: "num", width: 40},
         {id: "story", name: "Story", width: 520, formatter: storyTitleFormatter, cssClass: "cell-story"},

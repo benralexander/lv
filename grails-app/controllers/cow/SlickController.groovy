@@ -54,7 +54,7 @@ class SlickController {
   "records": "${TOTAL_NUMBER_SIMULATED_RECORDS}",
   "rows" :[
 """.toString()
-        returnValue +=  simulatedRows( ((requestedPage*numberRowsRequested)-numberRowsRequested)+1,
+        returnValue +=  simulatedRows( (requestedPage*numberRowsRequested)+1,
                 requestedPage,
                 numberRowsRequested )
         returnValue +=  """]
