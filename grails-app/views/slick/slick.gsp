@@ -137,7 +137,7 @@
                 while (data[toPage * PAGESIZE] !== undefined && fromPage < toPage)
                     toPage--;
 
-                console.log ('from ='+ from +', to ='+ to+', fromPage ='+ fromPage +', toPage ='+ toPage+'.');
+ //               console.log ('calculated->from ='+ from +', to ='+ to+', fromPage ='+ fromPage +', toPage ='+ toPage+'.');
                 if (fromPage > toPage || ((fromPage == toPage) && data[fromPage * PAGESIZE] !== undefined)) {
                     // TODO:  look-ahead
                     console.log ('.');
@@ -145,8 +145,10 @@
                     return;
                 }
 
-                var url = "feedMeJson?sidx=1&sord=asc&page=" + (fromPage) + "&rows=" + (((toPage - fromPage) * PAGESIZE) + PAGESIZE);
-                console.log ('making a round-trip to '+url+'.');
+                var rowsRequested= (((toPage - fromPage) * PAGESIZE) + PAGESIZE);
+//                var url = "feedMeJson?sidx=1&sord=asc&page=" + (fromPage) + "&rows=" + (((toPage - fromPage) * PAGESIZE) + PAGESIZE);
+                var url = "feedMeJson?sidx=1&sord=asc&page=" + (fromPage) + "&rows=" + rowsRequested;
+                console.log ('making a round-trip. requesting page='+(fromPage)+', rows='+(rowsRequested)+'.');
 
 
                 if (sortcol != null) {
@@ -181,11 +183,13 @@
             //  the externally visible variable we use for transfer.
             function onSuccess(resp) {
                 var from = parseInt( resp.start);
-                var to = from + parseInt( resp.length);
+                var to = from + parseInt( resp.end);
                 // if you want to limit the number of records we handle, this is the place to do it
                 // As an example:
                 // data.length = Math.min(parseInt(resp.records),1000); // limitation of the API
                 data.length = parseInt(resp.records);
+                console.log ('received->start ='+ from +', end ='+ to+', records ='+ data.length +'.');
+
 
                 //  first element of array is  null . How can we fix this problem?
                 for (var i = 0; i < resp.rows.length; i++) {

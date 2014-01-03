@@ -124,7 +124,7 @@
                             {name:'note',index:'note', width:150, sortable:false, formatter: cellFormatter},
                             {name:'amount',index:'amount', width:180, align:"center"},
                             {name:'tax',index:'tax', width:180, align:"center"},
-                            {name:'total',index:'total', width:180,align:"center"}
+                            {name:'AC50',index:'AC50', width:180,align:"center"}
                         ],
 
 

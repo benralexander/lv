@@ -17,13 +17,12 @@ class JqgridController {
 
         String returnValue = """
 {
-  "total": "66",
+  "total": "${TOTAL_NUMBER_SIMULATED_RECORDS}",
   "page": "${requestedPage}",
   "records": "${TOTAL_NUMBER_SIMULATED_RECORDS}",
   "rows" :[
 """.toString()
         returnValue +=  backendSimulatorService.simulatedRows( ((requestedPage*numberRowsRequested)-numberRowsRequested)+1,
-                 requestedPage,
                  numberRowsRequested,
                 TOTAL_NUMBER_SIMULATED_RECORDS )
         returnValue +=  """]
