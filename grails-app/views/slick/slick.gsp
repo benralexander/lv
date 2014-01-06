@@ -200,7 +200,9 @@
                     // Here are the pieces of information we will pass to the grid.
                     data[from+i] = { num:resp.rows[i].id,
                                      story:resp.rows[i].name,
-                                     points:resp.rows[i].amount };
+                                     points:resp.rows[i].amount,
+                        note:resp.rows[i].tax,
+                        amount:resp.rows[i].note};
                     data[from+i].index = from+i;
 
                  }
@@ -259,7 +261,11 @@
 
 
 <script>
-    // control the data grid on the browser, dependent on the underlying model
+    // ********* control the data grid on the browser ************
+    //  Handle the appearance, define the events and handlers, define
+    //   all user facing widgets.
+    //
+    //  Everything in the section is of course dependent on the previously defined data model.
     var grid;
     var loader = new Slick.Data.RemoteModel();
     var runawayRecursionDetector = 0;
@@ -282,12 +288,11 @@
         return "<img src='" +imageReference + "' alt='" + value + "' title='" + value + "' />";
     };
 
-//    function  cellFormatter (cellvalue, options, rowObject) {
-//        var rowIdInt = parseInt(options.rowId);
-//        var rowIdModulus = (rowIdInt% 8)+1;
-//        var imageReference = '../images/moles' +rowIdModulus +'.png';
-//        return "<img src='" +imageReference + "' alt='" + cellvalue + "' title='" + cellvalue + "' />";
-//    };
+    var numericalDataFormatter = function (row, cell, value, columnDef, dataContext) {
+        var s ="<b>" +dataContext["title"] + "</b><br/>";
+        return s;
+    };
+
 
 
 
@@ -298,12 +303,13 @@
     // the names specified by the field named 'field'  must match  those provided in the
     //  variable 'data' in the remoteModel portion of the code (look for the onSuccess method)
     var columns = [
-        {id: "num", name: "ID", field: "num", width: 40},
-        {id: "story", name: "Promiscuity", width: 80, formatter: storyTitleFormatter, cssClass: "cell-story"},
-        {id: "story", name: "Structure", width: 470, formatter: molecularStructureFormatter, cssClass: "cell-story"},
-
+        {id: "num", name: "ID", field: "num", width: 40, sortable: true},
+        {id: "story", name: "Promiscuity", width: 80, formatter: storyTitleFormatter, cssClass: "cell-story", sortable: true},
+        {id: "structure", name: "Structure", width: 120, formatter: molecularStructureFormatter, cssClass: "cell-story", sortable: false},
+        {id: "ac50", name: "AC50", field: "note", width: 120, formatter: numericalDataFormatter, cssClass: "cell-story", sortable: true},
+        {id: "ec50", name: "EC50", field: "amount", width: 120, formatter: numericalDataFormatter, cssClass: "cell-story", sortable: true},
 //        {id: "date", name: "Date", field: "create_ts", width: 60, formatter: dateFormatter, sortable: true},
-        {id: "points", name: "Points", field: "points", width: 60, sortable: true}
+        {id: "points", name: "Percent inhibition", field: "name", width: 60, sortable: true}
     ];
 
     var options = {
