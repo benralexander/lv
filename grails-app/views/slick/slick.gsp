@@ -466,7 +466,6 @@
     <div class="grid-header" style="width:100%">
         <label>Molecular spreadsheet</label>
         <span style="float:right;display:inline-block;">
-            <input type="button" id="AidGroup" value="Group by project">
             <input type="button" id="PidGroup" value="Group by AID">
         </span>
     </div>
@@ -565,7 +564,6 @@
                 while (data[toPage * PAGESIZE] !== undefined && fromPage < toPage)
                     toPage--;
 
- //               console.log ('calculated->from ='+ from +', to ='+ to+', fromPage ='+ fromPage +', toPage ='+ toPage+'.');
                 if (fromPage > toPage || ((fromPage == toPage) && (data[fromPage * PAGESIZE] !== undefined &&
                         data[fromPage * PAGESIZE] !== null))) {
                     // TODO:  This would be a good place to implement a look ahead
@@ -670,6 +668,9 @@
             return {
                 // properties
                 "data": data,
+                "headers": {"rowHeaders": {},
+                            "rowSubHeaders": {},
+                            "columnHeaders": {}} ,
 
                 // methods
                 "clear": clear,
@@ -739,8 +740,16 @@
         {id: "structure", name: "Structure", field: "structure", width: 120, formatter: molecularStructureFormatter, cssClass: "cell-story", sortable: false},
         {id: "ac50", name: "AC50", field: "ac50", width: 120, formatter: numericalDataFormatter, cssClass: "cell-story", sortable: true},
         {id: "ec50", name: "EC50", field: "ec50", width: 120, formatter: numericalDataFormatter, cssClass: "cell-story", sortable: true},
-//        {id: "date", name: "Date", field: "create_ts", width: 60, formatter: dateFormatter, sortable: true},
         {id: "inhib", name: "Percent inhibition", field: "inhib", width: 60, sortable: true,  headerCssClass: "trialHeaderAppearance"}
+    ];
+
+    var subColumns  = [
+        '',
+        '<span></span>',
+        '<span></span>',
+        '<span>AC50</span>',
+        '<span>EC50</span>',
+        '<span>inhib.</span>'
     ];
 
     var options = {
@@ -840,6 +849,18 @@
         loader.setSearch($("#txtSearch").val());
         loader.setSort("create_ts", -1);
         grid.setSortColumn("date", false);
+
+        var subheaderCounter = 0;
+        var totalNumberOfSubHeaders = subColumns.length;
+        $('.slick-headerrow-column').each(
+                function() {
+                    if (subheaderCounter < totalNumberOfSubHeaders) {
+                        $(this).append(subColumns[subheaderCounter++]);
+                    } else {
+                        alert(' array overrun.  Reactor core meltdown imminent.')
+                    }
+                }
+        );
 
         // load the first page
         grid.onViewportChanged.notify();
