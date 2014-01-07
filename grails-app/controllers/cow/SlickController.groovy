@@ -1,14 +1,15 @@
 package cow
 
-import junit.framework.Assert
-
 class SlickController {
     static int TOTAL_NUMBER_SIMULATED_RECORDS = 2000
 
     BackendSimulatorService backendSimulatorService
 
-    String simulatedRecord(int requestedStart,
-                           int requestedEnd){
+    String simulatedRecord( int requestedStart,
+                            int requestedEnd
+                      //      String indexName,
+                      //      String direction // "asc" Or "desc"
+                           ){
 
         String returnValue = """
 {
@@ -35,7 +36,7 @@ class SlickController {
     def feedMeJson(){
         String stringRequestedStart = params.start ?: "0" // get the requested page
         String stringRequestedEnd = params.end ?: "25" // get how many rows we want to have in the grid
-        String indexRow = params.sidx ?: "id"// get index row name
+        String indexRow = params.sortby ?: "id"// get index row name
         String direction = params.sord ?: "desc" // get the direction
         Integer requestedPage, rowsWeWant,requestedStart,requestedEnd
         try  {

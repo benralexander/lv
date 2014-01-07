@@ -12,7 +12,411 @@
   <title>SlickGrid example 1: Basic grid</title>
     <link rel="stylesheet" type="text/css" href="${resource(dir: 'css/slick', file: 'slick.grid.css')}" />
     <link rel="stylesheet" type="text/css" href="${resource(dir: 'css/slick/smoothness', file: 'jquery-ui-1.8.16.custom.css')}" />
-    <link rel="stylesheet" type="text/css" href="${resource(dir: 'css/slick', file: 'examples.css')}" />
+    %{--<link rel="stylesheet" type="text/css" href="${resource(dir: 'css/slick', file: 'examples.css')}" />--}%
+
+
+%{--Now write over some of the values in slick.grid.CSS    --}%
+ <style>
+.slick-header-column.ui-state-default {
+    position: relative;
+    display: inline-block;
+    overflow: visible;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    height: 32px;
+    line-height: 16px;
+    margin: 0;
+    padding: 4px;
+    border-right: 1px solid silver;
+    border-left: 0px;
+    border-top: 0px;
+    border-bottom: 0px;
+    float: left;
+}
+.slick-header.ui-state-default, .slick-headerrow.ui-state-default {
+    width: 100%;
+    overflow: hidden;
+    border-left: 0px;
+}
+
+.slick-header-columns, .slick-headerrow-columns {
+    position: relative;
+    /*white-space: nowrap;*/
+    cursor: default;
+    overflow: visible;
+}
+.ui-sortable {
+    white-space: normal;
+}
+ </style>
+
+%{--We can put some custom classes here, such as those referenced by headerCssClass, to see if we can--}%
+%{--manipulate the appearance of the grid that way--}%
+<style>
+    .trialHeaderAppearance {
+        word-break: keep-all;
+        position: relative;
+        background: #add8e6;
+    }
+
+</style>
+
+
+
+    %{--Previously everything in the following block was held in ../slick-default-theme.css--}%
+%{--Note that the only thing that needs to change if you want to copy it back there is to remove the characters "/css"--}%
+%{--from the URL references--}%
+<style>
+.slick-header-columns {
+    /*background: url('../css/images/header-columns-bg.gif') repeat-x center bottom;*/
+    border-bottom: 1px solid silver;
+}
+
+.slick-header-column {
+    /*background: url('../css/images/header-columns-bg.gif') repeat-x center bottom;*/
+    border-right: 1px solid silver;
+}
+
+.slick-header-column:hover, .slick-header-column-active {
+    background: white url('../css/images/header-columns-over-bg.gif') repeat-x center bottom;
+}
+
+.slick-headerrow {
+    background: #fafafa;
+}
+
+.slick-headerrow-column {
+    background: #fafafa;
+    border-bottom: 0;
+    height: 100%;
+}
+
+.slick-row.ui-state-active {
+    background: #F5F7D7;
+}
+
+.slick-row {
+    position: absolute;
+    background: white;
+    border: 0px;
+    line-height: 20px;
+}
+
+.slick-row.selected {
+    z-index: 10;
+    background: #DFE8F6;
+}
+
+.slick-cell {
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+.slick-group {
+    border-bottom: 2px solid silver;
+}
+
+.slick-group-toggle {
+    width: 9px;
+    height: 9px;
+    margin-right: 5px;
+}
+
+.slick-group-toggle.expanded {
+    background: url(../css/images/collapse.gif) no-repeat center center;
+}
+
+.slick-group-toggle.collapsed {
+    background: url(../css/images/expand.gif) no-repeat center center;
+}
+
+.slick-group-totals {
+    color: gray;
+    background: white;
+}
+
+.slick-cell.selected {
+    background-color: beige;
+}
+
+.slick-cell.active {
+    border-color: gray;
+    border-style: solid;
+}
+
+.slick-sortable-placeholder {
+    background: silver !important;
+}
+
+.slick-row.odd {
+    background: #fafafa;
+}
+
+.slick-row.ui-state-active {
+    background: #F5F7D7;
+}
+
+.slick-row.loading {
+    opacity: 0.5;
+    filter: alpha(opacity = 50);
+}
+
+.slick-cell.invalid {
+    border-color: red;
+    -moz-animation-duration: 0.2s;
+    -webkit-animation-duration: 0.2s;
+    -moz-animation-name: slickgrid-invalid-hilite;
+    -webkit-animation-name: slickgrid-invalid-hilite;
+}
+
+@-moz-keyframes slickgrid-invalid-hilite {
+    from { box-shadow: 0 0 6px red; }
+    to { box-shadow: none; }
+}
+
+@-webkit-keyframes slickgrid-invalid-hilite {
+    from { box-shadow: 0 0 6px red; }
+    to { box-shadow: none; }
+}
+</style>
+
+
+
+%{--Note that the only thing that needs to change if you want to copy it back there is to remove the characters "/css"--}%
+%{--from the URL references--}%
+    %{--Everything in the following style block used to go and examples.CSS. Presumably it will go in --}%
+    %{--another CSS block when the experimentation phase is done.--}%
+<style>
+    /*@import url('../slick-default-theme.css');*/
+
+    * {
+        font-family: arial;
+        font-size: 8pt;
+    }
+
+    body {
+        background: beige;
+        padding: 0;
+        margin: 8px;
+    }
+
+    h2 {
+        font-size: 10pt;
+        border-bottom: 1px dotted gray;
+    }
+
+    ul {
+        margin-left: 0;
+        padding: 0;
+        cursor: default;
+    }
+
+    li {
+        background: url("../css/images/arrow_right_spearmint.png") no-repeat center left;
+        padding: 0 0 0 14px;
+
+        list-style: none;
+        margin: 0;
+    }
+
+    #myGrid {
+        background: white;
+        outline: 0;
+        border: 1px solid gray;
+    }
+
+    .grid-header {
+        border: 1px solid gray;
+        border-bottom: 0;
+        border-top: 0;
+        background: url('../css/images/header-bg.gif') repeat-x center top;
+        color: black;
+        height: 32px;
+        line-height: 32px;
+    }
+
+    .grid-header label {
+        display: inline-block;
+        font-weight: bold;
+        margin: auto auto auto 6px;
+    }
+
+    .grid-header .ui-icon {
+        margin: 4px 4px auto 6px;
+        background-color: transparent;
+        border-color: transparent;
+    }
+
+    .grid-header .ui-icon.ui-state-hover {
+        background-color: white;
+    }
+
+    .grid-header #txtSearch {
+        margin: 0 4px 0 4px;
+        padding: 2px 2px;
+        -moz-border-radius: 2px;
+        -webkit-border-radius: 2px;
+        border: 1px solid silver;
+    }
+
+    .options-panel {
+        -moz-border-radius: 6px;
+        -webkit-border-radius: 6px;
+        border: 1px solid silver;
+        background: #f0f0f0;
+        padding: 4px;
+        margin-bottom: 20px;
+        width: 320px;
+        position: absolute;
+        top: 0px;
+        left: 650px;
+    }
+
+        /* Individual cell styles */
+    .slick-cell.task-name {
+        font-weight: bold;
+        text-align: right;
+    }
+
+    .slick-cell.task-percent {
+        text-align: right;
+    }
+
+    .slick-cell.cell-move-handle {
+        font-weight: bold;
+        text-align: right;
+        border-right: solid gray;
+
+        background: #efefef;
+        cursor: move;
+    }
+
+    .cell-move-handle:hover {
+        background: #b6b9bd;
+    }
+
+    .slick-row.selected .cell-move-handle {
+        background: #D5DC8D;
+    }
+
+    .slick-row .cell-actions {
+        text-align: left;
+    }
+
+    .slick-row.complete {
+        background-color: #DFD;
+        color: #555;
+    }
+
+    .percent-complete-bar {
+        display: inline-block;
+        height: 6px;
+        -moz-border-radius: 3px;
+        -webkit-border-radius: 3px;
+    }
+
+        /* Slick.Editors.Text, Slick.Editors.Date */
+    input.editor-text {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        margin: 0;
+        background: transparent;
+        outline: 0;
+        padding: 0;
+
+    }
+
+    .ui-datepicker-trigger {
+        margin-top: 2px;
+        padding: 0;
+        vertical-align: top;
+    }
+
+        /* Slick.Editors.PercentComplete */
+    input.editor-percentcomplete {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        margin: 0;
+        background: transparent;
+        outline: 0;
+        padding: 0;
+
+        float: left;
+    }
+
+    .editor-percentcomplete-picker {
+        position: relative;
+        display: inline-block;
+        width: 16px;
+        height: 100%;
+        background: url("../css/images/pencil.gif") no-repeat center center;
+        overflow: visible;
+        z-index: 1000;
+        float: right;
+    }
+
+    .editor-percentcomplete-helper {
+        border: 0 solid gray;
+        position: absolute;
+        top: -2px;
+        left: -9px;
+        background: url("../css/images/editor-helper-bg.gif") no-repeat top left;
+        padding-left: 9px;
+
+        width: 120px;
+        height: 140px;
+        display: none;
+        overflow: visible;
+    }
+
+    .editor-percentcomplete-wrapper {
+        background: beige;
+        padding: 20px 8px;
+
+        width: 100%;
+        height: 98px;
+        border: 1px solid gray;
+        border-left: 0;
+    }
+
+    .editor-percentcomplete-buttons {
+        float: right;
+    }
+
+    .editor-percentcomplete-buttons button {
+        width: 80px;
+    }
+
+    .editor-percentcomplete-slider {
+        float: left;
+    }
+
+    .editor-percentcomplete-picker:hover .editor-percentcomplete-helper {
+        display: block;
+    }
+
+    .editor-percentcomplete-helper:hover {
+        display: block;
+    }
+
+        /* Slick.Editors.YesNoSelect */
+    select.editor-yesno {
+        width: 100%;
+        margin: 0;
+        vertical-align: middle;
+    }
+
+        /* Slick.Editors.Checkbox */
+    input.editor-checkbox {
+        margin: 0;
+        height: 100%;
+        padding: 0;
+        border: 0;
+    }
+    </style>
+
     <style>
     .cell-story {
         white-space: normal !important;
@@ -23,7 +427,7 @@
         display: inline-block;
         padding: 12px;
         background: white;
-        -opacity: 0.5;
+        opacity: 0.5;
         color: black;
         font-weight: bold;
         z-index: 9999;
@@ -32,13 +436,28 @@
         -webkit-border-radius: 10px;
         -moz-box-shadow: 0 0 5px red;
         -webkit-box-shadow: 0px 0px 5px red;
-        -text-shadow: 1px 1px 1px white;
     }
 
     .loading-indicator label {
         padding-left: 20px;
         background: url('../images/ajax-loader-small.gif') no-repeat center left;
     }
+
+    .grid-header {
+        border: 1px solid gray;
+        border-bottom: 0;
+        border-top: 0;
+        /*background: url('../images/header-bg.gif') repeat-x center top;*/
+        color: black;
+        height: 36px;
+        line-height: 36px;
+    }
+
+    .slick-header-columns {
+        height: 32px;
+        line-height: 32px;
+    }
+
     </style>
 </head>
 <body>
@@ -47,8 +466,8 @@
     <div class="grid-header" style="width:100%">
         <label>Molecular spreadsheet</label>
         <span style="float:right;display:inline-block;">
-            Search:
-            <input type="text" id="txtSearch" value="github">
+            <input type="button" id="AidGroup" value="Group by project">
+            <input type="button" id="PidGroup" value="Group by AID">
         </span>
     </div>
     <div id="myGrid" style="width:100%;height:600px;"></div>
@@ -111,8 +530,15 @@
                 data.length = 0;
             }
 
-
+            /**
+            *  This method is called every time the grid needs more data.  This method has the responsibility
+            *  of deciding whether we already have those data in hand or whether we need to ask for something
+            *  new from the server If were going to go to the server then we need to put together a suitable
+            *   set of parameters to make sure we get back what we want.
+            */
             function ensureData(from, to) {
+
+                // If a call is already in progress then interrupt it -- we need to make a new one
                 if (req) {
                     req.abort();
                     // this next for loop makes no sense at all to me. I will commented out and see what happens
@@ -120,6 +546,8 @@
                         data[i * PAGESIZE] = undefined;
                 }
 
+                // We request data one page at a time.  Figure out the 'from' and 'to' For the page we're about to request,
+                // and then as the very last step we will convert that into rows.
                 if (from < 0) {
                     from = 0;
                 }
@@ -140,25 +568,24 @@
  //               console.log ('calculated->from ='+ from +', to ='+ to+', fromPage ='+ fromPage +', toPage ='+ toPage+'.');
                 if (fromPage > toPage || ((fromPage == toPage) && (data[fromPage * PAGESIZE] !== undefined &&
                         data[fromPage * PAGESIZE] !== null))) {
-                    // TODO:  look-ahead
+                    // TODO:  This would be a good place to implement a look ahead
                     onDataLoaded.notify({from: from, to: to});
                     return;
                 }
 
-              //  var rowsRequested= (((toPage - fromPage) * PAGESIZE) + PAGESIZE);
+                // Having decided on the page, we now convert those page numbers into specific rows
                 var rowsRequested= 50;
                 var requestedStart =  (fromPage*rowsRequested);
                 var requestedEnd = requestedStart +  rowsRequested;
-                 var url = "feedMeJson?sidx=1&sord=asc&start=" + requestedStart + "&end=" + requestedEnd;
-//                console.log ('making a round-trip. requesting page='+(fromPage)+', rows='+(rowsRequested)+
-//                        ', start='+(requestedStart)+', end='+(requestedEnd)+
-//                        ', toPage='+(toPage)+', fromPage='+(fromPage)+'.');
 
-
+                // Have we been launched as part of a header click? If so then specify the row and the direction of the sort
+                var columnAndDirection = "";
                 if (sortcol != null) {
-                    url += ("&sortby=" + sortcol + ((sortdir > 0) ? "+asc" : "+desc"));
+                    columnAndDirection = ("&sortby=" + sortcol +"&sord=" + ((sortdir > 0) ? "asc" : "desc"));
                 }
+                var url = "feedMeJson?start=" + requestedStart + "&end=" + requestedEnd+columnAndDirection;
 
+                // Ready to initiate a new timeout
                 if (h_request != null) {
                     clearTimeout(h_request);
                 }
@@ -169,6 +596,7 @@
 
                     onDataLoading.notify({from: from, to: to});
 
+                    console.log (' server request prepared: URL ='+url +'.');
                     req = $.getJSON(url,function(resp){
                                 onSuccess(resp);
                             }
@@ -198,11 +626,16 @@
                 //  first element of array is  null . How can we fix this problem?
                 for (var i = 0; i < resp.rows.length; i++) {
                     // Here are the pieces of information we will pass to the grid.
-                    data[from+i] = { num:resp.rows[i].id,
-                                     story:resp.rows[i].name,
-                                     points:resp.rows[i].amount,
-                        note:resp.rows[i].tax,
-                        amount:resp.rows[i].note};
+//                    data[from+i] = { num:resp.rows[i].id,
+//                                     story:resp.rows[i].name,
+//                                     points:resp.rows[i].amount,
+//                        ac50:resp.rows[i].tax,
+//                        ec50:resp.rows[i].note};
+                    data[from+i] = { id:resp.rows[i].id,
+                        promisc:resp.rows[i].name,
+                        inhib:resp.rows[i].amount,
+                        ec50:resp.rows[i].tax,
+                        ac50:resp.rows[i].AC50};
                     data[from+i].index = from+i;
 
                  }
@@ -270,15 +703,13 @@
     var loader = new Slick.Data.RemoteModel();
     var runawayRecursionDetector = 0;
 
-    var storyTitleFormatter = function (row, cell, value, columnDef, dataContext) {
-//        s ="<b><a href='" + dataContext["url"] + "' target=_blank>" +
-//                dataContext["title"] + "</a></b><br/>";
-//        desc = dataContext["text"];
-//        if (desc) { // on Hackernews many stories don't have a description
-//            s += desc;
-//        }
-//        return s;
-        return dataContext.story;
+    var storyTitleFormatter = function ( row,// Integer value of r ow
+                                         cell,  // Integer value of column
+                                         value,  // Unformatted matched value
+                                         columnDef, // Column header
+                                         dataContext  // Map defining this row
+            ) {
+        return value;
     };
 
     var molecularStructureFormatter = function (row, cell, value, columnDef, dataContext) {
@@ -289,7 +720,7 @@
     };
 
     var numericalDataFormatter = function (row, cell, value, columnDef, dataContext) {
-        var s ="<b>" +dataContext["title"] + "</b><br/>";
+        var s ="<b>" +value + "</b><br/>";
         return s;
     };
 
@@ -303,39 +734,47 @@
     // the names specified by the field named 'field'  must match  those provided in the
     //  variable 'data' in the remoteModel portion of the code (look for the onSuccess method)
     var columns = [
-        {id: "num", name: "ID", field: "num", width: 40, sortable: true},
-        {id: "story", name: "Promiscuity", width: 80, formatter: storyTitleFormatter, cssClass: "cell-story", sortable: true},
-        {id: "structure", name: "Structure", width: 120, formatter: molecularStructureFormatter, cssClass: "cell-story", sortable: false},
-        {id: "ac50", name: "AC50", field: "note", width: 120, formatter: numericalDataFormatter, cssClass: "cell-story", sortable: true},
-        {id: "ec50", name: "EC50", field: "amount", width: 120, formatter: numericalDataFormatter, cssClass: "cell-story", sortable: true},
+        {id: "id", name: "ID", field: "id", width: 40, sortable: true},
+        {id: "promisc", name: "Promiscuity", field: "promisc", width: 80, formatter: storyTitleFormatter, cssClass: "cell-story", sortable: true},
+        {id: "structure", name: "Structure", field: "structure", width: 120, formatter: molecularStructureFormatter, cssClass: "cell-story", sortable: false},
+        {id: "ac50", name: "AC50", field: "ac50", width: 120, formatter: numericalDataFormatter, cssClass: "cell-story", sortable: true},
+        {id: "ec50", name: "EC50", field: "ec50", width: 120, formatter: numericalDataFormatter, cssClass: "cell-story", sortable: true},
 //        {id: "date", name: "Date", field: "create_ts", width: 60, formatter: dateFormatter, sortable: true},
-        {id: "points", name: "Percent inhibition", field: "name", width: 60, sortable: true}
+        {id: "inhib", name: "Percent inhibition", field: "inhib", width: 60, sortable: true,  headerCssClass: "trialHeaderAppearance"}
     ];
 
     var options = {
         rowHeight: 100,
         editable: false,
         enableAddRow: false,
-        enableCellNavigation: false
+        enableCellNavigation: false,
+        showHeaderRow: true,
+        headerRowHeight: 40
     };
 
     var loadingIndicator = null;
 //    var data = [] ;
 
+
+
     $(function () {
         grid = new Slick.Grid("#myGrid", loader.data, columns, options);
 
         grid.onViewportChanged.subscribe(function (e, args) {
+            console.log("onViewportChanged.");
             var vp = grid.getViewport();
             loader.ensureData(vp.top, vp.bottom);
         });
 
+
         grid.onSort.subscribe(function (e, args) {
+            console.log("Sort requested on field="+args.sortCol.field + ", direction ="+args.sortAsc + ".");
             loader.setSort(args.sortCol.field, args.sortAsc ? 1 : -1);
             var vp = grid.getViewport();
             loader.ensureData(vp.top, vp.bottom);
         });
 
+        // Event handler -- we have initiated a data transfer with the server
         loader.onDataLoading.subscribe(function () {
             if (!loadingIndicator) {
                 loadingIndicator = $("<span class='loading-indicator'><label>Buffering...</label></span>").appendTo(document.body);
@@ -350,7 +789,9 @@
             loadingIndicator.show();
         });
 
+        // Event handler -- we have received everything were going to get for this transmission from the server
         loader.onDataLoaded.subscribe(function (e, args) {
+            console.log(' data received');
             for (var i = args.from; i <= args.to; i++) {
                 grid.invalidateRow(i);
             }
@@ -407,41 +848,4 @@
 
 
 
-
-
-
-
-%{--<script>--}%
-    %{--var grid;--}%
-    %{--var columns = [--}%
-        %{--{id: "title", name: "Title", field: "title"},--}%
-        %{--{id: "duration", name: "Duration", field: "duration"},--}%
-        %{--{id: "%", name: "% Complete", field: "percentComplete"},--}%
-        %{--{id: "start", name: "Start", field: "start"},--}%
-        %{--{id: "finish", name: "Finish", field: "finish"},--}%
-        %{--{id: "effort-driven", name: "Effort Driven", field: "effortDriven"}--}%
-    %{--];--}%
-
-    %{--var options = {--}%
-        %{--enableCellNavigation: true,--}%
-        %{--enableColumnReorder: false--}%
-    %{--};--}%
-
-    %{--$(function () {--}%
-        %{--var data = [];--}%
-        %{--for (var i = 0; i < 500; i++) {--}%
-            %{--data[i] = {--}%
-                %{--title: "Task " + i,--}%
-                %{--duration: "5 days",--}%
-                %{--percentComplete: Math.round(Math.random() * 100),--}%
-                %{--start: "01/01/2009",--}%
-                %{--finish: "01/05/2009",--}%
-                %{--effortDriven: (i % 5 == 0)--}%
-            %{--};--}%
-        %{--}--}%
-
-        %{--grid = new Slick.Grid("#myGrid", data, columns, options);--}%
-    %{--})--}%
-%{--</script>--}%
-</body>
 </html>
