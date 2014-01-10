@@ -495,12 +495,15 @@
         function RemoteModel() {
             // private
             var PAGESIZE = 50;
+            var STATIC_COLUMNS = 4;
             var data = {length: 0};
             var searchstr = "";
             var sortcol = null;
             var sortdir = 1;
             var h_request = null;
             var req = null; // ajax request
+            var headers = null;
+            var columnHeaders = null;
 
             // events
             var onDataLoading = new Slick.Event();
@@ -509,6 +512,25 @@
 
             function init() {
             }
+
+            function columnExtractor(  rawHeaderInfo )   {
+                var developingColumns = [];
+                if ((typeof rawHeaderInfo === 'undefined') ||
+                    (typeof rawHeaderInfo.headers === 'undefined') ||
+                    (typeof rawHeaderInfo.headers.exptHeaders === 'undefined') ||
+                        ( rawHeaderInfo.headers.exptHeaders.length <STATIC_COLUMNS )){
+                    console.log('Variable intended for header extraction is flawed');
+                } else {
+                    developingColumns.push ({id: "a0", name: "Structure", field: "f1", width: 120, formatter: molecularStructureFormatter, sortable: false});
+                    developingColumns.push ({id: "a1", name: "CID", field: "f2", width: 80, formatter: numericalDataFormatter, cssClass: "cell-story", sortable: true});
+                    developingColumns.push ({id: "a2", name: "Promiscuity", field: "f3", width: 80, formatter: numericalDataFormatter, cssClass: "cell-story", sortable: true});
+                    developingColumns.push ({id: "a3", name: "Active Inactive", field: "f4", width: 60, formatter: numericalDataFormatter, headerCssClass: "trialHeaderAppearance", sortable: false});
+                    for ( var i=STATIC_COLUMNS ; i<(STATIC_COLUMNS+rawHeaderInfo.headers.exptHeaders.length) ; i++ ) {
+                        developingColumns.push ({id: "a"+(i), name: rawHeaderInfo.headers.exptHeaders[i-STATIC_COLUMNS].resultType, field: "f"+(i), width: 90, formatter: numericalDataFormatter, cssClass: "cell-story", sortable: true});
+                    }
+                }
+                columnHeaders = developingColumns;
+            } ;
 
 
             function isDataLoaded(from, to) {
@@ -519,6 +541,30 @@
                 }
 
                 return true;
+            }
+
+
+            function retriveColumnHeaders(){
+                var retrieveHeadersUrl = "retrieveHeaders";
+                var returnValue;
+//                returnValue = $.getJSON(retrieveHeadersUrl,function(response){
+//                    onHeaderSuccess(response)
+//                });
+                returnValue = $.ajax({
+                    dataType: "json",
+                    url:retrieveHeadersUrl,
+                    data: "",
+                    success:onHeaderSuccess,
+                    async: false
+                 });
+                return columnHeaders;
+            }
+
+
+            function onHeaderSuccess(response) {
+                console.log(' made it In to onHeaderSuccess subroutine') ;
+                columnExtractor(  response ) ;
+                console.log(' made it Out of onHeaderSuccess.') ;
             }
 
 
@@ -620,6 +666,7 @@
                 data.length = parseInt(resp.records);
 //                console.log ('received->start ='+ from +', end ='+ to+', records ='+ data.length +'.');
 
+                headers = resp.headers;
 
                 //  first element of array is  null . How can we fix this problem?
                 for (var i = 0; i < resp.rows.length; i++) {
@@ -668,9 +715,7 @@
             return {
                 // properties
                 "data": data,
-                "headers": {"rowHeaders": {},
-                            "rowSubHeaders": {},
-                            "columnHeaders": {}} ,
+                "columnHeaders": columnHeaders ,
 
                 // methods
                 "clear": clear,
@@ -679,6 +724,7 @@
                 "reloadData": reloadData,
                 "setSort": setSort,
                 "setSearch": setSearch,
+                "retriveColumnHeaders":retriveColumnHeaders,
 
                 // events
                 "onDataLoading": onDataLoading,
@@ -726,22 +772,21 @@
     };
 
 
-
-
     var dateFormatter = function (row, cell, value, columnDef, dataContext) {
         return (value.getMonth()+1) + "/" + value.getDate() + "/" + value.getFullYear();
     };
 
     // the names specified by the field named 'field'  must match  those provided in the
     //  variable 'data' in the remoteModel portion of the code (look for the onSuccess method)
-    var columns = [
-        {id: "id", name: "ID", field: "id", width: 40, sortable: true},
-        {id: "promisc", name: "Promiscuity", field: "promisc", width: 80, formatter: storyTitleFormatter, cssClass: "cell-story", sortable: true},
-        {id: "structure", name: "Structure", field: "structure", width: 120, formatter: molecularStructureFormatter, cssClass: "cell-story", sortable: false},
-        {id: "ac50", name: "AC50", field: "ac50", width: 120, formatter: numericalDataFormatter, cssClass: "cell-story", sortable: true},
-        {id: "ec50", name: "EC50", field: "ec50", width: 120, formatter: numericalDataFormatter, cssClass: "cell-story", sortable: true},
-        {id: "inhib", name: "Percent inhibition", field: "inhib", width: 60, sortable: true,  headerCssClass: "trialHeaderAppearance"}
-    ];
+    var columns = columnExtractor (loader.headers) ;
+//    var columns = [
+//        {id: "id", name: "ID", field: "id", width: 40, sortable: true},
+//        {id: "promisc", name: "Promiscuity", field: "promisc", width: 80, formatter: storyTitleFormatter, cssClass: "cell-story", sortable: true},
+//        {id: "structure", name: "Structure", field: "structure", width: 120, formatter: molecularStructureFormatter, cssClass: "cell-story", sortable: false},
+//        {id: "ac50", name: "AC50", field: "ac50", width: 120, formatter: numericalDataFormatter, cssClass: "cell-story", sortable: true},
+//        {id: "ec50", name: "EC50", field: "ec50", width: 120, formatter: numericalDataFormatter, cssClass: "cell-story", sortable: true},
+//        {id: "inhib", name: "Percent inhibition", field: "inhib", width: 60, sortable: true,  headerCssClass: "trialHeaderAppearance"}
+//    ];
 
     var subColumns  = [
         '',
@@ -762,15 +807,38 @@
     };
 
     var loadingIndicator = null;
-//    var data = [] ;
 
+ function columnExtractor(  rawHeaderInfo )   {
+        if (rawHeaderInfo != null)  {
+            console.log('Hooray!   We now have data for the column extract or');
+        }
+        var developingColumns = [];
+        developingColumns.push ({id: "id", name: "ID", field: "id", width: 40, sortable: true});
+        developingColumns.push ({id: "promisc", name: "Promiscuity", field: "promisc", width: 80, formatter: storyTitleFormatter, cssClass: "cell-story", sortable: true});
+        developingColumns.push ({id: "structure", name: "Structure", field: "structure", width: 120, formatter: molecularStructureFormatter, cssClass: "cell-story", sortable: false});
+        developingColumns.push ({id: "ac50", name: "AC50", field: "ac50", width: 120, formatter: numericalDataFormatter, cssClass: "cell-story", sortable: true});
+        developingColumns.push ({id: "ec50", name: "EC50", field: "ec50", width: 120, formatter: numericalDataFormatter, cssClass: "cell-story", sortable: true});
+        developingColumns.push ({id: "inhib", name: "Percent inhibition", field: "inhib", width: 60, sortable: true,  headerCssClass: "trialHeaderAppearance"});
+        return  developingColumns;
+    } ;
+//            {id: "id", name: "ID", field: "id", width: 40, sortable: true},
+//            {id: "promisc", name: "Promiscuity", field: "promisc", width: 80, formatter: storyTitleFormatter, cssClass: "cell-story", sortable: true},
+//            {id: "structure", name: "Structure", field: "structure", width: 120, formatter: molecularStructureFormatter, cssClass: "cell-story", sortable: false},
+//            {id: "ac50", name: "AC50", field: "ac50", width: 120, formatter: numericalDataFormatter, cssClass: "cell-story", sortable: true},
+//            {id: "ec50", name: "EC50", field: "ec50", width: 120, formatter: numericalDataFormatter, cssClass: "cell-story", sortable: true},
+//            {id: "inhib", name: "Percent inhibition", field: "inhib", width: 60, sortable: true,  headerCssClass: "trialHeaderAppearance"}
+//        ]);
+//    loader.headers
+//}
 
 
     $(function () {
-        grid = new Slick.Grid("#myGrid", loader.data, columns, options);
+
+        var columnHdrs = loader.retriveColumnHeaders();
+
+        grid = new Slick.Grid("#myGrid", loader.data,columns , options);
 
         grid.onViewportChanged.subscribe(function (e, args) {
-            console.log("onViewportChanged.");
             var vp = grid.getViewport();
             loader.ensureData(vp.top, vp.bottom);
         });
@@ -804,7 +872,7 @@
             for (var i = args.from; i <= args.to; i++) {
                 grid.invalidateRow(i);
             }
-
+         //   columns = columnExtractor (loader.headers) ;
             grid.updateRowCount();
             grid.render();
 
