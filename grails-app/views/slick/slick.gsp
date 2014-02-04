@@ -750,6 +750,7 @@
     var loader = new Slick.Data.RemoteModel();
     var runawayRecursionDetector = 0;
 
+
     var storyTitleFormatter = function ( row,// Integer value of r ow
                                          cell,  // Integer value of column
                                          value,  // Unformatted matched value
@@ -821,15 +822,7 @@
         developingColumns.push ({id: "inhib", name: "Percent inhibition", field: "inhib", width: 60, sortable: true,  headerCssClass: "trialHeaderAppearance"});
         return  developingColumns;
     } ;
-//            {id: "id", name: "ID", field: "id", width: 40, sortable: true},
-//            {id: "promisc", name: "Promiscuity", field: "promisc", width: 80, formatter: storyTitleFormatter, cssClass: "cell-story", sortable: true},
-//            {id: "structure", name: "Structure", field: "structure", width: 120, formatter: molecularStructureFormatter, cssClass: "cell-story", sortable: false},
-//            {id: "ac50", name: "AC50", field: "ac50", width: 120, formatter: numericalDataFormatter, cssClass: "cell-story", sortable: true},
-//            {id: "ec50", name: "EC50", field: "ec50", width: 120, formatter: numericalDataFormatter, cssClass: "cell-story", sortable: true},
-//            {id: "inhib", name: "Percent inhibition", field: "inhib", width: 60, sortable: true,  headerCssClass: "trialHeaderAppearance"}
-//        ]);
-//    loader.headers
-//}
+
 
 
     $(function () {
