@@ -1,4 +1,4 @@
-addEnrichmentPlot = function(selector, width, height, values, hasFeature, minValue, midValue, maxValue) {
+addEnrichmentPlot = function(selector, width, height, values, hasFeature, minValue, midValue, maxValue, featureWithValues ) {
 
     var mySVG = d3.select(selector)
         .append("svg")
