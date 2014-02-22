@@ -2,7 +2,8 @@
 
 // Inspired by http://informationandvisualization.de/blog/box-plot
     d3.box = function() {
-        var width = 1,
+        var instance={},
+            width = 1,
             height = 1,
             duration = 0,
             domain = null,
@@ -12,7 +13,7 @@
             tickFormat = null;
 
         // For each small multiple…
-        function box(g) {
+        instance.render=function (g) {
             g.each(function(d, i) {
                 d = d.map(value).sort(d3.ascending);
                 var g = d3.select(this),
@@ -34,9 +35,9 @@
                     : d3.range(n);
 
                 // Compute the new x-scale.
-                var x1 = d3.scale.linear()
-                    .domain(domain && domain.call(this, d, i) || [min, max])
-                    .range([height, 0]);
+//                var x1 = d3.scale.linear()
+//                    .domain(domain && domain.call(this, d, i) || [min, max])
+//                    .range([height, 0]);
 
                 // Retrieve the old x-scale, if this is an update.
                 var x0 = this.__chart__ || d3.scale.linear()
@@ -235,55 +236,48 @@
             d3.timer.flush();
         }
 
-        box.width = function(x) {
+        instance.width = function(x) {
             if (!arguments.length) return width;
             width = x;
-            return box;
+            return instance;
+        };
+        instance.domain = function(x) {
+            if (!arguments.length) return domain;
+            domain = x;
+            return instance;
         };
 
-        box.height = function(x) {
+        instance.height = function(x) {
             if (!arguments.length) return height;
             height = x;
-            return box;
+            return instance;
         };
 
-        box.tickFormat = function(x) {
+        instance.tickFormat = function(x) {
             if (!arguments.length) return tickFormat;
             tickFormat = x;
-            return box;
+            return instance;
         };
 
-        box.duration = function(x) {
-            if (!arguments.length) return duration;
-            duration = x;
-            return box;
-        };
-
-        box.domain = function(x) {
-            if (!arguments.length) return domain;
-            domain = x == null ? x : d3.functor(x);
-            return box;
-        };
-
-        box.value = function(x) {
+        instance.value = function(x) {
             if (!arguments.length) return value;
             value = x;
-            return box;
+            return instance;
         };
 
-        box.whiskers = function(x) {
+        instance.whiskers = function(x) {
             if (!arguments.length) return whiskers;
             whiskers = x;
-            return box;
+            return instance;
         };
 
-        box.quartiles = function(x) {
+        instance.quartiles = function(x) {
             if (!arguments.length) return quartiles;
             quartiles = x;
-            return box;
+            return instance;
         };
 
-        return box;
+        return instance;
     };
 
     function boxWhiskers(d) {

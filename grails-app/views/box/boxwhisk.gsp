@@ -83,8 +83,9 @@ body {
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.bottom + margin.top)
                 .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-                .call(chart);
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")") ;
+        chart.render(svg);
+
 
     });
 
