@@ -35,11 +35,8 @@
                     : d3.range(n);
 
                 // Compute the new x-scale.
-//                var x1 = d3.scale.linear()
-//                    .domain(domain && domain.call(this, d, i) || [min, max])
-//                    .range([height, 0]);
                 var x1 = d3.scale.linear()
-                    .domain(instance.domain && instance.domain(this, d, i) || [min, max])
+                    .domain(domain && domain.call(this, d, i) || [min, max])
                     .range([height, 0]);
 
                 // Retrieve the old x-scale, if this is an update.
@@ -244,9 +241,10 @@
             width = x;
             return instance;
         };
+
         instance.domain = function(x) {
-            if (!arguments.length) return domain;
-            domain = x;
+            if (!arguments.length) return instance;
+            domain = x == null ? x : d3.functor(x);
             return instance;
         };
 
