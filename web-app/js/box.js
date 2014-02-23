@@ -38,6 +38,9 @@
 //                var x1 = d3.scale.linear()
 //                    .domain(domain && domain.call(this, d, i) || [min, max])
 //                    .range([height, 0]);
+                var x1 = d3.scale.linear()
+                    .domain(instance.domain && instance.domain(this, d, i) || [min, max])
+                    .range([height, 0]);
 
                 // Retrieve the old x-scale, if this is an update.
                 var x0 = this.__chart__ || d3.scale.linear()
