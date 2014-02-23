@@ -23,7 +23,6 @@
 <h4>Now let's try again</h4>
 <div id="newpickme"></div>
 <script>
-    console.log('hello');
     var values = [];
     for (var i = 0; i < 900; i++){
         if (i<100){
@@ -33,19 +32,19 @@
         }
 
     }
-    var ccl = {'name':'MYC','link':'<a href=\'#\'>link</a>'}
+
     var features = [];
 
     for (var i = 0; i < 900; i++){
-        features.push({'name':'MYC'+(i%100==0),'link':'<a href=\'#\'>link</a>'});
+        features.push({'name':'MYC'+(i%100==0),'exists':(i%100==0),'link':'<a href=\'#\'>link</a>'});
     }
     // old way
-    addEnrichmentPlot('#pickme',200,200,values,features,0,0.5,1);
+//    addEnrichmentPlot('#pickme',200,200,values,features,0,0.5,1);
 
     // new way
-    var margin = {top: 200, right: 200, bottom: 300, left: 50},
+    var margin = {top: 200, right: 200, bottom: 100, left: 50},
             width = 420 - margin.left - margin.right,
-            height = 800 - margin.top - margin.bottom;
+            height = 450 - margin.top - margin.bottom;
 
     var enrichmentPlot = d3.heatmap()
                   .width(width)
@@ -53,8 +52,11 @@
 
     var enrichData = [];
     for (var i=0;i<values.length;i++) {
-        enrichData.push({point:values[i],
-                        feature:features[i]?1:0});
+        enrichData.push({ index:i,
+                          point:values[i],
+                          name:features[i].name,
+                          link:features[i].link,
+                          feature:features[i].exists?1:0});
     }
     var enrichArray = [enrichData,enrichData,enrichData];
 
@@ -66,7 +68,7 @@
             .attr("height", height + margin.bottom + margin.top)
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-            .call(enrichmentPlot);
+            .call(enrichmentPlot.render);
 
 
 

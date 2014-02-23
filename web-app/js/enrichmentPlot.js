@@ -2,19 +2,15 @@
 
 // Inspired by http://informationandvisualization.de/blog/box-plot
     d3.heatmap = function() {
-        var width = 1,
+        var instance={},
+            width = 1,
             height = 1,
-            values = [],
-            hasFeature = [],
             minValue = 1,
             midValue = 1,
-            maxValue = 1,
-            duration = 0,
-            domain = null,
-            value = Number;
+            maxValue = 1;
 
         // For each small multiple…
-        function heatmap(g) {
+        instance.render=function (g) {
             g.each(function(d, i) {
 //                d = d.map(value).sort(d3.ascending);
                 d = d.sort(function(a, b) { return (b.point) - (a.point)});
@@ -39,7 +35,7 @@
                     .attr('width', w)
                     .attr('height', 2*height/3)
                     .attr('x', function(d,i) {
-                        return i * w;
+                        return d.index * w;
                     } )
                     .attr('y',0)
                     .attr('fill', function(d) {
@@ -49,39 +45,46 @@
                 var featuremap = g.selectAll(".featuremap")
                     .data(d)
                     .enter().append("svg:rect")
+                    .filter (
+                    function(d,i) {
+                        return d.feature;//2*height/3
+                    }
+                   )
                     .attr('width', function(d,i) {
                         return d.point * w;
                     } )
-                    .attr('height', 2*height/3)
+                    .attr('height',  function(d,i) {
+                        return (2*height/3);//*d.feature;//2*height/3
+                    } )
                     .attr('x', function(d,i) {
-                        return i * w;
+                        return d.index * w;
                     } )
                     .attr('y',height/3)
                     .attr('fill', "black")
-                    .attr('stroke', 'white');
+                    .attr('stroke', 'black');
 
             });
 
         }
-        heatmap.width = function(x) {
+        instance.width = function(x) {
             if (!arguments.length) return width;
             width = x;
-            return heatmap;
+            return instance;
         };
 
-        heatmap.height = function(x) {
+        instance.height = function(x) {
             if (!arguments.length) return height;
             height = x;
-            return heatmap;
+            return instance;
         };
 
-        heatmap.minValue = function(x) {
+        instance.minValue = function(x) {
             if (!arguments.length) return minValue;
             minValue = x;
-            return heatmap;
+            return instance;
         };
 
-         return heatmap;
+         return instance;
     };
 
 //    function boxWhiskers(d) {

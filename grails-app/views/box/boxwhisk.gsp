@@ -54,7 +54,7 @@ body {
             max = -Infinity;
 
     var chart = d3.box()
-            .whiskers(iqr(1.5))
+            .whiskers(iqr(0.1))
             .width(width)
             .height(height);
 
@@ -84,7 +84,7 @@ body {
                 .attr("height", height + margin.bottom + margin.top)
                 .append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-                .call(render);
+                .call(chart.render);
 //        chart.render(svg);
 
 
