@@ -2,41 +2,53 @@
 
 // Inspired by http://informationandvisualization.de/blog/box-plot
     d3.heatmap = function() {
-        var instance={},
+
+        // the variables we intend to surface
+        var
             width = 1,
             height = 1,
-            minValue = 1,
-            midValue = 1,
-            maxValue = 1,
-            selection = {},
-            data={};
+            selectionIdentifier = '',
+            data={},
 
-//        var svg = d3.select("body").select("#newpickme").selectAll("svg")
-//            .data(enrichArray)
-//            .enter().append("svg")
-//            .attr("class", "enrichmentPlot")
-////            .attr("width", width + margin.left + margin.right)
-////            .attr("height", height + margin.bottom + margin.top)
-//            .append("g")
-//            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-//            .call(enrichmentPlot.render);
+            // the variables that will never be exposed
+            instance={},
+            selection = {};
 
-        instance.assignment = function (data) {
-            selection.data(data)
-                .enter().append("svg");
+
+        // assign data to the DOM
+        instance.assignData = function (x) {
+            if (!arguments.length) return data;
+            data = x;
+            selection
+                .selectAll("svg")
+                .data(data)
+                .enter()
+                .append("svg");
             return instance;
         };
 
 
-        // For each small multiple…
+        // Now walk through the DOM and create the enrichment plot
          instance.render=function (g) {
-            g.each(function(d, i) {
+
+             //  create the on screen display
+             selection
+                 .selectAll("svg")
+                 .attr("class", "enrichmentPlot")
+                 .attr("width", width)
+                 .attr("height", height)
+                 .append("g")
+                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");            //  create the on screen display
+
+             selection
+                 .selectAll("svg")
+            .each(function(d, i) {
                 d = d.sort(function(a, b) { return (b.point) - (a.point)});
                 var g = d3.select(this),
                     n = d.length,
-                    w = width/n;
-                minValue = d[0].point;
-                midValue = d[Math.floor(n/2)].point;
+                    w = width/ n,
+                minValue = d[0].point,
+                midValue = d[Math.floor(n/2)].point,
                 maxValue = d[n - 1].point;
 
 
@@ -83,6 +95,8 @@
 
             });
 
+
+
         };
 
         instance.width = function(x) {
@@ -97,15 +111,10 @@
             return instance;
         };
 
-        instance.minValue = function(x) {
-            if (!arguments.length) return minValue;
-            minValue = x;
-            return instance;
-        };
-
-        instance.selection = function(x) {
-            if (!arguments.length) return selection;
-            selection = x;
+        instance.selectionIdentifier = function(x) {
+            if (!arguments.length) return selectionIdentifier;
+            selectionIdentifier = x;
+            selection = d3.select(selectionIdentifier);
             return instance;
         };
 

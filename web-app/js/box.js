@@ -7,6 +7,7 @@
             height = 1,
             duration = 0,
             domain = null,
+            dataUrl = '',
             value = Number,
             whiskers = boxWhiskers,
             quartiles = boxQuartiles,
@@ -14,6 +15,11 @@
 
         // For each small multiple…
         instance.render=function (g) {
+
+            g=d3.select("body").selectAll("svg") ;
+
+
+
             g.each(function(d, i) {
                 d = d.map(value).sort(d3.ascending);
                 var g = d3.select(this),
@@ -263,6 +269,40 @@
         instance.value = function(x) {
             if (!arguments.length) return value;
             value = x;
+            return instance;
+        };
+
+        instance.dataUrl = function(x) {
+            if (!arguments.length) return dataUrl;
+            dataUrl = x;
+            d3.json(dataUrl, function(error, csv) {
+                var data = [];
+
+                csv.forEach(function(x) {
+                    var e = Math.floor(x.Expt - 1),
+                        r = Math.floor(x.Run - 1),
+                        s = Math.floor(x.Speed),
+                        d = data[e];
+                    if (!d) d = data[e] = [s];
+                    else d.push(s);
+                    if (s > max) max = s;
+                    if (s < min) min = s;
+                });
+
+                instance.domain([min, max]);
+
+                var svg = d3.select("body").selectAll("svg")
+                    .data(data)
+                    .enter().append("svg")
+                    .attr("class", "box")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.bottom + margin.top)
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")") ;
+
+
+            });
+
             return instance;
         };
 
