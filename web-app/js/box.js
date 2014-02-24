@@ -5,22 +5,48 @@
         var instance={},
             width = 1,
             height = 1,
+            selectionIdentifier = '',
             duration = 0,
             domain = null,
             dataUrl = '',
+
+        // the variables that will never be exposed
             value = Number,
             whiskers = boxWhiskers,
             quartiles = boxQuartiles,
-            tickFormat = null;
+            tickFormat = null,
+            selection = {};
+
+
+        // assign data to the DOM
+        instance.assignData = function (x) {
+            if (!arguments.length) return data;
+            data = x;
+            selection
+                .selectAll("svg")
+                .data(data)
+                .enter()
+                .append("svg");
+            return instance;
+        };
+
+
+
 
         // For each small multiple…
         instance.render=function (g) {
 //
-//            g=d3.select("body").selectAll("svg") ;
+
+            selection
+                .selectAll("svg")
+                .attr("class", "box")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.bottom + margin.top)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
 
-
-            g.each(function(d, i) {
+            .each(function(d, i) {
                 d = d.map(value).sort(d3.ascending);
                 var g = d3.select(this),
                     n = d.length,
@@ -317,6 +343,14 @@
             quartiles = x;
             return instance;
         };
+
+        instance.selectionIdentifier = function(x) {
+            if (!arguments.length) return selectionIdentifier;
+            selectionIdentifier = x;
+            selection = d3.select(selectionIdentifier);
+            return instance;
+        };
+
 
         return instance;
     };

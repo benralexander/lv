@@ -42,9 +42,9 @@
 
     // create a placeholder, but don't assign any data yet
     var enrichmentPlot = d3.heatmap()
+            .selectionIdentifier("#pickme")
             .width(width + margin.left + margin.right)
             .height(height + margin.bottom + margin.top)
-            .selectionIdentifier("#pickme")
             .assignData(enrichArray)
             .render();
 

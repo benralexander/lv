@@ -53,41 +53,31 @@ body {
     var min = Infinity,
             max = -Infinity;
 
+
     var chart = d3.box()
-            .whiskers(iqr(0.1))
+            .selectionIdentifier("body")
+            .whiskers(iqr(1.0))
             .width(width)
             .height(height) ;
-//            .dataUrl ("http://localhost:8028/cow/box/retrieveBoxData")
-//            .render();
 
 
 
-    d3.json("http://localhost:8028/cow/box/retrieveBoxData", function(error, csv) {
+    d3.json("http://localhost:8028/cow/box/retrieveBoxData", function (error, json) {
         var data = [];
+        json.forEach(function (x) {
+                var e = Math.floor(x.Expt - 1),
+                        r = Math.floor(x.Run - 1),
+                        s = Math.floor(x.Speed),
+                        d = data[e];
+                if (!d) d = data[e] = [s];
+                else d.push(s);
+                if (s > max) max = s;
+                if (s < min) min = s;
+         });
 
-        csv.forEach(function(x) {
-            var e = Math.floor(x.Expt - 1),
-                    r = Math.floor(x.Run - 1),
-                    s = Math.floor(x.Speed),
-                    d = data[e];
-            if (!d) d = data[e] = [s];
-            else d.push(s);
-            if (s > max) max = s;
-            if (s < min) min = s;
-        });
-
-        chart.domain([min, max]);
-
-        var svg = d3.select("body").selectAll("svg")
-                .data(data)
-                .enter().append("svg")
-                .attr("class", "box")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.bottom + margin.top)
-                .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-                .call(chart.render);
-
+        chart
+                .assignData (data)
+                .render();
 
     });
 
