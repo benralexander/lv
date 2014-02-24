@@ -7,12 +7,30 @@
             height = 1,
             minValue = 1,
             midValue = 1,
-            maxValue = 1;
+            maxValue = 1,
+            selection = {},
+            data={};
+
+//        var svg = d3.select("body").select("#newpickme").selectAll("svg")
+//            .data(enrichArray)
+//            .enter().append("svg")
+//            .attr("class", "enrichmentPlot")
+////            .attr("width", width + margin.left + margin.right)
+////            .attr("height", height + margin.bottom + margin.top)
+//            .append("g")
+//            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+//            .call(enrichmentPlot.render);
+
+        instance.assignment = function (data) {
+            selection.data(data)
+                .enter().append("svg");
+            return instance;
+        };
+
 
         // For each small multiple…
-        instance.render=function (g) {
+         instance.render=function (g) {
             g.each(function(d, i) {
-//                d = d.map(value).sort(d3.ascending);
                 d = d.sort(function(a, b) { return (b.point) - (a.point)});
                 var g = d3.select(this),
                     n = d.length,
@@ -65,7 +83,8 @@
 
             });
 
-        }
+        };
+
         instance.width = function(x) {
             if (!arguments.length) return width;
             width = x;
@@ -84,12 +103,16 @@
             return instance;
         };
 
-         return instance;
+        instance.selection = function(x) {
+            if (!arguments.length) return selection;
+            selection = x;
+            return instance;
+        };
+
+
+        return instance;
     };
 
-//    function boxWhiskers(d) {
-//        return [0, d.length - 1];
-//    }
 
 
 })();

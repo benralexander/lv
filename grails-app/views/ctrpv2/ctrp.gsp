@@ -23,49 +23,38 @@
 <h4>Now let's try again</h4>
 <div id="newpickme"></div>
 <script>
-    var values = [];
+
+    // make up some data
+    var enrichData = [];
     for (var i = 0; i < 900; i++){
-        if (i<100){
-            values[i] = i/1900;
-        } else {
-            values[i] = i/900;
-        }
-
+        enrichData.push({ index:i,
+            point:(i<200)?(i/1900): (i/900),
+            name:'MYC'+(i%100==0),
+            link:'<a href=\'#\'>link</a>',
+            feature:(i%100==0)?1:0});
     }
+    // demonstrate that we can draw multiple enrichment plots simultaneously
+    var enrichArray = [enrichData,enrichData,enrichData];
 
-    var features = [];
-
-    for (var i = 0; i < 900; i++){
-        features.push({'name':'MYC'+(i%100==0),'exists':(i%100==0),'link':'<a href=\'#\'>link</a>'});
-    }
-    // old way
-//    addEnrichmentPlot('#pickme',200,200,values,features,0,0.5,1);
-
-    // new way
+    // Where do you want your plot?
     var margin = {top: 200, right: 200, bottom: 100, left: 50},
             width = 420 - margin.left - margin.right,
             height = 450 - margin.top - margin.bottom;
 
+    // create a placeholder, but don't assign any data yet
     var enrichmentPlot = d3.heatmap()
                   .width(width)
-                  .height(height);
+                  .height(height)
+            .selection( d3.select("body").select("#newpickme").selectAll("svg"));
 
-    var enrichData = [];
-    for (var i=0;i<values.length;i++) {
-        enrichData.push({ index:i,
-                          point:values[i],
-                          name:features[i].name,
-                          link:features[i].link,
-                          feature:features[i].exists?1:0});
-    }
-    var enrichArray = [enrichData,enrichData,enrichData];
+    var svg = enrichmentPlot.selection();
 
-    var svg = d3.select("body").select("#newpickme").selectAll("svg")
-            .data(enrichArray)
+
+            svg.data(enrichArray)
             .enter().append("svg")
             .attr("class", "enrichmentPlot")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.bottom + margin.top)
+//            .attr("width", width + margin.left + margin.right)
+//            .attr("height", height + margin.bottom + margin.top)
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
             .call(enrichmentPlot.render);
