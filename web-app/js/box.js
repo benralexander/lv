@@ -15,8 +15,8 @@
 
         // For each small multiple…
         instance.render=function (g) {
-
-            g=d3.select("body").selectAll("svg") ;
+//
+//            g=d3.select("body").selectAll("svg") ;
 
 
 

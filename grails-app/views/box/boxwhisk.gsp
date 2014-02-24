@@ -56,40 +56,40 @@ body {
     var chart = d3.box()
             .whiskers(iqr(0.1))
             .width(width)
-            .height(height)
-            .dataUrl ("http://localhost:8028/cow/box/retrieveBoxData")
-            .render();
+            .height(height) ;
+//            .dataUrl ("http://localhost:8028/cow/box/retrieveBoxData")
+//            .render();
 
 
-//
-//    d3.json("http://localhost:8028/cow/box/retrieveBoxData", function(error, csv) {
-//        var data = [];
-//
-//        csv.forEach(function(x) {
-//            var e = Math.floor(x.Expt - 1),
-//                    r = Math.floor(x.Run - 1),
-//                    s = Math.floor(x.Speed),
-//                    d = data[e];
-//            if (!d) d = data[e] = [s];
-//            else d.push(s);
-//            if (s > max) max = s;
-//            if (s < min) min = s;
-//        });
-//
-//        chart.domain([min, max]);
-//
-//        var svg = d3.select("body").selectAll("svg")
-//                .data(data)
-//                .enter().append("svg")
-//                .attr("class", "box")
-//                .attr("width", width + margin.left + margin.right)
-//                .attr("height", height + margin.bottom + margin.top)
-//                .append("g")
-//                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-//                .call(chart.render);
-//
-//
-//    });
+
+    d3.json("http://localhost:8028/cow/box/retrieveBoxData", function(error, csv) {
+        var data = [];
+
+        csv.forEach(function(x) {
+            var e = Math.floor(x.Expt - 1),
+                    r = Math.floor(x.Run - 1),
+                    s = Math.floor(x.Speed),
+                    d = data[e];
+            if (!d) d = data[e] = [s];
+            else d.push(s);
+            if (s > max) max = s;
+            if (s < min) min = s;
+        });
+
+        chart.domain([min, max]);
+
+        var svg = d3.select("body").selectAll("svg")
+                .data(data)
+                .enter().append("svg")
+                .attr("class", "box")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.bottom + margin.top)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                .call(chart.render);
+
+
+    });
 
 
     // Returns a function to compute the interquartile range.
