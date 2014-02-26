@@ -17,18 +17,13 @@
             tickFormat = null,
             selection = {};
 
-
-        // assign data to the DOM
-        instance.assignData = function (x) {
-            if (!arguments.length) return data;
-            data = x;
-            selection
-                .selectAll("svg")
-                .data(data)
-                .enter()
-                .append("svg");
-            return instance;
-        };
+        //  private variable
+        var tip = d3.tip()
+            .attr('class', 'd3-tip')
+            .offset([-10, 0])
+            .html(function(d) {
+                return "<strong>Value:</strong> <span style='color:red'>" + d + "</span>";
+            });
 
 
 
@@ -37,16 +32,18 @@
         instance.render=function (g) {
 //
 
-            selection
+            var gg = selection
                 .selectAll("svg")
                 .attr("class", "box")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.bottom + margin.top)
                 .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                gg.call(tip);
 
 
-            .each(function(d, i) {
+            gg.each(function(d, i) {
                 d = d.map(value).sort(d3.ascending);
                 var g = d3.select(this),
                     n = d.length,
@@ -194,10 +191,13 @@
                     .attr("cx", width / 2)
                     .attr("cy", function(i) { return x0(d[i]); })
                     .style("opacity", 1e-6)
+                    .on('mouseover', tip.show)
+                    .on('mouseout', tip.hide)
                     .transition()
                     .duration(duration)
                     .attr("cy", function(i) { return x1(d[i]); })
-                    .style("opacity", 1);
+                    .style("opacity", 1)
+                   ;
 
                 outlier.transition()
                     .duration(duration)
@@ -267,6 +267,18 @@
             });
             d3.timer.flush();
         }
+
+        // Note:  this method will assign data to the DOM
+        instance.assignData = function (x) {
+            if (!arguments.length) return data;
+            data = x;
+            selection
+                .selectAll("svg")
+                .data(data)
+                .enter()
+                .append("svg");
+            return instance;
+        };
 
         instance.width = function(x) {
             if (!arguments.length) return width;
