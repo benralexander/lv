@@ -8,7 +8,6 @@
             selectionIdentifier = '',
             duration = 0,
             domain = null,
-            dataUrl = '',
             min = Infinity,
             max = -Infinity,
 
@@ -35,7 +34,7 @@
         instance.render=function (g) {
 //
 
-            var gg = selection
+             selection
                 .selectAll("svg")
                 .attr("class", "box")
                 .attr("width", width + margin.left + margin.right)
@@ -45,8 +44,7 @@
                 .call(tip)
 
 
-            gg.each(function(d, i) {
-//                d = d.map(value).sort(d3.ascending);
+            .each(function(d, i) {
                 d = d.sort(function(a,b){
                     return a.value - b.value;
                 });
@@ -347,6 +345,7 @@
             return instance;
         };
 
+        // identify the dominant element upon which we will hang this graphic
         instance.selectionIdentifier = function(x) {
             if (!arguments.length) return selectionIdentifier;
             selectionIdentifier = x;

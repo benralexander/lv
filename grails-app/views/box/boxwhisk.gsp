@@ -85,9 +85,13 @@ body {
 
     var chart = d3.box()
             .selectionIdentifier("body")
-            .whiskers(iqr(1.0))
             .width(width)
-            .height(height) ;
+            .height(height)
+        // this next line determines how big the whiskers are.  Without it the
+        // whiskers will expand to cover the entire data range. With it they will
+        // shrink to cover a multiple of the interquartile range.  Set the parameter
+        // two zero and you'll get a box with no whiskers
+            .whiskers(iqr(1.5));
 
 
 
