@@ -22,7 +22,8 @@
             .attr('class', 'd3-tip')
             .offset([-10, 0])
             .html(function(d) {
-                return "<strong>Value:</strong> <span style='color:red'>" + d.description + "</span>";
+                var nodeData =  d3.select(this.parentNode).datum()[d];
+                return "<strong></strong> <span style='color:red'>" + nodeData.description + "</span>";
             });
 
 
