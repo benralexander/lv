@@ -22,7 +22,7 @@
             .attr('class', 'd3-tip')
             .offset([-10, 0])
             .html(function(d) {
-                return "<strong>Value:</strong> <span style='color:red'>" + d + "</span>";
+                return "<strong>Value:</strong> <span style='color:red'>" + d.description + "</span>";
             });
 
 
@@ -38,24 +38,26 @@
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.bottom + margin.top)
                 .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-                gg.call(tip);
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                .call(tip)
 
 
             gg.each(function(d, i) {
-                d = d.map(value).sort(d3.ascending);
+//                d = d.map(value).sort(d3.ascending);
+                d = d.sort(function(a,b){
+                    return a.value - b.value;
+                });
                 var g = d3.select(this),
                     n = d.length,
-                    min = d[0],
-                    max = d[n - 1];
+                    min = d[0].value,
+                    max = d[n - 1].value;
 
                 // Compute quartiles. Must return exactly 3 elements.
                 var quartileData = d.quartiles = quartiles(d);
 
                 // Compute whiskers. Must return exactly 2 elements, or null.
                 var whiskerIndices = whiskers && whiskers.call(this, d, i),
-                    whiskerData = whiskerIndices && whiskerIndices.map(function(i) { return d[i]; });
+                    whiskerData = whiskerIndices && whiskerIndices.map(function(i) { return d[i].value; });
 
                 // Compute outliers. If no whiskers are specified, all data are "outliers".
                 // We compute the outliers as indices, so that we can join across transitions!
@@ -88,9 +90,13 @@
                 center.enter().insert("line", "rect")
                     .attr("class", "center")
                     .attr("x1", width / 2)
-                    .attr("y1", function(d) { return x0(d[0]); })
+                    .attr("y1", function(d) {
+                        return x0(d[0]);
+                    })
                     .attr("x2", width / 2)
-                    .attr("y2", function(d) { return x0(d[1]); })
+                    .attr("y2", function(d) {
+                        return x0(d[1]);
+                    })
                     .style("opacity", 1e-6)
                     .transition()
                     .duration(duration)
@@ -189,24 +195,27 @@
                     .attr("class", "outlier")
                     .attr("r", 5)
                     .attr("cx", width / 2)
-                    .attr("cy", function(i) { return x0(d[i]); })
+                    .attr("cy", function(i) {
+                        return x0(d[i].value);
+                    })
                     .style("opacity", 1e-6)
                     .on('mouseover', tip.show)
                     .on('mouseout', tip.hide)
                     .transition()
                     .duration(duration)
-                    .attr("cy", function(i) { return x1(d[i]); })
+                    .attr("cy", function(i) {
+                        return x1(d[i].value); })
                     .style("opacity", 1)
                    ;
 
                 outlier.transition()
                     .duration(duration)
-                    .attr("cy", function(i) { return x1(d[i]); })
+                    .attr("cy", function(i) { return x1(d[i].value); })
                     .style("opacity", 1);
 
                 outlier.exit().transition()
                     .duration(duration)
-                    .attr("cy", function(i) { return x1(d[i]); })
+                    .attr("cy", function(i) { return x1(d[i].value); })
                     .style("opacity", 1e-6)
                     .remove();
 
@@ -372,10 +381,12 @@
     }
 
     function boxQuartiles(d) {
+        var accumulator = [];
+        d.forEach(function(x){accumulator.push(x.value)});
         return [
-            d3.quantile(d, .25),
-            d3.quantile(d, .5),
-            d3.quantile(d, .75)
+            d3.quantile(accumulator, .25),
+            d3.quantile(accumulator, .5),
+            d3.quantile(accumulator, .75)
         ];
     }
 

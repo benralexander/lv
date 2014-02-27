@@ -98,8 +98,10 @@ body {
                         r = Math.floor(x.Run - 1),
                         s = Math.floor(x.Speed),
                         d = data[e];
-                if (!d) d = data[e] = [s];
-                else d.push(s);
+                if (!d) d = data[e] = [{value:s,
+                    description:'first value of '+s}];
+                else d.push({value:s,
+                             description:'value of '+s});
                 if (s > max) max = s;
                 if (s < min) min = s;
          });
@@ -119,8 +121,8 @@ body {
                     iqr = (q3 - q1) * k,
                     i = -1,
                     j = d.length;
-            while (d[++i] < q1 - iqr);
-            while (d[--j] > q3 + iqr);
+            while ((d[++i].value) < q1 - iqr);
+            while ((d[--j].value) > q3 + iqr);
             return [i, j];
         };
     }
