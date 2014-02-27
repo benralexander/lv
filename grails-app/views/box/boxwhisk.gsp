@@ -79,8 +79,8 @@ body {
             width = 120 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom;
 
-    var min = Infinity,
-            max = -Infinity;
+    var globalMinimum = Infinity,
+            globalMaximum = -Infinity;
 
 
     var chart = d3.box()
@@ -102,12 +102,14 @@ body {
                     description:'first value of '+s}];
                 else d.push({value:s,
                              description:'value of '+s});
-                if (s > max) max = s;
-                if (s < min) min = s;
+                if (s > globalMaximum) globalMaximum = s;
+                if (s < globalMinimum) globalMinimum = s;
          });
 
         chart
                 .assignData (data)
+                .min(globalMinimum)
+                .max(globalMaximum)
                 .render();
 
     });

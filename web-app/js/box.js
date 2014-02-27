@@ -9,6 +9,8 @@
             duration = 0,
             domain = null,
             dataUrl = '',
+            min = Infinity,
+            max = -Infinity,
 
         // the variables that will never be exposed
             value = Number,
@@ -49,9 +51,7 @@
                     return a.value - b.value;
                 });
                 var g = d3.select(this),
-                    n = d.length,
-                    min = d[0].value,
-                    max = d[n - 1].value;
+                    n = d.length;
 
                 // Compute quartiles. Must return exactly 3 elements.
                 var quartileData = d.quartiles = quartiles(d);
@@ -296,6 +296,20 @@
             return instance;
         };
 
+
+        instance.min = function(x) {
+            if (!arguments.length) return min;
+            min = x;
+            return instance;
+        };
+
+        instance.max = function(x) {
+            if (!arguments.length) return max;
+            max = x;
+            return instance;
+        };
+
+
         instance.domain = function(x) {
             if (!arguments.length) return instance;
             domain = x == null ? x : d3.functor(x);
@@ -320,39 +334,6 @@
             return instance;
         };
 
-        instance.dataUrl = function(x) {
-            if (!arguments.length) return dataUrl;
-            dataUrl = x;
-            d3.json(dataUrl, function(error, csv) {
-                var data = [];
-
-                csv.forEach(function(x) {
-                    var e = Math.floor(x.Expt - 1),
-                        r = Math.floor(x.Run - 1),
-                        s = Math.floor(x.Speed),
-                        d = data[e];
-                    if (!d) d = data[e] = [s];
-                    else d.push(s);
-                    if (s > max) max = s;
-                    if (s < min) min = s;
-                });
-
-                instance.domain([min, max]);
-
-                var svg = d3.select("body").selectAll("svg")
-                    .data(data)
-                    .enter().append("svg")
-                    .attr("class", "box")
-                    .attr("width", width + margin.left + margin.right)
-                    .attr("height", height + margin.bottom + margin.top)
-                    .append("g")
-                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")") ;
-
-
-            });
-
-            return instance;
-        };
 
         instance.whiskers = function(x) {
             if (!arguments.length) return whiskers;
