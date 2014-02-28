@@ -124,14 +124,10 @@ body {
     var interquartileMultiplier = 1.5;
 
 
-    var chart = d3.box()
+    var chart = d3.boxWhiskerPlot()
             .selectionIdentifier("#plot")
             .width(width)
             .height(height)
-        // this next line determines how big the whiskers are.  Without it the
-        // whiskers will expand to cover the entire data range. With it they will
-        // shrink to cover a multiple of the interquartile range.  Set the parameter
-        // two zero and you'll get a box with no whiskers
             .whiskers(iqr(interquartileMultiplier));
 
 
@@ -151,20 +147,11 @@ body {
                 if (s < globalMinimum) globalMinimum = s;
          });
 
-        chart.assignData (data);
-
-        var g=chart.selection()
-                .selectAll("svg")
-                .attr("class", "box")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.bottom + margin.top)
-                .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")") ;
-
-        chart
+        chart.assignData (data)
                 .min(globalMinimum)
-                .max(globalMaximum)
-                .render(g);
+                .max(globalMaximum);
+
+        chart.render();
 
 
         var sliderWidth = 500;
@@ -211,32 +198,30 @@ body {
                 .attr("transform", "translate(0," + height / 2 + ")")
                 .attr("r", 9);
 
-        slider
-                .call(brush.event);
-//                .transition() // gratuitous intro!
-//                .duration(750)
-//                .call(brush.extent([70, 70]))
-//                .call(brush.event);
+        slider.call(brush.event);
 
         function brushed() {
             var value = brush.extent()[0];
 
             if (d3.event.sourceEvent) { // not a programmatic event
                 value = x.invert(d3.mouse(this)[0]);
- //               console.log('value ='+value +', this[0] ='+this[0] +'.') ;
                 brush.extent([value, value]);
             }
             handle.attr("cx", x(value));
             if (!isNaN(value)){
                 interquartileMultiplier = value;
-                chart.whiskers(iqr(interquartileMultiplier)).render(g);
+                chart.whiskers(iqr(interquartileMultiplier)).render();
             }
         }
 
     });
 
 
-    // Returns a function to compute the interquartile range.
+    // Returns a function to compute the interquartile range, which is represented
+    // through the whiskers attached to the quartile boxes.  Without this function the
+    // whiskers will expand to cover the entire data range. With it they will
+    // shrink to cover a multiple of the interquartile range.  Set the parameter
+    // two zero and you'll get a box with no whiskers
     function iqr(k) {
         return function(d, i) {
             var q1 = d.quartiles[0],

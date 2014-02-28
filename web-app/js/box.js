@@ -1,7 +1,7 @@
 (function() {
 
 // Inspired by http://informationandvisualization.de/blog/box-plot
-    d3.box = function() {
+    d3.boxWhiskerPlot = function() {
         var instance={},
             width = 1,
             height = 1,
@@ -31,20 +31,11 @@
 
 
         // For each small multiple…
-        instance.render=function (gg) {
-//
+        instance.render=function () {
 
-//             var gg=selection
-//                .selectAll("svg")
-//                .attr("class", "box")
-//                .attr("width", width + margin.left + margin.right)
-//                .attr("height", height + margin.bottom + margin.top)
-//                .append("g")
-//                .attr("transform", "translate(" + margin.left + "," + margin.top + ")") ;
-               // .call(tip);
-
-
-            gg.each(function(d, i) {
+            selection
+             .selectAll("svg")
+            .each(function(d, i) {
                 d = d.sort(function(a,b){
                     return a.value - b.value;
                 });
@@ -304,7 +295,15 @@
                 .selectAll("svg")
                 .data(data)
                 .enter()
-                .append("svg");
+                .append("svg")
+                .attr("class", "box")
+                 .attr("class", "box")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.bottom + margin.top)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                .call(tip);
+
             return instance;
         };
 
@@ -372,11 +371,6 @@
             selection = d3.select(selectionIdentifier);
             return instance;
         };
-
-        // identify the dominant element upon which we will hang this graphic
-        instance.selection= function() {
-            return selection;
-         };
 
 
 
