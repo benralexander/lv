@@ -10,120 +10,35 @@
 <html>
 <head>
   <title>boxwhisk</title>
-    <script src="../js/d3.js"></script>
-    <script src="../js/d3tooltip.js"></script>
-    <link media="all" rel="stylesheet" href="../css/d3.slider.css">
-
+    <link media="all" rel="stylesheet" href="../css/ctrp/boxWhiskerPlot.css">
+    <link media="all" rel="stylesheet" href="../css/ctrp/slider.css">
+    <script src="../js/ctrp/d3.js"></script>
+    <script src="../js/ctrp/d3tooltip.js"></script>
 </head>
 <!DOCTYPE html>
 <meta charset="utf-8">
-<style>
-
-body {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-.box {
-    font: 10px sans-serif;
-}
-
-.box line,
-.box rect,
-.box circle {
-    fill: #fff;
-    stroke: #000;
-    stroke-width: 1.5px;
-}
-
-.box .center {
-    stroke-dasharray: 3,3;
-}
-
-.box .outlier {
-    fill: #f00;
-    stroke: #111;
-}
-.d3-tip {
-    line-height: 1;
-    font-weight: bold;
-    padding: 12px;
-    background: rgba(0, 0, 0, 0.8);
-    color: #fff;
-    border-radius: 2px;
-}
-
-    /* Creates a small triangle extender for the tooltip */
-.d3-tip:after {
-    box-sizing: border-box;
-    display: inline;
-    font-size: 10px;
-    width: 100%;
-    line-height: 1;
-    color: rgba(0, 0, 0, 0.8);
-    content: "\25BC";
-    position: absolute;
-    text-align: center;
-}
-
-    /* Style northward tooltips differently */
-.d3-tip.n:after {
-    margin: -1px 0 0 0;
-    top: 100%;
-    left: 0;
-}
-
-</style>
-
-<style>
-
-.axis {
-    font: 10px sans-serif;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    user-select: none;
-}
-
-.axis .domain {
-    fill: none;
-    stroke: #000;
-    stroke-opacity: .3;
-    stroke-width: 10px;
-    stroke-linecap: round;
-}
-
-.axis .halo {
-    fill: none;
-    stroke: #ddd;
-    stroke-width: 8px;
-    stroke-linecap: round;
-}
-
-.slider .handle {
-    fill: #fff;
-    stroke: #000;
-    stroke-opacity: .5;
-    stroke-width: 1.25px;
-    pointer-events: none;
-}
-
-</style>
 
 <body>
 <div id='plot'></div>
 <div id='slider'></div>
-<script src="../js/box.js"></script>
+<script src="../js/ctrp/boxWhiskerPlot.js"></script>
 <script>
 
-    var margin = {top: 10, right: 50, bottom: 20, left: 50},
+    var
+      // these sizes referred to each individual bar in the bar whisker plot
+      margin = {top: 50, right: 50, bottom: 20, left: 50},
             width = 120 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom;
 
+    // minimum and maximum values across all bars
     var globalMinimum = Infinity,
             globalMaximum = -Infinity;
 
+    // initial value of the interquartile multiplier. Note that this value
+    //  is adjustable via a UI slider
     var interquartileMultiplier = 1.5;
 
-
+    // build those portions of the box whisker plot that our data independent
     var chart = d3.boxWhiskerPlot()
             .selectionIdentifier("#plot")
             .width(width)
@@ -147,11 +62,11 @@ body {
                 if (s < globalMinimum) globalMinimum = s;
          });
 
+        // add in those portions of the box whisker plot that our data dependent
         chart.assignData (data)
-                .min(globalMinimum)
-                .max(globalMaximum);
-
-        chart.render();
+             .min(globalMinimum)
+             .max(globalMaximum)
+             .render();
 
 
         var sliderWidth = 500;
