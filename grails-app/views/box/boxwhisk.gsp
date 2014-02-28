@@ -22,6 +22,7 @@
 <div id='plot'></div>
 <div id='slider'></div>
 <script src="../js/ctrp/boxWhiskerPlot.js"></script>
+<script src="../js/ctrp/slider.js"></script>
 <script>
 
     var
@@ -44,6 +45,9 @@
             .width(width)
             .height(height)
             .whiskers(iqr(interquartileMultiplier));
+
+    var slider = d3.slider();
+           // .width(500);
 
 
 
@@ -69,6 +73,7 @@
              .render();
 
 
+        // slider.render()
         var sliderWidth = 500;
         var x = d3.scale.linear()
                 .domain([0, 2])
