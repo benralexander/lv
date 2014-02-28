@@ -8,5 +8,8 @@ class CookinController {
     def nick() {
         render (view: 'nick')
     }
+    def multi() {
+        render (view: 'multi')
+    }
     def cookin(){}
 }

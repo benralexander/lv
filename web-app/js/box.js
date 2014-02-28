@@ -6,7 +6,7 @@
             width = 1,
             height = 1,
             selectionIdentifier = '',
-            duration = 0,
+            duration = 500,
             domain = null,
             min = Infinity,
             max = -Infinity,
@@ -31,20 +31,20 @@
 
 
         // For each small multiple…
-        instance.render=function (g) {
+        instance.render=function (gg) {
 //
 
-             selection
-                .selectAll("svg")
-                .attr("class", "box")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.bottom + margin.top)
-                .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-                .call(tip)
+//             var gg=selection
+//                .selectAll("svg")
+//                .attr("class", "box")
+//                .attr("width", width + margin.left + margin.right)
+//                .attr("height", height + margin.bottom + margin.top)
+//                .append("g")
+//                .attr("transform", "translate(" + margin.left + "," + margin.top + ")") ;
+               // .call(tip);
 
 
-            .each(function(d, i) {
+            gg.each(function(d, i) {
                 d = d.sort(function(a,b){
                     return a.value - b.value;
                 });
@@ -63,6 +63,7 @@
                 var outlierIndices = whiskerIndices
                     ? d3.range(0, whiskerIndices[0]).concat(d3.range(whiskerIndices[1] + 1, n))
                     : d3.range(n);
+                     console.log ('number of outlierIndices(i='+i+') ='+outlierIndices.length+'.')
 
                 // Compute the new x-scale.
                 var x1 = d3.scale.linear()
@@ -136,6 +137,8 @@
                     .attr("y", function(d) { return x1(d[2]); })
                     .attr("height", function(d) { return x1(d[0]) - x1(d[2]); });
 
+                box.exit().remove ();
+
                 // Update median line.
                 var medianLine = g.selectAll("line.median")
                     .data([quartileData[1]]);
@@ -156,7 +159,10 @@
                     .attr("y1", x1)
                     .attr("y2", x1);
 
-                // Update whiskers.
+                medianLine.exit().remove ();
+
+                // Update whiskers. These are the lines outside
+                //  of the boxes, but not including text or outliers.
                 var whisker = g.selectAll("line.whisker")
                     .data(whiskerData || []);
 
@@ -186,9 +192,11 @@
                     .style("opacity", 1e-6)
                     .remove();
 
-                // Update outliers.
+                // Update outliers.  These are the circles that Mark data outside of the whiskers.
                 var outlier = g.selectAll("circle.outlier")
                     .data(outlierIndices, Number);
+
+
 
                 outlier.enter().insert("circle", "text")
                     .attr("class", "outlier")
@@ -203,25 +211,35 @@
                     .transition()
                     .duration(duration)
                     .attr("cy", function(i) {
-                        return x1(d[i].value); })
+                        console.log ('enter outlier =' +d[i].value);
+                        return x1(d[i].value);
+                    })
                     .style("opacity", 1)
                    ;
 
                 outlier.transition()
                     .duration(duration)
-                    .attr("cy", function(i) { return x1(d[i].value); })
+                    .attr("cy", function(i) {
+                        console.log ('update outlier =' +d[i].value);
+                        return x1(d[i].value);
+                    })
                     .style("opacity", 1);
 
-                outlier.exit().transition()
+                outlier.exit()
+                    .transition()
                     .duration(duration)
-                    .attr("cy", function(i) { return x1(d[i].value); })
+                    .attr("cy", function(i) {
+                        console.log ('exit outlier =' +d[i].value);
+                        return x1(d[i].value);
+                    })
                     .style("opacity", 1e-6)
                     .remove();
 
                 // Compute the tick format.
                 var format = tickFormat || x1.tickFormat(8);
 
-                // Update box ticks.
+                // Update box ticks. These are the numbers on the
+                //     sides of the box
                 var boxTick = g.selectAll("text.box")
                     .data(quartileData);
 
@@ -242,7 +260,9 @@
                     .text(format)
                     .attr("y", x1);
 
-                // Update whisker ticks. These are handled separately from the box
+                // Update whisker ticks. These are the numbers on the side of the whiskers.
+                //
+                // These are handled separately from the box
                 // ticks because they may or may not exist, and we want don't want
                 // to join box ticks pre-transition with whisker ticks post-.
                 var whiskerTick = g.selectAll("text.whisker")
@@ -352,6 +372,13 @@
             selection = d3.select(selectionIdentifier);
             return instance;
         };
+
+        // identify the dominant element upon which we will hang this graphic
+        instance.selection= function() {
+            return selection;
+         };
+
+
 
 
         return instance;

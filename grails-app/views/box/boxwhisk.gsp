@@ -12,6 +12,8 @@
   <title>boxwhisk</title>
     <script src="../js/d3.js"></script>
     <script src="../js/d3tooltip.js"></script>
+    <link media="all" rel="stylesheet" href="../css/d3.slider.css">
+
 </head>
 <!DOCTYPE html>
 <meta charset="utf-8">
@@ -71,7 +73,44 @@ body {
 }
 
 </style>
+
+<style>
+
+.axis {
+    font: 10px sans-serif;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+.axis .domain {
+    fill: none;
+    stroke: #000;
+    stroke-opacity: .3;
+    stroke-width: 10px;
+    stroke-linecap: round;
+}
+
+.axis .halo {
+    fill: none;
+    stroke: #ddd;
+    stroke-width: 8px;
+    stroke-linecap: round;
+}
+
+.slider .handle {
+    fill: #fff;
+    stroke: #000;
+    stroke-opacity: .5;
+    stroke-width: 1.25px;
+    pointer-events: none;
+}
+
+</style>
+
 <body>
+<div id='plot'></div>
+<div id='slider'></div>
 <script src="../js/box.js"></script>
 <script>
 
@@ -82,16 +121,18 @@ body {
     var globalMinimum = Infinity,
             globalMaximum = -Infinity;
 
+    var interquartileMultiplier = 1.5;
+
 
     var chart = d3.box()
-            .selectionIdentifier("body")
+            .selectionIdentifier("#plot")
             .width(width)
             .height(height)
         // this next line determines how big the whiskers are.  Without it the
         // whiskers will expand to cover the entire data range. With it they will
         // shrink to cover a multiple of the interquartile range.  Set the parameter
         // two zero and you'll get a box with no whiskers
-            .whiskers(iqr(1.5));
+            .whiskers(iqr(interquartileMultiplier));
 
 
 
@@ -110,11 +151,87 @@ body {
                 if (s < globalMinimum) globalMinimum = s;
          });
 
+        chart.assignData (data);
+
+        var g=chart.selection()
+                .selectAll("svg")
+                .attr("class", "box")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.bottom + margin.top)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")") ;
+
         chart
-                .assignData (data)
                 .min(globalMinimum)
                 .max(globalMaximum)
-                .render();
+                .render(g);
+
+
+        var sliderWidth = 500;
+        var x = d3.scale.linear()
+                .domain([0, 2])
+                .range([0, sliderWidth])
+                .clamp(true);
+
+        var brush = d3.svg.brush()
+                .x(x)
+                .extent([sliderWidth, sliderWidth])
+                .on("brush", brushed);
+
+        var svg = d3.select("#slider").append("svg")
+                .attr("width", margin.width)
+                .attr("height", margin.height)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height / 2 + ")")
+                .call(d3.svg.axis()
+                        .scale(x)
+                        .orient("bottom")
+                        .tickFormat(function(d) { return d + "°"; })
+                        .tickSize(0)
+                        .tickPadding(12))
+                .select(".domain")
+                .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+                .attr("class", "halo");
+
+        var slider = svg.append("g")
+                .attr("class", "slider")
+                .call(brush);
+
+        slider.selectAll(".extent,.resize")
+                .remove();
+
+        slider.select(".background")
+                .attr("height", height);
+
+        var handle = slider.append("circle")
+                .attr("class", "handle")
+                .attr("transform", "translate(0," + height / 2 + ")")
+                .attr("r", 9);
+
+        slider
+                .call(brush.event);
+//                .transition() // gratuitous intro!
+//                .duration(750)
+//                .call(brush.extent([70, 70]))
+//                .call(brush.event);
+
+        function brushed() {
+            var value = brush.extent()[0];
+
+            if (d3.event.sourceEvent) { // not a programmatic event
+                value = x.invert(d3.mouse(this)[0]);
+ //               console.log('value ='+value +', this[0] ='+this[0] +'.') ;
+                brush.extent([value, value]);
+            }
+            handle.attr("cx", x(value));
+            if (!isNaN(value)){
+                interquartileMultiplier = value;
+                chart.whiskers(iqr(interquartileMultiplier)).render(g);
+            }
+        }
 
     });
 
@@ -132,6 +249,9 @@ body {
             return [i, j];
         };
     }
+
+
+
 
 </script>
 </body>
