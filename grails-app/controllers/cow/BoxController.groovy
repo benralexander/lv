@@ -519,5 +519,8 @@ class BoxController {
     def boxwhisker() {
         render(view:'boxwhisk')
     }
+    def scatter() {
+        render(view:'scatter')
+    }
 
 }
