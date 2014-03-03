@@ -54,7 +54,7 @@
                     var outlierIndices = whiskerIndices
                         ? d3.range(0, whiskerIndices[0]).concat(d3.range(whiskerIndices[1] + 1, n))
                         : d3.range(n);
-                    console.log('number of outlierIndices(i=' + i + ') =' + outlierIndices.length + '.')
+//                    console.log('number of outlierIndices(i=' + i + ') =' + outlierIndices.length + '.')
 
                     // Compute the new x-scale.
                     var x1 = d3.scale.linear()
@@ -225,7 +225,6 @@
                         .transition()
                         .duration(duration)
                         .attr("cy", function (i) {
-                            console.log('enter outlier =' + d[i].value);
                             return x1(d[i].value);
                         })
                         .style("opacity", 1)
@@ -234,7 +233,6 @@
                     outlier.transition()
                         .duration(duration)
                         .attr("cy", function (i) {
-                            console.log('update outlier =' + d[i].value);
                             return x1(d[i].value);
                         })
                         .style("opacity", 1);
@@ -243,8 +241,7 @@
                         .transition()
                         .duration(duration)
                         .attr("cy", function (i) {
-                            console.log('exit outlier =' + d[i].value);
-                            return x1(d[i].value);
+                           return x1(d[i].value);
                         })
                         .style("opacity", 1e-6)
                         .remove();

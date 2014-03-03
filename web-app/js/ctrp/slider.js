@@ -1,22 +1,31 @@
 (function () {
     d3.slider = function () {
-        var instance = {},
-            sliderWidth = 500,
-            responseToSliderEvent = defaultSliderEvent;
+        // public variables
+        var sliderWidth = 500,
+        responseToSliderEvent = defaultSliderEvent ,
 
-        instance.render = function () {
 
-            var x = d3.scale.linear()
+
+        // private variables
+        instance = {},
+            x = {} ,
+            svg = {} ,
+            brush = {} ,
+            handle = {} ,
+            slider = {};
+
+        var  ctor = function (){
+            x = d3.scale.linear()
                 .domain([0, 2])
                 .range([0, sliderWidth])
                 .clamp(true);
 
-            var brush = d3.svg.brush()
+            brush = d3.svg.brush()
                 .x(x)
                 .extent([sliderWidth, sliderWidth])
                 .on("brush", brushed);
 
-            var svg = d3.select("#slider").append("svg")
+            svg = d3.select("#slider").append("svg")
                 .attr("width", margin.width)
                 .attr("height", margin.height)
                 .append("g")
@@ -39,9 +48,33 @@
                 })
                 .attr("class", "halo");
 
-            var slider = svg.append("g")
+            slider = svg.append("g")
                 .attr("class", "slider")
                 .call(brush);
+
+//            return instance;
+
+            function brushed() {
+                var value = brush.extent()[0];
+
+                if (d3.event.sourceEvent) { // not a programmatic event
+                    value = x.invert(d3.mouse(this)[0]);
+                    brush.extent([value, value]);
+                }
+                handle.attr("cx", x(value));
+                if (!isNaN(value)) {
+                    interquartileMultiplier = value;
+                    chart.whiskers(iqr(interquartileMultiplier)).render();
+                }
+            }
+
+
+        };
+        ctor();
+
+
+        instance.render = function () {
+
 
             slider.selectAll(".extent,.resize")
                 .remove();
@@ -49,12 +82,14 @@
             slider.select(".background")
                 .attr("height", height);
 
-            var handle = slider.append("circle")
+            handle = slider.append("circle")
                 .attr("class", "handle")
                 .attr("transform", "translate(0," + height / 2 + ")")
                 .attr("r", 9);
 
             slider.call(brush.event);
+
+
         }
 
 
@@ -71,6 +106,7 @@
             return instance;
         };
 
+        return instance;
 
     };
 
@@ -79,19 +115,6 @@
     }
 
 
-    function brushed() {
-        var value = brush.extent()[0];
-
-        if (d3.event.sourceEvent) { // not a programmatic event
-            value = x.invert(d3.mouse(this)[0]);
-            brush.extent([value, value]);
-        }
-        handle.attr("cx", x(value));
-        if (!isNaN(value)) {
-            interquartileMultiplier = value;
-            chart.whiskers(iqr(interquartileMultiplier)).render();
-        }
-    }
 
 })();
 
