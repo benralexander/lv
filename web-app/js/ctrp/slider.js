@@ -1,10 +1,7 @@
 (function () {
-    d3.slider = function () {
+    d3.slider = function (domainStart,domainEnd,rangeStart, rangeEnd) {
         // public variables
-        var sliderWidth = 500,
-        responseToSliderEvent = defaultSliderEvent ,
-
-
+        var
 
         // private variables
         instance = {},
@@ -14,20 +11,18 @@
             handle = {} ,
             slider = {};
 
-        var  ctor = function (){
+        var  ctor = function (domainStart,domainEnd,rangeStart, rangeEnd){
             x = d3.scale.linear()
-                .domain([0, 2])
-                .range([0, sliderWidth])
+                .domain([domainStart, domainEnd])
+                .range([rangeStart, rangeEnd])
                 .clamp(true);
 
             brush = d3.svg.brush()
                 .x(x)
-                .extent([sliderWidth, sliderWidth])
+                .extent([rangeEnd, rangeEnd])
                 .on("brush", brushed);
 
             svg = d3.select("#slider").append("svg")
-                .attr("width", margin.width)
-                .attr("height", margin.height)
                 .append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -52,7 +47,19 @@
                 .attr("class", "slider")
                 .call(brush);
 
-//            return instance;
+            slider.selectAll(".extent,.resize")
+                .remove();
+
+            slider.select(".background")
+                .attr("height", height);
+
+            handle = slider.append("circle")
+                .attr("class", "handle")
+                .attr("transform", "translate(0," + height / 2 + ")")
+                .attr("r", 9);
+
+
+            return instance;
 
             function brushed() {
                 var value = brush.extent()[0];
@@ -70,41 +77,12 @@
 
 
         };
-        ctor();
+        ctor(domainStart,domainEnd,rangeStart, rangeEnd);
 
 
         instance.render = function () {
 
-
-            slider.selectAll(".extent,.resize")
-                .remove();
-
-            slider.select(".background")
-                .attr("height", height);
-
-            handle = slider.append("circle")
-                .attr("class", "handle")
-                .attr("transform", "translate(0," + height / 2 + ")")
-                .attr("r", 9);
-
-            slider.call(brush.event);
-
-
-        }
-
-
-        instance.responseToSliderEvent = function (x) {
-            if (!arguments.length) return responseToSliderEvent;
-            responseToSliderEvent = x;
-            return instance;
-        };
-
-
-        instance.width = function (x) {
-            if (!arguments.length) return width;
-            width = x;
-            return instance;
-        };
+            slider.call(brush.event);       };
 
         return instance;
 
