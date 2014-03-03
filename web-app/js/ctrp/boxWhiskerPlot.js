@@ -212,7 +212,12 @@
                         .data(outlierIndices, Number);
 
 
-                    outlier.enter().insert("circle", "text")
+                    outlier.enter()
+                        .insert("a")
+                        .attr("xlink:href", "http://localhost:8028/cow/box/scatter")
+                        .on('mouseover', tip.show)
+                        .on('mouseout', tip.hide)
+                        .insert("circle", "text")
                         .attr("class", "outlier")
                         .attr("r", 5)
                         .attr("cx", width / 2)
@@ -220,8 +225,7 @@
                             return x0(d[i].value);
                         })
                         .style("opacity", 1e-6)
-                        .on('mouseover', tip.show)
-                        .on('mouseout', tip.hide)
+
                         .transition()
                         .duration(duration)
                         .attr("cy", function (i) {
