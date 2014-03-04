@@ -46,7 +46,8 @@
             .height(height)
             .whiskers(iqr(interquartileMultiplier));
 
-    var slider = d3.slider(0,6,0,300) ;
+//    var slider = d3.slider(0,6,0,300,'vertical') ;
+    var slider = d3.slider(0,6,0,300,'horizontal') ;
          //   .width(200);
 
 

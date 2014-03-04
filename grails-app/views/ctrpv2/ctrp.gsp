@@ -12,8 +12,9 @@
   <title>ctrp test</title>
 
     <script src="../js/d3.js"></script>
-    <script src="../js/enrichment.js"></script>
-    <script src="../js/enrichmentPlot.js"></script>
+    %{--<script src="../js/enrichment.js"></script>--}%
+    <script src="../js/ctrp/enrichmentPlot.js"></script>
+    <script src="../js/ctrp/d3tooltip.js"></script>
 </head>
 <body>
   <h1>Enrichment plot</h1>
