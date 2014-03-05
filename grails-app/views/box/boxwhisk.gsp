@@ -46,12 +46,13 @@
             .height(height)
             .whiskers(iqr(interquartileMultiplier));
 
-    var slider = d3.slider(0,6,0,300) ;
+    var slider = d3.slider(0,3,0,500) ;
          //   .width(200);
 
 
 
-    d3.json("http://localhost:8028/cow/box/retrieveBoxData", function (error, json) {
+//    d3.json("http://localhost:8028/cow/box/retrieveBoxData", function (error, json) {
+        d3.json("/cow/box/retrieveBoxData", function (error, json) {
         var data = [];
         json.forEach(function (x) {
                 var e = Math.floor(x.Expt - 1),
