@@ -19,8 +19,13 @@
 <meta charset="utf-8">
 
 <body>
-<div id='plot'></div>
-<div id='slider'></div>
+
+                 <span id='plot'></span>
+
+                 <span id='slider'></span>
+
+
+
 <script src="../js/ctrp/boxWhiskerPlot.js"></script>
 <script src="../js/ctrp/slider.js"></script>
 <script>
@@ -46,14 +51,14 @@
             .height(height)
             .whiskers(iqr(interquartileMultiplier));
 
-    var slider = d3.slider(0,3,0,500,'vertical') ;
-//    var slider = d3.slider(0,6,0,300,'horizontal') ;
-         //   .width(200);
+    // build a slider and attach the callback methods
+    var slider = d3.slider(0,4,0,100,'vertical',interquartileMultiplier,onBrushMoveDoThis,onBrushEndDoThis) ;
 
-
-
+    // get your data
     d3.json("http://localhost:8028/cow/box/retrieveBoxData", function (error, json) {
         var data = [];
+
+        // loop through the data to find the global minimum/maximum
         json.forEach(function (x) {
                 var e = Math.floor(x.Expt - 1),
                         r = Math.floor(x.Run - 1),
@@ -67,17 +72,31 @@
                 if (s < globalMinimum) globalMinimum = s;
          });
 
-        // add in those portions of the box whisker plot that our data dependent
+        // We are finally ready to display the box whisker plot
         chart.assignData (data)
              .min(globalMinimum)
              .max(globalMaximum)
              .render();
 
+        // and now we can render the slider as well
+     //   slider.render();
 
-        slider.render();
+
+
 
     });
 
+
+    //  The adjustment we should make every time the slider moves a little
+    function onBrushMoveDoThis (value)  {
+        console.log('onBrushMoveDoThis ='+ value) ;
+        chart.whiskers(iqr(value));
+    }
+
+    //  What to do when the slider has stopped moving
+    function onBrushEndDoThis () {
+       chart.render();
+    }
 
     // Returns a function to compute the interquartile range, which is represented
     // through the whiskers attached to the quartile boxes.  Without this function the

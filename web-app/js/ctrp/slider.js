@@ -3,7 +3,10 @@
                           domainEnd,
                           rangeStart,
                           rangeEnd,
-                          orientation/*must be either 'vertical' or 'horizontal'*/) {
+                          orientation/*must be either 'vertical' or 'horizontal'*/,
+                          initialSliderValue,
+                          onBrushMoveDoThis,
+                          onBrushEndDoThis) {
         // public variables
         var
 
@@ -13,9 +16,7 @@
             svg = {} ,
             brush = {} ,
             handle = {} ,
-            slider = {},
-            width=300,
-            height=300;
+            slider = {};
 
         var  ctor = function (domainStart,domainEnd,rangeStart, rangeEnd){
             scale = d3.scale.linear()
@@ -110,7 +111,7 @@
                     .attr("transform", "translate(20,0)")
                     .attr("r", 9);
             }
-
+            brushed();
             return instance;
 
             function brushed() {
@@ -123,8 +124,16 @@
                     value = brush.extent()[1];
                 }
 
-
-                if (d3.event.sourceEvent) { // not a programmatic event
+                if (d3.event==null){ // this happens only if brushed is called programmatically with no event
+                    brush.extent([initialSliderValue, initialSliderValue]);
+                    if (orientation ==='horizontal') {
+                        handle.attr("cx", scale(initialSliderValue));
+                    }  else {
+                        handle.attr("cy", scale(1.5));
+                    }
+                    value=1.5;
+                }
+                else if (d3.event.sourceEvent) { // not a programmatic event
                     if (orientation ==='horizontal') {
                         value = scale.invert(d3.mouse(this)[0]);
                         brush.extent([value, value]);
@@ -139,13 +148,18 @@
                 }
 
                 if (!isNaN(value)) {
-                    interquartileMultiplier = value;
-                    chart.whiskers(iqr(interquartileMultiplier));
+                    if (typeof onBrushMoveDoThis !== "undefined") {
+                        onBrushMoveDoThis(value);
+                    }
+
                 }
             }
 
             function brushEnded() {
-                chart.render();
+                if (typeof onBrushEndDoThis !== "undefined") {
+                    onBrushEndDoThis();
+                }
+
             }
 
 
@@ -154,8 +168,8 @@
 
 
         instance.render = function () {
-
-            slider.call(brush.event);       };
+           // slider.call(brush.event);
+        };
 
         return instance;
 

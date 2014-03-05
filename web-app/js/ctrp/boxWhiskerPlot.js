@@ -209,11 +209,11 @@
 
                     // Update outliers.  These are the circles that Mark data outside of the whiskers.
                     var outlier = g.selectAll("circle.outlier")
-                        .data(outlierIndices, Number);
+                        .data(outlierIndices||[], Number);
 
 
                     outlier.enter()
-                        .insert("a")
+                        .append("a")
                         .attr("xlink:href", "http://localhost:8028/cow/box/scatter")
                         .on('mouseover', tip.show)
                         .on('mouseout', tip.hide)
