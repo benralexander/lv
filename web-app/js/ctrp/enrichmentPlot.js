@@ -13,6 +13,18 @@
             instance={},
             selection = {};
 
+        //  private variable
+        var tip = d3.tip()
+            .attr('class', 'd3-tip')
+            .offset([-10, 0])
+            .html(function (d) {
+             //   var nodeData = d3.select(this.parentNode).datum()[d];
+                return "<strong><div style='color:black'>CCL: " + d.name+ "<br/>Lineage: " + d.line+ "</div></strong> ";
+//                return "<strong></strong> <span style='color:red'>" + nodeData.description + "</span>";
+            });
+
+
+
 
         // assign data to the DOM
         instance.assignData = function (x) {
@@ -22,7 +34,8 @@
                 .selectAll("svg")
                 .data(data)
                 .enter()
-                .append("svg");
+                .append("svg")
+                .call(tip);
             return instance;
         };
 
@@ -42,13 +55,13 @@
              selection
                  .selectAll("svg")
             .each(function(d, i) {
-                d = d.sort(function(a, b) { return (b.point) - (a.point)});
+                d = d.sort(function(a, b) { return (b.value) - (a.value)});
                 var g = d3.select(this),
                     n = d.length,
                     w = width/ n,
-                minValue = d[0].point,
-                midValue = d[Math.floor(n/2)].point,
-                maxValue = d[n - 1].point;
+                minValue = d[0].value,
+                midValue = d[Math.floor(n/2)].value,
+                maxValue = d[n - 1].value;
 
 
 
@@ -57,10 +70,12 @@
                     .domain([minValue, midValue, maxValue])
                     .range(["blue", "white", "red"]);
 
-                // Update innerquartile box.
+                // Here is the colorful part of the heat map
                 var heatmap = g.selectAll(".heatmap")
                     .data(d)
                     .enter().append("svg:rect")
+                    .on('mouseover', tip.show)
+                    .on('mouseout', tip.hide)
                     .attr('width', w)
                     .attr('height', 2*height/3)
                     .attr('x', function(d,i) {
@@ -68,26 +83,30 @@
                     } )
                     .attr('y',0)
                     .attr('fill', function(d) {
-                        return colorScale(d.point);
+                        return colorScale(d.value);
                     });
 
+                // Here is the indicator that the feature under consideration
+                //   is present in this cell line
                 var featuremap = g.selectAll(".featuremap")
                     .data(d)
                     .enter().append("svg:rect")
                     .filter (
                     function(d,i) {
-                        return d.feature;//2*height/3
+                        return d.featureExists;
                     }
                    )
                     .attr('width', function(d,i) {
-                        return d.point * w;
+                        return d.value * w;
                     } )
                     .attr('height',  function(d,i) {
-                        return (2*height/3);//*d.feature;//2*height/3
+                        return (height/2);
                     } )
                     .attr('x', function(d,i) {
                         return d.index * w;
                     } )
+                    .on('mouseover', tip.show)
+                    .on('mouseout', tip.hide)
                     .attr('y',height/3)
                     .attr('fill', "black")
                     .attr('stroke', 'black');

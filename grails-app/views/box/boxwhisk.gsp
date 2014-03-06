@@ -89,7 +89,6 @@
 
     //  The adjustment we should make every time the slider moves a little
     function onBrushMoveDoThis (value)  {
-        console.log('onBrushMoveDoThis ='+ value) ;
         chart.whiskers(iqr(value));
     }
 

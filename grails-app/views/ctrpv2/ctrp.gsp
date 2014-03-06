@@ -12,7 +12,6 @@
   <title>ctrp test</title>
 
     <script src="../js/d3.js"></script>
-    %{--<script src="../js/enrichment.js"></script>--}%
     <script src="../js/ctrp/enrichmentPlot.js"></script>
     <script src="../js/ctrp/d3tooltip.js"></script>
 </head>
@@ -25,21 +24,43 @@
 
     // make up some data
     var enrichData = [];
-    for (var i = 0; i < 900; i++) {
+    var fakeData = [
+        {ccl:'1321N1',lineage:'central nervous system'},
+        {ccl:'22Rv1',lineage:'prostate'},
+        {ccl:'23132/87',lineage:'stomach'},
+        {ccl:'253J',lineage:'urinary tract'},
+        {ccl:'1321N1',lineage:'urinary tract'},
+        {ccl:'143B',lineage:'bone'}
+    ];
+
+
+//        22Rv1	prostate
+//        23132/87	stomach
+//        253J	urinary_tract
+//        253J-BV	urinary_tract
+
+    ///    Each data array described the data associated with a single feature/compound combination. We should
+    //      probably have the feature in combination available for display as needed.
+   for (var i = 0; i < 900; i++) {
+        ///  Each data element needs to hold:
+        ///    Cancer cell line name
+        ///    AUC value
+        ///    + A way to get to the underlying growth curve.  URL? Parameters?
         enrichData.push({ index: i,
-            point: (i < 200) ? (i / 1900) : (i / 900),
-            name: 'MYC' + (i % 100 == 0),
-            link: '<a href=\'#\'>link</a>',
-            feature: (i % 100 == 0) ? 1 : 0});
+            value: (i < 200) ? (i / 1900) : (i / 900), // AUC value
+            name: fakeData [(i % fakeData.length)].ccl,  //   CCL name
+            line: fakeData [(i % fakeData.length)].lineage,
+            link: '<a href=\'#\'>Parameter number ' +i +'</a>', // Parameter (?) get the data for this growth curve
+            featureExists: (i % 100 == 0) ? 1 : 0});
     }
     // demonstrate that we can draw multiple enrichment plots simultaneously
     //var enrichArray = [enrichData, enrichData];
     var enrichArray = [enrichData];
 
     // Where do you want your plot?
-    var margin = {top: 100, right: 200, bottom: 100, left: 50},
+    var margin = {top: 10, right: 20, bottom: 10, left: 50},
             width = 300 - margin.left - margin.right,
-            height = 200 - margin.top - margin.bottom;
+            height = 100 - margin.top - margin.bottom;
 
     // create a placeholder, but don't assign any data yet
     var enrichmentPlot = d3.heatmap()
