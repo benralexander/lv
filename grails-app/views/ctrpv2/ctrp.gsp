@@ -10,10 +10,15 @@
 <html>
 <head>
   <title>ctrp test</title>
-
+    <link media="all" rel="stylesheet" href="../css/ctrp/enrichmentPlot.css">
     <script src="../js/d3.js"></script>
     <script src="../js/ctrp/enrichmentPlot.js"></script>
     <script src="../js/ctrp/d3tooltip.js"></script>
+    <style>
+        .tooltip{
+
+        }
+    </style>
 </head>
 <body>
   <h1>Enrichment plot</h1>
@@ -34,10 +39,6 @@
     ];
 
 
-//        22Rv1	prostate
-//        23132/87	stomach
-//        253J	urinary_tract
-//        253J-BV	urinary_tract
 
     ///    Each data array described the data associated with a single feature/compound combination. We should
     //      probably have the feature in combination available for display as needed.
@@ -49,13 +50,29 @@
         enrichData.push({ index: i,
             value: (i < 200) ? (i / 1900) : (i / 900), // AUC value
             name: fakeData [(i % fakeData.length)].ccl,  //   CCL name
-            line: fakeData [(i % fakeData.length)].lineage,
+            line: fakeData [(i % fakeData.length)].lineage, // Name of lineage
             link: '<a href=\'#\'>Parameter number ' +i +'</a>', // Parameter (?) get the data for this growth curve
             featureExists: (i % 100 == 0) ? 1 : 0});
     }
     // demonstrate that we can draw multiple enrichment plots simultaneously
     //var enrichArray = [enrichData, enrichData];
-    var enrichArray = [enrichData];
+  //  var enrichArray = [enrichData];
+    var dataForEnrichmentHeatMap = {
+        featureName:'PDE4DIP',
+        compoundName:'parbendazole',
+        enrichmentData:[enrichData]
+    }
+
+    /***
+     * Sample JSON data:
+     {
+     featureName:'PDE4DIP',
+     compoundName:'parbendazole',
+     enrichmentData:[
+     {},
+     {}
+     ]
+  */
 
     // Where do you want your plot?
     var margin = {top: 10, right: 20, bottom: 10, left: 50},
@@ -67,7 +84,7 @@
             .selectionIdentifier("#pickme")
             .width(width + margin.left + margin.right)
             .height(height + margin.bottom + margin.top)
-            .assignData(enrichArray)
+            .assignData(dataForEnrichmentHeatMap)
             .render();
 
 

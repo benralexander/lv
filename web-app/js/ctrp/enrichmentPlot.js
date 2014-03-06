@@ -8,6 +8,8 @@
             height = 1,
             selectionIdentifier = '',
             data={},
+            featureName = '',
+            compoundName = '',
 
             // the variables that will never be exposed
             instance={},
@@ -18,9 +20,31 @@
             .attr('class', 'd3-tip')
             .offset([-10, 0])
             .html(function (d) {
-             //   var nodeData = d3.select(this.parentNode).datum()[d];
-                return "<strong><div style='color:black'>CCL: " + d.name+ "<br/>Lineage: " + d.line+ "</div></strong> ";
-//                return "<strong></strong> <span style='color:red'>" + nodeData.description + "</span>";
+                var textToPresent = "";
+                var textColor = '#000000';
+                if (d){
+                    if(d.featureExists){
+                        textColor = '#00ffff';
+                        textToPresent = "CCL: " +
+                            d.name+
+                            "<br/>Lineage: " +
+                            d.line+
+                            "<br/>Compound: " +
+                            compoundName+
+                            "<br/>Feature: " +
+                            featureName  ;
+                    }  else {
+                        textColor = '#00ff00';
+                        textToPresent = "CCL: "+
+                            d.name+
+                            "<br/>Lineage: " +
+                            d.line +
+                            "<br/>Compound: " +
+                            compoundName ;
+                    }
+
+                }
+                return "<strong></strong><span style='color:" +textColor +"'>" +textToPresent+ "</span> ";
             });
 
 
@@ -30,9 +54,15 @@
         instance.assignData = function (x) {
             if (!arguments.length) return data;
             data = x;
+            if (typeof data.featureName !== undefined) {
+                featureName =  data.featureName;
+            }
+            if (typeof data.compoundName !== undefined) {
+                compoundName =  data.compoundName;
+            }
             selection
                 .selectAll("svg")
-                .data(data)
+                .data(data.enrichmentData)
                 .enter()
                 .append("svg")
                 .call(tip);
@@ -126,6 +156,20 @@
         instance.height = function(x) {
             if (!arguments.length) return height;
             height = x;
+            return instance;
+        };
+
+        // May alternatively be passed in through initial Json data assignment
+        instance.featureName = function(x) {
+            if (!arguments.length) return featureName;
+            featureName = x;
+            return instance;
+        };
+
+        // May alternatively be passed in through initial Json data assignment
+        instance.compoundName = function(x) {
+            if (!arguments.length) return compoundName;
+            compoundName = x;
             return instance;
         };
 
