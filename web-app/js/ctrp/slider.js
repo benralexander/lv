@@ -39,14 +39,34 @@
             // Define the SVG area and place the slider in the UI.  The translate call is only there to make sure
             // that the top (in the case of a vertical slider) or the left (in the case of a horizontal)
             // isn't sitting off the edge of the visible region.
-            svg = d3.select("#slider").append("svg")
-                .append("g")
-                .attr("transform", "translate(10,10)");
+            if (orientation ==='horizontal')    {
+                svg = d3.select("#slider").append("svg")
+                    .attr("width", rangeEnd+20).attr("height", "50")
+                    .append("g")
+                    .attr("transform", "translate(10,10)");
+            }   else {
+                svg = d3.select("#slider").append("svg")
+                    .attr("width", "50").attr("height", rangeEnd+20)
+                    .append("g")
+                    .attr("transform", "translate(10,10)");
+
+            }
+//            svg = d3.select("#slider").append("svg")
+//                .append("g")
+//                .attr("transform", "translate(10,10)");
+//
+//            d3.select("#slider").select("svg").attr("width", "50").attr("height", rangeEnd);
+
 
             // build the track along which the slider will slide.  Move it down
             // 20 pixels just to give it a little space
             if (orientation ==='horizontal')    {
-                svg.append("g")
+//                svg = d3.select("#slider").append("svg")
+//                    .attr("width", "50").attr("height", rangeEnd)
+//                    .append("g")
+//                    .attr("transform", "translate(10,10)")
+
+                 svg.append("g")
                     .attr("class", "x axis")
                     .attr("transform", "translate(0,20)")
                     .call(d3.svg.axis()
@@ -116,7 +136,6 @@
 
             function brushed() {
                 var value;
-                console.log ("brush ="+brush.extent()[0] + ", "+ brush.extent()[1]+ ".")  ;
 
                 if (orientation ==='horizontal') {
                     value = brush.extent()[0];

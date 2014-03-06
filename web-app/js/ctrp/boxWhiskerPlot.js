@@ -54,7 +54,6 @@
                     var outlierIndices = whiskerIndices
                         ? d3.range(0, whiskerIndices[0]).concat(d3.range(whiskerIndices[1] + 1, n))
                         : d3.range(n);
-//                    console.log('number of outlierIndices(i=' + i + ') =' + outlierIndices.length + '.')
 
                     // Compute the new x-scale.
                     var x1 = d3.scale.linear()
