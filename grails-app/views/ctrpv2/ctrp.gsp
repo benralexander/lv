@@ -119,7 +119,7 @@
             width = 300 - margin.left - margin.right,
             height = 100 - margin.top - margin.bottom;
 
-    // create a placeholder, but don't assign any data yet
+    // create a  heatmap and populate it with data
     d3.heatmap()
             .selectionIdentifier("#eplot1")
             .width(width + margin.left + margin.right)
@@ -127,7 +127,7 @@
             .assignData(dataForEnrichmentHeatMap1)
             .render();
 
-    // create a placeholder, but don't assign any data yet
+    // create a  heatmap and populate it with data
     d3.heatmap()
             .selectionIdentifier("#eplot2")
             .width(width + margin.left + margin.right)
@@ -136,7 +136,7 @@
             .render();
 
 
-    // create a placeholder, but don't assign any data yet
+    // create a  heatmap and populate it with data
     d3.heatmap()
             .selectionIdentifier("#eplot3")
             .width(width + margin.left + margin.right)
