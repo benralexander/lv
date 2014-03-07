@@ -1,20 +1,30 @@
 (function() {
 
-    d3.scatter = function() {
+    d3.scatterPlot = function() {
 
         // the variables we intend to surface
         var
             width = 1,
             height = 1,
+            margin = {},
             selectionIdentifier = '',
             data={},
+            xAxisLabel='',
+            yAxisLabel='',
 
-        // the variables that will never be exposed
+
+        // private variables
             instance={},
-            selection = {};
+            selection = {},
+            x,
+            y,
+            color,
+            xAxis,
+            yAxis,
+            svg,
 
         //  private variable
-        var tip = d3.tip()
+        tip = d3.tip()
             .attr('class', 'd3-tip')
             .offset([-10, 0])
             .html(function (d) {
@@ -27,24 +37,39 @@
             });
 
 
-
-
         // assign data to the DOM
         instance.assignData = function (x) {
             if (!arguments.length) return data;
             data = x;
-             selection
-                .selectAll("svg")
-                .data(data)
-                .enter()
-                .append("svg")
-                .call(tip);
             return instance;
         };
 
 
         // Now walk through the DOM and create the enrichment plot
         instance.render=function (g) {
+
+            x = d3.scale.linear()
+                .range([0, width]);
+
+            y = d3.scale.linear()
+                .range([height, 0]);
+
+            color = d3.scale.category10();
+
+            xAxis = d3.svg.axis()
+                .scale(x)
+                .orient("bottom");
+
+            yAxis = d3.svg.axis()
+                .scale(y)
+                .orient("left");
+
+            svg = d3.select("body").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
 
             x.domain(d3.extent(data, function(d) { return d.xValue; })).nice();
             y.domain(d3.extent(data, function(d) { return d.yValue; })).nice();
@@ -55,10 +80,11 @@
                 .call(xAxis)
                 .append("text")
                 .attr("class", "label")
-                .attr("x", width)
-                .attr("y", -6)
-                .style("text-anchor", "end")
-                .text("Navitoclax AUC");
+                .attr("x", width/2)
+                .attr("y", 40)
+                .style("text-anchor", "middle")
+                .style("font-weight", "bold")
+                .text(xAxisLabel);
 
             svg.append("g")
                 .attr("class", "y axis")
@@ -67,9 +93,11 @@
                 .attr("class", "label")
                 .attr("transform", "rotate(-90)")
                 .attr("y", 6)
-                .attr("dy", ".71em")
-                .style("text-anchor", "end")
-                .text("BCL2 expression level")
+                .attr("dy", "-3em")
+                .attr("x", -height/2)
+                .style("text-anchor", "middle")
+                .style("font-weight", "bold")
+                .text(yAxisLabel);
 
             svg.selectAll(".dot")
                 .data(data)
@@ -113,19 +141,24 @@
             return instance;
         };
 
-//        // May alternatively be passed in through initial Json data assignment
-//        instance.featureName = function(x) {
-//            if (!arguments.length) return featureName;
-//            featureName = x;
-//            return instance;
-//        };
-//
-//        // May alternatively be passed in through initial Json data assignment
-//        instance.compoundName = function(x) {
-//            if (!arguments.length) return compoundName;
-//            compoundName = x;
-//            return instance;
-//        };
+
+        instance.xAxisLabel = function(x) {
+            if (!arguments.length) return xAxisLabel;
+            xAxisLabel = x;
+            return instance;
+        };
+
+        instance.yAxisLabel = function(x) {
+            if (!arguments.length) return yAxisLabel;
+            yAxisLabel = x;
+            return instance;
+        };
+
+        instance.margin = function(x) {
+            if (!arguments.length) return margin;
+            margin = x;
+            return instance;
+        };
 
         instance.selectionIdentifier = function(x) {
             if (!arguments.length) return selectionIdentifier;
@@ -133,7 +166,6 @@
             selection = d3.select(selectionIdentifier);
             return instance;
         };
-
 
         return instance;
     };
