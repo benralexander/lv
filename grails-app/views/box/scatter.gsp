@@ -16,8 +16,16 @@ body {
 .axis line {
     fill: none;
     stroke: #000;
+    stroke-width: 1.2px;
     shape-rendering: crispEdges;
 }
+.axis text {
+    font-size: 12pt;
+}
+.axis label {
+    font-size: 14pt;
+}
+
 
 .dot {
     stroke: #000;
@@ -55,46 +63,46 @@ body {
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     data = [
-        {sepalLength:5.1,
-            sepalWidth:3.5,
+        {yValue:5.1,
+            xValue:3.5,
             lineage:'colon'
         },
-        {sepalLength:4.9,
-            sepalWidth:3.0,
+        {yValue:4.9,
+            xValue:3.0,
             lineage:'colon'
         },
-        {sepalLength:4.7,
-            sepalWidth:3.2,
+        {yValue:4.7,
+            xValue:3.2,
             lineage:'lung'
         },
-        {sepalLength:4.4,
-            sepalWidth:3.7,
+        {yValue:4.4,
+            xValue:3.7,
             lineage:'lung'
         },
-        {sepalLength:5.0,
-            sepalWidth:3.6,
+        {yValue:5.0,
+            xValue:3.6,
             lineage:'endometrium'
         },
-        {sepalLength:4.5,
-            sepalWidth:3.8,
+        {yValue:4.5,
+            xValue:3.8,
             lineage:'endometrium'
         },
-        {sepalLength:4.4,
-            sepalWidth:3.1,
+        {yValue:4.4,
+            xValue:3.1,
             lineage:'endometrium'
         },
-        {sepalLength:4.9,
-            sepalWidth:3.3,
+        {yValue:4.9,
+            xValue:3.3,
             lineage:'endometrium'
         }
     ]
         data.forEach(function(d) {
-            d.sepalLength = +d.sepalLength;
-            d.sepalWidth = +d.sepalWidth;
+            d.yValue = +d.yValue;
+            d.xValue = +d.xValue;
         });
 
-        x.domain(d3.extent(data, function(d) { return d.sepalWidth; })).nice();
-        y.domain(d3.extent(data, function(d) { return d.sepalLength; })).nice();
+        x.domain(d3.extent(data, function(d) { return d.xValue; })).nice();
+        y.domain(d3.extent(data, function(d) { return d.yValue; })).nice();
 
         svg.append("g")
                 .attr("class", "x axis")
@@ -123,8 +131,8 @@ body {
                 .enter().append("circle")
                 .attr("class", "dot")
                 .attr("r", 3.5)
-                .attr("cx", function(d) { return x(d.sepalWidth); })
-                .attr("cy", function(d) { return y(d.sepalLength); })
+                .attr("cx", function(d) { return x(d.xValue); })
+                .attr("cy", function(d) { return y(d.yValue); })
                 .style("fill", function(d) { return color(d.lineage); });
 
         var legend = svg.selectAll(".legend")

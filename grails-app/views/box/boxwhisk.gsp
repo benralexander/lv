@@ -86,6 +86,27 @@
                 if (s < globalMinimum) globalMinimum = s;
          });
 
+
+        /***
+         * Sample JSON data:
+         [
+             {
+                value:0.8,
+                description:'MYC',
+             },
+             {
+                value:0.2,
+                description:'STAT6',
+             },
+
+             {
+                value:-0.3,
+                description:'BRCA2',
+             }
+         ]
+         */
+
+
         // We are finally ready to display the box whisker plot
         chart.assignData (data)
              .min(globalMinimum)

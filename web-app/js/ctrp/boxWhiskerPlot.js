@@ -12,6 +12,8 @@
             max = -Infinity,
             whiskers = boxWhiskers,
             quartiles = boxQuartiles,
+            xAxis = {},
+            yAxis = {},
 
         // the variables that will never be exposed
             value = Number,
@@ -68,6 +70,20 @@
 
                     // Stash the new scale.
                     this.__chart__ = x1;
+
+                    var xscale = d3.scale.ordinal()
+                        .domain([1])
+                        .range(['cmpd']);
+
+
+                    xAxis = d3.svg.axis()
+                        .scale(xscale)
+                        .orient("bottom");
+
+                    yAxis = d3.svg.axis()
+                        .scale(x1)
+                        .orient("left");
+
 
                     // Note: the box, median, and box tick elements are fixed in number,
                     // so we only have to handle enter and update. In contrast, the outliers
@@ -313,6 +329,8 @@
                         .attr("y", x1)
                         .style("opacity", 1e-6)
                         .remove();
+
+
                 });
             d3.timer.flush();
         }

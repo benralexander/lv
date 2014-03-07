@@ -69,10 +69,22 @@
      featureName:'PDE4DIP',
      compoundName:'parbendazole',
      enrichmentData:[
-     {},
-     {}
+     {
+        value:0.11,
+        name:'1321N1',
+        line:'central nervous system',
+        link: ----not sure about this yet---,
+        featureExists:1
+     },
+     {
+        value:0.13,
+        name:'22Rv1',
+        line:'prostate',
+        link: ----not sure about this yet---,
+        featureExists:0
+     }
      ]
-  */
+     */
 
     // Where do you want your plot?
     var margin = {top: 10, right: 20, bottom: 10, left: 50},
