@@ -19,12 +19,18 @@
 <meta charset="utf-8">
 
 <body>
+<table style='margin-top: 50px; padding: 50px; width: 100%'>
 
-                 <span id='plot'></span>
+                  <tr>
+                      <td style='width: 50%'><span id='plot'></span></td>
+                      <td style='width: 50%'><span id='slider'></span></td>
+                  </tr>
 
-                 <span id='slider'></span>
 
 
+
+
+</table>
 
 <script src="../js/ctrp/boxWhiskerPlot.js"></script>
 <script src="../js/ctrp/slider.js"></script>
@@ -33,7 +39,7 @@
     var
       // these sizes referred to each individual bar in the bar whisker plot
       margin = {top: 50, right: 50, bottom: 20, left: 50},
-            width = 120 - margin.left - margin.right,
+            width = 220 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom;
 
     // minimum and maximum values across all bars
@@ -51,23 +57,31 @@
             .height(height)
             .whiskers(iqr(interquartileMultiplier));
     // build a slider and attach the callback methods
-    var slider = d3.slider(0,4,0,100,'vertical',interquartileMultiplier,onBrushMoveDoThis,onBrushEndDoThis) ;
+    var slider = d3.slider(0,3,0,100,'vertical',interquartileMultiplier,onBrushMoveDoThis,onBrushEndDoThis) ;
 
     // get your data
     d3.json("http://localhost:8028/cow/box/retrieveBoxData", function (error, json) {
 
         var data = [];
+        var stubDataGenes = [
+            "MYC",
+            "BRCA2",
+            "STAT6",
+            "PDE4DIP",
+            "PDCD1",
+            "LRP1"
+        ];
 
         // loop through the data to find the global minimum/maximum
-        json.forEach(function (x) {
+        json.forEach(function (x,i) {
                 var e = Math.floor(x.Expt - 1),
-                        r = Math.floor(x.Run - 1),
-                        s = Math.floor(x.Speed),
+                        s = x.Value,
+                        e=0;
                         d = data[e];
                 if (!d) d = data[e] = [{value:s,
                     description:'first value of '+s}];
                 else d.push({value:s,
-                             description:'value of '+s});
+                             description:stubDataGenes [(i %stubDataGenes.length)]});
                 if (s > globalMaximum) globalMaximum = s;
                 if (s < globalMinimum) globalMinimum = s;
          });

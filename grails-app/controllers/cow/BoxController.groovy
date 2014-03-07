@@ -5,503 +5,243 @@ class BoxController {
 [
 {
 \t"Expt":1,
-\t"Run":1,
-\t"Speed":850
+\t"Value": 0.850
 },
 {
 \t"Expt":1,
-\t"Run":2,
-\t"Speed":740
+\t"Value": 0.740
 },
 {
 \t"Expt":1,
-\t"Run":3,
-\t"Speed":900
+\t"Value": 0.900
 },
 {
 \t"Expt":1,
-\t"Run":4,
-\t"Speed":1070
+\t"Value": 1.070
 },
 {
 \t"Expt":1,
-\t"Run":5,
-\t"Speed":930
+\t"Value": 0.930
 },
 {
 \t"Expt":1,
-\t"Run":6,
-\t"Speed":850
+\t"Value": 0.850
 },
 {
 \t"Expt":1,
-\t"Run":7,
-\t"Speed":950
+\t"Value": 0.950
 },
 {
 \t"Expt":1,
-\t"Run":8,
-\t"Speed":980
+\t"Value": 0.980
 },
 {
 \t"Expt":1,
-\t"Run":9,
-\t"Speed":980
+\t"Value": 0.980
 },
 {
 \t"Expt":1,
-\t"Run":10,
-\t"Speed":880
+\t"Value": 0.880
 },
 {
 \t"Expt":1,
-\t"Run":11,
-\t"Speed":1000
+\t"Value": 1.000
 },
 {
 \t"Expt":1,
-\t"Run":12,
-\t"Speed":980
+\t"Value": 0.980
 },
 {
 \t"Expt":1,
-\t"Run":13,
-\t"Speed":930
+\t"Value": 0.930
 },
 {
 \t"Expt":1,
-\t"Run":14,
-\t"Speed":650
+\t"Value": 0.650
 },
 {
 \t"Expt":1,
-\t"Run":15,
-\t"Speed":760
+\t"Value": 0.760
 },
 {
 \t"Expt":1,
-\t"Run":16,
-\t"Speed":810
+\t"Value": 0.810
 },
 {
 \t"Expt":1,
-\t"Run":17,
-\t"Speed":1000
+\t"Value": 1.000
 },
 {
 \t"Expt":1,
-\t"Run":18,
-\t"Speed":1000
+\t"Value": 1.000
 },
 {
 \t"Expt":1,
-\t"Run":19,
-\t"Speed":960
+\t"Value": 0.960
 },
 {
 \t"Expt":1,
-\t"Run":20,
-\t"Speed":960
+\t"Value": 0.960
 },
 {
 \t"Expt":2,
-\t"Run":1,
-\t"Speed":960
+\t"Value": 0.960
 },
 {
 \t"Expt":2,
-\t"Run":2,
-\t"Speed":940
+\t"Value": 0.940
 },
 {
 \t"Expt":2,
-\t"Run":3,
-\t"Speed":960
+\t"Value": 0.960
 },
 {
 \t"Expt":2,
-\t"Run":4,
-\t"Speed":940
+\t"Value": 0.940
 },
 {
 \t"Expt":2,
-\t"Run":5,
-\t"Speed":880
+\t"Value": 0.880
 },
 {
 \t"Expt":2,
-\t"Run":6,
-\t"Speed":800
+\t"Value": 0.800
 },
 {
 \t"Expt":2,
-\t"Run":7,
-\t"Speed":850
+\t"Value": 0.850
 },
 {
 \t"Expt":2,
-\t"Run":8,
-\t"Speed":880
+\t"Value": 0.880
 },
 {
 \t"Expt":2,
-\t"Run":9,
-\t"Speed":900
+\t"Value": 0.900
 },
 {
 \t"Expt":2,
-\t"Run":10,
-\t"Speed":840
+\t"Value": 0.840
 },
 {
 \t"Expt":2,
-\t"Run":11,
-\t"Speed":830
+\t"Value": 0.830
 },
 {
 \t"Expt":2,
-\t"Run":12,
-\t"Speed":790
+\t"Value": 0.790
 },
 {
 \t"Expt":2,
-\t"Run":13,
-\t"Speed":810
+\t"Value": 0.810
 },
 {
 \t"Expt":2,
-\t"Run":14,
-\t"Speed":880
+\t"Value": 0.880
 },
 {
 \t"Expt":2,
-\t"Run":15,
-\t"Speed":880
+\t"Value": 0.880
 },
 {
 \t"Expt":2,
-\t"Run":16,
-\t"Speed":830
+\t"Value": 0.830
 },
 {
 \t"Expt":2,
-\t"Run":17,
-\t"Speed":800
+\t"Value": 0.800
 },
 {
 "Expt":2,
-"Run":18,
-"Speed":790
+"Value": 0.790
 },
 {
 "Expt":2,
-"Run":19,
-"Speed":760
+"Value": 0.760
 },
 {
 "Expt":2,
-"Run":20,
-"Speed":800
+"Value": 0.800
 },
 {
 "Expt":3,
-"Run":1,
-"Speed":880
+"Value": 0.880
 },
 {
 "Expt":3,
-"Run":2,
-"Speed":880
+"Value": 0.880
 },
 {
 "Expt":3,
-"Run":3,
-"Speed":880
+"Value": 0.880
 },
 {
 "Expt":3,
-"Run":4,
-"Speed":860
+"Value": 0.860
 },
 {
 "Expt":3,
-"Run":5,
-"Speed":720
+"Value": 0.720
 },
 {
 "Expt":3,
-"Run":6,
-"Speed":720
+"Value": 0.720
 },
 {
 "Expt":3,
-"Run":7,
-"Speed":620
+"Value": 0.620
 },
 {
 "Expt":3,
-"Run":8,
-"Speed":860
+"Value": 0.860
 },
 {
 "Expt":3,
-"Run":9,
-"Speed":970
+"Value": 0.970
 },
 {
 "Expt":3,
-"Run":10,
-"Speed":950
+"Value": 0.950
 },
 {
 "Expt":3,
-"Run":11,
-"Speed":880
+"Value": 0.880
 },
 {
 "Expt":3,
-"Run":12,
-"Speed":910
+"Value": 0.910
 },
 {
 "Expt":3,
-"Run":13,
-"Speed":850
+"Value": 0.850
 },
 {
 "Expt":3,
-"Run":14,
-"Speed":870
+"Value": 0.870
 },
 {
 "Expt":3,
-"Run":15,
-"Speed":840
+"Value": 0.840
 },
 {
 "Expt":3,
-"Run":16,
-"Speed":840
+"Value": 0.840
 },
 {
 "Expt":3,
-"Run":17,
-"Speed":850
+"Value": 0.850
 },
 {
 "Expt":3,
-"Run":18,
-"Speed":840
+"Value": 0.840
 },
 {
 "Expt":3,
-"Run":19,
-"Speed":840
+"Value": 0.840
 },
 {
 "Expt":3,
-"Run":20,
-"Speed":840
-},
-{
-"Expt":4,
-"Run":1,
-"Speed":890
-},
-{
-"Expt":4,
-"Run":2,
-"Speed":810
-},
-{
-"Expt":4,
-"Run":3,
-"Speed":810
-},
-{
-"Expt":4,
-"Run":4,
-"Speed":820
-},
-{
-"Expt":4,
-"Run":5,
-"Speed":800
-},
-{
-"Expt":4,
-"Run":6,
-"Speed":770
-},
-{
-"Expt":4,
-"Run":7,
-"Speed":760
-},
-{
-"Expt":4,
-"Run":8,
-"Speed":740
-},
-{
-"Expt":4,
-"Run":9,
-"Speed":750
-},
-{
-"Expt":4,
-"Run":10,
-"Speed":760
-},
-{
-"Expt":4,
-"Run":11,
-"Speed":910
-},
-{
-"Expt":4,
-"Run":12,
-"Speed":920
-},
-{
-"Expt":4,
-"Run":13,
-"Speed":890
-},
-{
-"Expt":4,
-"Run":14,
-"Speed":860
-},
-{
-"Expt":4,
-"Run":15,
-"Speed":880
-},
-{
-"Expt":4,
-"Run":16,
-"Speed":720
-},
-{
-"Expt":4,
-"Run":17,
-"Speed":840
-},
-{
-"Expt":4,
-"Run":18,
-"Speed":850
-},
-{
-"Expt":4,
-"Run":19,
-"Speed":850
-},
-{
-"Expt":4,
-"Run":20,
-"Speed":780
-},
-{
-"Expt":5,
-"Run":1,
-"Speed":890
-},
-{
-"Expt":5,
-"Run":2,
-"Speed":840
-},
-{
-"Expt":5,
-"Run":3,
-"Speed":780
-},
-{
-"Expt":5,
-"Run":4,
-"Speed":810
-},
-{
-"Expt":5,
-"Run":5,
-"Speed":760
-},
-{
-"Expt":5,
-"Run":6,
-"Speed":810
-},
-{
-"Expt":5,
-"Run":7,
-"Speed":790
-},
-{
-"Expt":5,
-"Run":8,
-"Speed":810
-},
-{
-"Expt":5,
-"Run":9,
-"Speed":820
-},
-{
-"Expt":5,
-"Run":10,
-"Speed":850
-},
-{
-"Expt":5,
-"Run":11,
-"Speed":870
-},
-{
-"Expt":5,
-"Run":12,
-"Speed":870
-},
-{
-"Expt":5,
-"Run":13,
-"Speed":810
-},
-{
-"Expt":5,
-"Run":14,
-"Speed":740
-},
-{
-"Expt":5,
-"Run":15,
-"Speed":810
-},
-{
-"Expt":5,
-"Run":16,
-"Speed":940
-},
-{
-"Expt":5,
-"Run":17,
-"Speed":950
-},
-{
-"Expt":5,
-"Run":18,
-"Speed":800
-},
-{
-"Expt":5,
-"Run":19,
-"Speed":810
-},
-{
-"Expt":5,
-"Run":20,
-"Speed":870
+"Value": 0.840
 }
 ]
 """

@@ -24,7 +24,8 @@
             .offset([-10, 0])
             .html(function (d) {
                 var nodeData = d3.select(this.parentNode).datum()[d];
-                return "<strong></strong> <span style='color:red'>" + nodeData.description + "</span>";
+                return "<strong></strong> <span style='color:#00ff00'>Gene: " + nodeData.description + "<br/>"+
+                    "Correlation: " +  nodeData.value+ "</span>";
             });
 
 
@@ -325,7 +326,6 @@
                 .data(data)
                 .enter()
                 .append("svg")
-                .attr("class", "box")
                 .attr("class", "box")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.bottom + margin.top)

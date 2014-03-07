@@ -5,6 +5,7 @@ body {
 
 .box {
     font: 10px sans-serif;
+    padding : 20px;
 }
 
 .box line,
