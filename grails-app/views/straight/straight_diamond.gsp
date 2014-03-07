@@ -10,11 +10,59 @@
     <script src="../js/d3.min.js"></script>
     <script src="../js/dc.js"></script>
     <script src="../js/crossfilter.min.js"></script>
-</head>
+    <style>
+    body {
+        font: 12px Arial;
+    }
+    text.shadow {
+        stroke: #fff;
+        stroke-width: 2.5px;
+        opacity: 0.9;
+    }
+    h1 p {
+        font-family: 'Gravitas One','Arial Black';
+        color: #666666;
+        font-weight: normal;
+        font-size: 3em;
+        margin: 0;
+    }
+    h2{
+        font-family: 'Gravitas One','Arial Black';
+        color: #b1967c;
+        font-weight: normal;
+        font-size: 2.3em;
+        margin: 0;
+    }
+    p   *.intro{
+        color: green;
+        font-family: 'Arial Black';
+        font-size: 5em;
+    }
+    p:hover{
+        color: purple;
+        font-family: 'Arial Black';
+        font-size: 2em;
+    }
+    p.intro{
+        color: yellow;
+        font-family: 'Arial Black';
+        font-size: 5em;
+    }
+    </style>
+    </head>
 <body>
 
 <div id="chart"></div>
-
+%{--<h1>--}%
+%{--<p>    Hi</p>--}%
+%{--</h1>--}%
+%{--<h2>Ho--}%
+    %{--<p>    He</p>--}%
+%{--</h2>--}%
+<p><span class="intro">hello 1</span></p>
+<p class="intro">hello 2</p>
+<p><a class="intro">hello 3</a></p>
+<a class="intr">hello 4</a>
 <script type="text/javascript">
     var data = [ // <-A
         {expense: 10, category: "Retail"},
@@ -61,6 +109,16 @@
             render(data);
         });
     }
+
+    // define a function
+    var sayHi = function (who) {
+        return "Hello" + (who ? ", " + who : "") + "!";
+    };
+    // invoke a function
+    sayHi(); // "Hello"
+    sayHi('world'); // "Hello, world!"
+    // apply a function
+    sayHi.apply(null, ["hello"]); // "Hello, hello!"
 </script>
 
 <div class="control-group">
