@@ -33,7 +33,11 @@ body {
 
 </style>
 <body>
-<script src="http://d3js.org/d3.v3.min.js"></script>
+%{--<link media="all" rel="stylesheet" href="../css/ctrp/scatter.css">--}%
+<script src="../js/d3.js"></script>
+<script src="../js/ctrp/scatter.js"></script>
+<script src="../js/ctrp/d3tooltip.js"></script>
+<div id="scatterPlot"></div>
 <script>
 
     var margin = {top: 20, right: 20, bottom: 30, left: 40},
@@ -95,64 +99,69 @@ body {
             xValue:3.3,
             lineage:'endometrium'
         }
-    ]
-        data.forEach(function(d) {
-            d.yValue = +d.yValue;
-            d.xValue = +d.xValue;
-        });
+    ];
 
-        x.domain(d3.extent(data, function(d) { return d.xValue; })).nice();
-        y.domain(d3.extent(data, function(d) { return d.yValue; })).nice();
 
-        svg.append("g")
-                .attr("class", "x axis")
-                .attr("transform", "translate(0," + height + ")")
-                .call(xAxis)
-                .append("text")
-                .attr("class", "label")
-                .attr("x", width)
-                .attr("y", -6)
-                .style("text-anchor", "end")
-                .text("Navitoclax AUC");
-
-        svg.append("g")
-                .attr("class", "y axis")
-                .call(yAxis)
-                .append("text")
-                .attr("class", "label")
-                .attr("transform", "rotate(-90)")
-                .attr("y", 6)
-                .attr("dy", ".71em")
-                .style("text-anchor", "end")
-                .text("BCL2 expression level")
-
-        svg.selectAll(".dot")
-                .data(data)
-                .enter().append("circle")
-                .attr("class", "dot")
-                .attr("r", 3.5)
-                .attr("cx", function(d) { return x(d.xValue); })
-                .attr("cy", function(d) { return y(d.yValue); })
-                .style("fill", function(d) { return color(d.lineage); });
-
-        var legend = svg.selectAll(".legend")
-                .data(color.domain())
-                .enter().append("g")
-                .attr("class", "legend")
-                .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
-
-        legend.append("rect")
-                .attr("x", width - 18)
-                .attr("width", 18)
-                .attr("height", 18)
-                .style("fill", color);
-
-        legend.append("text")
-                .attr("x", width - 24)
-                .attr("y", 9)
-                .attr("dy", ".35em")
-                .style("text-anchor", "end")
-                .text(function(d) { return d; });
+    d3.scatter()
+            .selectionIdentifier("#scatterPlot")
+            .width (width)
+            .height (height)
+            .assignData (data)
+            .render() ;
+//
+//
+//        x.domain(d3.extent(data, function(d) { return d.xValue; })).nice();
+//        y.domain(d3.extent(data, function(d) { return d.yValue; })).nice();
+//
+//        svg.append("g")
+//                .attr("class", "x axis")
+//                .attr("transform", "translate(0," + height + ")")
+//                .call(xAxis)
+//                .append("text")
+//                .attr("class", "label")
+//                .attr("x", width)
+//                .attr("y", -6)
+//                .style("text-anchor", "end")
+//                .text("Navitoclax AUC");
+//
+//        svg.append("g")
+//                .attr("class", "y axis")
+//                .call(yAxis)
+//                .append("text")
+//                .attr("class", "label")
+//                .attr("transform", "rotate(-90)")
+//                .attr("y", 6)
+//                .attr("dy", ".71em")
+//                .style("text-anchor", "end")
+//                .text("BCL2 expression level")
+//
+//        svg.selectAll(".dot")
+//                .data(data)
+//                .enter().append("circle")
+//                .attr("class", "dot")
+//                .attr("r", 3.5)
+//                .attr("cx", function(d) { return x(d.xValue); })
+//                .attr("cy", function(d) { return y(d.yValue); })
+//                .style("fill", function(d) { return color(d.lineage); });
+//
+//        var legend = svg.selectAll(".legend")
+//                .data(color.domain())
+//                .enter().append("g")
+//                .attr("class", "legend")
+//                .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+//
+//        legend.append("rect")
+//                .attr("x", width - 18)
+//                .attr("width", 18)
+//                .attr("height", 18)
+//                .style("fill", color);
+//
+//        legend.append("text")
+//                .attr("x", width - 24)
+//                .attr("y", 9)
+//                .attr("dy", ".35em")
+//                .style("text-anchor", "end")
+//                .text(function(d) { return d; });
 
 
 
