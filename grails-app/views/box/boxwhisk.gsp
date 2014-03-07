@@ -48,16 +48,16 @@
 
     // initial value of the interquartile multiplier. Note that this value
     //  is adjustable via a UI slider
-    var interquartileMultiplier = 1.5;
+    var defaultInterquartileMultiplier = 1.5;
 
     // build those portions of the box whisker plot that our data independent
     var chart = d3.boxWhiskerPlot()
             .selectionIdentifier("#plot")
             .width(width)
             .height(height)
-            .whiskers(iqr(interquartileMultiplier));
+            .whiskers(iqr(defaultInterquartileMultiplier));
     // build a slider and attach the callback methods
-    var slider = d3.slider(0,3,0,100,'vertical',interquartileMultiplier,onBrushMoveDoThis,onBrushEndDoThis) ;
+    var slider = d3.slider(0,3,0,100,'vertical',defaultInterquartileMultiplier,onBrushMoveDoThis,onBrushEndDoThis) ;
 
     // get your data
     d3.json("http://localhost:8028/cow/box/retrieveBoxData", function (error, json) {

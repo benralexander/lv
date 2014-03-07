@@ -14,17 +14,38 @@
     <script src="../js/d3.js"></script>
     <script src="../js/ctrp/enrichmentPlot.js"></script>
     <script src="../js/ctrp/d3tooltip.js"></script>
-    <style>
-        .tooltip{
 
-        }
-    </style>
 </head>
 <body>
   <h1>Enrichment plot</h1>
   <div class="heatmap"></div>
- <div class="featuremap"></div>
-<div id="pickme"></div>
+  <div class="featuremap"></div>
+<table border="1" style="margin:10px;">
+    <tr>
+        <td style="padding:10px">
+            Information
+        </td>
+        <td style="padding:10px">
+            <div id="eplot1"></div>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding:10px">
+            Information
+        </td>
+        <td style="padding:10px">
+            <div id="eplot2"></div>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding:10px">
+            Information
+        </td>
+        <td style="padding:10px">
+            <div id="eplot3"></div>
+        </td>
+    </tr>
+</table>
 <script>
 
     // make up some data
@@ -48,7 +69,7 @@
         ///    AUC value
         ///    + A way to get to the underlying growth curve.  URL? Parameters?
         enrichData.push({ index: i,
-            value: (i < 200) ? (i / 1900) : (i / 900), // AUC value
+            value:  (i / 900), // AUC value
             name: fakeData [(i % fakeData.length)].ccl,  //   CCL name
             line: fakeData [(i % fakeData.length)].lineage, // Name of lineage
             link: '<a href=\'#\'>Parameter number ' +i +'</a>', // Parameter (?) get the data for this growth curve
@@ -57,11 +78,18 @@
     // demonstrate that we can draw multiple enrichment plots simultaneously
     //var enrichArray = [enrichData, enrichData];
   //  var enrichArray = [enrichData];
-    var dataForEnrichmentHeatMap = {
+    var dataForEnrichmentHeatMap1 = {
         featureName:'PDE4DIP',
         compoundName:'parbendazole',
         enrichmentData:[enrichData]
     }
+
+    var dataForEnrichmentHeatMap2 = {
+        featureName:'IGFBP5',
+        compoundName:'4-methylfasudil',
+        enrichmentData:[enrichData]
+    }
+
 
     /***
      * Sample JSON data:
@@ -92,12 +120,30 @@
             height = 100 - margin.top - margin.bottom;
 
     // create a placeholder, but don't assign any data yet
-    var enrichmentPlot = d3.heatmap()
-            .selectionIdentifier("#pickme")
+    d3.heatmap()
+            .selectionIdentifier("#eplot1")
             .width(width + margin.left + margin.right)
             .height(height + margin.bottom + margin.top)
-            .assignData(dataForEnrichmentHeatMap)
+            .assignData(dataForEnrichmentHeatMap1)
             .render();
+
+    // create a placeholder, but don't assign any data yet
+    d3.heatmap()
+            .selectionIdentifier("#eplot2")
+            .width(width + margin.left + margin.right)
+            .height(height + margin.bottom + margin.top)
+            .assignData(dataForEnrichmentHeatMap2)
+            .render();
+
+
+    // create a placeholder, but don't assign any data yet
+    d3.heatmap()
+            .selectionIdentifier("#eplot3")
+            .width(width + margin.left + margin.right)
+            .height(height + margin.bottom + margin.top)
+            .assignData(dataForEnrichmentHeatMap1)
+            .render();
+
 
 
 </script>
