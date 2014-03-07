@@ -64,7 +64,6 @@
     position: relative;
     font: 16px serif;
     font-weight: bold;
-    color: #000;
     margin: 5px;
     padding: 10px;
     background: #eeeeee;
@@ -84,7 +83,6 @@
     font-style: italic;
 color: #000000;
 }
-
 </style>
 
 
@@ -155,64 +153,6 @@ color: #000000;
                         .tickSize(-chart_dimensions.width*yLabelProportion),
 
         // Encapsulate the variables/methods necessary to handle tooltips
-<<<<<<< HEAD
-        var tooltipHandler  = new TooltipHandler ();
-        function TooltipHandler()  {
-            // private variable =  tooltip
-//            var tooltip = d3.select("body")
-//                    .append("div")
-//                    .style("position", "absolute")
-//                    .style("visibility", "visible")
-//                    .attr("class", "toolTextAppearance");
-            this.respondToBarChartMouseOver = function(d) {
-                d3.select(".toolTextAppearance").remove();
-                var stringToReturn = 'Compounds in bin: ' + d[0] +
-                        '<br/>' + 'Minimim bin value: ' + d[1].toPrecision(3) +
-                        '<br/>' + 'Maximum bin value:' + d[2].toPrecision(3);
-
-                var curpoint = d3.select(this) ;
-                var curbar = d3.select(this.parentElement) ;
-                curbar.append('div')
-                        .html(stringToReturn)
-                        .attr('x', curpoint.attr('x') + 10)
-                        .attr('y', curpoint.attr('y') - 10)
-                        .attr('class','toolTextAppearance') ;
-//                        .attr('x', time_scale(d.time) + 10)
-//                        .attr('y', percent_scale(d.late_percent) - 10)
-
-
-
-
-//                tooltip.style("visibility", "visible")
-//                        .style("opacity", "0")
-//                        .transition()
-//                        .duration(200)
-//                        .style("opacity", "1");
-//                var stringToReturn = tooltip.html('Compounds in bin: ' + d[0] +
-//                        '<br/>' + 'Minimim bin value: ' + d[1].toPrecision(3) +
-//                        '<br/>' + 'Maximum bin value:' + d[2].toPrecision(3));
-//                d3.select(this)
-//                        .transition()
-//                        .duration(250)
-//                        .attr('fill', '#FFA500');
-//                return stringToReturn;
-            };
-            this.respondToBarChartMouseOut =  function(d) {
-                var curpoint = d3.select('.toolTextAppearance').remove() ;
-//                var returnValue = tooltip.style("visibility", "hidden");
-//                d3.select(this)
-//                        .transition()
-//                        .duration(250)
-//                        .attr('fill', 'steelblue');
-//                return returnValue;
-;
-            };
-            this.respondToBarChartMouseMove =  function(d) {
-//                return tooltip.style("top", (event.pageY - 10) + "px").style("left", (event.pageX + 10) + "px");
-;
-            };
-        }
-=======
                 TooltipHandler = function ()  {
 
                     // Safety trick for constructors
@@ -258,7 +198,6 @@ color: #000000;
                     };
                 },
                 tooltipHandler  = new TooltipHandler ();
->>>>>>> hierarc
 
         //
         //  part 3:  Build up the Dom
@@ -267,7 +206,6 @@ color: #000000;
         // Create a div for each histogram we make. All of those divs are held within the div with ID = histogramHere
         var histogramDiv = domMarker
                 .append("div");
-//                .attr("id","histo");
 
         // Create an SVG to hold the graphics
         var svg = histogramDiv
@@ -292,16 +230,6 @@ color: #000000;
                 .append("g")
                 .attr("class", "bar")
                 .attr("fill", "steelblue")
-<<<<<<< HEAD
-                .append("rect")
-               .attr("x", function (d, i) { return xScale(d[1]);  })
-               .attr("y", function (d) { return chart_dimensions.height - yScale(d[0]);  })
-               .attr("width", (chart_dimensions.width / oneHistogramsData.histogram.length) - barPadding)
-               .attr("height", function (d) { return yScale(d[0]);})
-               .on("mouseover.tooltip", tooltipHandler.respondToBarChartMouseOver)
-               .on("mousemove", tooltipHandler.respondToBarChartMouseMove)
-               .on("mouseout.tooltip", tooltipHandler.respondToBarChartMouseOut);
-=======
                 .append('svg:polyline')
                 .attr('points',function(d){
                         return (xScale(d[1])+' '+(yScale(0))+','+
@@ -340,7 +268,6 @@ color: #000000;
 //                .on("mousemove", tooltipHandler.respondToBarChartMouseMove)
 //                .on("mouseout", tooltipHandler.respondToBarChartMouseOut)
 
->>>>>>> hierarc
 
         // Create horizontal axis
         svg.append("g")
