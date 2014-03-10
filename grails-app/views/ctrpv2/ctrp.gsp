@@ -136,7 +136,7 @@
             .render();
 
 
-    // create a  heatmap and populate it with data
+    // create a  heatmap and populate it with data.
     d3.heatmap()
             .selectionIdentifier("#eplot3")
             .width(width + margin.left + margin.right)
