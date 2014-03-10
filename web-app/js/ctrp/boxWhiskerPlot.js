@@ -14,6 +14,8 @@
             quartiles = boxQuartiles,
             xAxis = {},
             yAxis = {},
+            internalMargin = {left: 25,
+            bottom: 25},
 
         // the variables that will never be exposed
             value = Number,
@@ -35,7 +37,7 @@
         instance.render = function () {
 
             selection
-                .selectAll("svg")
+                .select("svg").select("g.boxHolder")
                 .each(function (d, i) {
                     d = d.sort(function (a, b) {
                         return a.value - b.value;
@@ -59,29 +61,34 @@
                         : d3.range(n);
 
                     // Compute the new x-scale.
-                    var x1 = d3.scale.linear()
-                        .domain(domain && domain.call(this, d, i) || [min, max])
-                        .range([height, 0]);
+                    var xScale = d3.scale.linear()
+                        .domain([0, 1])
+                        .range([width+margin.right+margin.left, 0]);
+
 
                     // Retrieve the old x-scale, if this is an update.
-                    var x0 = this.__chart__ || d3.scale.linear()
+                    var xScaleOld = this.__chart__ || d3.scale.linear()
                         .domain([0, Infinity])
-                        .range(x1.range());
+                        .range(xScale.range());
+
+
+                    // Compute the new y-scale.
+                    var yScale = d3.scale.linear()
+                        .domain(domain && domain.call(this, d, i) || [min, max])
+                        .range([0, height+margin.top+margin.bottom]);
+
+
 
                     // Stash the new scale.
-                    this.__chart__ = x1;
-
-                    var xscale = d3.scale.ordinal()
-                        .domain([1])
-                        .range(['cmpd']);
+                    this.__chart__ = xScale;
 
 
                     xAxis = d3.svg.axis()
-                        .scale(xscale)
+                        .scale(yScale)
                         .orient("bottom");
 
                     yAxis = d3.svg.axis()
-                        .scale(x1)
+                        .scale(xScale)
                         .orient("left");
 
 
@@ -94,45 +101,45 @@
                     var center = g.selectAll("line.center")
                         .data(whiskerData ? [whiskerData] : []);
 
-                    center.enter().insert("line", "rect")
+                    center.enter().append("line", "rect")
                         .attr("class", "center")
                         .attr("x1", width / 2)
                         .attr("y1", function (d) {
-                            return x0(d[0]);
+                            return xScaleOld(d[0]);
                         })
                         .attr("x2", width / 2)
                         .attr("y2", function (d) {
-                            return x0(d[1]);
+                            return xScaleOld(d[1]);
                         })
                         .style("opacity", 1e-6)
                         .transition()
                         .duration(duration)
                         .style("opacity", 1)
                         .attr("y1", function (d) {
-                            return x1(d[0]);
+                            return xScale(d[0]);
                         })
                         .attr("y2", function (d) {
-                            return x1(d[1]);
+                            return xScale(d[1]);
                         });
 
                     center.transition()
                         .duration(duration)
                         .style("opacity", 1)
                         .attr("y1", function (d) {
-                            return x1(d[0]);
+                            return xScale(d[0]);
                         })
                         .attr("y2", function (d) {
-                            return x1(d[1]);
+                            return xScale(d[1]);
                         });
 
                     center.exit().transition()
                         .duration(duration)
                         .style("opacity", 1e-6)
                         .attr("y1", function (d) {
-                            return x1(d[0]);
+                            return xScale(d[0]);
                         })
                         .attr("y2", function (d) {
-                            return x1(d[1]);
+                            return xScale(d[1]);
                         })
                         .remove();
 
@@ -144,28 +151,28 @@
                         .attr("class", "box")
                         .attr("x", 0)
                         .attr("y", function (d) {
-                            return x0(d[2]);
+                            return xScaleOld(d[2]);
                         })
                         .attr("width", width)
                         .attr("height", function (d) {
-                            return x0(d[0]) - x0(d[2]);
+                            return xScaleOld(d[0]) - xScaleOld(d[2]);
                         })
                         .transition()
                         .duration(duration)
                         .attr("y", function (d) {
-                            return x1(d[2]);
+                            return xScale(d[2]);
                         })
                         .attr("height", function (d) {
-                            return x1(d[0]) - x1(d[2]);
+                            return xScale(d[0]) - xScale(d[2]);
                         });
 
                     box.transition()
                         .duration(duration)
                         .attr("y", function (d) {
-                            return x1(d[2]);
+                            return xScale(d[2]);
                         })
                         .attr("height", function (d) {
-                            return x1(d[0]) - x1(d[2]);
+                            return xScale(d[0]) - xScale(d[2]);
                         });
 
                     box.exit().remove();
@@ -177,18 +184,18 @@
                     medianLine.enter().append("line")
                         .attr("class", "median")
                         .attr("x1", 0)
-                        .attr("y1", x0)
+                        .attr("y1", xScaleOld)
                         .attr("x2", width)
-                        .attr("y2", x0)
+                        .attr("y2", xScaleOld)
                         .transition()
                         .duration(duration)
-                        .attr("y1", x1)
-                        .attr("y2", x1);
+                        .attr("y1", xScale)
+                        .attr("y2", xScale);
 
                     medianLine.transition()
                         .duration(duration)
-                        .attr("y1", x1)
-                        .attr("y2", x1);
+                        .attr("y1", xScale)
+                        .attr("y2", xScale);
 
                     medianLine.exit().remove();
 
@@ -197,29 +204,29 @@
                     var whisker = g.selectAll("line.whisker")
                         .data(whiskerData || []);
 
-                    whisker.enter().insert("line", "circle, text")
+                    whisker.enter().append("line", "circle, text")
                         .attr("class", "whisker")
                         .attr("x1", 0)
-                        .attr("y1", x0)
+                        .attr("y1", xScaleOld)
                         .attr("x2", width)
-                        .attr("y2", x0)
+                        .attr("y2", xScaleOld)
                         .style("opacity", 1e-6)
                         .transition()
                         .duration(duration)
-                        .attr("y1", x1)
-                        .attr("y2", x1)
+                        .attr("y1", xScale)
+                        .attr("y2", xScale)
                         .style("opacity", 1);
 
                     whisker.transition()
                         .duration(duration)
-                        .attr("y1", x1)
-                        .attr("y2", x1)
+                        .attr("y1", xScale)
+                        .attr("y2", xScale)
                         .style("opacity", 1);
 
                     whisker.exit().transition()
                         .duration(duration)
-                        .attr("y1", x1)
-                        .attr("y2", x1)
+                        .attr("y1", xScale)
+                        .attr("y2", xScale)
                         .style("opacity", 1e-6)
                         .remove();
 
@@ -233,19 +240,19 @@
                         .attr("xlink:href", "http://localhost:8028/cow/box/scatter")
                         .on('mouseover', tip.show)
                         .on('mouseout', tip.hide)
-                        .insert("circle", "text")
+                        .append("circle", "text")
                         .attr("class", "outlier")
                         .attr("r", 5)
                         .attr("cx", width / 2)
                         .attr("cy", function (i) {
-                            return x0(d[i].value);
+                            return xScaleOld(d[i].value);
                         })
                         .style("opacity", 1e-6)
 
                         .transition()
                         .duration(duration)
                         .attr("cy", function (i) {
-                            return x1(d[i].value);
+                            return xScale(d[i].value);
                         })
                         .style("opacity", 1)
                     ;
@@ -253,7 +260,7 @@
                     outlier.transition()
                         .duration(duration)
                         .attr("cy", function (i) {
-                            return x1(d[i].value);
+                            return xScale(d[i].value);
                         })
                         .style("opacity", 1);
 
@@ -261,13 +268,13 @@
                         .transition()
                         .duration(duration)
                         .attr("cy", function (i) {
-                           return x1(d[i].value);
+                           return xScale(d[i].value);
                         })
                         .style("opacity", 1e-6)
                         .remove();
 
                     // Compute the tick format.
-                    var format = tickFormat || x1.tickFormat(8);
+                    var format = tickFormat || xScale.tickFormat(8);
 
                     // Update box ticks. These are the numbers on the
                     //     sides of the box
@@ -283,19 +290,19 @@
                         .attr("x", function (d, i) {
                             return i & 1 ? width : 0
                         })
-                        .attr("y", x0)
+                        .attr("y", xScaleOld)
                         .attr("text-anchor", function (d, i) {
                             return i & 1 ? "start" : "end";
                         })
                         .text(format)
                         .transition()
                         .duration(duration)
-                        .attr("y", x1);
+                        .attr("y", xScale);
 
                     boxTick.transition()
                         .duration(duration)
                         .text(format)
-                        .attr("y", x1);
+                        .attr("y", xScale);
 
                     // Update whisker ticks. These are the numbers on the side of the whiskers.
                     //
@@ -310,25 +317,57 @@
                         .attr("dy", ".3em")
                         .attr("dx", 6)
                         .attr("x", width)
-                        .attr("y", x0)
+                        .attr("y", xScaleOld)
                         .text(format)
                         .style("opacity", 1e-6)
                         .transition()
                         .duration(duration)
-                        .attr("y", x1)
+                        .attr("y", xScale)
                         .style("opacity", 1);
 
                     whiskerTick.transition()
                         .duration(duration)
                         .text(format)
-                        .attr("y", x1)
+                        .attr("y", xScale)
                         .style("opacity", 1);
 
                     whiskerTick.exit().transition()
                         .duration(duration)
-                        .attr("y", x1)
+                        .attr("y", xScale)
                         .style("opacity", 1e-6)
                         .remove();
+
+                    // y axis
+                    selection
+                        .select("svg").selectAll("g.y").data([1]).enter()
+                        .append("g")
+                        .attr("class", "y axis")
+                        .attr("transform", "translate(0,0)")
+                        .call(yAxis)
+                        .append("text")
+                        .attr("class", "label")
+                        .attr("x",  margin.left )
+                        .attr("y", height/2  + margin.top + margin.bottom )
+                        .style("text-anchor", "middle")
+                        .style("font-weight", "bold")
+                        .text('YYY');
+
+                    // x axis
+                    selection
+                        .select("svg").selectAll("g.x").data([1]).enter()
+                        .append("g")
+                        .attr("class", "x axis")
+                        .attr("transform", "translate(0," + (height + margin.top + margin.bottom) +")")
+                        .call(xAxis)
+                        .append("text")
+                        .attr("class", "label")
+                        .attr("x", width/2 )
+                        .attr("y", height/2 )
+                        .style("text-anchor", "middle")
+                        .style("font-weight", "bold")
+                        .text('XXX');
+
+
 
 
                 });
@@ -348,8 +387,30 @@
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.bottom + margin.top)
                 .append("g")
+                .attr("class", "boxHolder")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
                 .call(tip);
+
+//            selection
+//                .selectAll("svg")
+//                .data(data)
+//                .enter()
+//                .append("svg")
+//                .attr("class", "box")
+//                .append("g")
+//
+//            selection
+//                .selectAll("svg")
+//                .data(data)
+//                .select("svg.box")
+//                .attr("width", width + margin.left + margin.right)
+//                .attr("height", height + margin.bottom + margin.top)
+//                .append("g")
+//                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+//                .call(tip);
+//
+//
+//
 
             return instance;
         };
