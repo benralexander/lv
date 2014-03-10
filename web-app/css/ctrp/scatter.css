@@ -1,0 +1,26 @@
+
+body {
+    font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    stroke-width: 1.2px;
+    shape-rendering: crispEdges;
+}
+.axis text {
+    font-size: 12pt;
+}
+.label {
+    font-size: 14pt;
+    font-weight: bold;
+}
+.legend {
+    font-size: 10pt;
+}
+
+.dot {
+    stroke: #000;
+}
