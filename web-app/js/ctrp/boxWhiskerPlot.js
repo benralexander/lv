@@ -62,13 +62,13 @@
 
                     // Compute the new x-scale.
                     var xScale = d3.scale.linear()
-                        .domain([0, 1])
+                        .domain([-1, 1])
                         .range([width+margin.right+margin.left, 0]);
 
 
                     // Retrieve the old x-scale, if this is an update.
                     var xScaleOld = this.__chart__ || d3.scale.linear()
-                        .domain([0, Infinity])
+                        .domain([-1, Infinity])
                         .range(xScale.range());
 
 
@@ -77,18 +77,22 @@
                         .domain(domain && domain.call(this, d, i) || [min, max])
                         .range([0, height+margin.top+margin.bottom]);
 
+                    // Retrieve the old x-scale, if this is an update.
+                    var yScaleOld = this.__chart__ || d3.scale.linear()
+                        .domain([-1, 1])
+                        .range(yScale.range());
 
 
                     // Stash the new scale.
-                    this.__chart__ = xScale;
+                    this.__chart__ = yScale;
 
 
                     xAxis = d3.svg.axis()
-                        .scale(yScale)
+                        .scale(xScale)
                         .orient("bottom");
 
                     yAxis = d3.svg.axis()
-                        .scale(xScale)
+                        .scale(yScale)
                         .orient("left");
 
 
@@ -342,11 +346,11 @@
                         .select("svg").selectAll("g.y").data([1]).enter()
                         .append("g")
                         .attr("class", "y axis")
-                        .attr("transform", "translate(0,0)")
+                        .attr("transform", "translate(10,0)")
                         .call(yAxis)
                         .append("text")
                         .attr("class", "label")
-                        .attr("x",  margin.left )
+                        .attr("x",  0 )
                         .attr("y", height/2  + margin.top + margin.bottom )
                         .style("text-anchor", "middle")
                         .style("font-weight", "bold")
@@ -359,6 +363,7 @@
                         .attr("class", "x axis")
                         .attr("transform", "translate(0," + (height + margin.top + margin.bottom) +")")
                         .call(xAxis)
+                        .classed({'domain':false,'line': true})
                         .append("text")
                         .attr("class", "label")
                         .attr("x", width/2 )
@@ -390,27 +395,6 @@
                 .attr("class", "boxHolder")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
                 .call(tip);
-
-//            selection
-//                .selectAll("svg")
-//                .data(data)
-//                .enter()
-//                .append("svg")
-//                .attr("class", "box")
-//                .append("g")
-//
-//            selection
-//                .selectAll("svg")
-//                .data(data)
-//                .select("svg.box")
-//                .attr("width", width + margin.left + margin.right)
-//                .attr("height", height + margin.bottom + margin.top)
-//                .append("g")
-//                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-//                .call(tip);
-//
-//
-//
 
             return instance;
         };

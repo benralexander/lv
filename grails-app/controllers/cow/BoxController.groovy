@@ -17,55 +17,31 @@ class BoxController {
 },
 {
 \t"Expt":1,
-\t"Value": 1.070
+\t"Value": 0.070
 },
 {
 \t"Expt":1,
-\t"Value": 0.930
+\t"Value": 0.30
 },
 {
 \t"Expt":1,
-\t"Value": 0.850
+\t"Value": 0.50
 },
 {
 \t"Expt":1,
-\t"Value": 0.950
+\t"Value": 0.50
 },
 {
 \t"Expt":1,
-\t"Value": 0.980
+\t"Value": 0.80
 },
 {
 \t"Expt":1,
-\t"Value": 0.980
+\t"Value": 0.80
 },
 {
 \t"Expt":1,
-\t"Value": 0.880
-},
-{
-\t"Expt":1,
-\t"Value": 1.000
-},
-{
-\t"Expt":1,
-\t"Value": 0.980
-},
-{
-\t"Expt":1,
-\t"Value": 0.930
-},
-{
-\t"Expt":1,
-\t"Value": 0.650
-},
-{
-\t"Expt":1,
-\t"Value": 0.760
-},
-{
-\t"Expt":1,
-\t"Value": 0.810
+\t"Value": 0.80
 },
 {
 \t"Expt":1,
@@ -73,15 +49,39 @@ class BoxController {
 },
 {
 \t"Expt":1,
-\t"Value": 1.000
+\t"Value": 0.80
 },
 {
 \t"Expt":1,
-\t"Value": 0.960
+\t"Value": 0.30
 },
 {
 \t"Expt":1,
-\t"Value": 0.960
+\t"Value": -0.50
+},
+{
+\t"Expt":1,
+\t"Value": -0.60
+},
+{
+\t"Expt":1,
+\t"Value": -0.10
+},
+{
+\t"Expt":1,
+\t"Value": -0.30
+},
+{
+\t"Expt":1,
+\t"Value": -1.000
+},
+{
+\t"Expt":1,
+\t"Value": -0.960
+},
+{
+\t"Expt":1,
+\t"Value": -0.660
 },
 {
 \t"Expt":2,
@@ -89,87 +89,87 @@ class BoxController {
 },
 {
 \t"Expt":2,
-\t"Value": 0.940
+\t"Value": -0.540
 },
 {
 \t"Expt":2,
-\t"Value": 0.960
+\t"Value": -0.260
 },
 {
 \t"Expt":2,
-\t"Value": 0.940
+\t"Value": -0.140
 },
 {
 \t"Expt":2,
-\t"Value": 0.880
+\t"Value": 0.80
 },
 {
 \t"Expt":2,
-\t"Value": 0.800
+\t"Value": 0.00
 },
 {
 \t"Expt":2,
-\t"Value": 0.850
+\t"Value": -0.50
 },
 {
 \t"Expt":2,
-\t"Value": 0.880
+\t"Value": 0.80
 },
 {
 \t"Expt":2,
-\t"Value": 0.900
+\t"Value": 0.200
 },
 {
 \t"Expt":2,
-\t"Value": 0.840
+\t"Value": 0.40
 },
 {
 \t"Expt":2,
-\t"Value": 0.830
+\t"Value": -0.30
 },
 {
 \t"Expt":2,
-\t"Value": 0.790
+\t"Value": 0.70
 },
 {
 \t"Expt":2,
-\t"Value": 0.810
+\t"Value": 0.30
 },
 {
 \t"Expt":2,
-\t"Value": 0.880
+\t"Value": 0.20
 },
 {
 \t"Expt":2,
-\t"Value": 0.880
+\t"Value": -0.30
 },
 {
 \t"Expt":2,
-\t"Value": 0.830
+\t"Value": -0.20
 },
 {
 \t"Expt":2,
-\t"Value": 0.800
+\t"Value": 0.00
 },
 {
 "Expt":2,
-"Value": 0.790
+"Value": 0.70
 },
 {
 "Expt":2,
-"Value": 0.760
+"Value": -0.60
 },
 {
 "Expt":2,
-"Value": 0.800
+"Value": 0.0800
 },
 {
 "Expt":3,
-"Value": 0.880
+"Value": -0.10
 },
 {
 "Expt":3,
-"Value": 0.880
+"Value": 0.10
 },
 {
 "Expt":3,

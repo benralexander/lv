@@ -6,7 +6,7 @@
     user-select: none;
 }
 
-.axis .domain {
+.slider .domain {
     fill: none;
     stroke: #000;
     stroke-opacity: .3;

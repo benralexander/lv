@@ -52,3 +52,26 @@ body {
     top: 100%;
     left: 0;
 }
+
+.box .domain {
+    fill: none;
+    stroke: #000;
+    stroke-width: 1px;
+    shape-rendering: crispEdges;
+}
+.box .axis .domain {
+    fill: none;
+    stroke: #000;
+    stroke-width: 1.2px;
+    shape-rendering: crispEdges;
+}
+.axis text {
+    font-size: 10pt;
+}
+.label {
+    font-size: 14pt;
+    font-weight: bold;
+}
+.legend {
+    font-size: 10pt;
+}

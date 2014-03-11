@@ -51,7 +51,7 @@
             if (orientation === 'horizontal') {
 
                 svg.append("g")
-                    .attr("class", "x axis")
+                    .attr("class", "slider axis")
                     .attr("transform", "translate(0,20)")
                     .call(d3.svg.axis()
                         .scale(scale)
@@ -64,7 +64,7 @@
 
             } else {
                 svg.append("g")
-                    .attr("class", "y axis")
+                    .attr("class", "slider axis")
                     .attr("transform", "translate(20,0)")
                     .call(d3.svg.axis()
                         .scale(scale)
