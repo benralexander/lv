@@ -53,18 +53,24 @@ body {
     left: 0;
 }
 
-.box .domain {
-    fill: none;
-    stroke: #000;
-    stroke-width: 1px;
-    shape-rendering: crispEdges;
-}
-.box .axis .domain {
+.box .y .domain {
     fill: none;
     stroke: #000;
     stroke-width: 1.2px;
     shape-rendering: crispEdges;
 }
+.box .x .domain {
+    display: none;
+}
+.box .x .tick {
+    display: none;
+}
+.box .x .label {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font: 10px sans-serif;
+    padding : 20px;
+}
+
 .axis text {
     font-size: 10pt;
 }

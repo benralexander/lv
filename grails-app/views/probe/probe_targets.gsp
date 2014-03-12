@@ -616,7 +616,7 @@
                     {"name":"zzull6", "descr":"invisible","col": 0,"size":1}
                 ]},
                 {"name":"DNA binding protein", "descr":"A protein that has DNA binding domains and binds DNA.  Transcription factors are DNA binding proteins, but they are not included in this category.","size": 4,"col": 1,"children": [
-                    {"name":"chromatin/chromatin-binding protein", "descr":"A non-histone protein that either binds DNA to comprise chromatin or which binds chromatin.","col": 1,"size":1},
+                    {"name":"chromatin_chromatin-binding protein", "descr":"A non-histone protein that either binds DNA to comprise chromatin or which binds chromatin.","col": 1,"size":1},
                     {"name":"zzull7", "descr":"invisible","col": 0,"size":3}
                 ]},
                 {"name":"helicase", "descr":"An enzyme that promotes the unwinding of duplex nucleic acids.","size": 2,"col": 1,"children": [
@@ -654,7 +654,7 @@
             {"name":"transferase", "descr":"Enzymes transferring a group from one compound (donor) to another compound (acceptor).  Kinase is a separate category, so it is not included here.","size": 70,"col": 1,"children": [
                 {"name":"kinase", "descr":"An enzyme that catalyzes the transfer of a phosphate from ATP to a second substrate (EC2.7).","size": 52,"col": 1,"children": [
                     {"name":"protein kinase", "descr":"An enzyme that catalyzes the transfer of a phosphate from ATP to the hydroxyl side chains on proteins, causing changes in function.","size": 36,"col": 1,"children": [
-                        {"name":"non-receptor serine/threonine protein kinase", "descr":"A soluble protein catalyzing transfer of phosphate from ATP to serine or threonine residue.","col": 1,"size":12},
+                        {"name":"non-receptor serine_threonine protein kinase", "descr":"A soluble protein catalyzing transfer of phosphate from ATP to serine or threonine residue.","col": 1,"size":12},
                         {"name":"tyrosine protein kinase receptor", "descr":"A protein that has an extracellular ligand binding domain, a single transmembrane domain and an intracellular tyrosine kinase domain that phosphorylates protein tyrosine residues.","col": 1,"size":2},
                         {"name":"non-receptor tyrosine protein kinase", "descr":"A soluble protein catalyzing transfer of phosphate from ATP to tyrosine residue.","col": 1,"size":8},
                         {"name":"zzull16", "descr":"invisible","col": 0,"size":14}
@@ -695,23 +695,23 @@
             ]},
             {"name":"cell adhesion molecule", "descr":"A protein that mediates cell-to-cell adhesion.","col": 1,"size":2},
             {"name":"oxidoreductase", "descr":"An enzyme that catalyzes a redox reaction.","size": 12,"col": 1,"children": [
-                {"name":"dehydrogenase", "descr":"An enzyme that oxidizes a substrate by transferring hydrogen to an acceptor that is either NAD/NADP or a flavin enzyme.","col": 1,"size":2},
+                {"name":"dehydrogenase", "descr":"An enzyme that oxidizes a substrate by transferring hydrogen to an acceptor that is either NAD_NADP or a flavin enzyme.","col": 1,"size":2},
                 {"name":"reductase", "descr":"An enzyme that introduces an electron into its substrate from an electron donor.  The reaction is usually coupled with an oxidation reaction.","col": 1,"size":3},
                 {"name":"oxygenase", "descr":"An enzyme that catalyzes the incorporation of molecular oxygen into organic substrates.","col": 1,"size":1},
                 {"name":"oxidase", "descr":"An enzyme that removes an electron from its substrate to an electron acceptor.  The reaction is usually coupled with a reduction reaction.","col": 1,"size":1},
                 {"name":"zzull26", "descr":"invisible","col": 0,"size":5}
             ]},
-            {"name":"transfer/carrier protein", "descr":"Proteins that carry specific substances in the blood or in the cell. They usually are not involved in transmembrane transport.","size": 2,"col": 1,"children": [
+            {"name":"transfer_carrier protein", "descr":"Proteins that carry specific substances in the blood or in the cell. They usually are not involved in transmembrane transport.","size": 2,"col": 1,"children": [
                 {"name":"apolipoprotein", "descr":"The protein component of serum lipoproteins.","col": 1,"size":1},
                 {"name":"zzull27", "descr":"invisible","col": 0,"size":1}
             ]},
-            {"name":"defense/immunity protein", "descr":"A specific protein substance that is produced to take part in various defense and immune responses of the body.","size": 2,"col": 1,"children": [
+            {"name":"defense_immunity protein", "descr":"A specific protein substance that is produced to take part in various defense and immune responses of the body.","size": 2,"col": 1,"children": [
                 {"name":"complement component", "descr":"One of 20 distinct serum proteins that is the effector of immune cytolysis.","col": 1,"size":1},
                 {"name":"zzull28", "descr":"invisible","col": 0,"size":1}
             ]},
             {"name":"membrane traffic protein", "descr":"A protein that is located on an intracellular vesicle membrane, and is responsible for the docking or fusion of the vesicle to the cytoplasma membrane.","col": 1,"size":2},
             {"name":"isomerase", "descr":"A class of enzymes that catalyze geometric or structural changes within a molecule to form a single product. The reactions do not involve a net change in the concentrations of compounds other than the substrate and the product.","size": 2,"col": 1,"children": [
-                {"name":"epimerase/racemase", "descr":"Enzymes that catalyze inversion of the configuration around an asymmetric carbon in a substrate having one (racemase) or more (epimerase) center(s) of asymmetry (EC5.1).","col": 1,"size":1},
+                {"name":"epimerase_racemase", "descr":"Enzymes that catalyze inversion of the configuration around an asymmetric carbon in a substrate having one (racemase) or more (epimerase) center(s) of asymmetry (EC5.1).","col": 1,"size":1},
                 {"name":"zzull29", "descr":"invisible","col": 0,"size":1}
             ]},
             {"name":"extracellular matrix protein", "descr":"A protein that is produced and secreted by cells and forms an intricate extracellular meshwork in which cells are embedded to construct tissues.","col": 1,"size":1}

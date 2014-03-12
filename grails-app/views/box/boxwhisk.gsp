@@ -55,7 +55,8 @@
             .selectionIdentifier("#plot")
             .width(width)
             .height(height)
-            .whiskers(iqr(defaultInterquartileMultiplier));
+            .whiskers(iqr(defaultInterquartileMultiplier))
+            .boxWhiskerName ('3,4,5-trimethoxy benzaldehyde');
     // build a slider and attach the callback methods
     var slider = d3.slider(0,3,0,100,'vertical',defaultInterquartileMultiplier,onBrushMoveDoThis,onBrushEndDoThis) ;
 

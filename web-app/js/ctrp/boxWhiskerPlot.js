@@ -14,8 +14,7 @@
             quartiles = boxQuartiles,
             xAxis = {},
             yAxis = {},
-            internalMargin = {left: 25,
-            bottom: 25},
+            boxWhiskerName = '',
 
         // the variables that will never be exposed
             value = Number,
@@ -62,25 +61,20 @@
 
                     // Compute the new x-scale.
                     var xScale = d3.scale.linear()
-                        .domain([-1, 1])
+                        .domain([0, 1])
                         .range([width+margin.right+margin.left, 0]);
 
-
-                    // Retrieve the old x-scale, if this is an update.
-                    var xScaleOld = this.__chart__ || d3.scale.linear()
-                        .domain([-1, Infinity])
-                        .range(xScale.range());
 
 
                     // Compute the new y-scale.
                     var yScale = d3.scale.linear()
-                        .domain(domain && domain.call(this, d, i) || [min, max])
-                        .range([0, height+margin.top+margin.bottom]);
+                        .domain([min-((max-min)*0.05), max+((max-min)*0.05)])
+                        .range([height ,0]);
 
                     // Retrieve the old x-scale, if this is an update.
                     var yScaleOld = this.__chart__ || d3.scale.linear()
-                        .domain([-1, 1])
-                        .range(yScale.range());
+                        .domain([min-((max-min)*0.05), max+((max-min)*0.05)])
+                        .range([height/* + margin.bottom + margin.top*/,0]);
 
 
                     // Stash the new scale.
@@ -109,41 +103,41 @@
                         .attr("class", "center")
                         .attr("x1", width / 2)
                         .attr("y1", function (d) {
-                            return xScaleOld(d[0]);
+                            return yScaleOld(d[0]);
                         })
                         .attr("x2", width / 2)
                         .attr("y2", function (d) {
-                            return xScaleOld(d[1]);
+                            return yScaleOld(d[1]);
                         })
                         .style("opacity", 1e-6)
                         .transition()
                         .duration(duration)
                         .style("opacity", 1)
                         .attr("y1", function (d) {
-                            return xScale(d[0]);
+                            return yScale(d[0]);
                         })
                         .attr("y2", function (d) {
-                            return xScale(d[1]);
+                            return yScale(d[1]);
                         });
 
                     center.transition()
                         .duration(duration)
                         .style("opacity", 1)
                         .attr("y1", function (d) {
-                            return xScale(d[0]);
+                            return yScale(d[0]);
                         })
                         .attr("y2", function (d) {
-                            return xScale(d[1]);
+                            return yScale(d[1]);
                         });
 
                     center.exit().transition()
                         .duration(duration)
                         .style("opacity", 1e-6)
                         .attr("y1", function (d) {
-                            return xScale(d[0]);
+                            return yScale(d[0]);
                         })
                         .attr("y2", function (d) {
-                            return xScale(d[1]);
+                            return yScale(d[1]);
                         })
                         .remove();
 
@@ -155,28 +149,28 @@
                         .attr("class", "box")
                         .attr("x", 0)
                         .attr("y", function (d) {
-                            return xScaleOld(d[2]);
+                            return yScaleOld(d[2]);
                         })
                         .attr("width", width)
                         .attr("height", function (d) {
-                            return xScaleOld(d[0]) - xScaleOld(d[2]);
+                            return yScaleOld(d[0]) - yScaleOld(d[2]);
                         })
                         .transition()
                         .duration(duration)
                         .attr("y", function (d) {
-                            return xScale(d[2]);
+                            return yScale(d[2]);
                         })
                         .attr("height", function (d) {
-                            return xScale(d[0]) - xScale(d[2]);
+                            return yScale(d[0]) - yScale(d[2]);
                         });
 
                     box.transition()
                         .duration(duration)
                         .attr("y", function (d) {
-                            return xScale(d[2]);
+                            return yScale(d[2]);
                         })
                         .attr("height", function (d) {
-                            return xScale(d[0]) - xScale(d[2]);
+                            return yScale(d[0]) - yScale(d[2]);
                         });
 
                     box.exit().remove();
@@ -188,18 +182,18 @@
                     medianLine.enter().append("line")
                         .attr("class", "median")
                         .attr("x1", 0)
-                        .attr("y1", xScaleOld)
+                        .attr("y1", yScaleOld)
                         .attr("x2", width)
-                        .attr("y2", xScaleOld)
+                        .attr("y2", yScaleOld)
                         .transition()
                         .duration(duration)
-                        .attr("y1", xScale)
-                        .attr("y2", xScale);
+                        .attr("y1", yScale)
+                        .attr("y2", yScale);
 
                     medianLine.transition()
                         .duration(duration)
-                        .attr("y1", xScale)
-                        .attr("y2", xScale);
+                        .attr("y1", yScale)
+                        .attr("y2", yScale);
 
                     medianLine.exit().remove();
 
@@ -211,26 +205,26 @@
                     whisker.enter().append("line", "circle, text")
                         .attr("class", "whisker")
                         .attr("x1", 0)
-                        .attr("y1", xScaleOld)
+                        .attr("y1", yScaleOld)
                         .attr("x2", width)
-                        .attr("y2", xScaleOld)
+                        .attr("y2", yScaleOld)
                         .style("opacity", 1e-6)
                         .transition()
                         .duration(duration)
-                        .attr("y1", xScale)
-                        .attr("y2", xScale)
+                        .attr("y1", yScale)
+                        .attr("y2", yScale)
                         .style("opacity", 1);
 
                     whisker.transition()
                         .duration(duration)
-                        .attr("y1", xScale)
-                        .attr("y2", xScale)
+                        .attr("y1", yScale)
+                        .attr("y2", yScale)
                         .style("opacity", 1);
 
                     whisker.exit().transition()
                         .duration(duration)
-                        .attr("y1", xScale)
-                        .attr("y2", xScale)
+                        .attr("y1", yScale)
+                        .attr("y2", yScale)
                         .style("opacity", 1e-6)
                         .remove();
 
@@ -249,14 +243,14 @@
                         .attr("r", 5)
                         .attr("cx", width / 2)
                         .attr("cy", function (i) {
-                            return xScaleOld(d[i].value);
+                            return yScaleOld(d[i].value);
                         })
                         .style("opacity", 1e-6)
 
                         .transition()
                         .duration(duration)
                         .attr("cy", function (i) {
-                            return xScale(d[i].value);
+                            return yScale(d[i].value);
                         })
                         .style("opacity", 1)
                     ;
@@ -264,7 +258,7 @@
                     outlier.transition()
                         .duration(duration)
                         .attr("cy", function (i) {
-                            return xScale(d[i].value);
+                            return yScale(d[i].value);
                         })
                         .style("opacity", 1);
 
@@ -272,13 +266,13 @@
                         .transition()
                         .duration(duration)
                         .attr("cy", function (i) {
-                           return xScale(d[i].value);
+                           return yScale(d[i].value);
                         })
                         .style("opacity", 1e-6)
                         .remove();
 
                     // Compute the tick format.
-                    var format = tickFormat || xScale.tickFormat(8);
+                    var format = tickFormat || yScale.tickFormat(8);
 
                     // Update box ticks. These are the numbers on the
                     //     sides of the box
@@ -294,19 +288,19 @@
                         .attr("x", function (d, i) {
                             return i & 1 ? width : 0
                         })
-                        .attr("y", xScaleOld)
+                        .attr("y", yScaleOld)
                         .attr("text-anchor", function (d, i) {
                             return i & 1 ? "start" : "end";
                         })
                         .text(format)
                         .transition()
                         .duration(duration)
-                        .attr("y", xScale);
+                        .attr("y", yScale);
 
                     boxTick.transition()
                         .duration(duration)
                         .text(format)
-                        .attr("y", xScale);
+                        .attr("y", yScale);
 
                     // Update whisker ticks. These are the numbers on the side of the whiskers.
                     //
@@ -321,23 +315,23 @@
                         .attr("dy", ".3em")
                         .attr("dx", 6)
                         .attr("x", width)
-                        .attr("y", xScaleOld)
+                        .attr("y", yScaleOld)
                         .text(format)
                         .style("opacity", 1e-6)
                         .transition()
                         .duration(duration)
-                        .attr("y", xScale)
+                        .attr("y", yScale)
                         .style("opacity", 1);
 
                     whiskerTick.transition()
                         .duration(duration)
                         .text(format)
-                        .attr("y", xScale)
+                        .attr("y", yScale)
                         .style("opacity", 1);
 
                     whiskerTick.exit().transition()
                         .duration(duration)
-                        .attr("y", xScale)
+                        .attr("y", yScale)
                         .style("opacity", 1e-6)
                         .remove();
 
@@ -354,23 +348,22 @@
                         .attr("y", height/2  + margin.top + margin.bottom )
                         .style("text-anchor", "middle")
                         .style("font-weight", "bold")
-                        .text('YYY');
+                        .text('');
 
                     // x axis
                     selection
                         .select("svg").selectAll("g.x").data([1]).enter()
                         .append("g")
                         .attr("class", "x axis")
-                        .attr("transform", "translate(0," + (height + margin.top + margin.bottom) +")")
+                        .attr("transform", "translate(0," + (height) +")")
                         .call(xAxis)
-                        .classed({'domain':false,'line': true})
                         .append("text")
                         .attr("class", "label")
-                        .attr("x", width/2 )
-                        .attr("y", height/2 )
+                        .attr("x", (width + margin.left + margin.right)/2 )
+                        .attr("y",margin.bottom )
                         .style("text-anchor", "middle")
                         .style("font-weight", "bold")
-                        .text('XXX');
+                        .text(boxWhiskerName);
 
 
 
@@ -393,7 +386,7 @@
                 .attr("height", height + margin.bottom + margin.top)
                 .append("g")
                 .attr("class", "boxHolder")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                .attr("transform", "translate(" + margin.left + ",0)")
                 .call(tip);
 
             return instance;
@@ -464,6 +457,11 @@
             return instance;
         };
 
+        instance.boxWhiskerName = function (x) {
+            if (!arguments.length) return boxWhiskerName;
+            boxWhiskerName = x;
+            return instance;
+        };
 
         return instance;
     };
