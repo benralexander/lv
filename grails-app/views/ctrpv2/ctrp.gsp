@@ -63,17 +63,18 @@
 
     ///    Each data array described the data associated with a single feature/compound combination. We should
     //      probably have the feature in combination available for display as needed.
-   for (var i = 0; i < 900; i++) {
+    var numberOfBars = 9;
+   for (var i = 0; i < numberOfBars; i++) {
         ///  Each data element needs to hold:
         ///    Cancer cell line name
         ///    AUC value
         ///    + A way to get to the underlying growth curve.  URL? Parameters?
         enrichData.push({ index: i,
-            value:  (i / 900), // AUC value
+            value:  ((i / numberOfBars)-0.5), // AUC value
             name: fakeData [(i % fakeData.length)].ccl,  //   CCL name
             line: fakeData [(i % fakeData.length)].lineage, // Name of lineage
             link: '<a href=\'#\'>Parameter number ' +i +'</a>', // Parameter (?) get the data for this growth curve
-            featureExists: (i % 100 == 0) ? 1 : 0});
+            featureExists: (i % 3 == 0) ? 1 : 0});
     }
     // demonstrate that we can draw multiple enrichment plots simultaneously
     //var enrichArray = [enrichData, enrichData];

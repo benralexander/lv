@@ -12,6 +12,7 @@
             compoundName = '',
 
             // the variables that will never be exposed
+            xAxis = {},
             instance={},
             selection = {};
 
@@ -98,7 +99,18 @@
                     .domain([minValue, midValue, maxValue])
                     .range(["blue", "white", "red"]);
 
-                // Here is the colorful part of the heat map
+                var xScale = d3.scale.linear()
+                    .domain([minValue, maxValue])
+                    .range([0,  width]);
+
+
+                 xAxis = d3.svg.axis()
+                     .scale(xScale)
+                     .orient("bottom");
+
+
+
+                     // Here is the colorful part of the heat map
                 var heatmap = g.selectAll(".heatmap")
                     .data(d)
                     .enter().append("svg:rect")
@@ -124,9 +136,7 @@
                         return d.featureExists;
                     }
                    )
-                    .attr('width', function(d,i) {
-                        return d.value * w;
-                    } )
+                    .attr('width',w )
                     .attr('height',  function(d,i) {
                         return (height/2);
                     } )
@@ -139,7 +149,24 @@
                     .attr('fill', "black")
                     .attr('stroke', 'black');
 
-            });
+                     // create an X axis
+                     g
+                         .append("g")
+                         .attr("class", "x axis")
+                         .attr("transform", "translate(0," + (height-margin.top-margin.bottom) +")")
+                         .attr("width", 140)
+                         .attr("height", 30)
+                         .call(xAxis)
+                         .append("text")
+                         .attr("class", "label")
+                         .attr("x",  0  )
+                         .attr("y",margin.bottom  )
+                         .style("text-anchor", "middle")
+                         .style("font-weight", "bold")
+                         .text('');
+
+
+                 });
 
 
         };
