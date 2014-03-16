@@ -24,5 +24,27 @@ class CookinController {
     def colorinterp() {
         render (view: 'colorinterp')
     }
+    def basicAxes() {
+        render (view: 'basic-axes')
+    }
+    def gridLines() {
+        render (view: 'grid-line')
+    }
+    def rescaling() {
+        render (view: 'rescaling')
+    }
+    def multiElementTransition() {
+        render (view: 'multi-element-transition')
+    }
+    def easing() {
+        render (view: 'easing')
+    }
+    def tweening() {
+        render (view: 'tweening')
+    }
+    def lineInt() {
+        render (view: 'lineInt')
+    }
+
     def cookin(){}
 }
