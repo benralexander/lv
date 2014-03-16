@@ -262,5 +262,8 @@ class BoxController {
     def scatter() {
         render(view:'scatter')
     }
+    def doseResponse() {
+        render(view:'doseResponse')
+    }
 
 }
