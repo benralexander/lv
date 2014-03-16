@@ -66,7 +66,7 @@
                 .data(data.enrichmentData)
                 .enter()
                 .append("svg")
-                .call(tip);
+//                .call(tip);
             return instance;
         };
 
@@ -79,7 +79,9 @@
                  .selectAll("svg")
                  .attr("width", width)
                  .attr("height", height)
-                 .append("g");            //  create the on screen display
+                 .append("g").call(tip);            //  create the on screen display
+
+
 
              selection
                  .selectAll("svg")
@@ -125,6 +127,9 @@
                     .attr('fill', function(d) {
                         return colorScale(d.value);
                     });
+
+
+               //g.append("g").call(tip);
 
                 // Here is the indicator that the feature under consideration
                 //   is present in this cell line
