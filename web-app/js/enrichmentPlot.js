@@ -1,6 +1,5 @@
 (function() {
 
-// Inspired by http://informationandvisualization.de/blog/box-plot
     d3.heatmap = function() {
 
         // the variables we intend to surface
