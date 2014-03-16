@@ -101,7 +101,10 @@
 
             svg.selectAll(".dot")
                 .data(data)
-                .enter().append("circle")
+                .enter()
+                .append("a")
+                .attr("xlink:href", "http://localhost:8028/cow/box/doseResponse")
+                .append("circle")
                 .attr("class", "dot")
                 .attr("r", 3.5)
                 .attr("cx", function(d) { return x(d.xValue); })
