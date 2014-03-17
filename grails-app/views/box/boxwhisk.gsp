@@ -12,6 +12,7 @@
   <title>boxwhisk</title>
     <link media="all" rel="stylesheet" href="../css/ctrp/boxWhiskerPlot.css">
     <link media="all" rel="stylesheet" href="../css/ctrp/slider.css">
+    <link media="all" rel="stylesheet" href="../css/ctrp/d3tooltip.css">
     <script src="../js/ctrp/d3.js"></script>
     <script src="../js/ctrp/d3tooltip.js"></script>
 </head>
@@ -19,11 +20,28 @@
 <meta charset="utf-8">
 
 <body>
-<table style='margin-top: 50px; padding: 50px; width: 100%'>
+<table style='margin-top: 50px; border-top: 50px;'>
 
                   <tr>
-                      <td style='width: 50%'><span id='plot'></span></td>
-                      <td style='width: 50%'><span id='slider'></span></td>
+                      <td style='width: 450px'>
+                          <span id='plot'></span>
+                      </td>
+                      <td style='width: 100px;'>
+                          <span style="padding-left: 25px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px">
+                              Interquartile multiplier
+                          </span>
+                          <div id='slider'
+                               style="border: 1px solid #adffff;
+                               margin-top: 20px;
+                               margin-left: 10px;
+                               margin-right: 10px;
+                               padding-left: 40px;
+                               padding-bottom: 50px;
+                               padding-top: 50px;
+                               padding-right: 40px"
+                          ></div>
+                      </td>
+                      <td style='margin-right: 0px;'></td>
                   </tr>
 
 
@@ -39,7 +57,7 @@
     var
       // these sizes referred to each individual bar in the bar whisker plot
       margin = {top: 50, right: 50, bottom: 20, left: 50},
-            width = 220 - margin.left - margin.right,
+            width = 420 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom;
 
     // minimum and maximum values across all bars

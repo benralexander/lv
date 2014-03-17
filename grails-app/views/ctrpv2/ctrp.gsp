@@ -11,6 +11,7 @@
 <head>
   <title>ctrp test</title>
     <link media="all" rel="stylesheet" href="../css/ctrp/enrichmentPlot.css">
+    <link media="all" rel="stylesheet" href="../css/ctrp/d3tooltip.css">
     <script src="../js/d3.js"></script>
     <script src="../js/ctrp/enrichmentPlot.js"></script>
     <script src="../js/ctrp/d3tooltip.js"></script>

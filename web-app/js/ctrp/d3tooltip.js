@@ -27,10 +27,11 @@
   
     function tip(vis) {
       svg = getSVGNode(vis)
-      point = svg.createSVGPoint()
-      document.body.appendChild(node)
+        if (svg!==null){
+            point = svg.createSVGPoint();
+            document.body.appendChild(node) ;
+        }
     }
-  
     // Public - show the tooltip on the screen
     //
     // Returns a tip
@@ -43,9 +44,9 @@
           dir     = direction.apply(this, args),
           nodel   = d3.select(node),
           i       = directions.length,
-                    coords,
-                      scrollTop  = document.documentElement.scrollTop || document.body.scrollTop,
-                      scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft
+          coords,
+          scrollTop  = document.documentElement.scrollTop || document.body.scrollTop,
+          scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft
       nodel.html(content)
         .style({ opacity: 1, 'pointer-events': 'all' })
   
@@ -232,15 +233,22 @@
   
       return node.node()
     }
-  
-    function getSVGNode(el) {
-      el = el.node()
-      if(el.tagName.toLowerCase() == 'svg')
-        return el
-  
-      return el.ownerSVGElement
-    }
-  
+
+      function getSVGNode(el) {
+          el = el.node()
+          if ((el !== null)&&
+              (el.tagName !== undefined) &&
+              (el.tagName.toLowerCase() == 'svg'))  {
+              return el;
+          }
+
+          if (el!==null){
+              return el.ownerSVGElement
+          } else {
+              return el;
+          }
+
+      }
     // Private - gets the screen coordinates of a shape
     //
     // Given a shape on the screen, will return an SVGPoint for the directions

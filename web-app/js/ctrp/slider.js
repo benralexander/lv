@@ -91,9 +91,6 @@
                 .attr("class", "slider")
                 .call(brush);
 
-//            slider.selectAll(".extent,.resize")
-//                .remove();
-
             // Specify the size of the area over which we are watching the cursor
             if (orientation === 'horizontal') {
                 slider.select(".background")

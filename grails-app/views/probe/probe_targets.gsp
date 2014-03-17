@@ -143,6 +143,7 @@
                 } else{
 
                 }
+//                returnValue ="#000";
                 returnValue = color(colorCnt%20);//"#a8fafb";
             }
             return returnValue;
@@ -396,12 +397,22 @@
                     if ((d.name.length> 4)  && (d.name.substring(0,4)==='zzul')) {
                         return '#ffffff';
                     }  else {
-                        return '#999';
+                        return '#000';
+                    }
+                })
+                .style("stroke-width", function(d){
+                    if ((d.name.length> 4)  && (d.name.substring(0,4)==='zzul')) {
+                        return '0px';
+                    }  else {
+                        return '1px';
                     }
                 })
                 .style("fill", function (d) {
-                    return colorManagementRoutines.colorArcFill(d);
+                    return /*colorManagementRoutines.colorArcFill(d)*/'transparent';
                 })
+//                .style("opacity", function (d) {
+//                    return "0";
+//                })
                 .on("click", click)
                 .on("mouseover", tooltipHandler.mouseOver)
                 .on("mousemove", tooltipHandler.mouseMove)
@@ -852,8 +863,9 @@
 
     var continuousColorScale = d3.scale.linear()
             .domain([minimumValue, maximumValue])
-            .interpolate(d3.interpolateRgb)
-            .range(["#deffd9", "#74c476"]);
+//            .interpolate(d3.interpolateRgb)
+//            .range(["#deffd9", "#74c476"]);
+    .range(["#000", "#000"]);
 
 </script>
 

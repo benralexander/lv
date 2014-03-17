@@ -240,7 +240,7 @@
                         .on('mouseout', tip.hide)
                         .append("circle", "text")
                         .attr("class", "outlier")
-                        .attr("r", 5)
+                        .attr("r", 2)
                         .attr("cx", width / 2)
                         .attr("cy", function (i) {
                             return yScaleOld(d[i].value);

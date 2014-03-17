@@ -1,3 +1,8 @@
+// One dimensional heatmap.
+//     original: pgm
+//     modified: ba
+//     17-03-2014    ba   fix feature map cell width bug
+
 (function() {
 
     d3.heatmap = function() {
@@ -11,7 +16,7 @@
             featureName = '',
             compoundName = '',
 
-            // the variables that will never be exposed
+        // the variables that will never be exposed
             xAxis = {},
             instance={},
             selection = {};
@@ -66,112 +71,109 @@
                 .data(data.enrichmentData)
                 .enter()
                 .append("svg")
-//                .call(tip);
+                .call(tip)
             return instance;
         };
 
 
         // Now walk through the DOM and create the enrichment plot
-         instance.render=function (g) {
+        instance.render=function (g) {
 
-             //  create the on screen display
-             selection
-                 .selectAll("svg")
-                 .attr("width", width)
-                 .attr("height", height)
-                 .append("g").call(tip);            //  create the on screen display
-
-
-
-             selection
-                 .selectAll("svg")
-            .each(function(d, i) {
-                d = d.sort(function(a, b) { return (b.value) - (a.value)});
-                var g = d3.select(this),
-                    n = d.length,
-                    w = width/ n,
-                minValue = d[0].value,
-                midValue = d[Math.floor(n/2)].value,
-                maxValue = d[n - 1].value;
+            //  create the on screen display
+            selection
+                .selectAll("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g");            //  create the on screen display
 
 
 
-                //define a color scale using the min and max expression values
-                var colorScale = d3.scale.linear()
-                    .domain([minValue, midValue, maxValue])
-                    .range(["blue", "white", "red"]);
-
-                var xScale = d3.scale.linear()
-                    .domain([minValue, maxValue])
-                    .range([0,  width]);
-
-
-                 xAxis = d3.svg.axis()
-                     .scale(xScale)
-                     .orient("bottom");
+            selection
+                .selectAll("svg")
+                .each(function(d, i) {
+                    d = d.sort(function(a, b) { return (b.value) - (a.value)});
+                    var g = d3.select(this),
+                        n = d.length,
+                        w = width/ n,
+                        minValue = d[0].value,
+                        midValue = d[Math.floor(n/2)].value,
+                        maxValue = d[n - 1].value;
 
 
 
-                     // Here is the colorful part of the heat map
-                var heatmap = g.selectAll(".heatmap")
-                    .data(d)
-                    .enter().append("svg:rect")
-                    .on('mouseover', tip.show)
-                    .on('mouseout', tip.hide)
-                    .attr('width', w)
-                    .attr('height', 2*height/3)
-                    .attr('x', function(d,i) {
-                        return d.index * w;
-                    } )
-                    .attr('y',0)
-                    .attr('fill', function(d) {
-                        return colorScale(d.value);
-                    });
+                    //define a color scale using the min and max expression values
+                    var colorScale = d3.scale.linear()
+                        .domain([minValue, midValue, maxValue])
+                        .range(["blue", "white", "red"]);
+
+                    var xScale = d3.scale.linear()
+                        .domain([minValue, maxValue])
+                        .range([0,  width]);
 
 
-               //g.append("g").call(tip);
-
-                // Here is the indicator that the feature under consideration
-                //   is present in this cell line
-                var featuremap = g.selectAll(".featuremap")
-                    .data(d)
-                    .enter().append("svg:rect")
-                    .filter (
-                    function(d,i) {
-                        return d.featureExists;
-                    }
-                   )
-                    .attr('width',w )
-                    .attr('height',  function(d,i) {
-                        return (height/2);
-                    } )
-                    .attr('x', function(d,i) {
-                        return d.index * w;
-                    } )
-                    .on('mouseover', tip.show)
-                    .on('mouseout', tip.hide)
-                    .attr('y',height/3)
-                    .attr('fill', "black")
-                    .attr('stroke', 'black');
-
-                     // create an X axis
-                     g
-                         .append("g")
-                         .attr("class", "x axis")
-                         .attr("transform", "translate(0," + (height-margin.top-margin.bottom) +")")
-                         .attr("width", 140)
-                         .attr("height", 30)
-                         .call(xAxis)
-                         .append("text")
-                         .attr("class", "label")
-                         .attr("x",  0  )
-                         .attr("y",margin.bottom  )
-                         .style("text-anchor", "middle")
-                         .style("font-weight", "bold")
-                         .text('');
+                    xAxis = d3.svg.axis()
+                        .scale(xScale)
+                        .orient("bottom");
 
 
-                 });
+
+                    // Here is the colorful part of the heat map
+                    var heatmap = g.selectAll(".heatmap")
+                        .data(d)
+                        .enter().append("svg:rect")
+                        .on('mouseover', tip.show)
+                        .on('mouseout', tip.hide)
+                        .attr('width', w)
+                        .attr('height', 2*height/3)
+                        .attr('x', function(d,i) {
+                            return d.index * w;
+                        } )
+                        .attr('y',0)
+                        .attr('fill', function(d) {
+                            return colorScale(d.value);
+                        });
+
+                    // Here is the indicator that the feature under consideration
+                    //   is present in this cell line
+                    var featuremap = g.selectAll(".featuremap")
+                        .data(d)
+                        .enter().append("svg:rect")
+                        .filter (
+                        function(d,i) {
+                            return d.featureExists;
+                        }
+                    )
+                        .attr('width',w )
+                        .attr('height',  function(d,i) {
+                            return (height/2);
+                        } )
+                        .attr('x', function(d,i) {
+                            return d.index * w;
+                        } )
+                        .on('mouseover', tip.show)
+                        .on('mouseout', tip.hide)
+                        .attr('y',height/3)
+                        .attr('fill', "black")
+                        .attr('stroke', 'black');
+
+//                    // create an X axis
+//                    g
+//                        .append("g")
+//                        .attr("class", "x axis")
+//                        .attr("transform", "translate(0," + (height-margin.top-margin.bottom) +")")
+//                        .attr("width", 140)
+//                        .attr("height", 30)
+//                        .call(xAxis)
+//                        .append("text")
+//                        .attr("class", "label")
+//                        .attr("x",  0  )
+//                        .attr("y",margin.bottom  )
+//                        .style("text-anchor", "middle")
+//                        .style("font-weight", "bold")
+//                        .text('');
+
+
+                });
 
 
         };
