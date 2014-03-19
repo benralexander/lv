@@ -4,13 +4,16 @@
         var _chart = {};
 
         var _width = 600, _height = 300, // <-1B
-            _margins = {top: 30, left: 30, right: 30, bottom: 30},
+            _margins = {top: 30, left: 40, right: 30, bottom: 40},
             _x, _y,
             _data = [],
             _colors = d3.scale.category10(),
             _svg,
             _bodyG,
-            _line;
+            _line,
+            _displayGridLines,
+            _xAxisLabel='',
+            _yAxisLabel='';
 
         _chart.render = function () { // <-2A
             if (!_svg) {
@@ -18,7 +21,7 @@
                     .attr("height", _height)
                     .attr("width", _width);
 
-                renderAxes(_svg);
+                renderAxes(_svg,_displayGridLines);
 
                 defineBodyClip(_svg);
             }
@@ -26,55 +29,85 @@
             renderBody(_svg);
         };
 
-        function renderAxes(svg) {
+        function renderAxes(svg,displayGridLines) {
             var axesG = svg.append("g")
                 .attr("class", "axes");
 
-            renderXAxis(axesG);
+            renderXAxis(axesG,displayGridLines);
 
-            renderYAxis(axesG);
+            renderYAxis(axesG,displayGridLines);
         }
 
-        function renderXAxis(axesG) {
+        function renderXAxis(axesG,displayGridLines) {
             var xAxis = d3.svg.axis()
                 .scale(_x.range([0, quadrantWidth()]))
                 .orient("bottom");
 
-            axesG.append("g")
+            var xAxisTextGoesHere = axesG.append("g")
                 .attr("class", "x axis")
                 .attr("transform", function () {
                     return "translate(" + xStart() + "," + yStart() + ")";
                 })
                 .call(xAxis);
 
-            d3.selectAll("g.x g.tick")
-                .append("line")
-                .classed("grid-line", true)
-                .attr("x1", 0)
-                .attr("y1", 0)
-                .attr("x2", 0)
-                .attr("y2", -quadrantHeight());
+            if ((_xAxisLabel) &&
+                (_xAxisLabel) )  {
+                xAxisTextGoesHere
+                    .append("text")
+                    .attr("class", "label")
+                    .attr("x", _width/2)
+                    .attr("y", _margins.bottom)
+                    .style("text-anchor", "middle")
+                    .style("font-weight", "bold")
+                    .text(_xAxisLabel);
+            }
+
+            if (displayGridLines){
+                d3.selectAll("g.x g.tick")
+                    .append("line")
+                    .classed("grid-line", true)
+                    .attr("x1", 0)
+                    .attr("y1", 0)
+                    .attr("x2", 0)
+                    .attr("y2", -quadrantHeight());
+            }
         }
 
-        function renderYAxis(axesG) {
+        function renderYAxis(axesG,displayGridLines) {
             var yAxis = d3.svg.axis()
                 .scale(_y.range([quadrantHeight(), 0]))
                 .orient("left");
 
-            axesG.append("g")
+            var yAxisTextGoesHere = axesG.append("g")
                 .attr("class", "y axis")
                 .attr("transform", function () {
                     return "translate(" + xStart() + "," + yEnd() + ")";
                 })
                 .call(yAxis);
 
-            d3.selectAll("g.y g.tick")
-                .append("line")
-                .classed("grid-line", true)
-                .attr("x1", 0)
-                .attr("y1", 0)
-                .attr("x2", quadrantWidth())
-                .attr("y2", 0);
+            if ((_yAxisLabel) &&
+                (_yAxisLabel) )  {
+                yAxisTextGoesHere
+                    .append("text")
+                    .attr("class", "label")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 0)  // works together with dy
+                    .attr("dy", "-3em") // how far from the y-axis should the word appear
+                    .attr("x", -_height/2)    // how far up the y-axis
+                    .style("text-anchor", "middle")
+                    .style("font-weight", "bold")
+                    .text(_yAxisLabel);
+            }
+
+            if (displayGridLines){
+                d3.selectAll("g.y g.tick")
+                    .append("line")
+                    .classed("grid-line", true)
+                    .attr("x1", 0)
+                    .attr("y1", 0)
+                    .attr("x2", quadrantWidth())
+                    .attr("y2", 0);
+            }
         }
 
         function defineBodyClip(svg) { // <-2C
@@ -177,6 +210,25 @@
         function quadrantHeight() {
             return _height - _margins.top - _margins.bottom;
         }
+
+        _chart.displayGridLines = function (w) {
+            if (!arguments.length) return _displayGridLines;
+            _displayGridLines = w;
+            return _chart;
+        };
+
+        _chart.xAxisLabel = function (w) {
+            if (!arguments.length) return _xAxisLabel;
+            _xAxisLabel = w;
+            return _chart;
+        };
+
+        _chart.yAxisLabel = function (w) {
+            if (!arguments.length) return _yAxisLabel;
+            _yAxisLabel = w;
+            return _chart;
+        };
+
 
         _chart.width = function (w) {
             if (!arguments.length) return _width;

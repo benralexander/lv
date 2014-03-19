@@ -30,15 +30,23 @@
             numberOfDataPoint = 11,
             data = [];
     var curves = [
-        { name: 'SKOV3',
-          elements:[
+        {   name: 'SKOV3',
+            y0: 93.1,
+            y1: 2.5,
+            inflection: 26.0,
+            hillslope: -1.7,
+            elements:[
               {x: 1.2, y: 98.2},
               {x: 10.3, y: 80},
               {x: 20, y: 22},
               {x: 49.9, y: 4}
           ]
         },
-        { name: 'NCI/ADR-RES',
+        {   name: 'NCI/ADR-RES',
+            y0: 89,
+            y1: 0.5,
+            inflection: 8.0,
+            hillslope: -2.0,
             elements:[
                 {x: 2.2, y: 98.2},
                 {x: 12.3, y: 60},
@@ -47,23 +55,25 @@
             ]
         },
         { name: 'OVCOR8',
-            elements:[
+          y0: 91.1,
+          y1: 8.5,
+          inflection: 16.0,
+          hillslope: -1.0,
+          elements:[
                 {x: 1.5, y: 98.2},
                 {x: 10.5, y: 50},
                 {x: 20.9, y: 4},
                 {x: 49.9, y: 1}
-            ]
+           ]
         }
     ];
 
-    for (var i = 0; i < numberOfSeries; ++i)
-        data.push(d3.range(numberOfDataPoint).map(function (i) {
-            return {x: i, y: Math.random() * 9};
-        }));
-
     var chart =  d3.doseResponse()
-            .x(d3.scale.linear().domain([0, 60]))
-            .y(d3.scale.linear().domain([0, 100]));
+            .displayGridLines(true)
+            .xAxisLabel('Concentration')
+            .yAxisLabel('Response')
+            .x(d3.scale.linear().domain([1, 60]))
+            .y(d3.scale.linear().domain([0, 101]));
 
     curves.forEach(function (series) {
         chart.addSeries(series);
