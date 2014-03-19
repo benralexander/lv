@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>Line Chart</title>
-    <link rel="stylesheet" type="text/css" href="../css/styles.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/ctrp/doseResponse.css"/>
     <script type="text/javascript" src="../js/d3.js"></script>
     <script src="../js/ctrp/doseResponse.js"></script>
     <script src="../js/ctrp/d3tooltip.js"></script>
@@ -31,7 +31,7 @@
             data = [];
     var curves = [
         { name: 'SKOV3',
-          elelements:[
+          elements:[
               {x: 1.2, y: 98.2},
               {x: 10.3, y: 80},
               {x: 20, y: 22},
@@ -39,7 +39,7 @@
           ]
         },
         { name: 'NCI/ADR-RES',
-            elelements:[
+            elements:[
                 {x: 2.2, y: 98.2},
                 {x: 12.3, y: 60},
                 {x: 19, y: 5},
@@ -47,7 +47,7 @@
             ]
         },
         { name: 'OVCOR8',
-            elelements:[
+            elements:[
                 {x: 1.5, y: 98.2},
                 {x: 10.5, y: 50},
                 {x: 20.9, y: 4},
@@ -62,10 +62,10 @@
         }));
 
     var chart =  d3.doseResponse()
-            .x(d3.scale.linear().domain([0, 10]))
-            .y(d3.scale.linear().domain([0, 10]));
+            .x(d3.scale.linear().domain([0, 60]))
+            .y(d3.scale.linear().domain([0, 100]));
 
-    data.forEach(function (series) {
+    curves.forEach(function (series) {
         chart.addSeries(series);
     });
 

@@ -126,7 +126,7 @@
                 .data(_data)
                 .transition() //<-4D
                 .attr("d", function (d) {
-                    return _line(d);
+                    return _line(d.elements);
                 });
         }
 

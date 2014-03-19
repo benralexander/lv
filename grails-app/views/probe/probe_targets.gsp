@@ -211,7 +211,16 @@
         var tooltipHandler  = new TooltipHandler ();
         var colorManagementRoutines = new ColorManagementRoutines(colorScale);
         var radius = Math.min(width, height) / 2;
+        var hideOrDisplayColors = 1;
 
+
+        var toggleColorDisplay = function (){
+            if (hideOrDisplayColors=== 1) {
+                hideOrDisplayColors = 0;
+            } else {
+                hideOrDisplayColors = 1;
+            }
+        }
 
         var SunburstAnimation = function ()  {
                     // Safety trick for constructors
@@ -408,11 +417,11 @@
                     }
                 })
                 .style("fill", function (d) {
-                    return /*colorManagementRoutines.colorArcFill(d)*/'transparent';
+                    return colorManagementRoutines.colorArcFill(d);
                 })
-//                .style("opacity", function (d) {
-//                    return "0";
-//                })
+                .style("fill-opacity", function (d) {
+                    return hideOrDisplayColors;
+                })
                 .on("click", click)
                 .on("mouseover", tooltipHandler.mouseOver)
                 .on("mousemove", tooltipHandler.mouseMove)
@@ -483,30 +492,47 @@
         textEnter.append("tspan")
                 .attr("x", 0)
                 .text(function (d) {
-                    return d.depth ? d.name.split(" ")[0] : "";
+                    if ((d.depth) && (d.name.indexOf("zzul") === -1)){
+                        return d.name.split(" ")[0];
+                    }  else {
+                        return "";
+                    }
                 });
         textEnter.append("tspan")
                 .attr("x", 0)
                 .attr("dy", "1em")
                 .text(function (d) {
-                    return d.depth ? d.name.split(" ")[1] || "" : "";
+                    if ((d.depth) && (d.name.indexOf("zzul") === -1)){
+                        return d.name.split(" ")[1]|| "";
+                    }  else {
+                        return "";
+                    }
                 });
         textEnter.append("tspan")
                 .attr("x", 0)
                 .attr("dy", "1em")
                 .text(function (d) {
-                    return d.depth ? d.name.split(" ")[2] || "" : "";
+                    if ((d.depth) && (d.name.indexOf("zzul") === -1)){
+                        return d.name.split(" ")[2]|| "";
+                    }  else {
+                        return "";
+                    }
                 });
         textEnter.append("tspan")
                 .attr("x", 0)
                 .attr("dy", "1em")
                 .text(function (d) {
-                    return d.depth ? d.name.split(" ")[3] || "" : "";
+                    if ((d.depth) && (d.name.indexOf("zzul") === -1)){
+                        return d.name.split(" ")[3]|| "";
+                    }  else {
+                        return "";
+                    }
                 });
 
 
 
 //            d3.select(self.frameElement).style("height", height + "px");
+
     }
 </script>
 
@@ -876,18 +902,19 @@
         <div id="sunburstdiv">
 
             <script>
+                sunburst =  createASunburst;
                 if ($data[0].children !== undefined) {
-                    createASunburst( 1400, 1400,5,1000,continuousColorScale,'div#sunburstdiv');
+                    sunburst(1400, 1400, 5, 1000, continuousColorScale, 'div#sunburstdiv');
                 } else {
                     d3.select('div#sunburstdiv')
                             .append('div')
                             .attr("width", 4000)
-                            .attr("height", 1400 )
-                            .style("padding-top", '200px' )
-                            .style("text-align", 'center' )
+                            .attr("height", 1400)
+                            .style("padding-top", '200px')
+                            .style("text-align", 'center')
                             .append("h1")
-                            .html("No off-embargo assay data are  available for this compound.<br /><br />"+
-                                    "Please either choose a different compound, or else come<br />"+
+                            .html("No off-embargo assay data are  available for this compound.<br /><br />" +
+                                    "Please either choose a different compound, or else come<br />" +
                                     "back later when more assay data may have accumulated.");
                 }
             </script>
@@ -900,8 +927,9 @@
 
             <div id="legendGoesHere"></div>
             <script>
+
                 if ($data[0].children !== undefined) {
-                    createALegend(120, 200,100,continuousColorScale,'div#legendGoesHere',minimumValue, maximumValue);
+                    createALegend(120, 200, 100, continuousColorScale, 'div#legendGoesHere', minimumValue, maximumValue);
                 }
             </script>
 
@@ -910,16 +938,15 @@
         <div style="text-align: center; vertical-align: bottom;">
 
             <select id="coloringOptions" style="visibility: hidden">
-                <option value="1"
-                >Color by activity</option>
-                <option value="2"
-                >Split classes by activity</option>
-                <option value="3" >Color by class</option>
+                <option value="1">Color by activity</option>
+                <option value="2">Split classes by activity</option>
+                <option value="3">Color by class</option>
             </select>
-            <div  style="padding-top: 320px;"></div>
+
+            <div style="padding-top: 320px;"></div>
             <select id="activity" style="visibility: hidden">
-                <option value="1" >Active only</option>
-                <option value="2" >Inactive only</option>
+                <option value="1">Active only</option>
+                <option value="2">Inactive only</option>
                 <option value="3"
                         selected>Active and Inactive</option>
             </select>
@@ -928,7 +955,18 @@
 
     </div>
 </div>
+
+<div class="row-fluid">
+    <div class="span9 pull-left">
+    </div>
+
+    <div class="span3 pull-left">
+        <button id="toggler" onclick="sunburst.toggleColorDisplay()">toggle color</button>
+    </div>
 </div>
+<hr>
+</div>
+
 
 </body>
 </html>
