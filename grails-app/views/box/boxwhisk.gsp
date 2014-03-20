@@ -66,7 +66,11 @@
 
     // initial value of the interquartile multiplier. Note that this value
     //  is adjustable via a UI slider
-    var defaultInterquartileMultiplier = 1.5;
+    var defaultInterquartileMultiplier = 1.5,
+            maximumInterquartileMultiplier = 3,
+            minimumInterquartileMultiplier = 0,
+            onScreenStart = 0,
+            onScreenEnd = 100;
 
     // build those portions of the box whisker plot that our data independent
     var chart = d3.boxWhiskerPlot()
@@ -76,7 +80,12 @@
             .whiskers(iqr(defaultInterquartileMultiplier))
             .boxWhiskerName ('3,4,5-trimethoxy benzaldehyde');
     // build a slider and attach the callback methods
-    var slider = d3.slider(0,3,0,100,'vertical',defaultInterquartileMultiplier,onBrushMoveDoThis,onBrushEndDoThis) ;
+    var slider = d3.slider(minimumInterquartileMultiplier,
+            maximumInterquartileMultiplier,
+            onScreenStart,
+            onScreenEnd,
+            'vertical',defaultInterquartileMultiplier/2,onBrushMoveDoThis,onBrushEndDoThis) ;
+    onBrushMoveDoThis(minimumInterquartileMultiplier);
 
     // get your data
     d3.json("http://localhost:8028/cow/box/retrieveBoxData", function (error, json) {

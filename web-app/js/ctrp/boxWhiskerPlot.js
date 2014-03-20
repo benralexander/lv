@@ -15,11 +15,82 @@
             xAxis = {},
             yAxis = {},
             boxWhiskerName = '',
+            outlierRadius = 2,
 
         // the variables that will never be exposed
             value = Number,
             tickFormat = null,
             selection = {};
+
+        // jitter module
+        // assumes data are presented in descending order
+        var jitter = (function () {
+           var lastX = null,
+               lastY = null,
+               centralXPosition = null,
+               lastAxialPoint = null,
+               radiusOfPoint =  outlierRadius,
+               shiftLeftNext = true,
+               currentX = 0,
+
+               determinePositioning = function(xValue,yValue){
+                   if ((lastX === null) && (lastY === null)) {  // this is our first time through
+                       lastX =  0;
+                       centralXPosition =  xValue;
+                       lastAxialPoint =  yValue;
+                       lastY = yValue;
+                       shiftLeftNext = true;
+                   }
+                   else {  // this is not our first time
+                       if (yValue > (lastAxialPoint-(2*radiusOfPoint)))  { // potential overlap. Shift it.
+                           if (shiftLeftNext){    // let's shift to the left.  expand on left shifts only
+                               if (lastX<0){
+                                   lastX = (0 - lastX);
+                               }
+                               lastX +=  (2*radiusOfPoint);
+                               shiftLeftNext = false;
+                           } else {  // we are shifting to the right. Change sign.
+                               lastX = (0 - lastX);
+                               shiftLeftNext = true;
+                           }
+                       } else { // no overlap possible. Return to center
+                           lastX =  0;
+                           lastAxialPoint =  yValue;
+                           shiftLeftNext = true;
+                       }
+                       lastY = yValue;
+                   }
+                   currentX =  (centralXPosition+lastX);
+               },
+               shiftedX  = function(xValue,yValue){
+                   if (yValue>lastY) {
+                       initialize();
+                   }
+                   determinePositioning(xValue,yValue);
+                   return currentX;
+               },
+               shiftedY  = function(xValue,yValue){
+                   if (yValue>lastY) {
+                       initialize();
+                   }
+                   determinePositioning(xValue,yValue);
+                   return lastY;
+               },
+               initialize = function (){
+                   lastX = null;
+                   lastY = null;
+               }
+
+               return {
+                   // public variables
+
+                   // public methods
+                   currentX :  shiftedX,
+                   currentY :  shiftedY,
+                   initialize: initialize
+               }
+
+        }());
 
         //  private variable
         var tip = d3.tip()
@@ -71,7 +142,7 @@
                         .domain([min-((max-min)*0.05), max+((max-min)*0.05)])
                         .range([height ,0]);
 
-                    // Retrieve the old x-scale, if this is an update.
+                    // Right now we are only using one scale so that yScale is equivalent to  yScaleOld, but let's retain
                     var yScaleOld = this.__chart__ || d3.scale.linear()
                         .domain([min-((max-min)*0.05), max+((max-min)*0.05)])
                         .range([height/* + margin.bottom + margin.top*/,0]);
@@ -240,33 +311,47 @@
                         .on('mouseout', tip.hide)
                         .append("circle", "text")
                         .attr("class", "outlier")
-                        .attr("r", 2)
-                        .attr("cx", width / 2)
+                        .attr("r", outlierRadius)
+                        .attr("cx", function (i) {
+                            var xx= jitter.currentX(width/2,yScaleOld(d[i].value));
+                            console.log('xx='+xx+' (i='+i+')');
+                            return xx;
+                        })
                         .attr("cy", function (i) {
-                            return yScaleOld(d[i].value);
+                            var yy = jitter.currentY(width/2,yScaleOld(d[i].value));
+                            console.log('yy='+yy+' (i='+i+')');
+                            return yy;
                         })
                         .style("opacity", 1e-6)
-
                         .transition()
                         .duration(duration)
+                        .attr("cx", function (i) {
+                             return jitter.currentX(width/2,yScaleOld(d[i].value));
+                        })
                         .attr("cy", function (i) {
-                            return yScale(d[i].value);
+                            return jitter.currentY(width/2,yScaleOld(d[i].value));
                         })
                         .style("opacity", 1)
                     ;
 
                     outlier.transition()
                         .duration(duration)
+                        .attr("cx", function (i) {
+                            return jitter.currentX(width/2,yScaleOld(d[i].value));
+                        })
                         .attr("cy", function (i) {
-                            return yScale(d[i].value);
+                            return jitter.currentY(width/2,yScaleOld(d[i].value));
                         })
                         .style("opacity", 1);
 
                     outlier.exit()
                         .transition()
                         .duration(duration)
+                        .attr("cx", function (i) {
+                            return jitter.currentX(width/2,yScaleOld(d[i].value));
+                        })
                         .attr("cy", function (i) {
-                           return yScale(d[i].value);
+                            return jitter.currentY(width/2,yScaleOld(d[i].value));
                         })
                         .style("opacity", 1e-6)
                         .remove();
