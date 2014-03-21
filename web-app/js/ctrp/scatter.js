@@ -64,15 +64,19 @@
                 .scale(y)
                 .orient("left");
 
-            svg = d3.select("body").append("svg")
+            svg = selection.selectAll("svg")
+                .data([1])
+                .enter()
+                .append("svg")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
                 .append("g")
+                .attr("class", "scatter")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
-            x.domain(d3.extent(data, function(d) { return d.xValue; })).nice();
-            y.domain(d3.extent(data, function(d) { return d.yValue; })).nice();
+            x.domain(d3.extent(data, function(d) { return d.cpd_auc; })).nice();
+            y.domain(d3.extent(data, function(d) { return d.mrna_expression; })).nice();
 
             svg.append("g")
                 .attr("class", "x axis")
@@ -107,8 +111,10 @@
                 .append("circle")
                 .attr("class", "dot")
                 .attr("r", 3.5)
-                .attr("cx", function(d) { return x(d.xValue); })
-                .attr("cy", function(d) { return y(d.yValue); })
+                .attr("cx", function(d) {
+                    return x(d.cpd_auc);
+                })
+                .attr("cy", function(d) { return y(d.mrna_expression); })
                 .style("fill", function(d) { return color(d.lineage); });
 
             var legend = svg.selectAll(".legend")

@@ -80,7 +80,8 @@
                     contentType: 'application/json',
                     async: true,
                     success: function (data) {
-                        scatterDataCallback(data);
+                        var obj = (JSON.parse(data));
+                        scatterDataCallback(obj.results);
                     },
                     error: function () {
                         alert('Contact message failed');

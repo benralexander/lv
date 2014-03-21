@@ -20,36 +20,36 @@
             height = 400 - margin.top - margin.bottom;
 
     data = [
-        {yValue:5.1,
-            xValue:3.5,
+        {mrna_expression:5.1,
+            cpd_auc:3.5,
             lineage:'colon'
         },
-        {yValue:4.9,
-            xValue:3.0,
+        {mrna_expression:4.9,
+            cpd_auc:3.0,
             lineage:'colon'
         },
-        {yValue:4.7,
-            xValue:3.2,
+        {mrna_expression:4.2,
+            cpd_auc:3.2,
             lineage:'lung'
         },
-        {yValue:4.4,
-            xValue:3.7,
+        {mrna_expression:4.4,
+            cpd_auc:3.7,
             lineage:'lung'
         },
-        {yValue:5.0,
-            xValue:3.6,
+        {mrna_expression:5.0,
+            cpd_auc:3.6,
             lineage:'endometrium'
         },
-        {yValue:4.5,
-            xValue:3.8,
+        {mrna_expression:4.5,
+            cpd_auc:3.8,
             lineage:'endometrium'
         },
-        {yValue:4.4,
-            xValue:3.1,
+        {mrna_expression:4.4,
+            cpd_auc:3.1,
             lineage:'endometrium'
         },
-        {yValue:4.9,
-            xValue:3.3,
+        {mrna_expression:4.9,
+            cpd_auc:3.3,
             lineage:'endometrium'
         }
     ];

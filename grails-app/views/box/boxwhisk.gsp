@@ -14,7 +14,7 @@
     <link media="all" rel="stylesheet" href="../css/ctrp/boxWhiskerPlot.css">
     <link media="all" rel="stylesheet" href="../css/ctrp/slider.css">
     <link media="all" rel="stylesheet" href="../css/ctrp/d3tooltip.css">
-    %{--<link media="all" rel="stylesheet" href="../css/ctrp/scatter.css">--}%
+    <link media="all" rel="stylesheet" href="../css/ctrp/scatter.css">
     <script src="../js/ctrp/d3.js"></script>
     <script src="../js/ctrp/d3tooltip.js"></script>
     <style>
@@ -32,7 +32,9 @@
         margin-top: 15px;
         position:absolute;
         text-align:left;
-        width:394px;
+        width:620px;
+        margin-top: -200px;
+        margin-left: 100px;
         z-index:50;
         padding: 25px 25px 20px;
     }
@@ -189,12 +191,17 @@
 
 
     function respondToScatterData(data)  {
+        var margin = {top: 30, right: 20, bottom: 50, left: 70},
+                width = 600 - margin.left - margin.right,
+                height = 400 - margin.top - margin.bottom;
         d3.scatterPlot()
                 .selectionIdentifier("#scatterPlot1")
                 .width (width)
                 .height (height)
                 .margin(margin)
                 .assignData (data)
+                .xAxisLabel ('Navitoclax AUC')
+                .yAxisLabel ('BCL2 expression level')
                 .render() ;
 
     }
@@ -235,7 +242,7 @@
 </script>
 <div class="messagepop pop">
     <form method="post" id="new_message" action="/messages">
-        <h1>hi</h1>
+        <h1>Correlation plot</h1>
         <div id="scatterPlot1"></div>
         <p><a class="close" href="/">Cancel</a></p>
     </form>

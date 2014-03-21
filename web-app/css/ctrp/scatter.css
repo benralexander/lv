@@ -3,24 +3,24 @@ body {
     font: 10px sans-serif;
 }
 
-.axis path,
-.axis line {
+.scatter .axis path,
+.scatter .axis line {
     fill: none;
     stroke: #000;
     stroke-width: 1.2px;
     shape-rendering: crispEdges;
 }
-.axis text {
+.scatter .axis text {
     font-size: 12pt;
 }
-.label {
+.scatter .label {
     font-size: 14pt;
     font-weight: bold;
 }
-.legend {
+.scatter .legend {
     font-size: 10pt;
 }
 
-.dot {
+.scatter .dot {
     stroke: #000;
 }

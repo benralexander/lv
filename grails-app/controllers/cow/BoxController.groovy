@@ -246,6 +246,7 @@ class BoxController {
 ]
 """
     def correlationInJsonForm = """
+{
     "results": [
     {
         "mrna_expression": 6.7829559999999995,
@@ -277,7 +278,8 @@ class BoxController {
         "cell_sample_id": 759,
         "cell_primary_name": "NCIH1755"
     }
-]"""
+]
+}"""
 
     def retrieveBoxData(){
         render(dataInJsonForm) ;
