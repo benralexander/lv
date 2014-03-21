@@ -10,11 +10,46 @@
 <html>
 <head>
   <title>boxwhisk</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <link media="all" rel="stylesheet" href="../css/ctrp/boxWhiskerPlot.css">
     <link media="all" rel="stylesheet" href="../css/ctrp/slider.css">
     <link media="all" rel="stylesheet" href="../css/ctrp/d3tooltip.css">
+    %{--<link media="all" rel="stylesheet" href="../css/ctrp/scatter.css">--}%
     <script src="../js/ctrp/d3.js"></script>
     <script src="../js/ctrp/d3tooltip.js"></script>
+    <style>
+    a.selected {
+        background-color:#1F75CC;
+        color:white;
+        z-index:100;
+    }
+
+    .messagepop {
+        background-color:#FFFFFF;
+        border:1px solid #999999;
+        cursor:default;
+        display:none;
+        margin-top: 15px;
+        position:absolute;
+        text-align:left;
+        width:394px;
+        z-index:50;
+        padding: 25px 25px 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 3px;
+        padding-left: 15px;
+        text-indent: -15px;
+    }
+
+    .messagepop p, .messagepop.div {
+        border-bottom: 1px solid #EFEFEF;
+        margin: 8px 0;
+        padding-bottom: 8px;
+    }
+    </style>
 </head>
 <!DOCTYPE html>
 <meta charset="utf-8">
@@ -51,6 +86,7 @@
 </table>
 
 <script src="../js/ctrp/boxWhiskerPlot.js"></script>
+<script src="../js/ctrp/scatter.js"></script>
 <script src="../js/ctrp/slider.js"></script>
 <script>
 
@@ -139,6 +175,8 @@
         chart.assignData (data)
              .min(globalMinimum)
              .max(globalMaximum)
+                .scatterDataCallback( respondToScatterData )
+                .compoundIdentifier(375788)
              .render();
 
         // and now we can render the slider as well
@@ -148,6 +186,20 @@
 
 
     });
+
+
+    function respondToScatterData(data)  {
+        d3.scatterPlot()
+                .selectionIdentifier("#scatterPlot1")
+                .width (width)
+                .height (height)
+                .margin(margin)
+                .assignData (data)
+                .render() ;
+
+    }
+
+
 
 
     //  The adjustment we should make every time the slider moves a little
@@ -180,7 +232,16 @@
 
 
 
-
 </script>
+<div class="messagepop pop">
+    <form method="post" id="new_message" action="/messages">
+        <h1>hi</h1>
+        <div id="scatterPlot1"></div>
+        <p><a class="close" href="/">Cancel</a></p>
+    </form>
+</div>
+
+
+
 </body>
 </html>

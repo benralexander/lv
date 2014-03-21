@@ -1,5 +1,6 @@
 (function () {
 
+
 // Inspired by http://informationandvisualization.de/blog/box-plot
     d3.boxWhiskerPlot = function () {
         var instance = {},
@@ -16,14 +17,93 @@
             yAxis = {},
             boxWhiskerName = '',
             outlierRadius = 2,
+            compoundIdentifier = '',
+            scatterDataCallback = {},
+
+        // these sizes referred to each individual bar in the bar whisker plot
+            margin = {top: 50, right: 50, bottom: 20, left: 50},
+            width = 420 - margin.left - margin.right,
+            height = 500 - margin.top - margin.bottom,
 
         // the variables that will never be exposed
             value = Number,
             tickFormat = null,
             selection = {};
 
-        // jitter module
-        // assumes data are presented in descending order
+
+        var clickHandling = (function () {
+
+            function deselect() {
+                $(".pop").slideFadeToggle(function () {
+                    $("#examineCorrelation").removeClass("selected");
+                });
+            }
+
+            $(function () {
+                $(".clickable").live('click', function () {
+                    if ($(this).hasClass("selected")) {
+                        deselect();
+                    } else {
+                        $(this).addClass("selected");
+                        var x = $(this).attr('gpn');
+                        $(".pop").slideFadeToggle(function () {
+                                console.log(x);
+                                retrieveCorrelationData(375788, x);
+                                $("#email").focus();
+                            }
+                        );
+                    }
+                    return false;
+                });
+
+                $(".close").live('click', function () {
+                    deselect();
+                    return false;
+                });
+            });
+
+            $.fn.slideFadeToggle = function (easing, callback) {
+                return this.animate({ opacity: 'toggle', height: 'toggle' }, "fast", easing, callback);
+            };
+
+            var retrieveCorrelationData = function (compoundId, geneName) {
+                var regObj = new Object();
+                regObj.cpd_id = 375788;
+                regObj.gene_primary_name = geneName;
+
+
+                var res = $.ajax({
+                    url: './correlationPoints',
+                    type: 'post',
+                    context: document.body,
+                    data: JSON.stringify(regObj),
+                    contentType: 'application/json',
+                    async: true,
+                    success: function (data) {
+                        scatterDataCallback(data);
+                    },
+                    error: function () {
+                        alert('Contact message failed');
+                    }
+                });
+            };
+            return {
+                // public variables
+
+                // public methods
+            }
+
+        }());
+
+
+
+
+
+        // jitter module provides an offset so that points that would be near
+        //  to one another along the y-axis are offset in the x-axis to keep
+        //  points from overlaying one another
+        //
+        // Assumption: this method requires the data to be monotonic in descending order
         var jitter = (function () {
            var lastX = null,
                lastY = null,
@@ -306,7 +386,11 @@
 
                     outlier.enter()
                         .append("a")
-                        .attr("xlink:href", "http://localhost:8028/cow/box/scatter")
+                        .attr("class", "clickable")
+                        .attr("gpn", function (i) {
+                            return d[i].description;
+                        } )
+//                        .attr("xlink:href", "/examineCorrelation")
                         .on('mouseover', tip.show)
                         .on('mouseout', tip.hide)
                         .append("circle", "text")
@@ -314,12 +398,10 @@
                         .attr("r", outlierRadius)
                         .attr("cx", function (i) {
                             var xx= jitter.currentX(width/2,yScaleOld(d[i].value));
-                            console.log('xx='+xx+' (i='+i+')');
                             return xx;
                         })
                         .attr("cy", function (i) {
                             var yy = jitter.currentY(width/2,yScaleOld(d[i].value));
-                            console.log('yy='+yy+' (i='+i+')');
                             return yy;
                         })
                         .style("opacity", 1e-6)
@@ -547,6 +629,21 @@
             boxWhiskerName = x;
             return instance;
         };
+
+
+        instance.compoundIdentifier = function (x) {
+            if (!arguments.length) return compoundIdentifier;
+            compoundIdentifier = x;
+            return instance;
+        };
+
+        instance.scatterDataCallback = function (x) {
+            if (!arguments.length) return scatterDataCallback;
+            scatterDataCallback = x;
+            return instance;
+        };
+
+
 
         return instance;
     };
