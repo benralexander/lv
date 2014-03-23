@@ -19,7 +19,16 @@
         // the variables that will never be exposed
             xAxis = {},
             instance={},
-            selection = {};
+            selection = {},
+            svg = {},
+            heatmap = {},
+            featuremap = {};
+
+        // Where do you want your plot?
+        var margin = {top: 10, right: 20, bottom: 10, left: 50},
+            width = 300 - margin.left - margin.right,
+            height = 100 - margin.top - margin.bottom;
+
 
         //  private variable
         var tip = d3.tip()
@@ -71,7 +80,7 @@
                 .data(data.enrichmentData)
                 .enter()
                 .append("svg")
-                .call(tip)
+                .call(tip);
             return instance;
         };
 
@@ -94,11 +103,11 @@
                     d = d.sort(function(a, b) { return (b.value) - (a.value)});
                     var g = d3.select(this),
                         n = d.length,
-                        w = width/ n,
-                        minValue = d[0].value,
+                      //  w = width/ n,
+                        maxValue = d[0].value,
                         midValue = d[Math.floor(n/2)].value,
-                        maxValue = d[n - 1].value;
-
+                        minValue = d[n - 1].value,
+                        w = (maxValue-minValue)/( n-1);
 
 
                     //define a color scale using the min and max expression values
@@ -106,7 +115,12 @@
                         .domain([minValue, midValue, maxValue])
                         .range(["blue", "white", "red"]);
 
+                    console.log('xScale:: from([minValue, maxValue]):'+([minValue, maxValue])+', to:[0,  width]='+([0,  width])+'.');
                     var xScale = d3.scale.linear()
+                        .domain([minValue, maxValue])
+                        .range([0,  width]);
+
+                    var yScale = d3.scale.linear()
                         .domain([minValue, maxValue])
                         .range([0,  width]);
 
@@ -115,18 +129,26 @@
                         .scale(xScale)
                         .orient("bottom");
 
+                     var zoom = d3.behavior.zoom()
+                        .x(xScale)
+                        //.y(yScale)
+                        .scaleExtent([1, 10])
+                        .on("zoom", zoomed);
 
+                    selection.call(zoom);
 
                     // Here is the colorful part of the heat map
-                    var heatmap = g.selectAll(".heatmap")
+                    heatmap = g.selectAll(".heatmap")
                         .data(d)
                         .enter().append("svg:rect")
                         .on('mouseover', tip.show)
                         .on('mouseout', tip.hide)
-                        .attr('width', w)
+                        .attr('width', function(d,i) {
+                            return (xScale(w)-xScale(0));
+                        })
                         .attr('height', 2*height/3)
                         .attr('x', function(d,i) {
-                            return d.index * w;
+                            return xScale(d.value);
                         } )
                         .attr('y',0)
                         .attr('fill', function(d) {
@@ -135,7 +157,7 @@
 
                     // Here is the indicator that the feature under consideration
                     //   is present in this cell line
-                    var featuremap = g.selectAll(".featuremap")
+                    featuremap = g.selectAll(".featuremap")
                         .data(d)
                         .enter().append("svg:rect")
                         .filter (
@@ -143,12 +165,12 @@
                             return d.featureExists;
                         }
                     )
-                        .attr('width',w )
+                        .attr('width',(xScale(w)-xScale(0)))
                         .attr('height',  function(d,i) {
                             return (height/2);
                         } )
                         .attr('x', function(d,i) {
-                            return d.index * w;
+                            return xScale(d.value);
                         } )
                         .on('mouseover', tip.show)
                         .on('mouseout', tip.hide)
@@ -156,24 +178,43 @@
                         .attr('fill', "black")
                         .attr('stroke', 'black');
 
-//                    // create an X axis
-//                    g
-//                        .append("g")
-//                        .attr("class", "x axis")
-//                        .attr("transform", "translate(0," + (height-margin.top-margin.bottom) +")")
-//                        .attr("width", 140)
-//                        .attr("height", 30)
-//                        .call(xAxis)
-//                        .append("text")
-//                        .attr("class", "label")
-//                        .attr("x",  0  )
-//                        .attr("y",margin.bottom  )
-//                        .style("text-anchor", "middle")
-//                        .style("font-weight", "bold")
-//                        .text('');
+                    // create an X axis
+                    g
+                        .append("g")
+                        .attr("class", "x axis")
+                        .attr("transform", "translate(0," + (height-margin.top-margin.bottom) +")")
+                        .attr("width", 140)
+                        .attr("height", 30)
+                        .call(xAxis)
+                        .append("text")
+                        .attr("class", "label")
+                        .attr("x",  0  )
+                        .attr("y",margin.bottom  )
+                        .style("text-anchor", "middle")
+                        .style("font-weight", "bold")
+                        .text('');
+
+
+                    function zoomed() {
+                        selection.select(".x.axis").call(xAxis);
+                        heatmap.attr('x', function(d,i) {
+                            return xScale(d.value);
+                        })
+                        .attr('width', function(d,i) {
+                                return (xScale(w)-xScale(0));
+                            }) ;
+                        featuremap.attr('x', function(d,i) {
+                            return xScale(d.value);
+                        })
+                        .attr('width', function(d,i) {
+                                return (xScale(w)-xScale(0));
+                            });
+
+                    }
 
 
                 });
+
 
 
         };

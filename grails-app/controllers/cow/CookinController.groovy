@@ -45,6 +45,12 @@ class CookinController {
     def lineInt() {
         render (view: 'lineInt')
     }
+    def areaChart() {
+        render (view: 'area-chart')
+    }
+    def scatterplotChart() {
+        render (view: 'scatterplot-chart')
+    }
 
     def cookin(){}
 }
