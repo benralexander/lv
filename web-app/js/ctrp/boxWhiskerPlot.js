@@ -16,7 +16,7 @@
             xAxis = {},
             yAxis = {},
             boxWhiskerName = '',
-            outlierRadius = 2,
+            outlierRadius = 7,
             compoundIdentifier = '',
             scatterDataCallback = {},
 
@@ -31,6 +31,12 @@
             selection = {};
 
 
+        /***
+         *  This module adds a handler for clicks on the outlier elements in the
+         *  box whisker plot, and then retrieves the data necessary to insert
+         *  a scatter plot into a common div.  We use prototype definition tricks
+         *  JQuery here, so make sure those libraries are available.
+         */
         var clickHandling = (function () {
 
             function deselect() {
@@ -40,15 +46,15 @@
             }
 
             $(function () {
-                $(".clickable").live('click', function () {
+                $(document.body).bind('click','a.clickable', function () {
                     if ($(this).hasClass("selected")) {
                         deselect();
                     } else {
                         $(this).addClass("selected");
-                        var x = $(this).attr('gpn');
+                       var genePrimaryName = $(this).attr('gpn');
                         $(".pop").slideFadeToggle(function () {
-                                console.log(x);
-                                retrieveCorrelationData(375788, x);
+                                retrieveCorrelationData(compoundIdentifier,
+                                    genePrimaryName);
                                 $("#email").focus();
                             }
                         );
@@ -56,10 +62,10 @@
                     return false;
                 });
 
-                $(".close").live('click', function () {
-                    deselect();
-                    return false;
-                });
+//                $(document.body).bind('click','.close', function () {
+//                    deselect();
+//                    return false;
+//                });
             });
 
             $.fn.slideFadeToggle = function (easing, callback) {
@@ -68,7 +74,7 @@
 
             var retrieveCorrelationData = function (compoundId, geneName) {
                 var regObj = new Object();
-                regObj.cpd_id = 375788;
+                regObj.cpd_id = compoundId;
                 regObj.gene_primary_name = geneName;
 
 
@@ -97,14 +103,13 @@
         }());
 
 
-
-
-
-        // jitter module provides an offset so that points that would be near
-        //  to one another along the y-axis are offset in the x-axis to keep
-        //  points from overlaying one another
-        //
-        // Assumption: this method requires the data to be monotonic in descending order
+        /***
+         *  jitter module provides an offset so that points that would be near
+         *  to one another along the y-axis are offset in the x-axis to keep
+         *  points from overlaying one another
+         *
+         *  Assumption: this method requires the data to be monotonic in descending order
+         */
         var jitter = (function () {
            var lastX = null,
                lastY = null,
@@ -632,12 +637,15 @@
         };
 
 
+        // Identify the compounds that will be retrieved by the scatter plot ( activated
+        // through a click on the outlier points)
         instance.compoundIdentifier = function (x) {
             if (!arguments.length) return compoundIdentifier;
             compoundIdentifier = x;
             return instance;
         };
 
+        // Methods to be activated to create the scatter plot
         instance.scatterDataCallback = function (x) {
             if (!arguments.length) return scatterDataCallback;
             scatterDataCallback = x;

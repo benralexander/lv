@@ -10,48 +10,17 @@
 <html>
 <head>
   <title>boxwhisk</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    %{--<script src="../js/jquery-1.7.1.min.js"></script>--}%
+    <script src="../js/ctrp/jquery-1.9.1.js"></script>
+    %{--<script src="../js/jquery-2.0.3.min.js "></script>--}%
+        %{--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>--}%
     <link media="all" rel="stylesheet" href="../css/ctrp/boxWhiskerPlot.css">
+    <link media="all" rel="stylesheet" href="../css/ctrp/clickablePopUp.css">
     <link media="all" rel="stylesheet" href="../css/ctrp/slider.css">
     <link media="all" rel="stylesheet" href="../css/ctrp/d3tooltip.css">
     <link media="all" rel="stylesheet" href="../css/ctrp/scatter.css">
     <script src="../js/ctrp/d3.js"></script>
     <script src="../js/ctrp/d3tooltip.js"></script>
-    <style>
-    a.selected {
-        background-color:#1F75CC;
-        color:white;
-        z-index:100;
-    }
-
-    .messagepop {
-        background-color:#FFFFFF;
-        border:1px solid #999999;
-        cursor:default;
-        display:none;
-        margin-top: 15px;
-        position:absolute;
-        text-align:left;
-        width:620px;
-        margin-top: -200px;
-        margin-left: 100px;
-        z-index:50;
-        padding: 25px 25px 20px;
-    }
-
-    label {
-        display: block;
-        margin-bottom: 3px;
-        padding-left: 15px;
-        text-indent: -15px;
-    }
-
-    .messagepop p, .messagepop.div {
-        border-bottom: 1px solid #EFEFEF;
-        margin: 8px 0;
-        padding-bottom: 8px;
-    }
-    </style>
 </head>
 <!DOCTYPE html>
 <meta charset="utf-8">
