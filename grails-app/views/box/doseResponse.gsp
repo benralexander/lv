@@ -72,8 +72,28 @@
             .displayGridLines(true)
             .xAxisLabel('Concentration')
             .yAxisLabel('Response')
-            .x(d3.scale.linear().domain([1, 60]))
-            .y(d3.scale.linear().domain([0, 101]));
+            .x(d3.scale.linear().domain([0, 1500]))
+            .y(d3.scale.linear().domain([10, 110]));
+
+    var c = chart.generateSigmoidPoints(100, //  yMax
+                                        10,  //  yMin
+                                        -5,  // hillSlope
+                                        900,  // Ec50
+                                        100,  //  numberOfPoints
+                                        200,  //   xStart
+                                        1400 //   xEnd
+    );
+    var d = chart.generateSigmoidPoints(90, //  yMax
+            50,  //  yMin
+            -6,  // hillSlope
+            900,  // Ec50
+            1000,  //  numberOfPoints
+            400,  //   xStart
+            1600 //   xEnd
+    );
+
+    curves[1].elements =  c;
+    curves[2].elements =  d;
 
     curves.forEach(function (series) {
         chart.addSeries(series);

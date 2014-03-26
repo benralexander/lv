@@ -271,6 +271,24 @@
             return _chart;
         };
 
+        _chart.generateSigmoidPoints = function (yMax,yMin,hillSlope,Ec50,
+                                                 numberOfPoints,xStart,xEnd) {
+            var xVector = [];
+            var returnValue = [];
+            // first create the X factor
+            for ( var  i=0 ; i<(numberOfPoints-1) ; i++ ){
+                xVector.push(xStart + ((((numberOfPoints-1)-i)/(numberOfPoints-1))*(xEnd-xStart)));
+            }
+            xVector = xVector.reverse();
+            // now apply x vector to the sigmoid function
+            for ( var  i=0 ; i<xVector.length ; i++) {
+                var x =  xVector[i];
+                var y = yMin + (yMax - yMin)/(1 +Math.pow((x/Ec50), (0-hillSlope)));
+                returnValue.push({x:x,y:y});
+            }
+            return returnValue;
+        }
+
         return _chart; // <-1E
     };
 

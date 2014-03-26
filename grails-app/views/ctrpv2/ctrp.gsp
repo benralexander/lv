@@ -71,7 +71,7 @@
         ///    AUC value
         ///    + A way to get to the underlying growth curve.  URL? Parameters?
         enrichData.push({ index: i,
-            value:  ((i / numberOfBars)-0.5), // AUC value
+            value:  (((i / numberOfBars)-0.5)), // AUC value
             name: fakeData [(i % fakeData.length)].ccl,  //   CCL name
             line: fakeData [(i % fakeData.length)].lineage, // Name of lineage
             link: '<a href=\'#\'>Parameter number ' +i +'</a>', // Parameter (?) get the data for this growth curve
@@ -128,24 +128,24 @@
             .height(height + margin.bottom + margin.top)
             .assignData(dataForEnrichmentHeatMap1)
             .render();
-
-    // create a  heatmap and populate it with data
-    d3.heatmap()
-            .selectionIdentifier("#eplot2")
-            .width(width + margin.left + margin.right)
-            .height(height + margin.bottom + margin.top)
-            .assignData(dataForEnrichmentHeatMap2)
-            .render();
-
-
-    // create a  heatmap and populate it with data.
-    d3.heatmap()
-            .selectionIdentifier("#eplot3")
-            .width(width + margin.left + margin.right)
-            .height(height + margin.bottom + margin.top)
-            .assignData(dataForEnrichmentHeatMap1)
-            .render();
-
+//
+//    // create a  heatmap and populate it with data
+//    d3.heatmap()
+//            .selectionIdentifier("#eplot2")
+//            .width(width + margin.left + margin.right)
+//            .height(height + margin.bottom + margin.top)
+//            .assignData(dataForEnrichmentHeatMap2)
+//            .render();
+//
+//
+//    // create a  heatmap and populate it with data.
+//    d3.heatmap()
+//            .selectionIdentifier("#eplot3")
+//            .width(width + margin.left + margin.right)
+//            .height(height + margin.bottom + margin.top)
+//            .assignData(dataForEnrichmentHeatMap1)
+//            .render();
+//
 
 
 </script>

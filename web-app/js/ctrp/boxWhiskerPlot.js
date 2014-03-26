@@ -1,5 +1,7 @@
 (function () {
 
+    var firstInstance = true;
+
 
 // Inspired by http://informationandvisualization.de/blog/box-plot
     d3.boxWhiskerPlot = function () {
@@ -45,8 +47,21 @@
                 });
             }
 
+            $("#examineCorrelation").focusout( function(event){
+                    console.log('focusout1');
+                }
+
+            );
+            $(document.body).on('focusout','#examineCorrelation', function () {
+                    console.log('focusout2');
+                }
+
+            );
+
             $(function () {
-                $(document.body).bind('click','a.clickable', function () {
+                if (firstInstance) {
+                    firstInstance = false;
+                        $(document.body).on('click','a.clickable', function () {
                     if ($(this).hasClass("selected")) {
                         deselect();
                     } else {
@@ -55,17 +70,18 @@
                         $(".pop").slideFadeToggle(function () {
                                 retrieveCorrelationData(compoundIdentifier,
                                     genePrimaryName);
-                                $("#email").focus();
+                                $("#examineCorrelation").focus();
                             }
                         );
                     }
                     return false;
                 });
+                }
 
-//                $(document.body).bind('click','.close', function () {
-//                    deselect();
-//                    return false;
-//                });
+                $(document.body).on('click','.close', function () {
+                    deselect();
+                    return false;
+                });
             });
 
             $.fn.slideFadeToggle = function (easing, callback) {

@@ -91,7 +91,7 @@
             //  create the on screen display
             selection
                 .selectAll("svg")
-                .attr("width", width)
+                .attr("width", width*1.2)
                 .attr("height", height)
                 .append("g");            //  create the on screen display
 
@@ -102,12 +102,12 @@
                 .each(function(d, i) {
                     d = d.sort(function(a, b) { return (b.value) - (a.value)});
                     var g = d3.select(this),
-                        n = d.length,
+                        dataLength = d.length,
                       //  w = width/ n,
                         maxValue = d[0].value,
-                        midValue = d[Math.floor(n/2)].value,
-                        minValue = d[n - 1].value,
-                        w = (maxValue-minValue)/( n-1);
+                        midValue = d[Math.floor(dataLength/2)].value,
+                        minValue = d[dataLength - 1].value,
+                        averageWidth = (maxValue-minValue)/( dataLength-1); // Average width
 
 
                     //define a color scale using the min and max expression values
@@ -132,23 +132,25 @@
                      var zoom = d3.behavior.zoom()
                         .x(xScale)
                         //.y(yScale)
-                        .scaleExtent([1, 10])
+                        .scaleExtent([1, 100])
                         .on("zoom", zoomed);
 
                     selection.call(zoom);
 
                     // Here is the colorful part of the heat map
+                    var dVector = d;
                     heatmap = g.selectAll(".heatmap")
                         .data(d)
                         .enter().append("svg:rect")
                         .on('mouseover', tip.show)
                         .on('mouseout', tip.hide)
-                        .attr('width', function(d,i) {
-                            return (xScale(w)-xScale(0));
+                        .attr('width', function(data,i) {
+                            return  calculateWidth(dVector,i,xScale,averageWidth) ;
                         })
                         .attr('height', 2*height/3)
                         .attr('x', function(d,i) {
-                            return xScale(d.value);
+                            //return xScale(d.value);
+                            return xScale(dVector[dVector[i].index].value);
                         } )
                         .attr('y',0)
                         .attr('fill', function(d) {
@@ -165,12 +167,16 @@
                             return d.featureExists;
                         }
                     )
-                        .attr('width',(xScale(w)-xScale(0)))
+                        .attr('width', function(data,i) {
+                            return  calculateWidth(dVector,i,xScale,averageWidth) ;
+                        }
+                           // (xScale(w)-xScale(0))
+                        )
                         .attr('height',  function(d,i) {
                             return (height/2);
                         } )
                         .attr('x', function(d,i) {
-                            return xScale(d.value);
+                            return xScale(dVector[d.index].value);
                         } )
                         .on('mouseover', tip.show)
                         .on('mouseout', tip.hide)
@@ -179,20 +185,20 @@
                         .attr('stroke', 'black');
 
                     // create an X axis
-                    g
-                        .append("g")
-                        .attr("class", "x axis")
-                        .attr("transform", "translate(0," + (height-margin.top-margin.bottom) +")")
-                        .attr("width", 140)
-                        .attr("height", 30)
-                        .call(xAxis)
-                        .append("text")
-                        .attr("class", "label")
-                        .attr("x",  0  )
-                        .attr("y",margin.bottom  )
-                        .style("text-anchor", "middle")
-                        .style("font-weight", "bold")
-                        .text('');
+//                    g
+//                        .append("g")
+//                        .attr("class", "x axis")
+//                        .attr("transform", "translate(0," + (height-margin.top-margin.bottom) +")")
+//                        .attr("width", 140)
+//                        .attr("height", 30)
+//                        .call(xAxis)
+//                        .append("text")
+//                        .attr("class", "label")
+//                        .attr("x",  0  )
+//                        .attr("y",margin.bottom  )
+//                        .style("text-anchor", "middle")
+//                        .style("font-weight", "bold")
+//                        .text('');
 
 
                     function zoomed() {
@@ -201,14 +207,28 @@
                             return xScale(d.value);
                         })
                         .attr('width', function(d,i) {
-                                return (xScale(w)-xScale(0));
-                            }) ;
+                                return  calculateWidth(dVector,i,xScale,averageWidth) ;
+                           }) ;
                         featuremap.attr('x', function(d,i) {
                             return xScale(d.value);
                         })
                         .attr('width', function(d,i) {
-                                return (xScale(w)-xScale(0));
+                                return  calculateWidth(dVector,i,xScale,averageWidth) ;
                             });
+
+                    }
+
+
+                    function calculateWidth(dataVector,currentPosition,scale,aveWidth) {
+                        var rectangleWidth;
+                        var curPos = dataVector[currentPosition].index;
+                        if ((curPos>=0)&&
+                            (curPos < (dataLength-1))){
+                            rectangleWidth =  (scale(dataVector[curPos].value)-scale(dataVector[curPos+1].value));
+                        } else {
+                            rectangleWidth = (scale(aveWidth)-scale(0));
+                        }
+                        return rectangleWidth;
 
                     }
 

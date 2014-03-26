@@ -11,7 +11,7 @@
 <head>
   <title>boxwhisk</title>
     %{--<script src="../js/jquery-1.7.1.min.js"></script>--}%
-    <script src="../js/ctrp/jquery-1.9.1.js"></script>
+    <script src="../js/jquery-2.0.3.min.js"></script>
     %{--<script src="../js/jquery-2.0.3.min.js "></script>--}%
         %{--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>--}%
     <link media="all" rel="stylesheet" href="../css/ctrp/boxWhiskerPlot.css">
@@ -209,13 +209,16 @@
 
 
 </script>
-<div class="messagepop pop">
+<div class="messagepop pop" id="examineCorrelation">
     <form method="post" id="new_message" action="/messages">
         <h1>Correlation plot</h1>
         <div id="scatterPlot1"></div>
         <p><a class="close" href="/">Cancel</a></p>
     </form>
 </div>
+<div class="d" id="teste">
+    <button>hi</button>
+    </div>
 
 
 
