@@ -3,7 +3,7 @@
     d3.doseResponse = function () {
         var _chart = {};
 
-        var _width = 600, _height = 300, // <-1B
+        var _width = 600, _height = 300,
             _margins = {top: 30, left: 40, right: 30, bottom: 40},
             _x, _y,
             _data = [],
@@ -13,7 +13,12 @@
             _line,
             _displayGridLines,
             _xAxisLabel='',
-            _yAxisLabel='';
+            _yAxisLabel='',
+            // private variables
+            _expansionPercent  = 10.0, // percent we extend beyond the min max of the raw data
+            _pointsDefiningGeneratedLine = 100  // the curve we generate from the four parameters is a series of
+        // straight-line segments. This variable describes how many exactly.
+            ;
 
         _chart.render = function () { // <-2A
             if (!_svg) {
@@ -22,6 +27,7 @@
                     .attr("width", _width);
 
                 renderAxes(_svg,_displayGridLines);
+
 
                 defineBodyClip(_svg);
             }
@@ -134,6 +140,8 @@
 
             renderLines();
 
+            renderAreas();
+
             renderDots();
         }
 
@@ -159,33 +167,104 @@
                 .data(_data)
                 .transition() //<-4D
                 .attr("d", function (d) {
-                    return _line(d.elements);
+                    return _line(d.lines);
                 });
         }
 
         function renderDots() {
-            _data.forEach(function (list, i) {
-                _bodyG.selectAll("circle._" + i) //<-4E
-                    .data(list)
-                    .enter()
-                    .append("circle")
-                    .attr("class", "dot _" + i);
+//            _data.forEach(function (list, i) {
+//                _bodyG.selectAll("circle._" + i) //<-4E
+//                    .data(list.dots)
+//                    .enter()
+//                    .append("circle")
+//                    .attr("class", "dot _" + i);
+//
+//                _bodyG.selectAll("circle._" + i)
+//                    .data(list.dots)
+//                    .style("stroke", function (d) {
+//                        return _colors(i); //<-4F
+//                    })
+//                    .transition() //<-4G
+//                    .attr("cx", function (d) {
+//                        return _x(d.x);
+//                    })
+//                    .attr("cy", function (d) {
+//                        return _y(d.y);
+//                    })
+//                    .attr("r", 4.5);
+//            });
 
-                _bodyG.selectAll("circle._" + i)
-                    .data(list)
+            _data.forEach(function (list, i) {
+                _bodyG.selectAll("path._" + i) //<-4E
+                    .data(list.dots)
+                    .enter()
+                    .append("path")
+                    .attr("class", "symbol _" + i);
+
+                _bodyG.selectAll("path._" + i)
+                    .data(list.dots)
+                    .classed('cross', true)
                     .style("stroke", function (d) {
-                        return _colors(i); //<-4F
+                        return _colors(i);
                     })
-                    .transition() //<-4G
-                    .attr("cx", function (d) {
-                        return _x(d.x);
+                    .style("fill", function (d) {
+                        return '#ffffff';
                     })
-                    .attr("cy", function (d) {
-                        return _y(d.y);
+                    .transition()
+                    .attr("transform", function(d){
+                        return "translate(" // <-D
+                            + _x(d.x)
+                            + ","
+                            + _y(d.y)
+                            + ")";
                     })
-                    .attr("r", 4.5);
+                    .attr("d",
+                        d3.svg.symbol() // <-E
+                            .type('cross')
+                    );
+
+//                .attr("cx", function (d) {
+//                        return _x(d.x);
+//                    })
+//                    .attr("cy", function (d) {
+//                        return _y(d.y);
+//                    })
+//                    .attr("r", 4.5);
             });
+
+
+
+
+
+
         }
+
+
+        function renderAreas() {
+            var area = d3.svg.area() // <-A
+                .x(function(d) { return _x(d.x); })
+                .y0(yStart())
+                .y1(function(d) { return _y(d.y); });
+
+            _bodyG.selectAll("path.area")
+                .data(_data)
+                .enter() // <-B
+                .append("path")
+                .style("fill", function (d, i) {
+                    return _colors(i);
+                })
+                .attr("class", "area");
+
+            _bodyG.selectAll("path.area")
+                .data(_data)
+                .transition() // <-D
+                .attr("d", function (d) {
+                    return area(d.lines); // <-E
+                });
+        }
+
+
+
 
         function xStart() {
             return _margins.left;
@@ -266,12 +345,54 @@
             return _chart;
         };
 
-        _chart.addSeries = function (series) { // <-1D
-            _data.push(series);
+        /***
+         * Add another data set. Each additional data set will contribute both
+         * a line (based on the four sigmoid line spec properties) as well as
+         * a set of points intended to represent the raw data from which the line
+         * is generated. The accumulation of all of these data sets will appear
+         * on the same set of axes.
+         *
+         * Calculate the range of the calculated line based on the minimum/maximum
+         * of the x/y points given plus _expansionPercent  on all sides.
+         *
+         * @param series
+         * @returns {{}}
+         */
+        _chart.addSeries = function (series) {
+            var minimumX = d3.min(series.elements, function (d){
+                     return d.x;
+                }),
+                maximumX = d3.max(series.elements, function (d){
+                    return d.x;
+                }),
+                minimumY = d3.min(series.elements, function (d){
+                    return d.y;
+                }),
+                maximumY = d3.max(series.elements, function (d){
+                    return d.y;
+                }),
+            // special restriction.  X values must be nonnegative in order for the EC50 calculation
+            // to be valid.  Therefore we can go ahead and increase the range, but we cannot increase
+            // to include x-values smaller than zero.
+                lowXRange =  Math.max(minimumX-((maximumX- minimumX) * (_expansionPercent/100.0)),0.0),
+                highXRange =  maximumX+((maximumX- minimumX) * (_expansionPercent/100.0)),
+                lowYRange =  minimumY-((maximumY- minimumY) * (_expansionPercent/100.0)),
+                highYRange =  maximumY+((maximumY- minimumY) * (_expansionPercent/100.0)),
+                generatedLine = _chart.generateSigmoidPoints ( series.yMinimum,
+                                                               series.yMaximum,
+                                                               series.hillslope,
+                                                               series.inflection,
+                                                               _pointsDefiningGeneratedLine,
+                                                               lowXRange,
+                                                               highXRange );
+                dataHolder = { lines: generatedLine,
+                               elements: series.elements,
+                               dots: series.elements};
+            _data.push(dataHolder);
             return _chart;
         };
 
-        _chart.generateSigmoidPoints = function (yMax,yMin,hillSlope,Ec50,
+        _chart.generateSigmoidPoints = function (yMin,yMax,hillSlope,Ec50,
                                                  numberOfPoints,xStart,xEnd) {
             var xVector = [];
             var returnValue = [];
@@ -282,9 +403,16 @@
             xVector = xVector.reverse();
             // now apply x vector to the sigmoid function
             for ( var  i=0 ; i<xVector.length ; i++) {
-                var x =  xVector[i];
-                var y = yMin + (yMax - yMin)/(1 +Math.pow((x/Ec50), (0-hillSlope)));
-                returnValue.push({x:x,y:y});
+                // sanity check.  We cannot derive a line if the X values are less than zero
+                // ( strictly speaking X values less than zero are only illegal if raised to
+                //  a fractional power but we're splitting hairs -- if the concentration values
+                //  are less than zero and clearly something is wrong ).  Therefore every time
+                //  we will avoid generating any numbers for any points unless the X values are
+                // nonnegative.
+                if (xVector[i] >= 0) {
+                    returnValue.push({x:xVector[i],
+                                      y:(yMin + (yMax - yMin)/(1 +Math.pow((xVector[i]/Ec50), (0-hillSlope))))});
+                }
             }
             return returnValue;
         }
