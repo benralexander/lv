@@ -18,7 +18,8 @@
 
 </head>
 <body>
-  <h1>Enrichment plot</h1>
+<h1>Enrichment plot</h1>
+<h1>Enrichment plot</h1>
   <div class="heatmap"></div>
   <div class="featuremap"></div>
 <table border="1" style="margin:10px;">
@@ -116,6 +117,136 @@
      ]
      */
 
+
+    /***
+     * Realistic data: */
+
+var realdata= {
+     featureName:'STK11',
+     compoundName:'10-DEBChe',
+     enrichmentData:[[
+     {
+        featureExists:0,
+        index: 0,
+        line: 'lung',
+        link: '#no-link',
+        name:'T3M10',
+        value:5.6399
+     },
+         {
+             featureExists:0,
+             index: 1,
+             line: 'lung',
+             link: '#no-link',
+             name:'HCC2935',
+             value:5.8119000000000005
+         },
+         {
+             featureExists:1,
+             index: 2,
+             line: 'lung',
+             link: '#no-link',
+             name:'HCC4006',
+             value:5.8377
+         },
+         {
+             featureExists:0,
+             index: 3,
+             line: 'lung',
+             link: '#no-link',
+             name:'SKLU1',
+             value:6.0929
+
+         },
+         {
+             featureExists:true,
+             index: 4,
+             line: 'lung',
+             link: '#no-link',
+             name:'CAL12T',
+             value:6.1115
+         },
+         {
+             featureExists:0,
+             index: 5,
+             line: 'lung',
+             link: '#no-link',
+             name:'T3M10',
+             value:6.2096
+         },
+         {
+             featureExists:0,
+             index: 6,
+             line: 'endometrium',
+             link: '#no-link',
+             name:'JHUEM2',
+             value:6.28780000000000
+         },
+         {
+             featureExists:1,
+             index: 7,
+             line: 'lung',
+             link: '#no-link',
+             name:'HCC2108',
+             value:6.365
+         },
+         {
+             featureExists:0,
+             index: 8,
+             line: 'lung',
+             link: '#no-link',
+             name:'HCC1833',
+             value:6.365200000000001
+         },
+         {
+             featureExists:0,
+             index: 9,
+             line: 'lung',
+             link: '#no-link',
+             name:'HCC827',
+             value:6.423
+         },
+         {
+             featureExists:0,
+             index: 10,
+             line: 'lung',
+             link: '#no-link',
+             name:'SQ1',
+             value:6.4381
+         },
+         {
+             featureExists:0,
+             index: 11,
+             line: 'lung',
+             link: '#no-link',
+             name:'HCC1195',
+             value:6.500500000000001
+         },
+         {
+             featureExists:0,
+             index: 12,
+             line: 'lung',
+             link: '#no-link',
+             name:'HCC1359',
+             value:6.6662
+         },
+         {
+             featureExists:0,
+             index: 13,
+             line: 'lung',
+             link: '#no-link',
+             name:'CORL23',
+             value:7.216200000000001
+         }
+     ]]
+    };
+
+
+
+
+
+
+
     // Where do you want your plot?
     var margin = {top: 10, right: 20, bottom: 10, left: 50},
             width = 300 - margin.left - margin.right,
@@ -126,7 +257,7 @@
             .selectionIdentifier("#eplot1")
             .width(width + margin.left + margin.right)
             .height(height + margin.bottom + margin.top)
-            .assignData(dataForEnrichmentHeatMap1)
+            .assignData(realdata)
             .render();
 //
 //    // create a  heatmap and populate it with data

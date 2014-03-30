@@ -16,13 +16,15 @@
             featureName = '',
             compoundName = '',
 
+
         // the variables that will never be exposed
             xAxis = {},
             instance={},
             selection = {},
             svg = {},
             heatmap = {},
-            featuremap = {};
+            featuremap = {},
+            formatTooltipNumericValue = d3.format(".3g");
 
         // Where do you want your plot?
         var margin = {top: 10, right: 20, bottom: 10, left: 50},
@@ -47,7 +49,9 @@
                             "<br/>Compound: " +
                             compoundName+
                             "<br/>Feature: " +
-                            featureName  ;
+                            featureName +
+                            "<br/>AUC: " +
+                            formatTooltipNumericValue (d.value)   ;
                     }  else {
                         textColor = '#00ff00';
                         textToPresent = "CCL: "+
@@ -55,7 +59,9 @@
                             "<br/>Lineage: " +
                             d.line +
                             "<br/>Compound: " +
-                            compoundName ;
+                            compoundName  +
+                            "<br/>AUC: " +
+                            formatTooltipNumericValue (d.value)   ;
                     }
 
                 }
@@ -100,36 +106,29 @@
             selection
                 .selectAll("svg")
                 .each(function(d, i) {
-                    d = d.sort(function(a, b) { return (b.value) - (a.value)});
+                    d = d.sort(function(a, b) { return  (a.value)-(b.value)});
                     var g = d3.select(this),
                         dataLength = d.length,
-                      //  w = width/ n,
-                        maxValue = d[0].value,
+                        minValue = d[0].value,
                         midValue = d[Math.floor(dataLength/2)].value,
-                        minValue = d[dataLength - 1].value,
+                        maxValue  = d[dataLength - 1].value,
                         averageWidth = (maxValue-minValue)/( dataLength-1); // Average width
 
 
                     //define a color scale using the min and max expression values
                     var colorScale = d3.scale.linear()
                         .domain([minValue, midValue, maxValue])
-                        .range(["blue", "white", "red"]);
+                        .range(["red", "white", "blue"]);
 
-                    console.log('xScale:: from([minValue, maxValue]):'+([minValue, maxValue])+', to:[0,  width]='+([0,  width])+'.');
                     var xScale = d3.scale.linear()
                         .domain([minValue, maxValue])
-                        .range([0,  width]);
-
-                    var yScale = d3.scale.linear()
-                        .domain([minValue, maxValue])
-                        .range([0,  width]);
-
+                        .range([0,width]);
 
                     xAxis = d3.svg.axis()
                         .scale(xScale)
                         .orient("bottom");
 
-                     var zoom = d3.behavior.zoom()
+                    var zoom = d3.behavior.zoom()
                         .x(xScale)
                         //.y(yScale)
                         .scaleExtent([1, 100])
@@ -137,20 +136,21 @@
 
                     selection.call(zoom);
 
+
                     // Here is the colorful part of the heat map
                     var dVector = d;
-                    heatmap = g.selectAll(".heatmap")
+                    var heatmap = g.selectAll(".heatmap")
                         .data(d)
                         .enter().append("svg:rect")
                         .on('mouseover', tip.show)
                         .on('mouseout', tip.hide)
-                        .attr('width', function(data,i) {
-                            return  calculateWidth(dVector,i,xScale,averageWidth) ;
+                        .attr('width', function(d,i) {
+                            return  calculateWidth(dVector,d,i,xScale, averageWidth) ;
                         })
                         .attr('height', 2*height/3)
                         .attr('x', function(d,i) {
-                            //return xScale(d.value);
-                            return xScale(dVector[dVector[i].index].value);
+                           // return xScale(dVector[dVector[i].index].value);
+                            return xScale(dVector[d.index].value);
                         } )
                         .attr('y',0)
                         .attr('fill', function(d) {
@@ -159,25 +159,22 @@
 
                     // Here is the indicator that the feature under consideration
                     //   is present in this cell line
-                    featuremap = g.selectAll(".featuremap")
+                    dVector = d;
+                    var featuremap = g.selectAll(".featuremap")
                         .data(d)
                         .enter().append("svg:rect")
-                        .filter (
-                        function(d,i) {
-                            return d.featureExists;
-                        }
-                    )
-                        .attr('width', function(data,i) {
-                            return  calculateWidth(dVector,i,xScale,averageWidth) ;
-                        }
-                           // (xScale(w)-xScale(0))
-                        )
+                        .filter ( function(d,i) {
+                        return d.featureExists;
+                    })
+                        .attr('width',function(d,i) {
+                            return  calculateWidth(dVector,d,i,xScale, averageWidth) ;
+                        })
                         .attr('height',  function(d,i) {
                             return (height/2);
-                        } )
+                        })
                         .attr('x', function(d,i) {
                             return xScale(dVector[d.index].value);
-                        } )
+                        })
                         .on('mouseover', tip.show)
                         .on('mouseout', tip.hide)
                         .attr('y',height/3)
@@ -185,56 +182,73 @@
                         .attr('stroke', 'black');
 
                     // create an X axis
-//                    g
-//                        .append("g")
-//                        .attr("class", "x axis")
-//                        .attr("transform", "translate(0," + (height-margin.top-margin.bottom) +")")
-//                        .attr("width", 140)
-//                        .attr("height", 30)
-//                        .call(xAxis)
-//                        .append("text")
-//                        .attr("class", "label")
-//                        .attr("x",  0  )
-//                        .attr("y",margin.bottom  )
-//                        .style("text-anchor", "middle")
-//                        .style("font-weight", "bold")
-//                        .text('');
+//                   g
+//                       .append("g")
+//                       .attr("class", "x axis")
+//                       .attr("transform", "translate(0," + (height-margin.top-margin.bottom) +")")
+//                       .attr("width", 140)
+//                       .attr("height", 30)
+//                       .call(xAxis)
+//                       .append("text")
+//                       .attr("class", "label")
+//                       .attr("x",  0  )
+//                       .attr("y",margin.bottom  )
+//                       .style("text-anchor", "middle")
+//                       .style("font-weight", "bold")
+//                       .text('');
 
 
                     function zoomed() {
                         selection.select(".x.axis").call(xAxis);
                         heatmap.attr('x', function(d,i) {
-                            return xScale(d.value);
+                            return xScale(dVector[d.index].value);
                         })
-                        .attr('width', function(d,i) {
-                                return  calculateWidth(dVector,i,xScale,averageWidth) ;
-                           }) ;
+                            .attr('width', function(d,i) {
+                                return  calculateWidth(dVector,d,i,xScale, averageWidth) ;
+                            }) ;
                         featuremap.attr('x', function(d,i) {
-                            return xScale(d.value);
+                            return xScale(dVector[d.index].value);
                         })
-                        .attr('width', function(d,i) {
-                                return  calculateWidth(dVector,i,xScale,averageWidth) ;
+                            .attr('width', function(d,i) {
+                                return  calculateWidth(dVector,d,i,xScale, averageWidth) ;
                             });
-
                     }
 
 
-                    function calculateWidth(dataVector,currentPosition,scale,aveWidth) {
+                    function calculateWidth(dataVector,currentElement,currentPosition,scale,aveWidth) {
                         var rectangleWidth;
-                        var curPos = dataVector[currentPosition].index;
+                        var curPos = currentElement.index;
                         if ((curPos>=0)&&
                             (curPos < (dataLength-1))){
-                            rectangleWidth =  (scale(dataVector[curPos].value)-scale(dataVector[curPos+1].value));
+                            var f = scale(dataVector[curPos].value-dataVector[curPos+1].value);
+                            rectangleWidth =  (scale(dataVector[curPos+1].value)-scale(dataVector[curPos].value));
                         } else {
                             rectangleWidth = (scale(aveWidth)-scale(0));
                         }
                         return rectangleWidth;
 
+
+//                        var rectangleWidth;
+//                        var curPos = dataVector[currentPosition].index-1;
+//                        if ((curPos>=0)&&
+//                            (curPos < (dataLength-1))){
+//                            var f = scale(dataVector[curPos].value-dataVector[curPos+1].value);
+//                            rectangleWidth =  (scale(dataVector[curPos].value)-scale(dataVector[curPos+1].value));
+//                        } else {
+//                            rectangleWidth = (scale(aveWidth)-scale(0));
+//                        }
+//                        return rectangleWidth;
+
+
+
+
+
                     }
 
 
-                });
 
+
+                });
 
 
         };
