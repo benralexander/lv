@@ -348,7 +348,8 @@
 
                     box.exit().remove();
 
-                    // Update median line.
+                    // Update median line.   This is the horizontal line
+                    //  that runs through the center of the box.
                     var medianLine = g.selectAll("line.median")
                         .data([quartileData[1]]);
 

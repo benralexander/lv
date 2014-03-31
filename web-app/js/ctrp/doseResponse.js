@@ -143,6 +143,8 @@
             renderAreas();
 
             renderDots();
+
+            renderErrorBars();
         }
 
         function renderLines() {
@@ -171,7 +173,256 @@
                 });
         }
 
+
+        function renderErrorBars(){
+            renderErrorBarCenterline ();
+     //       renderErrorBarCrossbars ()
+        }
+
+
+        function renderErrorBarCenterline () {
+
+            var crossbarWidth = 0.8;
+
+            // we only need to deal with points that have error bars
+            var relevantDataOnly = function(sourceArray,orientation, direction){
+                var filtered = [];
+                if (orientation === 'vertical') {
+                    sourceArray.forEach(function(d){
+                        if ((typeof d.dyp !== "undefined") &&
+                            (direction === "up")){
+                            filtered.push(d);
+                        }  else if ((typeof d.dyn !== "undefined") &&
+                            (direction === "down")){
+                            filtered.push(d);
+                        }
+                    });
+                }  else {
+                    sourceArray.forEach(function(d){
+                        sourceArray.forEach(function(d){
+                            if ((typeof d.dxp !== "undefined") &&
+                                (direction === "up")){
+                                filtered.push(d);
+                            }  else if ((typeof d.dxn !== "undefined") &&
+                                (direction === "down")){
+                                filtered.push(d);
+                            }
+                        });
+                    });
+                };
+                return filtered;
+            };
+
+            var addSegmentToErrorBar = function (dataset,name, orientation, direction, portion,i){
+
+                var extractOffset = function (d, orientation, direction)  {
+                    var offset;
+                    if (orientation ==='vertical'){
+                        if (direction ==='up')  {
+                            offset =  d.dyp;
+                        }  else {// direction must be down
+                            offset =  (0-d.dyn);
+                        }
+                    } else {  // orientation must be horizontal
+                        if (direction ==='right')  {
+                            offset =  d.dxp;
+                        }  else {// direction must be left
+                            offset =  (0-d.dxn);
+                        }
+                    }
+                   return offset;
+                }
+
+
+
+
+                var dataNeedingErrorBars =  _bodyG.selectAll(name + i)
+                    .data(relevantDataOnly (dataset,orientation,direction));
+
+                dataNeedingErrorBars
+                    .enter()
+                    .append("line")
+                    .attr("class", orientation + " " + portion + " _" + i);
+
+                dataNeedingErrorBars
+                    .classed('errorbar', true)
+                    .attr("x1", function (d){
+                        if (portion ==='mainline'){
+                            return _x(d.x);
+                        }  else if (portion ==='crossbar') {
+                            return _x(d.x-crossbarWidth);
+                        }
+                    })
+                    .attr("y1", function (d){
+                        var offset = extractOffset (d, orientation, direction);
+                         if (portion ==='mainline'){
+                            return _y(d.y);
+                        }  else if (portion ==='crossbar') {
+                            return _y(d.y+ offset);
+                        }
+                    })
+                    .attr("x2", function (d){
+                            if (portion ==='mainline'){
+                                return _x(d.x);
+                            }  else if (portion ==='crossbar') {
+                                return  _x(d.x+crossbarWidth);
+                            }
+                        })
+                    .attr("y2",  function (d){
+                        var offset = extractOffset (d, orientation, direction);
+                                if (portion ==='mainline'){
+                                    return _y(d.y+offset);
+                                }  else if (portion ==='crossbar') {
+                                    return _y(d.y+ offset);
+                                }
+                            })
+                    .style("stroke", function (d) {
+                        return _colors(i);
+                    });
+
+                dataNeedingErrorBars
+                    .exit()
+                    .remove();
+
+            };
+
+
+
+
+            _data.forEach(function (list, i) {
+
+                addSegmentToErrorBar(list.dots, 'line.errorbar.m',
+                    'vertical', 'up', 'mainline',i);
+                addSegmentToErrorBar(list.dots, 'line.errorbar.m',
+                    'vertical', 'up', 'crossbar',i);
+                addSegmentToErrorBar(list.dots, 'line.errorbar.m',
+                    'vertical', 'down', 'mainline',i);
+                addSegmentToErrorBar(list.dots, 'line.errorbar.m',
+                    'vertical', 'down', 'crossbar',i);
+
+//
+//                var dataNeedingErrorBars =  _bodyG.selectAll("line.errorbar.m" + i)
+//                    .data(relevantDataOnly (list.dots,'vertical','up'));
+//
+//                dataNeedingErrorBars
+//                    .enter()
+//                    .append("line")
+//                    .attr("class", "vertical mainline _" + i);
+//
+//                dataNeedingErrorBars
+//                    .classed('errorbar', true)
+//                    .attr("x1", function (d){return _x(d.x);})
+//                    .attr("y1", function (d){return _y(d.y);})
+//                    .attr("x2", function (d){return _x(d.x);})
+//                    .attr("y2",  function (d){return _y(d.y+ d.dyp);})
+//                    .style("stroke", function (d) {
+//                        return _colors(i);
+//                    });
+//
+//                dataNeedingErrorBars
+//                    .exit()
+//                    .remove();
+//
+//                dataNeedingErrorBars =  _bodyG.selectAll("line.errorbar.c" + i)
+//                    .data(relevantDataOnly (list.dots,'vertical','up'));
+//
+//                dataNeedingErrorBars
+//                    .enter()
+//                    .append("line")
+//                    .attr("class", "vertical crossbar _" + i);
+//
+//                dataNeedingErrorBars
+//                    .classed('errorbar', true)
+//                    .attr("x1", function (d){return _x(d.x+1);})
+//                    .attr("y1", function (d){return _y(d.y+ d.dyp);})
+//                    .attr("x2", function (d){return _x(d.x-1);})
+//                    .attr("y2",  function (d){return _y(d.y+ d.dyp);})
+//                    .style("stroke", function (d) {
+//                        return _colors(i);
+//                    });
+//
+//                dataNeedingErrorBars
+//                    .exit()
+//                    .remove();
+
+
+
+
+                /*
+                            _data.forEach(function (list, i) {
+                                _bodyG.selectAll("line.center _" + i) //<-4E
+                                    .data(list.dots)
+                                    .enter()
+                                    .append("line")
+                                    .filter( function(d){return typeof d.dyp !== "undefined"} )
+                                       .attr("class", "center _" + i);
+
+                                _bodyG.selectAll("line.center _" + i)
+                                    .data(list.dots)
+                                    .filter( function(d){return typeof d.dyp !== "undefined"} )
+                                       .classed('center', true);
+
+                                _bodyG.selectAll("line.center _" + i)
+                                    .data(list.dots)
+                                    .exit()
+                                    .remove();
+                 */
+
+//                center.enter().append("line", "rect")
+//                .attr("class", "center")
+//                .attr("x1", width / 2)
+//                .attr("y1", function (d) {
+//                    return yScaleOld(d[0]);
+//                })
+//                .attr("x2", width / 2)
+//                .attr("y2", function (d) {
+//                    return yScaleOld(d[1]);
+//                })
+//                .style("opacity", 1e-6)
+//                .transition()
+//                .duration(duration)
+//                .style("opacity", 1)
+//                .attr("y1", function (d) {
+//                    return yScale(d[0]);
+//                })
+//                .attr("y2", function (d) {
+//                    return yScale(d[1]);
+//                });
+
+            });
+        }
+
+
+        function renderErrorBarCrossbars () {
+            center.enter().append("line", "rect")
+                .attr("class", "center")
+                .attr("x1", width / 2)
+                .attr("y1", function (d) {
+                    return yScaleOld(d[0]);
+                })
+                .attr("x2", width / 2)
+                .attr("y2", function (d) {
+                    return yScaleOld(d[1]);
+                })
+                .style("opacity", 1e-6)
+                .transition()
+                .duration(duration)
+                .style("opacity", 1)
+                .attr("y1", function (d) {
+                    return yScale(d[0]);
+                })
+                .attr("y2", function (d) {
+                    return yScale(d[1]);
+                });
+
+        }
+
+
+
+
+
         function renderDots() {
+            // go here to draw circles
 //            _data.forEach(function (list, i) {
 //                _bodyG.selectAll("circle._" + i) //<-4E
 //                    .data(list.dots)
@@ -194,6 +445,8 @@
 //                    .attr("r", 4.5);
 //            });
 
+
+            // go here to draw shapes
             _data.forEach(function (list, i) {
                 _bodyG.selectAll("path._" + i) //<-4E
                     .data(list.dots)

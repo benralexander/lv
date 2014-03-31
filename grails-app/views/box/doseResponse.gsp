@@ -7,6 +7,13 @@
     <script type="text/javascript" src="../js/d3.js"></script>
     <script src="../js/ctrp/doseResponse.js"></script>
     <script src="../js/ctrp/d3tooltip.js"></script>
+    <style>
+        .errorbar {
+            fill: #379;
+            stroke: #0099ff;
+            stroke-width: 1.1px;
+        }
+    </style>
 </head>
 
 <body>
@@ -49,7 +56,7 @@
             hillslope: -2.0,
             elements:[
                 {x: 2.2, y: 98.2},
-                {x: 12.3, y: 60},
+                {x: 12.3, y: 60, dyp: 10.2, dyn: 20.2},
                 {x: 19, y: 5},
                 {x: 49.9, y: 2}
             ]
@@ -61,9 +68,9 @@
           hillslope: -1.0,
           elements:[
                 {x: 1.5, y: 98.2},
-                {x: 10.5, y: 50},
+                {x: 10.5, y: 50, dyp: 10.2, dyn: 20.2 },
                 {x: 20.9, y: 4},
-                {x: 49.9, y: 1}
+                {x: 49.9, y: 1, dyp: 18.2, dyn: 28.2}
            ]
         }
     ];
