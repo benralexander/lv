@@ -65,6 +65,11 @@
                 .scale(y)
                 .orient("left");
 
+            var previouslyExistingScatterPlot = selection.selectAll("svg");
+            if (previouslyExistingScatterPlot) {
+                previouslyExistingScatterPlot.remove();
+            }
+
             if (!svg){
                 svg = selection
                     .append("svg")
@@ -116,7 +121,9 @@
                     return x(d.cpd_auc);
                 })
                 .attr("cy", function(d) { return y(d.mrna_expression); })
-                .style("fill", function(d) { return color(d.primary_site[0]); });
+                .style("fill", function(d) {
+                    return color(d.primary_site[0]);
+                });
 
             var legend = svg.selectAll(".legend")
                 .data(color.domain())
@@ -180,6 +187,6 @@
         return instance;
     };
 
-    return instance;
+
 
 })();

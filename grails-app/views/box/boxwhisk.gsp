@@ -12,7 +12,6 @@
   <title>boxwhisk</title>
     %{--<script src="../js/jquery-1.7.1.min.js"></script>--}%
     <script src="../js/jquery-2.0.3.min.js"></script>
-    %{--<script src="../js/jquery-2.0.3.min.js "></script>--}%
         %{--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>--}%
     <link media="all" rel="stylesheet" href="../css/ctrp/boxWhiskerPlot.css">
     <link media="all" rel="stylesheet" href="../css/ctrp/clickablePopUp.css">
@@ -24,9 +23,13 @@
 </head>
 <!DOCTYPE html>
 <meta charset="utf-8">
+<script>
+    $('#imageHolder').data('compound')='999';
+</script>
 
 <body>
 <table style='margin-top: 50px; border-top: 50px;'>
+
 
                   <tr>
                       <td style='width: 450px'>

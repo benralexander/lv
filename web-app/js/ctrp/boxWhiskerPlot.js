@@ -47,28 +47,37 @@
                 });
             }
 
-            $("#examineCorrelation").focusout( function(event){
-                    console.log('focusout1');
-                }
-
-            );
-            $(document.body).on('focusout','#examineCorrelation', function () {
-                    console.log('focusout2');
-                }
-
-            );
+//            $("#examineCorrelation").focusout( function(event){
+//                    console.log('focusout1');
+//                }
+//
+//            );
+//            $(document.body).on('focusout','#examineCorrelation', function () {
+//                    console.log('focusout2');
+//                }
+//
+//            );
 
             $(function () {
                 if (firstInstance) {
                     firstInstance = false;
                         $(document.body).on('click','a.clickable', function () {
-                    if ($(this).hasClass("selected")) {
-                        deselect();
-                    } else {
-                        $(this).addClass("selected");
+                            if (d3.select(this).select('circle').classed('selectedCircle')){
+                                d3.select(this).select('circle').classed('selectedCircle',false);
+                                d3.select(this).select('circle').classed('outlier',true);
+                            } else {
+                                d3.select(this).select('circle').classed('selectedCircle',true);
+                                d3.select(this).select('circle').classed('outlier',false);
+
+//                    if ($(this).hasClass("selected")) {
+//                        deselect();
+//                    } else {
+//                        $(this).addClass("selected");
                        var genePrimaryName = $(this).attr('gpn');
                         $(".pop").slideFadeToggle(function () {
-                                retrieveCorrelationData(compoundIdentifier,
+                                var cmpd = $('#imageHolder').data('compound');
+
+                                retrieveCorrelationData(cmpd,
                                     genePrimaryName);
                                 $("#examineCorrelation").focus();
                             }

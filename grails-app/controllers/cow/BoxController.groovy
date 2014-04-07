@@ -252,31 +252,31 @@ class BoxController {
         "mrna_expression": 6.7829559999999995,
         "cpd_auc": 6.2818000000000005,
         "cell_sample_id": 985,
-        "cell_primary_name": "RMUGS"
+        "primary_site": ["RMUGS"]
     },
     {
         "mrna_expression": 5.991586,
         "cpd_auc": 7.4305,
         "cell_sample_id": 299,
-        "cell_primary_name": "HCC1359"
+        "primary_site": ["HCC1359"]
     },
     {
         "mrna_expression": 5.8883,
         "cpd_auc": 6.8716,
         "cell_sample_id": 1133,
-        "cell_primary_name": "SNUC4"
+        "primary_site": ["SNUC4"]
     },
     {
         "mrna_expression": 6.118193,
         "cpd_auc": 6.983300000000001,
         "cell_sample_id": 536,
-        "cell_primary_name": "KM12"
+        "primary_site": ["KM12"]
     },
     {
         "mrna_expression": 6.527301,
         "cpd_auc": 7.7155000000000005,
         "cell_sample_id": 759,
-        "cell_primary_name": "NCIH1755"
+        "primary_site": ["NCIH1755"]
     }
 ]
 }"""
