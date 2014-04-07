@@ -51,6 +51,13 @@ class CookinController {
     def scatterplotChart() {
         render (view: 'scatterplot-chart')
     }
+    def bubbleChart() {
+        render (view: 'bubble-chart')
+    }
+    def pieChart() {
+        render (view: 'pie-chart')
+    }
+
 
     def cookin(){}
 }
