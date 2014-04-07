@@ -1,6 +1,7 @@
-(function() {
 
-    d3.scatterPlot = function() {
+(function () {
+
+          d3.scatterPlot = function() {
 
         // the variables we intend to surface
         var
@@ -64,15 +65,15 @@
                 .scale(y)
                 .orient("left");
 
-            svg = selection.selectAll("svg")
-                .data([1])
-                .enter()
-                .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("class", "scatter")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            if (!svg){
+                svg = selection
+                    .append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("class", "scatter")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            }
 
 
             x.domain(d3.extent(data, function(d) { return d.cpd_auc; })).nice();
@@ -115,7 +116,7 @@
                     return x(d.cpd_auc);
                 })
                 .attr("cy", function(d) { return y(d.mrna_expression); })
-                .style("fill", function(d) { return color(d.lineage); });
+                .style("fill", function(d) { return color(d.primary_site[0]); });
 
             var legend = svg.selectAll(".legend")
                 .data(color.domain())
@@ -179,6 +180,6 @@
         return instance;
     };
 
-
+    return instance;
 
 })();

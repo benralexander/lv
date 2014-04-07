@@ -5,7 +5,8 @@
 
         var _width = 600, _height = 300,
             _margins = {top: 30, left: 40, right: 30, bottom: 40},
-            _x, _y,
+            _x = null,
+            _y = null,
             _data = [],
             _colors = d3.scale.category10(),
             _svg,
@@ -20,11 +21,13 @@
         // straight-line segments. This variable describes how many exactly.
             ;
 
-        _chart.render = function () { // <-2A
+        _chart.render = function () {
             if (!_svg) {
-                _svg = d3.select("body").append("svg") // <-2B
+                _svg = d3.select("body").append("svg")
                     .attr("height", _height)
                     .attr("width", _width);
+
+                autoScaleIfNecessary( );
 
                 renderAxes(_svg,_displayGridLines);
 
@@ -34,6 +37,62 @@
 
             renderBody(_svg);
         };
+//
+//
+//        function autoScaleIfNecessary(_x ) {
+// //           if (_x == null)   {
+//
+//            // Find the minimum and maximum X values, calculate the range, increase it by a fixed
+//            //  percentage, and then calculate a linear scale to include that expanded range.
+//
+//            // Calculate a minimum
+//            var minimumDataValue = undefined, adjustedMinimumDataValue = undefined;
+//            // raw data values
+//            _data.forEach(function (list, i) {
+//                if )
+//                minimumDataValue =  d3.min(list.elements , function (d){return d.x});
+//            });
+//            // try raw data values minus any error bars
+//            _data.forEach(function (list, i) {
+//                adjustedMinimumDataValue =  d3.min(list.elements , function (d){return d.x-d.dxn});
+//            });
+//            // if we have both types of values then choose the smaller.
+//            if (adjustedMinimumDataValue !== undefined){
+//                minimumDataValue = Math.min (minimumDataValue,adjustedMinimumDataValue);
+//            }
+//
+//
+//            // Calculate a maximum
+//            var maximumDataValue = undefined, adjustedMaximumDataValue = undefined;
+//            // raw data values
+//            _data.forEach(function (list, i) {
+//                maximumDataValue =  d3.max(list.elements , function (d){return d.x});
+//            });
+//            // try raw data values minus any error bars
+//            _data.forEach(function (list, i) {
+//                adjustedMaximumDataValue =  d3.max(list.elements , function (d){return d.x+d.dxp});
+//            });
+//            // if we have both types of values then choose the smaller.
+//            if (adjustedMinimumDataValue !== undefined){
+//                maximumDataValue = Math.max (maximumDataValue,adjustedMaximumDataValue);
+//            }
+//
+//            var range = maximumDataValue -  minimumDataValue,
+//                adjustedRange = (range)
+//
+//
+//
+//
+//
+//
+//            //  _x = d3.scale.linear().domain([0, 60]);
+//    //        }
+////            if (_y == null)   {
+////               _y = d3.scale.linear().domain([0, 150]);
+////            }
+//        }
+//
+
 
         function renderAxes(svg,displayGridLines) {
             var axesG = svg.append("g")
@@ -174,12 +233,9 @@
         }
 
 
+
+
         function renderErrorBars() {
-            renderErrorBar();
-        }
-
-
-        function renderErrorBar() {
 
             var crossbarWidth = 0.8;
 

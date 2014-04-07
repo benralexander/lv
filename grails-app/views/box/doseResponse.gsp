@@ -80,7 +80,7 @@
             .xAxisLabel('Concentration')
             .yAxisLabel('Response')
             .x(d3.scale.linear().domain([0, 60]))
-            .y(d3.scale.linear().domain([0, 100]));
+            .y(d3.scale.linear().domain([0, 150]));
  //   .x(d3.scale.linear().domain([0, 1500]))
  //           .y(d3.scale.linear().domain([10, 110]));
 

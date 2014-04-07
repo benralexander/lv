@@ -22,40 +22,48 @@
     data = [
         {mrna_expression:5.1,
             cpd_auc:3.5,
-            lineage:'colon'
+            primary_site:['colon']
+//             lineage:'colon'
         },
         {mrna_expression:4.9,
             cpd_auc:3.0,
-            lineage:'colon'
+            primary_site:['colon']
+//             lineage:'colon'
         },
         {mrna_expression:4.2,
             cpd_auc:3.2,
-            lineage:'lung'
+            primary_site:['lung']
+//             lineage:'lung'
         },
         {mrna_expression:4.4,
             cpd_auc:3.7,
-            lineage:'lung'
+            primary_site:['lung']
+//             lineage:'lung'
         },
         {mrna_expression:5.0,
             cpd_auc:3.6,
-            lineage:'endometrium'
+            primary_site:[]
+//             lineage:'endometrium'
         },
         {mrna_expression:4.5,
             cpd_auc:3.8,
-            lineage:'endometrium'
+            primary_site:['endometrium']
+ //            lineage:'endometrium'
         },
         {mrna_expression:4.4,
             cpd_auc:3.1,
-            lineage:'endometrium'
+            primary_site:['endometrium']
+ //            lineage:'endometrium'
         },
         {mrna_expression:4.9,
             cpd_auc:3.3,
-            lineage:'endometrium'
+            primary_site:['endometrium']
+//            lineage:'endometrium'
         }
     ];
 
 
-    d3.scatterPlot()
+    ScatterPlotHolder().scatterPlot()
             .selectionIdentifier("#scatterPlot1")
             .width (width)
             .height (height)
@@ -66,7 +74,7 @@
             .render() ;
 
 
-    d3.scatterPlot()
+    ScatterPlotHolder().scatterPlot()
             .selectionIdentifier("#scatterPlot2")
             .width (width)
             .height (height)
