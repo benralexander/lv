@@ -41,54 +41,81 @@
          */
         var clickHandling = (function () {
 
+            // callback -- unselect the pop-up scatterplot
             function deselect() {
                 $(".pop").slideFadeToggle(function () {
-                    $("#examineCorrelation").removeClass("selected");
+                    visuallyUnidentifyAllDots();
                 });
             }
 
-//            $("#examineCorrelation").focusout( function(event){
-//                    console.log('focusout1');
-//                }
-//
-//            );
-//            $(document.body).on('focusout','#examineCorrelation', function () {
-//                    console.log('focusout2');
-//                }
-//
-//            );
+            function visuallyIdentifyDot(currentDot) {
+                d3.select(currentDot).select('circle').classed('selectedCircle',true).classed('outlier',false);
+            }
 
+            function visuallyUnidentifyAllDots() {
+                d3.selectAll('.selectedCircle').classed('outlier',true).classed('selectedCircle', false);
+            }
+
+            function scatterIsUp(trueOrFalse) {
+                if (!arguments.length) {
+                    return d3.select("#examineCorrelation").classed('scatterIsUp');
+                }
+                d3.select("#examineCorrelation").classed('scatterIsUp',trueOrFalse);
+            }
+
+            function thisDotIsAlreadySelected(currentDot) {
+                return d3.select(currentDot).select('circle').classed('selectedCircle');
+            }
+
+            // The meat of the clickHandling function
             $(function () {
                 if (firstInstance) {
                     firstInstance = false;
                         $(document.body).on('click','a.clickable', function () {
-                            if (d3.select(this).select('circle').classed('selectedCircle')){
-                                d3.select(this).select('circle').classed('selectedCircle',false);
-                                d3.select(this).select('circle').classed('outlier',true);
+
+                            if (thisDotIsAlreadySelected(this)){
+
+                                visuallyUnidentifyAllDots();
+                                if (scatterIsUp()){
+                                    $(".pop").slideFadeToggle(function () {
+                                            scatterIsUp(false) ;
+                                        }
+                                    );
+                                }
+
                             } else {
-                                d3.select(this).select('circle').classed('selectedCircle',true);
-                                d3.select(this).select('circle').classed('outlier',false);
 
-//                    if ($(this).hasClass("selected")) {
-//                        deselect();
-//                    } else {
-//                        $(this).addClass("selected");
-                       var genePrimaryName = $(this).attr('gpn');
-                        $(".pop").slideFadeToggle(function () {
-                                var cmpd = $('#imageHolder').data('compound');
+                                visuallyUnidentifyAllDots();
+                                if (scatterIsUp()){
+                                    $(".pop").slideFadeToggle(function () {
+                                            scatterIsUp(false) ;
+                                        }
+                                    );
+                                }
 
-                                retrieveCorrelationData(cmpd,
-                                    genePrimaryName);
-                                $("#examineCorrelation").focus();
+
+                               visuallyIdentifyDot(this);
+                               // go get the data and launch a scatter plot
+                               var genePrimaryName = $(this).attr('gpn');
+                                $(".pop").slideFadeToggle(function () {
+                                       // var cmpd = $('#imageHolder').data('compound');
+                                        var cmpd = 999;
+
+                                        retrieveCorrelationData(cmpd,
+                                            genePrimaryName);
+                                        scatterIsUp(true) ;
+                                       // $("#examineCorrelation").focus();
+                                    }
+                                );
+
                             }
-                        );
-                    }
                     return false;
                 });
                 }
 
+                // assign a call back on the close button
                 $(document.body).on('click','.close', function () {
-                    deselect();
+                    deselect() ;
                     return false;
                 });
             });
@@ -97,6 +124,10 @@
                 return this.animate({ opacity: 'toggle', height: 'toggle' }, "fast", easing, callback);
             };
 
+
+            // the callback which retrieves the correlation data. Note that this callback
+            // also assigns a second callback ( scatterDataCallback ) which it uses to
+            // actually launch the scatter plot
             var retrieveCorrelationData = function (compoundId, geneName) {
                 var regObj = new Object();
                 regObj.cpd_id = compoundId;
@@ -119,6 +150,8 @@
                     }
                 });
             };
+
+            // the public methods of clickHandling method
             return {
                 // public variables
 
@@ -140,7 +173,7 @@
                lastY = null,
                centralXPosition = null,
                lastAxialPoint = null,
-               radiusOfPoint =  outlierRadius,
+               //radiusOfPoint =  outlierRadius,
                shiftLeftNext = true,
                currentX = 0,
 
@@ -153,12 +186,12 @@
                        shiftLeftNext = true;
                    }
                    else {  // this is not our first time
-                       if (yValue > (lastAxialPoint-(2*radiusOfPoint)))  { // potential overlap. Shift it.
+                       if (yValue > (lastAxialPoint-(2*outlierRadius)))  { // potential overlap. Shift it.
                            if (shiftLeftNext){    // let's shift to the left.  expand on left shifts only
                                if (lastX<0){
                                    lastX = (0 - lastX);
                                }
-                               lastX +=  (2*radiusOfPoint);
+                               lastX +=  (2* outlierRadius);
                                shiftLeftNext = false;
                            } else {  // we are shifting to the right. Change sign.
                                lastX = (0 - lastX);
@@ -427,7 +460,9 @@
                         .on('mouseout', tip.hide)
                         .append("circle", "text")
                         .attr("class", "outlier")
-                        .attr("r", outlierRadius)
+                        .attr("r", function (d){
+                            return outlierRadius;
+                        })
                         .attr("cx", function (i) {
                             var xx= jitter.currentX(width/2,yScaleOld(d[i].value));
                             return xx;
@@ -439,6 +474,7 @@
                         .style("opacity", 1e-6)
                         .transition()
                         .duration(duration)
+                        .attr("r", function (d){return outlierRadius;})
                         .attr("cx", function (i) {
                              return jitter.currentX(width/2,yScaleOld(d[i].value));
                         })
@@ -450,6 +486,7 @@
 
                     outlier.transition()
                         .duration(duration)
+                        .attr("r", function (d){return outlierRadius;})
                         .attr("cx", function (i) {
                             return jitter.currentX(width/2,yScaleOld(d[i].value));
                         })
@@ -461,6 +498,7 @@
                     outlier.exit()
                         .transition()
                         .duration(duration)
+                        .attr("r", function (d){return outlierRadius;})
                         .attr("cx", function (i) {
                             return jitter.currentX(width/2,yScaleOld(d[i].value));
                         })
@@ -645,6 +683,12 @@
         instance.quartiles = function (x) {
             if (!arguments.length) return quartiles;
             quartiles = x;
+            return instance;
+        };
+
+        instance.outlierRadius = function (x) {
+            if (!arguments.length) return outlierRadius;
+            outlierRadius = x;
             return instance;
         };
 

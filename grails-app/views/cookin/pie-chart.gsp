@@ -56,10 +56,10 @@
             if (!_pieG)
                 _pieG = _bodyG.append("g")
                         .attr("class", "pie")
-                        .attr("transform", "translate(" 
-                            + _radius 
-                            + "," 
-                            + _radius + ")");
+                        .attr("transform", "translate("
+                                + _radius
+                                + ","
+                                + _radius + ")");
 
             renderSlices(pie, arc);
 
@@ -83,10 +83,10 @@
 
                         if (!currentArc)
                             currentArc = {startAngle: 0,
-                                            endAngle: 0};
-                        console.log("startAngle="+currentArc.startAngle+", endAngle="+currentArc.endAngle+".")
+                                endAngle: 0};
+                        console.log("startAngle=" + currentArc.startAngle + ", endAngle=" + currentArc.endAngle + ".")
                         var interpolate = d3.interpolate(
-                                            currentArc, d);
+                                currentArc, d);
 
                         this.__current__ = interpolate(1);//<-D
 
@@ -106,8 +106,8 @@
 
             labels.transition()
                     .attr("transform", function (d) {
-                        return "translate(" 
-                            + arc.centroid(d) + ")"; // <-F
+                        return "translate("
+                                + arc.centroid(d) + ")"; // <-F
                     })
                     .attr("dy", ".35em")
                     .attr("text-anchor", "middle")
@@ -179,6 +179,7 @@
             .data(data);
 
     chart.render();
+
 </script>
 
 
@@ -215,30 +216,30 @@
                             {"x": 150, "y": 200},
                             {"x": 200, "y": 100}];
 
-//            box.enter().append("rect")
-//                    .attr("class", "box")
-//                    .attr('fill','#f00')
-//                    .attr("x", 0)
-//                    .attr("y", function (d) {
-//                        return (100);
-//                    })
-//                    .attr("width", _width)
-//                    .attr("height", function (d) {
-//                        return 200;
-//                    });
-            box.enter().append("polygon")
-                    .attr("points", lineFunction(lineData))//.join(" ")
-                    .attr('stroke','blue')
-                    .attr("stroke-width", 2)
-                    .attr("fill", 'orange');
+            box.enter().append("rect")
+                    .attr("class", "box")
+                    .attr('fill','#f00')
+                    .attr("x", 0)
+                    .attr("y", function (d) {
+                        return (100);
+                    })
+                    .attr("width", _width)
+                    .attr("height", function (d) {
+                        return 200;
+                    });
+//            box.enter().append("polygon")
+//                    .attr("points", lineFunction(lineData))//.join(" ")
+//                    .attr('stroke','blue')
+//                    .attr("stroke-width", 2)
+//                    .attr("fill", 'orange');
 
 
-            function lineFunction(d){
-                return d3.svg.line()
-                        .x(function(d) {return d.x;})
-                        .y(function(d) {return d.y;})
-                        .interpolate("linear");
-            }
+//            function lineFunction(d){
+//                return d3.svg.line()
+//                        .x(function(d) {return d.x;})
+//                        .y(function(d) {return d.y;})
+//                        .interpolate("linear");
+//            }
 
 //                    .transition()
 //                    .duration(duration)
@@ -249,14 +250,14 @@
 //                        return 300;
 //                    });
 
-//            box.transition()
-//                    .duration(duration)
-//                    .attr("y", function (d) {
-//                        return 200;
-//                    })
-//                    .attr("height", function (d) {
-//                        return 400;
-//                    });
+            box.transition()
+                    .duration(duration)
+                    .attr("y", function (d) {
+                        return 200;
+                    })
+                    .attr("height", function (d) {
+                        return 400;
+                    });
 
             box.exit().remove();
 

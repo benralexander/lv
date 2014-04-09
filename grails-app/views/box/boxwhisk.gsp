@@ -7,7 +7,7 @@
 --%>
 
 <%@ page contentType="text/html;charset=UTF-8" %>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
   <title>boxwhisk</title>
     %{--<script src="../js/jquery-1.7.1.min.js"></script>--}%
@@ -24,7 +24,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <script>
-    $('#imageHolder').data('compound')='999';
+//    $('#imageHolder').data('compound')='999';
 </script>
 
 <body>
@@ -40,7 +40,7 @@
                               Interquartile multiplier
                           </span>
                           <div id='slider'
-                               style="border: 1px solid #adffff;
+                               style="border: 2px outset #ad0000;
                                margin-top: 20px;
                                margin-left: 10px;
                                margin-right: 10px;
@@ -219,9 +219,24 @@
         <p><a class="close" href="/">Cancel</a></p>
     </form>
 </div>
-<div class="d" id="teste">
-    <button>hi</button>
+<div class="d" id="teste" style="border: 2px outset red; width: 110px">
+    <span style="font-size: medium">Outlier radius</span>
+    <form action="" id="outlierRadius" style="padding: 20px">
+        <input type="radio"  name="outlierRadius" value="1">small</input><br/>
+        <input type="radio"  name="outlierRadius" value="3">3</input><br/>
+        <input type="radio"  name="outlierRadius" value="5">medium</input><br/>
+        <input type="radio"  name="outlierRadius" value="7" checked>7</input> <br/>
+        <input type="radio"  name="outlierRadius" value="9">9</input><br/>
+        <input type="radio"  name="outlierRadius" value="11">11</input><br/>
+    </form>
     </div>
+<script>
+    $("#outlierRadius").click(function(d,x) {
+        var  integerOutlierRadius = parseInt( $('input:radio[name=outlierRadius]:checked').val());
+        chart.outlierRadius(integerOutlierRadius);
+        chart.render();
+    }) ;
+</script>
 
 
 
