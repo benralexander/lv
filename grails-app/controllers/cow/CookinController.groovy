@@ -57,6 +57,9 @@ class CookinController {
     def pieChart() {
         render (view: 'pie-chart')
     }
+    def poly() {
+        render (view: 'poly')
+    }
 
 
     def cookin(){}
