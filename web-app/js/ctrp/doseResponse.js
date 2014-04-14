@@ -12,11 +12,12 @@
             _svg,
             _bodyG,
             _line,
+            _domainMultiplier = 1.1,  // 110% of the data we get by default
             _displayGridLines,
-            _xAxisLabel='',
-            _yAxisLabel='',
-            // private variables
-            _expansionPercent  = 10.0, // percent we extend beyond the min max of the raw data
+            _xAxisLabel = '',
+            _yAxisLabel = '',
+        // private variables
+            _expansionPercent = 10.0, // percent we extend beyond the min max of the raw data
             _pointsDefiningGeneratedLine = 100  // the curve we generate from the four parameters is a series of
         // straight-line segments. This variable describes how many exactly.
             ;
@@ -27,9 +28,9 @@
                     .attr("height", _height)
                     .attr("width", _width);
 
-                autoScaleIfNecessary( );
+               autoScale(_data);
 
-                renderAxes(_svg,_displayGridLines);
+                renderAxes(_svg, _displayGridLines);
 
 
                 defineBodyClip(_svg);
@@ -37,73 +38,167 @@
 
             renderBody(_svg);
         };
-//
-//
-//        function autoScaleIfNecessary(_x ) {
-// //           if (_x == null)   {
-//
-//            // Find the minimum and maximum X values, calculate the range, increase it by a fixed
-//            //  percentage, and then calculate a linear scale to include that expanded range.
-//
-//            // Calculate a minimum
-//            var minimumDataValue = undefined, adjustedMinimumDataValue = undefined;
-//            // raw data values
-//            _data.forEach(function (list, i) {
-//                if )
-//                minimumDataValue =  d3.min(list.elements , function (d){return d.x});
-//            });
-//            // try raw data values minus any error bars
-//            _data.forEach(function (list, i) {
-//                adjustedMinimumDataValue =  d3.min(list.elements , function (d){return d.x-d.dxn});
-//            });
-//            // if we have both types of values then choose the smaller.
-//            if (adjustedMinimumDataValue !== undefined){
-//                minimumDataValue = Math.min (minimumDataValue,adjustedMinimumDataValue);
-//            }
-//
-//
-//            // Calculate a maximum
-//            var maximumDataValue = undefined, adjustedMaximumDataValue = undefined;
-//            // raw data values
-//            _data.forEach(function (list, i) {
-//                maximumDataValue =  d3.max(list.elements , function (d){return d.x});
-//            });
-//            // try raw data values minus any error bars
-//            _data.forEach(function (list, i) {
-//                adjustedMaximumDataValue =  d3.max(list.elements , function (d){return d.x+d.dxp});
-//            });
-//            // if we have both types of values then choose the smaller.
-//            if (adjustedMinimumDataValue !== undefined){
-//                maximumDataValue = Math.max (maximumDataValue,adjustedMaximumDataValue);
-//            }
-//
-//            var range = maximumDataValue -  minimumDataValue,
-//                adjustedRange = (range)
-//
-//
-//
-//
-//
-//
-//            //  _x = d3.scale.linear().domain([0, 60]);
-//    //        }
-////            if (_y == null)   {
-////               _y = d3.scale.linear().domain([0, 150]);
-////            }
-//        }
-//
+
+        /***
+         * pay attention to 'lines' and 'elements'
+         *
+         * Find the minimum and maximum X values, calculate the range, increase it by a fixed
+         *  percentage, and then calculate a linear scale to include that expanded range.         *
+         * @param data
+         */
+        function autoScale(data) {
+            // Private variables
+            var xExtremesForRawValues,
+                yExtremesForRawValues,
+                xExtremesForCalculatedLines,
+                yExtremesForCalculatedLines,
+                collectExtremes = function (dataElement, extremeDetector, currentCollector) {
+                    var temper;
+                    if (typeof currentCollector === "undefined") {
+                        currentCollector = extremeDetector(dataElement);
+                    } else {
+                        temper = extremeDetector(dataElement);
+                        if (currentCollector.max < temper.max) {
+                            currentCollector.max = temper.max;
+                        }
+                        if (currentCollector.min > temper.min) {
+                            currentCollector.min = temper.min;
+                        }
+                    }
+                    return  currentCollector;
+                },
+                /***
+                 * find maximum and minimum values along the x-axis, including error bars if they exist
+                 * @param incomingArray
+                 * @returns {{max: undefined, min: undefined}}
+                 */
+                findHorizontalExtremes = function (incomingArray) {
+                    var returnValue = {max: undefined, min: undefined};
+                    if ((typeof incomingArray !== "undefined") &&
+                        (incomingArray.length > 0)) {
+                        var tempValue;
+                        returnValue.max = d3.max(incomingArray.map(function (element) {
+                            return element.x
+                        }));
+                        returnValue.min = d3.min(incomingArray.map(function (element) {
+                            return element.x
+                        }));
+                        tempValue = d3.max(incomingArray.map(function (element) {
+                            return element.x + element.dxp
+                        }));
+                        if ((typeof tempValue !== "undefined") &&
+                            (tempValue > returnValue.max)) {
+                            returnValue.max = tempValue;
+                        }
+                        tempValue = d3.min(incomingArray.map(function (element) {
+                            return element.x - element.dxn
+                        }));
+                        if ((typeof tempValue !== "undefined") &&
+                            (tempValue < returnValue.min)) {
+                            returnValue.min = tempValue;
+                        }
+                    }
+                    return  returnValue;
+                },
+                /***
+                 * find maximum and minimum values along the y-axis, including error bars if they exist
+                 * @param incomingArray
+                 * @returns {{max: undefined, min: undefined}}
+                 */
+                findVerticalExtremes = function (incomingArray) {
+                    var returnValue = {max: undefined, min: undefined};
+                    if ((typeof incomingArray !== "undefined") &&
+                        (incomingArray.length > 0)) {
+                        var tempValue;
+                        returnValue.max = d3.max(incomingArray.map(function (element) {
+                            return element.y
+                        }));
+                        returnValue.min = d3.min(incomingArray.map(function (element) {
+                            return element.y
+                        }));
+                        tempValue = d3.max(incomingArray.map(function (element) {
+                            return element.y + element.dyp
+                        }));
+                        if ((typeof tempValue !== "undefined") &&
+                            (tempValue > returnValue.max)) {
+                            returnValue.max = tempValue;
+                        }
+                        tempValue = d3.min(incomingArray.map(function (element) {
+                            return element.y - element.dyn
+                        }));
+                        if ((typeof tempValue !== "undefined") &&
+                            (tempValue < returnValue.min)) {
+                            returnValue.min = tempValue;
+                        }
+                    }
+                    return  returnValue;
+                },
+                setXRangeBasedOnData = function (minimumValue,maximumValue) {
+                    var range = maximumValue-minimumValue,
+                        expandedRange = range*_domainMultiplier,
+                        rangeMidpoint =  (maximumValue+minimumValue)*0.5;
+                    chart.x([(rangeMidpoint - (expandedRange*0.5)),(rangeMidpoint + (expandedRange*0.5))]);
+                },
+                setYRangeBasedOnData = function (minimumValue,maximumValue) {
+                    var range = maximumValue-minimumValue,
+                        expandedRange = range*_domainMultiplier,
+                        rangeMidpoint =  (maximumValue+minimumValue)*0.5;
+                    chart.y([(rangeMidpoint - (expandedRange*0.5)),(rangeMidpoint + (expandedRange*0.5))]);
+
+                };
 
 
-        function renderAxes(svg,displayGridLines) {
+
+            if (_x ===null) {
+                data.forEach(function (arrayElement, index) {
+                        xExtremesForRawValues = collectExtremes(arrayElement.elements, findHorizontalExtremes, xExtremesForRawValues);
+                        xExtremesForCalculatedLines = collectExtremes(arrayElement.lines, findHorizontalExtremes, xExtremesForCalculatedLines);
+                    }
+                );
+                // Calculate extremes for horizontal
+                var maximumDataValue = d3.max([xExtremesForRawValues.max, xExtremesForCalculatedLines.max]),
+                minimumDataValue = d3.min([xExtremesForRawValues.min, xExtremesForCalculatedLines.min]);
+                setXRangeBasedOnData(minimumDataValue,maximumDataValue);
+            }
+
+            if (_y ===null) {
+                data.forEach(function (arrayElement, index) {
+                        yExtremesForRawValues = collectExtremes(arrayElement.elements, findVerticalExtremes, yExtremesForRawValues);
+                        yExtremesForCalculatedLines = collectExtremes(arrayElement.lines, findVerticalExtremes, yExtremesForCalculatedLines);
+                    }
+                );
+                // Calculate extremes for vertical
+                var maximumDataValue = d3.max([yExtremesForRawValues.max, yExtremesForCalculatedLines.max]),
+                minimumDataValue = d3.min([yExtremesForRawValues.min, yExtremesForCalculatedLines.min]);
+                setYRangeBasedOnData (minimumDataValue,maximumDataValue);
+
+            }
+
+
+
+
+
+
+
+
+
+        }
+
+
+
+
+
+
+        function renderAxes(svg, displayGridLines) {
             var axesG = svg.append("g")
                 .attr("class", "axes");
 
-            renderXAxis(axesG,displayGridLines);
+            renderXAxis(axesG, displayGridLines);
 
-            renderYAxis(axesG,displayGridLines);
+            renderYAxis(axesG, displayGridLines);
         }
 
-        function renderXAxis(axesG,displayGridLines) {
+        function renderXAxis(axesG, displayGridLines) {
             var xAxis = d3.svg.axis()
                 .scale(_x.range([0, quadrantWidth()]))
                 .orient("bottom");
@@ -116,18 +211,18 @@
                 .call(xAxis);
 
             if ((_xAxisLabel) &&
-                (_xAxisLabel) )  {
+                (_xAxisLabel)) {
                 xAxisTextGoesHere
                     .append("text")
                     .attr("class", "label")
-                    .attr("x", _width/2)
+                    .attr("x", _width / 2)
                     .attr("y", _margins.bottom)
                     .style("text-anchor", "middle")
                     .style("font-weight", "bold")
                     .text(_xAxisLabel);
             }
 
-            if (displayGridLines){
+            if (displayGridLines) {
                 d3.selectAll("g.x g.tick")
                     .append("line")
                     .classed("grid-line", true)
@@ -138,7 +233,7 @@
             }
         }
 
-        function renderYAxis(axesG,displayGridLines) {
+        function renderYAxis(axesG, displayGridLines) {
             var yAxis = d3.svg.axis()
                 .scale(_y.range([quadrantHeight(), 0]))
                 .orient("left");
@@ -151,20 +246,20 @@
                 .call(yAxis);
 
             if ((_yAxisLabel) &&
-                (_yAxisLabel) )  {
+                (_yAxisLabel)) {
                 yAxisTextGoesHere
                     .append("text")
                     .attr("class", "label")
                     .attr("transform", "rotate(-90)")
                     .attr("y", 0)  // works together with dy
                     .attr("dy", "-3em") // how far from the y-axis should the word appear
-                    .attr("x", -_height/2)    // how far up the y-axis
+                    .attr("x", -_height / 2)    // how far up the y-axis
                     .style("text-anchor", "middle")
                     .style("font-weight", "bold")
                     .text(_yAxisLabel);
             }
 
-            if (displayGridLines){
+            if (displayGridLines) {
                 d3.selectAll("g.y g.tick")
                     .append("line")
                     .classed("grid-line", true)
@@ -197,16 +292,24 @@
                         + yEnd() + ")") // <-2E
                     .attr("clip-path", "url(#body-clip)");
 
+            // the fitted lines
             renderLines();
 
+            // the area underneath the fitted lines (approximates AUC)
             renderAreas();
 
-            renderDots();
+            // the raw data elements
+            renderElements();
 
+            // error bars for raw elements
             renderErrorBars();
         }
 
         function renderLines() {
+             var filteredLines = _data.filter(function(d,i){
+                 return (d.linesExist);
+             });
+
             _line = d3.svg.line() //<-4A
                 .x(function (d) {
                     return _x(d.x);
@@ -216,7 +319,7 @@
                 });
 
             _bodyG.selectAll("path.line")
-                .data(_data)
+                .data(filteredLines)
                 .enter() //<-4B
                 .append("path")
                 .style("stroke", function (d, i) {
@@ -225,14 +328,12 @@
                 .attr("class", "line");
 
             _bodyG.selectAll("path.line")
-                .data(_data)
+                .data(filteredLines)
                 .transition() //<-4D
                 .attr("d", function (d) {
                     return _line(d.lines);
                 });
         }
-
-
 
 
         function renderErrorBars() {
@@ -351,7 +452,7 @@
                             } else if (portion === 'crossbar') {
                                 return _y(d.y + offset);
                             }
-                        }  else { // orientation must be horizontal
+                        } else { // orientation must be horizontal
                             if (portion === 'mainline') {
                                 return _y(d.y);
                             } else if (portion === 'crossbar') {
@@ -366,7 +467,7 @@
                             } else if (portion === 'crossbar') {
                                 return  _x(d.x + crossbarWidth);
                             }
-                        }  else { // orientation must be horizontal
+                        } else { // orientation must be horizontal
                             var offset = extractOffset(d, orientation, direction);
                             if (portion === 'mainline') {
                                 return _x(d.x - offset);
@@ -384,7 +485,7 @@
                             } else if (portion === 'crossbar') {
                                 return _y(d.y + offset);
                             }
-                        }  else { // orientation must be horizontal
+                        } else { // orientation must be horizontal
                             if (portion === 'mainline') {
                                 return _y(d.y);
                             } else if (portion === 'crossbar') {
@@ -405,42 +506,54 @@
 
             _data.forEach(function (list, i) {
 
-                addSegmentToErrorBar(list.dots, 'line.errorbar.m',
+//                if ((! list.elements) ||
+//                    (list.elements.length === 0)) {
+//                    console.log (' hello');
+//                }   else {
+
+                addSegmentToErrorBar(list.elements, 'line.errorbar.m',
                     'vertical', 'up', 'mainline', i);
-                addSegmentToErrorBar(list.dots, 'line.errorbar.m',
+                addSegmentToErrorBar(list.elements, 'line.errorbar.m',
                     'vertical', 'up', 'crossbar', i);
 
-                addSegmentToErrorBar(list.dots, 'line.errorbar.m',
+                addSegmentToErrorBar(list.elements, 'line.errorbar.m',
                     'vertical', 'down', 'mainline', i);
-                addSegmentToErrorBar(list.dots, 'line.errorbar.m',
+                addSegmentToErrorBar(list.elements, 'line.errorbar.m',
                     'vertical', 'down', 'crossbar', i);
 
-                addSegmentToErrorBar(list.dots, 'line.errorbar.c',
+                addSegmentToErrorBar(list.elements, 'line.errorbar.c',
                     'horizontal', 'left', 'mainline', i);
-                addSegmentToErrorBar(list.dots, 'line.errorbar.c',
+                addSegmentToErrorBar(list.elements, 'line.errorbar.c',
                     'horizontal', 'left', 'crossbar', i);
 
-                addSegmentToErrorBar(list.dots, 'line.errorbar.c',
+                addSegmentToErrorBar(list.elements, 'line.errorbar.c',
                     'horizontal', 'right', 'mainline', i);
-                addSegmentToErrorBar(list.dots, 'line.errorbar.c',
+                addSegmentToErrorBar(list.elements, 'line.errorbar.c',
                     'horizontal', 'right', 'crossbar', i);
-
+              //  }
 
             });
         }
 
 
-        function renderDots() {
+        function renderElements() {
+
+            var filteredElements = _data.filter(function(d,i){
+                    return (d.elementsExist);
+                });
+
+
+
             // go here to draw circles
 //            _data.forEach(function (list, i) {
 //                _bodyG.selectAll("circle._" + i) //<-4E
-//                    .data(list.dots)
+//                    .data(list.elements)
 //                    .enter()
 //                    .append("circle")
 //                    .attr("class", "dot _" + i);
 //
 //                _bodyG.selectAll("circle._" + i)
-//                    .data(list.dots)
+//                    .data(list.elements)
 //                    .style("stroke", function (d) {
 //                        return _colors(i); //<-4F
 //                    })
@@ -456,15 +569,15 @@
 
 
             // go here to draw shapes
-            _data.forEach(function (list, i) {
+            filteredElements.forEach(function (list, i) {
                 _bodyG.selectAll("path._" + i) //<-4E
-                    .data(list.dots)
+                    .data(list.elements)
                     .enter()
                     .append("path")
                     .attr("class", "symbol _" + i);
 
                 _bodyG.selectAll("path._" + i)
-                    .data(list.dots)
+                    .data(list.elements)
                     .classed('cross', true)
                     .style("stroke", function (d) {
                         return _colors(i);
@@ -473,7 +586,7 @@
                         return '#ffffff';
                     })
                     .transition()
-                    .attr("transform", function(d){
+                    .attr("transform", function (d) {
                         return "translate(" // <-D
                             + _x(d.x)
                             + ","
@@ -495,21 +608,25 @@
             });
 
 
-
-
-
-
         }
 
 
         function renderAreas() {
-            var area = d3.svg.area() // <-A
-                .x(function(d) { return _x(d.x); })
+            var filteredLines = _data.filter(function(d,i){
+                return (d.linesExist);
+            }),
+
+            area = d3.svg.area() // <-A
+                .x(function (d) {
+                    return _x(d.x);
+                })
                 .y0(yStart())
-                .y1(function(d) { return _y(d.y); });
+                .y1(function (d) {
+                    return _y(d.y);
+                });
 
             _bodyG.selectAll("path.area")
-                .data(_data)
+                .data(filteredLines)
                 .enter() // <-B
                 .append("path")
                 .style("fill", function (d, i) {
@@ -518,14 +635,12 @@
                 .attr("class", "area");
 
             _bodyG.selectAll("path.area")
-                .data(_data)
+                .data(filteredLines)
                 .transition() // <-D
                 .attr("d", function (d) {
                     return area(d.lines); // <-E
                 });
         }
-
-
 
 
         function xStart() {
@@ -597,15 +712,23 @@
 
         _chart.x = function (x) {
             if (!arguments.length) return _x;
-            _x = x;
+            _x = d3.scale.linear().domain(x);
             return _chart;
         };
 
         _chart.y = function (y) {
             if (!arguments.length) return _y;
-            _y = y;
+            _y = d3.scale.linear().domain(y);
             return _chart;
         };
+
+        _chart.domainMultiplier = function (domainMultiplier) {
+            if (!arguments.length) return _domainMultiplier;
+            _domainMultiplier = domainMultiplier;
+            return _chart;
+        };
+
+
 
         /***
          * Add another data set. Each additional data set will contribute both
@@ -621,50 +744,60 @@
          * @returns {{}}
          */
         _chart.addSeries = function (series) {
-            var minimumX = d3.min(series.elements, function (d){
-                     return d.x;
-                }),
-                maximumX = d3.max(series.elements, function (d){
+            var minimumX = d3.min(series.elements, function (d) {
                     return d.x;
                 }),
-                minimumY = d3.min(series.elements, function (d){
+                maximumX = d3.max(series.elements, function (d) {
+                    return d.x;
+                }),
+                minimumY = d3.min(series.elements, function (d) {
                     return d.y;
                 }),
-                maximumY = d3.max(series.elements, function (d){
+                maximumY = d3.max(series.elements, function (d) {
                     return d.y;
                 }),
             // special restriction.  X values must be nonnegative in order for the EC50 calculation
             // to be valid.  Therefore we can go ahead and increase the range, but we cannot increase
             // to include x-values smaller than zero.
-                lowXRange =  Math.max(minimumX-((maximumX- minimumX) * (_expansionPercent/100.0)),0.0),
-                highXRange =  maximumX+((maximumX- minimumX) * (_expansionPercent/100.0)),
-                lowYRange =  minimumY-((maximumY- minimumY) * (_expansionPercent/100.0)),
-                highYRange =  maximumY+((maximumY- minimumY) * (_expansionPercent/100.0)),
-                generatedLine = _chart.generateSigmoidPoints ( series.yMinimum,
-                                                               series.yMaximum,
-                                                               series.hillslope,
-                                                               series.inflection,
-                                                               _pointsDefiningGeneratedLine,
-                                                               lowXRange,
-                                                               highXRange );
-                dataHolder = { lines: generatedLine,
-                               elements: series.elements,
-                               dots: series.elements};
+                lowXRange = Math.max(minimumX - ((maximumX - minimumX) * (_expansionPercent / 100.0)), 0.0),
+                highXRange = maximumX + ((maximumX - minimumX) * (_expansionPercent / 100.0)),
+                lowYRange = minimumY - ((maximumY - minimumY) * (_expansionPercent / 100.0)),
+                highYRange = maximumY + ((maximumY - minimumY) * (_expansionPercent / 100.0)),
+                generatedLine,
+                linesExist = true;
+
+                if ((series.yMinimum===null) ||
+                (series.yMaximum===null) ||
+                (series.hillslope===null) ||
+                (series.inflection===null)) {
+                    linesExist =false;
+                }  else {
+                    generatedLine = _chart.generateSigmoidPoints(series.yMinimum,
+                        series.yMaximum,
+                        series.hillslope,
+                        series.inflection,
+                        _pointsDefiningGeneratedLine,
+                        lowXRange,
+                        highXRange);
+                }
+            dataHolder = { linesExist: linesExist,
+                           lines: generatedLine,
+                           elementsExist: true,
+                           elements: series.elements };
             _data.push(dataHolder);
             return _chart;
         };
 
-        _chart.generateSigmoidPoints = function (yMin,yMax,hillSlope,Ec50,
-                                                 numberOfPoints,xStart,xEnd) {
+        _chart.generateSigmoidPoints = function (yMin, yMax, hillSlope, Ec50, numberOfPoints, xStart, xEnd) {
             var xVector = [];
             var returnValue = [];
             // first create the X factor
-            for ( var  i=0 ; i<(numberOfPoints-1) ; i++ ){
-                xVector.push(xStart + ((((numberOfPoints-1)-i)/(numberOfPoints-1))*(xEnd-xStart)));
+            for (var i = 0; i < (numberOfPoints - 1); i++) {
+                xVector.push(xStart + ((((numberOfPoints - 1) - i) / (numberOfPoints - 1)) * (xEnd - xStart)));
             }
             xVector = xVector.reverse();
             // now apply x vector to the sigmoid function
-            for ( var  i=0 ; i<xVector.length ; i++) {
+            for (var i = 0; i < xVector.length; i++) {
                 // sanity check.  We cannot derive a line if the X values are less than zero
                 // ( strictly speaking X values less than zero are only illegal if raised to
                 //  a fractional power but we're splitting hairs -- if the concentration values
@@ -672,8 +805,8 @@
                 //  we will avoid generating any numbers for any points unless the X values are
                 // nonnegative.
                 if (xVector[i] >= 0) {
-                    returnValue.push({x:xVector[i],
-                                      y:(yMin + (yMax - yMin)/(1 +Math.pow((xVector[i]/Ec50), (0-hillSlope))))});
+                    returnValue.push({x: xVector[i],
+                        y: (yMin + (yMax - yMin) / (1 + Math.pow((xVector[i] / Ec50), (0 - hillSlope))))});
                 }
             }
             return returnValue;

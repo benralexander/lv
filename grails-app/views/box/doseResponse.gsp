@@ -50,6 +50,10 @@
 //            ]
 //        },
         {   name: 'NCI/ADR-RES',
+//            yMinimum: null,
+//            yMaximum: null,
+//            inflection: null,
+//            hillslope: null,
             yMinimum: 0.5,
             yMaximum: 89,
             inflection: 25.0,
@@ -62,15 +66,23 @@
             ]
         },
         { name: 'OVCOR8',
-          yMinimum: 8.5,
-          yMaximum: 70.1,
-          inflection: 25.0,
-          hillslope: -1.0,
+//            yMinimum: null,
+//            yMaximum: null,
+//            inflection: null,
+//            hillslope: null,
+            yMinimum: 8.5,
+            yMaximum: 70.1,
+            inflection: 25.0,
+            hillslope: -1.0,
           elements:[
-                {x: 1.5, y: 98.2},
-                {x: 10.5, y: 50, dyp: 10.2, dyn: 20.2 },
-                {x: 20.9, y: 4, dxp: 10.2, dxn: 12.2 },
-                {x: 49.9, y: 1, dyp: 18.2, dyn: 28.2}
+              {x: 1.5, y: 98.2},
+              {x: 10.5, y: 50 },
+              {x: 20.9, y: 4 },
+              {x: 49.9, y: 1}
+//              {x: 1.5, y: 98.2},
+//              {x: 10.5, y: 50, dyp: 10.2, dyn: 20.2 },
+//              {x: 20.9, y: 4, dxp: 10.2, dxn: 12.2 },
+//              {x: 49.9, y: 1, dyp: 18.2, dyn: 28.2}
            ]
         }
     ];
@@ -79,8 +91,9 @@
             .displayGridLines(true)
             .xAxisLabel('Concentration')
             .yAxisLabel('Response')
-            .x(d3.scale.linear().domain([0, 60]))
-            .y(d3.scale.linear().domain([0, 150]));
+//            .x([0, 60])
+//            .y([0, 150])
+            .domainMultiplier(1.2);
  //   .x(d3.scale.linear().domain([0, 1500]))
  //           .y(d3.scale.linear().domain([10, 110]));
 

@@ -29,26 +29,102 @@
 
 <body>
 <table style='margin-top: 50px; border-top: 50px;'>
+    <style>
+    #outlierRadiusDiv {
+        border: 2px outset #777;
+        width: 131px;
+        margin-left: 10px;
+    }
+    #outlierRadiusDiv .outlierRadiusLabel {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size: 10pt;
+        margin-left:5px;
+        padding-top:10px;
+        text-decoration : underline;
+    }
+    #outlierRadius {
+        padding-left: 5px;
+        padding-left: 5px;
+        padding-top: 10px;
+        padding-bottom: 2px;
+    }
+    #outlierRadius .options {
+        font-size: 9pt;
+    }
+    #slider {
+        border: 2px outset #777;
+        margin-top: 4px;
+        margin-left: 10px;
+        margin-right: 10px;
+        padding-left: 40px;
+        padding-bottom: 50px;
+        padding-top: 50px;
+        padding-right: 40px
+    }
+    #correlationPlotLayout {
+        width: 450px;
+    }
+    #correlationPlotControllers {
+        width: 100px;
+    }
+    #correlationPlotControllers .iqmLabel {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size: 12px;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+
+    </style>
 
 
-                  <tr>
-                      <td style='width: 450px'>
+    <tr>
+                      <td id='correlationPlotLayout'>
                           <span id='plot'></span>
                       </td>
-                      <td style='width: 100px;'>
-                          <span style="padding-left: 25px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px">
+                      <td id='correlationPlotControllers'>
+                          <div class='iqmLabel'>
                               Interquartile multiplier
-                          </span>
-                          <div id='slider'
-                               style="border: 2px outset #ad0000;
-                               margin-top: 20px;
-                               margin-left: 10px;
-                               margin-right: 10px;
-                               padding-left: 40px;
-                               padding-bottom: 50px;
-                               padding-top: 50px;
-                               padding-right: 40px"
-                          ></div>
+                          </div>
+                          %{--<div id='slider'--}%
+                               %{--style="border: 2px outset #ad0000;--}%
+                              %{--">                          --}%
+                              <div id='slider'>
+                              %{--<span style="margin-left: -35px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; text-decoration: underline">--}%
+                                  %{--<nobr>Interquartile multiplier</nobr>--}%
+                              %{--</span>--}%
+                              </div>
+
+                          %{--<div id="outlierRadiusDiv" style="border: 2px outset red; width: 131px;margin-left: 10px;">--}%
+                              %{--<div class='outlierRadiusLabel' style="font-size: 10pt; margin-left:5px;padding-top:10px;  text-decoration : underline">Outlier radius:</div>--}%
+
+                              <div id='outlierRadiusDiv' >
+                                  <div class='outlierRadiusLabel'>Outlier radius:</div>
+                                    <form id="outlierRadius">
+                                  <table class='options'>
+                                      <tr>
+                                          <td>
+                                              <input type="radio"  name="outlierRadius" value="1">tiny</input>
+                                          </td>
+                                          <td>
+                                              <input type="radio"  name="outlierRadius" value="2">small</input>
+                                          </td>
+                                      </tr>
+                                      <tr>
+                                          <td>
+                                              <input type="radio"  name="outlierRadius" value="4">medium</input>
+                                          </td>
+                                          <td>
+                                              <input type="radio"  name="outlierRadius" value="6" checked>large</input>
+                                          </td>
+                                      </tr>
+                                  </table>
+
+                              </form>
+                          </div>
+
+
+
+                          %{--</div>--}%
                       </td>
                       <td style='margin-right: 0px;'></td>
                   </tr>
@@ -209,7 +285,11 @@
         };
     }
 
-
+    $("#outlierRadius").click(function(d,x) {
+        var  integerOutlierRadius = parseInt( $('input:radio[name=outlierRadius]:checked').val());
+        chart.outlierRadius(integerOutlierRadius);
+        chart.render();
+    }) ;
 
 </script>
 <div class="messagepop pop" id="examineCorrelation">
@@ -219,23 +299,33 @@
         <p><a class="close" href="/">Cancel</a></p>
     </form>
 </div>
-<div class="d" id="teste" style="border: 2px outset red; width: 110px">
-    <span style="font-size: medium">Outlier radius</span>
-    <form action="" id="outlierRadius" style="padding: 20px">
-        <input type="radio"  name="outlierRadius" value="1">small</input><br/>
-        <input type="radio"  name="outlierRadius" value="3">3</input><br/>
-        <input type="radio"  name="outlierRadius" value="5">medium</input><br/>
-        <input type="radio"  name="outlierRadius" value="7" checked>7</input> <br/>
-        <input type="radio"  name="outlierRadius" value="9">9</input><br/>
-        <input type="radio"  name="outlierRadius" value="11">11</input><br/>
-    </form>
-    </div>
+%{--<div class="d" id="outlierRadius" style="border: 2px outset red; width: 133px">--}%
+    %{--<span style="font-size: 10pt;padding-left: 5px; ">Outlier radius:</span>--}%
+    %{--<span style="font-size: 10pt; margin-left:5px;margin-top:5px;  text-decoration : underline">Outlier radius:</span>--}%
+    %{--<form action="" id="outlierRadius" style="padding-left: 5px;padding-left: 5px;padding-top: 5px;padding-bottom: 4px; ">--}%
+        %{--<table style ="font-size: 9pt" >--}%
+            %{--<tr>--}%
+                %{--<td>--}%
+                    %{--<input type="radio"  name="outlierRadius" value="1">tiny</input>--}%
+                %{--</td>--}%
+                %{--<td>--}%
+                    %{--<input type="radio"  name="outlierRadius" value="2">small</input>--}%
+                %{--</td>--}%
+            %{--</tr>--}%
+            %{--<tr>--}%
+                %{--<td>--}%
+                    %{--<input type="radio"  name="outlierRadius" value="4">medium</input>--}%
+                %{--</td>--}%
+                %{--<td>--}%
+                    %{--<input type="radio"  name="outlierRadius" value="6" checked>large</input>--}%
+                %{--</td>--}%
+            %{--</tr>--}%
+        %{--</table>--}%
+
+    %{--</form>--}%
+    %{--</div>--}%
 <script>
-    $("#outlierRadius").click(function(d,x) {
-        var  integerOutlierRadius = parseInt( $('input:radio[name=outlierRadius]:checked').val());
-        chart.outlierRadius(integerOutlierRadius);
-        chart.render();
-    }) ;
+
 </script>
 
 
