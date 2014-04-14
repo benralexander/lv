@@ -173,17 +173,20 @@
         return {id: i, value: randomData()};
     });
 
-    var chart = pieChart()
-            .radius(200)
-            .innerRadius(100)
-            .data(data);
-
-    chart.render();
+//    var chart = pieChart()
+//            .radius(200)
+//            .innerRadius(100)
+//            .data(data);
+//
+//    chart.render();
+    console.log('a');
 
 </script>
 
 
 <script type="text/javascript">
+
+
     function box() {
         var _boxer = {};
         var _width = 500, _height = 500,
@@ -207,14 +210,11 @@
         };
 
 
+         /*
         _boxer.makebox = function () {
             var sin30 = Math.sin(30);
             var box = _svg.selectAll("rect.box")
                     .data([100, 200, 300]);
-
-            var lineData = [{"x": 100, "y": 100},
-                            {"x": 150, "y": 200},
-                            {"x": 200, "y": 100}];
 
             box.enter().append("rect")
                     .attr("class", "box")
@@ -227,28 +227,6 @@
                     .attr("height", function (d) {
                         return 200;
                     });
-//            box.enter().append("polygon")
-//                    .attr("points", lineFunction(lineData))//.join(" ")
-//                    .attr('stroke','blue')
-//                    .attr("stroke-width", 2)
-//                    .attr("fill", 'orange');
-
-
-//            function lineFunction(d){
-//                return d3.svg.line()
-//                        .x(function(d) {return d.x;})
-//                        .y(function(d) {return d.y;})
-//                        .interpolate("linear");
-//            }
-
-//                    .transition()
-//                    .duration(duration)
-//                    .attr("y", function (d) {
-//                        return 100;
-//                    })
-//                    .attr("height", function (d) {
-//                        return 300;
-//                    });
 
             box.transition()
                     .duration(duration)
@@ -261,16 +239,174 @@
 
             box.exit().remove();
 
+        }  */
+        _boxer.makebox = function () {
+            var sin30 = Math.sin(30);
+            var box = _svg.selectAll("path")
+                    .data([100, 200, 300])
+                    .classed('liney',true);
+
+            var lineData = [{"x": 100, "y": 100},
+                {"x": 150, "y": 200},
+                {"x": 200, "y": 100}];
+
+            function lineFunction(d){
+                return d3.svg.line()
+                        .x(function(d) {return d.x;})
+                        .y(function(d) {return d.y;})
+                        .interpolate("linear");
+            }
+
+//            box.enter().append("path").append("id",'goof')
+//                                        .attr("d", lineFunction(lineData))
+//                                        .attr("stroke", "blue")
+//                                        .attr("stroke-width", 2)
+//                                        .attr("fill", "none");
+            box.enter().append("path")
+                    .attr('fill','#f00')
+                    .attr('id','goo')
+                    .attr("d", lineFunction(lineData))
+                    .attr("stroke", "blue")
+                    .attr("stroke-width", 2)
+                    .attr("width", _width)
+                    .attr("height", function (d) {
+                        return 200;
+                    });
+
+//            box.transition()
+//                    .duration(duration)
+//                    .attr("y", function (d) {
+//                        return 200;
+//                    })
+//                    .attr("height", function (d) {
+//                        return 400;
+//                    });
+//
+//            box.exit().remove();
+
         }
         _boxer.render();
     }
 
+
+
+
+
+
+    console.log('about to make something...');
     var boxme = box();
-//            .radius(200)
-//            .innerRadius(100)
-//            .data(data);
-//
-//    chart.render();
+
+
+
+
+
+
+
+
+
+    /*
+       _boxer.makebox = function () {
+           var sin30 = Math.sin(30);
+           var box = _svg.selectAll("rect.box")
+                   .data([100, 200, 300]);
+
+           var lineData = [{"x": 100, "y": 100},
+               {"x": 150, "y": 200},
+               {"x": 200, "y": 100}];
+
+           box.enter().append("rect")
+                   .attr("class", "box")
+                   .attr('fill','#f00')
+                   .attr("x", 0)
+                   .attr("y", function (d) {
+                       return (100);
+                   })
+                   .attr("width", _width)
+                   .attr("height", function (d) {
+                       return 200;
+                   });
+   //            box.enter().append("polygon")
+   //                    .attr("points", lineFunction(lineData))//.join(" ")
+   //                    .attr('stroke','blue')
+   //                    .attr("stroke-width", 2)
+   //                    .attr("fill", 'orange');
+
+
+   //            function lineFunction(d){
+   //                return d3.svg.line()
+   //                        .x(function(d) {return d.x;})
+   //                        .y(function(d) {return d.y;})
+   //                        .interpolate("linear");
+   //            }
+
+   //                    .transition()
+   //                    .duration(duration)
+   //                    .attr("y", function (d) {
+   //                        return 100;
+   //                    })
+   //                    .attr("height", function (d) {
+   //                        return 300;
+   //                    });
+
+           box.transition()
+                   .duration(duration)
+                   .attr("y", function (d) {
+                       return 200;
+                   })
+                   .attr("height", function (d) {
+                       return 400;
+                   });
+
+           box.exit().remove();
+
+       }
+       _boxer.render();
+       }
+
+    */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </script>
 
 <div class="control-group">
