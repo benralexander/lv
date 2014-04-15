@@ -52,6 +52,8 @@
                 yExtremesForRawValues,
                 xExtremesForCalculatedLines,
                 yExtremesForCalculatedLines,
+                minimumDataValue,
+                maximumDataValue,
                 collectExtremes = function (dataElement, extremeDetector, currentCollector) {
                     var temper;
                     if (typeof currentCollector === "undefined") {
@@ -156,7 +158,7 @@
                     }
                 );
                 // Calculate extremes for horizontal
-                var maximumDataValue = d3.max([xExtremesForRawValues.max, xExtremesForCalculatedLines.max]),
+                maximumDataValue = d3.max([xExtremesForRawValues.max, xExtremesForCalculatedLines.max]),
                 minimumDataValue = d3.min([xExtremesForRawValues.min, xExtremesForCalculatedLines.min]);
                 setXRangeBasedOnData(minimumDataValue,maximumDataValue);
             }
@@ -506,10 +508,10 @@
 
             _data.forEach(function (list, i) {
 
-//                if ((! list.elements) ||
-//                    (list.elements.length === 0)) {
-//                    console.log (' hello');
-//                }   else {
+                if ((! list.elements) ||
+                    (list.elements.length === 0)) {
+                    console.log (' hello');
+                }   else {
 
                 addSegmentToErrorBar(list.elements, 'line.errorbar.m',
                     'vertical', 'up', 'mainline', i);
@@ -530,7 +532,7 @@
                     'horizontal', 'right', 'mainline', i);
                 addSegmentToErrorBar(list.elements, 'line.errorbar.c',
                     'horizontal', 'right', 'crossbar', i);
-              //  }
+                }
 
             });
         }
@@ -744,32 +746,35 @@
          * @returns {{}}
          */
         _chart.addSeries = function (series) {
-            var minimumX = d3.min(series.elements, function (d) {
-                    return d.x;
-                }),
-                maximumX = d3.max(series.elements, function (d) {
-                    return d.x;
-                }),
-                minimumY = d3.min(series.elements, function (d) {
-                    return d.y;
-                }),
-                maximumY = d3.max(series.elements, function (d) {
-                    return d.y;
-                }),
-            // special restriction.  X values must be nonnegative in order for the EC50 calculation
-            // to be valid.  Therefore we can go ahead and increase the range, but we cannot increase
-            // to include x-values smaller than zero.
-                lowXRange = Math.max(minimumX - ((maximumX - minimumX) * (_expansionPercent / 100.0)), 0.0),
-                highXRange = maximumX + ((maximumX - minimumX) * (_expansionPercent / 100.0)),
-                lowYRange = minimumY - ((maximumY - minimumY) * (_expansionPercent / 100.0)),
-                highYRange = maximumY + ((maximumY - minimumY) * (_expansionPercent / 100.0)),
-                generatedLine,
-                linesExist = true;
+            var generatedLine, elementsExist = true;
+            if ((!series.elements)   || (series.elements.length === 0)) {
+                elementsExist = false;
+            } else {
+                var minimumX = d3.min(series.elements, function (d) {
+                        return d.x;
+                    }),
+                    maximumX = d3.max(series.elements, function (d) {
+                        return d.x;
+                    }),
+                    minimumY = d3.min(series.elements, function (d) {
+                        return d.y;
+                    }),
+                    maximumY = d3.max(series.elements, function (d) {
+                        return d.y;
+                    }),
+                // special restriction.  X values must be nonnegative in order for the EC50 calculation
+                // to be valid.  Therefore we can go ahead and increase the range, but we cannot increase
+                // to include x-values smaller than zero.
+                    lowXRange = Math.max(minimumX - ((maximumX - minimumX) * (_expansionPercent / 100.0)), 0.0),
+                    highXRange = maximumX + ((maximumX - minimumX) * (_expansionPercent / 100.0)),
+                    lowYRange = minimumY - ((maximumY - minimumY) * (_expansionPercent / 100.0)),
+                    highYRange = maximumY + ((maximumY - minimumY) * (_expansionPercent / 100.0)),
+                    linesExist = true;
 
                 if ((series.yMinimum===null) ||
-                (series.yMaximum===null) ||
-                (series.hillslope===null) ||
-                (series.inflection===null)) {
+                    (series.yMaximum===null) ||
+                    (series.hillslope===null) ||
+                    (series.inflection===null)) {
                     linesExist =false;
                 }  else {
                     generatedLine = _chart.generateSigmoidPoints(series.yMinimum,
@@ -780,9 +785,10 @@
                         lowXRange,
                         highXRange);
                 }
+            }
             dataHolder = { linesExist: linesExist,
                            lines: generatedLine,
-                           elementsExist: true,
+                           elementsExist: elementsExist,
                            elements: series.elements };
             _data.push(dataHolder);
             return _chart;
