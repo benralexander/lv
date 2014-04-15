@@ -37,6 +37,83 @@
             numberOfDataPoint = 11,
             data = [];
     var curves = [
+        {
+            curve_slope: null,
+            cell_primary_name: "HS852T",
+            inflection_point_lower_ci: null,
+            curve_height: null,
+            nominal_ec50: null,
+            points: [
+                {
+                    cpd_pv_measured_value: 0.963315618068203,
+                    cpd_pv_error: null,
+                    pert_conc: 8.333300000000001
+                },
+                {
+                    cpd_pv_measured_value: 1.02352754258068,
+                    cpd_pv_error: null,
+                    pert_conc: 0.521
+                },
+                {
+                    cpd_pv_measured_value: 0.850163121198869,
+                    cpd_pv_error: null,
+                    pert_conc: 1.0417
+                },
+                {
+                    cpd_pv_measured_value: 0.772913001782416,
+                    cpd_pv_error: null,
+                    pert_conc: 33.333
+                },
+                {
+                    cpd_pv_measured_value: 0.942188732981274,
+                    cpd_pv_error: null,
+                    pert_conc: 4.1667000000000005
+                },
+                {
+                    cpd_pv_measured_value: 0.820096102255203,
+                    cpd_pv_error: null,
+                    pert_conc: 2.0833
+                },
+                {
+                    cpd_pv_measured_value: 0.823229778154418,
+                    cpd_pv_error: null,
+                    pert_conc: 16.667
+                },
+                {
+                    cpd_pv_measured_value: 1.01048107121215,
+                    cpd_pv_error: null,
+                    pert_conc: 0.26033
+                }
+            ],
+            cell_sample_id: 428,
+            curve_baseline: null,
+            perturbagen_name: "C-75",
+            inflection_point_upper_ci: null,
+            cpd_auc_12_point: null,
+            auc_file_id: 106,
+            cpd_auc_8_point: 6.3146,
+            cpd_auc_full_range: null,
+            perturbagen: "CCCCCCCCC1OC(=O)C(=C)C1C(O)=O",
+            pv_predicted_value_last: null,
+            curve_inflection_point: null,
+            dataset_name: "Broad CTD2 (v1.3)",
+            cpd_id: 594662
+        }
+        ,
+        { cell_primary_name: 'OVCOR8',
+            curve_baseline: 2.5,
+            curve_height: 93.1,
+            nominal_ec50: 26.0,
+            curve_slope: -1.01,
+          points:[
+              {pert_conc: 1.5, cpd_pv_measured_value: 98.2, cpd_pv_error: 8},
+              {pert_conc: 10.5, cpd_pv_measured_value: 50, cpd_pv_error: 4 },
+              {pert_conc: 20.9, cpd_pv_measured_value: 4, cpd_pv_error: 2 },
+              {pert_conc: 49.9, cpd_pv_measured_value: 1, cpd_pv_error: null}
+           ]
+
+           /*
+            var curves = [
 //        {   name: 'SKOV3_2',
 //            yMinimum: 2.5,
 //            yMaximum: 93.1,
@@ -49,41 +126,43 @@
 //                {x: 49.9, y: 2}
 //            ]
 //        },
-        {   name: 'NCI/ADR-RES',
-            yMinimum: null,
-            yMaximum: null,
-            inflection: null,
-            hillslope: null,
+                {   name: 'NCI/ADR-RES',
+                    yMinimum: null,
+                    yMaximum: null,
+                    inflection: null,
+                    hillslope: null,
 //            yMinimum: 0.5,
 //            yMaximum: 89,
 //            inflection: 25.0,
 //            hillslope: -2.0,
-            elements:[
-                {x: 2.2, y: 98.2},
-                {x: 12.3, y: 60, dyp: 10.2, dyn: 20.2, dxp: 10.2, dxn: 12.2 },
-                {x: 19, y: 5, dxp: 10.2, dxn: 12.2 },
-                {x: 49.9, y: 2}
-            ]
-        },
-        { name: 'OVCOR8',
-            yMinimum: null,
-            yMaximum: null,
-            inflection: null,
-            hillslope: null,
+                    elements:[
+                        {x: 2.2, y: 98.2},
+                        {x: 12.3, y: 60, dyp: 10.2, dyn: 20.2, dxp: 10.2, dxn: 12.2 },
+                        {x: 19, y: 5, dxp: 10.2, dxn: 12.2 },
+                        {x: 49.9, y: 2}
+                    ]
+                },
+                { name: 'OVCOR8',
+                    yMinimum: null,
+                    yMaximum: null,
+                    inflection: null,
+                    hillslope: null,
 //            yMinimum: 8.5,
 //            yMaximum: 70.1,
 //            inflection: 25.0,
 //            hillslope: -1.0,
-          elements:[
-              {x: 1.5, y: 98.2},
-              {x: 10.5, y: 50 },
-              {x: 20.9, y: 4 },
-              {x: 49.9, y: 1}
+                    elements:[
+                        {x: 1.5, y: 98.2},
+                        {x: 10.5, y: 50 },
+                        {x: 20.9, y: 4 },
+                        {x: 49.9, y: 1}
 //              {x: 1.5, y: 98.2},
 //              {x: 10.5, y: 50, dyp: 10.2, dyn: 20.2 },
 //              {x: 20.9, y: 4, dxp: 10.2, dxn: 12.2 },
 //              {x: 49.9, y: 1, dyp: 18.2, dyn: 28.2}
-           ]
+                    ]
+             */
+
         }
     ];
 

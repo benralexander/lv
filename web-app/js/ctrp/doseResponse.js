@@ -746,20 +746,43 @@
          * @returns {{}}
          */
         _chart.addSeries = function (series) {
-            var generatedLine, elementsExist = true;
-            if ((!series.elements)   || (series.elements.length === 0)) {
+            var generatedLine,
+                elementsExist = true,
+                points;
+            // convert the Json field names, whatever they are, into an
+            //  internal form we can depend on
+            if (series.points){
+                points = series.points.map(function (element){
+                    var returnValue;
+                    if ((element.cpd_pv_error) && (element.cpd_pv_error !==null)) {
+                        returnValue = {
+                            x: element.pert_conc,
+                            y: element.cpd_pv_measured_value,
+                            dyp: element.cpd_pv_error/2.0,
+                            dyn: element.cpd_pv_error/2.0
+                        }
+                    } else {
+                        returnValue = {
+                            x: element.pert_conc,
+                            y: element.cpd_pv_measured_value
+                        };
+                    }
+                    return returnValue;
+                });
+            }
+            if ((!points)   || (points.length === 0)) {
                 elementsExist = false;
             } else {
-                var minimumX = d3.min(series.elements, function (d) {
+                var minimumX = d3.min(points, function (d) {
                         return d.x;
                     }),
-                    maximumX = d3.max(series.elements, function (d) {
+                    maximumX = d3.max(points, function (d) {
                         return d.x;
                     }),
-                    minimumY = d3.min(series.elements, function (d) {
+                    minimumY = d3.min(points, function (d) {
                         return d.y;
                     }),
-                    maximumY = d3.max(series.elements, function (d) {
+                    maximumY = d3.max(points, function (d) {
                         return d.y;
                     }),
                 // special restriction.  X values must be nonnegative in order for the EC50 calculation
@@ -771,16 +794,16 @@
                     highYRange = maximumY + ((maximumY - minimumY) * (_expansionPercent / 100.0)),
                     linesExist = true;
 
-                if ((series.yMinimum===null) ||
-                    (series.yMaximum===null) ||
-                    (series.hillslope===null) ||
-                    (series.inflection===null)) {
+                if ((series.curve_baseline===null) ||
+                    (series.curve_height===null) ||
+                    (series.curve_slope===null) ||
+                    (series.nominal_ec50===null)) {
                     linesExist =false;
                 }  else {
-                    generatedLine = _chart.generateSigmoidPoints(series.yMinimum,
-                        series.yMaximum,
-                        series.hillslope,
-                        series.inflection,
+                    generatedLine = _chart.generateSigmoidPoints(series.curve_baseline,
+                        series.curve_height,
+                        series.curve_slope,
+                        series.nominal_ec50,
                         _pointsDefiningGeneratedLine,
                         lowXRange,
                         highXRange);
@@ -789,7 +812,7 @@
             dataHolder = { linesExist: linesExist,
                            lines: generatedLine,
                            elementsExist: elementsExist,
-                           elements: series.elements };
+                           elements: points };
             _data.push(dataHolder);
             return _chart;
         };
