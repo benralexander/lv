@@ -187,221 +187,66 @@
 <script type="text/javascript">
 
 
-    function box() {
-        var _boxer = {};
-        var _width = 500, _height = 500,
-                _data = [],
-                _colors = d3.scale.category20(),
-                _svg,
-                _bodyG,
-                _pieG,
-                _radius = 200,
-                _innerRadius = 100,
-                duration = 2000;
+        function box() {
+            var _boxer = {};
+            var _width = 500, _height = 500,
+                    _data = [],
+                    _colors = d3.scale.category20(),
+                    _svg,
+                    _bodyG,
+                    _pieG,
+                    _radius = 200,
+                    _innerRadius = 100,
+                    duration = 2000;
 
-        _boxer.render = function () {
-            if (!_svg) {
-                _svg = d3.select("body").append("svg")
-                        .attr("height", _height)
-                        .attr("width", _width);
+            _boxer.render = function () {
+                if (!_svg) {
+                    _svg = d3.select("body").append("svg")
+                            .attr("height", _height)
+                            .attr("width", _width);
+                }
+
+                _boxer.makebox (_svg);
+            };
+
+
+
+            _boxer.makebox = function () {
+                var sin30 = Math.sin(30);
+                var box = _svg.selectAll("rect.box")
+                        .data([100, 200, 300]);
+
+                box.enter().append("rect")
+                        .attr("class", "box")
+                        .attr('fill','#f00')
+                        .attr("x", 0)
+                        .attr("y", function (d) {
+                            return (100);
+                        })
+                        .attr("width", _width)
+                        .attr("height", function (d) {
+                            return 200;
+                        });
+
+                box.transition()
+                        .duration(duration)
+                        .attr("y", function (d) {
+                            return 200;
+                        })
+                        .attr("height", function (d) {
+                            return 400;
+                        });
+
+                box.exit().remove();
+
             }
-
-            _boxer.makebox (_svg);
-        };
-
-
-         /*
-        _boxer.makebox = function () {
-            var sin30 = Math.sin(30);
-            var box = _svg.selectAll("rect.box")
-                    .data([100, 200, 300]);
-
-            box.enter().append("rect")
-                    .attr("class", "box")
-                    .attr('fill','#f00')
-                    .attr("x", 0)
-                    .attr("y", function (d) {
-                        return (100);
-                    })
-                    .attr("width", _width)
-                    .attr("height", function (d) {
-                        return 200;
-                    });
-
-            box.transition()
-                    .duration(duration)
-                    .attr("y", function (d) {
-                        return 200;
-                    })
-                    .attr("height", function (d) {
-                        return 400;
-                    });
-
-            box.exit().remove();
-
-        }  */
-        _boxer.makebox = function () {
-            var sin30 = Math.sin(30);
-            var box = _svg.selectAll("path")
-                    .data([100, 200, 300])
-                    .classed('liney',true);
-
-            var lineData = [{"x": 100, "y": 100},
-                {"x": 150, "y": 200},
-                {"x": 200, "y": 100}];
-
-            function lineFunction(d){
-                return d3.svg.line()
-                        .x(function(d) {return d.x;})
-                        .y(function(d) {return d.y;})
-                        .interpolate("linear");
-            }
-
-//            box.enter().append("path").append("id",'goof')
-//                                        .attr("d", lineFunction(lineData))
-//                                        .attr("stroke", "blue")
-//                                        .attr("stroke-width", 2)
-//                                        .attr("fill", "none");
-            box.enter().append("path")
-                    .attr('fill','#f00')
-                    .attr('id','goo')
-                    .attr("d", lineFunction(lineData))
-                    .attr("stroke", "blue")
-                    .attr("stroke-width", 2)
-                    .attr("width", _width)
-                    .attr("height", function (d) {
-                        return 200;
-                    });
-
-//            box.transition()
-//                    .duration(duration)
-//                    .attr("y", function (d) {
-//                        return 200;
-//                    })
-//                    .attr("height", function (d) {
-//                        return 400;
-//                    });
+            return  _boxer;
 //
-//            box.exit().remove();
-
         }
-        _boxer.render();
-    }
 
-
-
-
-
-
-    console.log('about to make something...');
-    var boxme = box();
-
-
-
-
-
-
-
-
-
-    /*
-       _boxer.makebox = function () {
-           var sin30 = Math.sin(30);
-           var box = _svg.selectAll("rect.box")
-                   .data([100, 200, 300]);
-
-           var lineData = [{"x": 100, "y": 100},
-               {"x": 150, "y": 200},
-               {"x": 200, "y": 100}];
-
-           box.enter().append("rect")
-                   .attr("class", "box")
-                   .attr('fill','#f00')
-                   .attr("x", 0)
-                   .attr("y", function (d) {
-                       return (100);
-                   })
-                   .attr("width", _width)
-                   .attr("height", function (d) {
-                       return 200;
-                   });
-   //            box.enter().append("polygon")
-   //                    .attr("points", lineFunction(lineData))//.join(" ")
-   //                    .attr('stroke','blue')
-   //                    .attr("stroke-width", 2)
-   //                    .attr("fill", 'orange');
-
-
-   //            function lineFunction(d){
-   //                return d3.svg.line()
-   //                        .x(function(d) {return d.x;})
-   //                        .y(function(d) {return d.y;})
-   //                        .interpolate("linear");
-   //            }
-
-   //                    .transition()
-   //                    .duration(duration)
-   //                    .attr("y", function (d) {
-   //                        return 100;
-   //                    })
-   //                    .attr("height", function (d) {
-   //                        return 300;
-   //                    });
-
-           box.transition()
-                   .duration(duration)
-                   .attr("y", function (d) {
-                       return 200;
-                   })
-                   .attr("height", function (d) {
-                       return 400;
-                   });
-
-           box.exit().remove();
-
-       }
-       _boxer.render();
-       }
-
-    */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        console.log('about to make something...');
+        var boxme = box();
+        boxme.render();
 
 
 
