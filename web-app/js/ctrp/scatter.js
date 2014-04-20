@@ -12,6 +12,9 @@
             data={},
             xAxisLabel='',
             yAxisLabel='',
+            clickCallback = function (d, i){
+                console.log(' uninitialized scatter callback ='+ d+'.') ;
+            },
 
 
         // private variables
@@ -25,20 +28,24 @@
             svg,
 
         //  private variable
-        tip = d3.tip()
-            .attr('class', 'd3-tip')
-            .offset([-10, 0])
-            .html(function (d) {
-                var textToPresent = "";
-                var textColor = '#000000';
-                if (d){
-                        textToPresent = "Howdy ";
-                     }
-                return "<strong><span style='color:'#ccc'>" +textToPresent+ "</span></strong> ";
-            });
+            tip = d3.tip()
+                .attr('class', 'd3-tip scatter-tip')
+                .style('z-index', 51)
+                .offset([-10, 0])
+                .html(function (d) {
+                    var textToPresent = "";
+                    if (d) {
+                        if ((d.primary_site) && (d.primary_site.length > 0)) {
+                        }
+                        textToPresent = "CCLE: " + d.primary_site.toString();
+                    } else {
+                        textToPresent = "CCLE: " + d.toString();
+                    }
+                    return "<strong><span>" + textToPresent + "</span></strong> ";
+                });
 
 
-        // assign data to the DOM
+              // assign data to the DOM
         instance.assignData = function (x) {
             if (!arguments.length) return data;
             data = x;
@@ -70,6 +77,7 @@
                 previouslyExistingScatterPlot.remove();
             }
 
+
             if (!svg){
                 svg = selection
                     .append("svg")
@@ -77,12 +85,15 @@
                     .attr("height", height + margin.top + margin.bottom)
                     .append("g")
                     .attr("class", "scatter")
-                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                    .call(tip);
             }
 
 
             x.domain(d3.extent(data, function(d) { return d.cpd_auc; })).nice();
-            y.domain(d3.extent(data, function(d) { return d.mrna_expression; })).nice();
+            y.domain(d3.extent(data, function(d) {
+                return d.value;
+            })).nice();
 
             svg.append("g")
                 .attr("class", "x axis")
@@ -113,14 +124,17 @@
                 .data(data)
                 .enter()
                 .append("a")
-                .attr("xlink:href", "http://localhost:8028/cow/box/doseResponse")
+              //  .attr("xlink:href", "http://localhost:8028/cow/box/doseResponse")
+                .on('mouseover', tip.show)
+                .on('mouseout', tip.hide)
+                .on('click', clickCallback )
                 .append("circle")
                 .attr("class", "dot")
                 .attr("r", 3.5)
                 .attr("cx", function(d) {
                     return x(d.cpd_auc);
                 })
-                .attr("cy", function(d) { return y(d.mrna_expression); })
+                .attr("cy", function(d) { return y(d.value); })
                 .style("fill", function(d) {
                     return color(d.primary_site[0]);
                 });
@@ -174,6 +188,12 @@
         instance.margin = function(x) {
             if (!arguments.length) return margin;
             margin = x;
+            return instance;
+        };
+
+        instance.clickCallback = function(x) {
+            if (!arguments.length) return clickCallback;
+            clickCallback = x;
             return instance;
         };
 
