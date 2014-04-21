@@ -214,7 +214,7 @@
                             .attr("width", _width);
                 }
 
-                _boxer.sierpinskiTriangle (400,400,600,3);
+                _boxer.sierpinskiTriangle (400,400,600,8);
             };
 
             xScale=d3.scale.linear()
@@ -240,20 +240,20 @@
 
                 if (levels>0){
                     levels -= 1;
-                    _boxer.quadTriangle (cx,cy,h,levels);
+
                 }  else {
                     return;
                 }
 
-
-                    var triangles = d3.selectAll('.recursion'+levels).filter(function(d){return(d.label==='a')});
+                var quadOfTriangles =  _boxer.quadTriangle (cx,cy,h,levels);
+                    var triangles = quadOfTriangles.filter(function(d){return(d.label==='a')});
                     console.log('a triangles='+triangles.length+', level='+levels+'.');
                     descend(triangles[0],levels) ;
-                     triangles = d3.selectAll('.recursion'+levels).filter(function(d){return(d.label==='b')});
+                     triangles = quadOfTriangles.filter(function(d){return(d.label==='b')});
 
                     console.log('b triangles='+triangles.length+', level='+levels+'.');
                 descend(triangles[0],levels) ;
-                     triangles = d3.selectAll('.recursion'+levels).filter(function(d){return(d.label==='c')});
+                     triangles = quadOfTriangles.filter(function(d){return(d.label==='c')});
                     console.log('c triangles='+triangles.length+', level='+levels+'.');
                 descend(triangles[0],levels) ;
 
@@ -317,6 +317,8 @@
                                    (xScale(d.cx))  +','+ (yScale(d.cy + (d.h/2)))  +' '+
                                    (xScale(d.cx+(d.h/tan45)))  +','+ (yScale(d.cy- (d.h/2)))})  ;
                  box.exit().remove();
+
+                return box;
 
             }
 
