@@ -5,6 +5,11 @@
     <title>Pie Chart</title>
     <link rel="stylesheet" type="text/css" href="../css/styles.css"/>
     <script type="text/javascript" src="../js/d3.js"></script>
+    <style>
+        .triangle {
+            stroke
+        }
+    </style>
 </head>
 
 <body>
@@ -13,7 +18,7 @@
     function pieChart() {
         var _chart = {};
 
-        var _width = 500, _height = 500,
+        var _width = 1000, _height = 1000,
                 _data = [],
                 _colors = d3.scale.category20(),
                 _svg,
@@ -184,12 +189,12 @@
 </script>
 
 
-<script type="text/javascript">
+<script>
 
 
         function box() {
             var _boxer = {};
-            var _width = 500, _height = 500,
+            var _width = 1000, _height = 1000,
                     _data = [],
                     _colors = d3.scale.category20(),
                     _svg,
@@ -197,7 +202,10 @@
                     _pieG,
                     _radius = 200,
                     _innerRadius = 100,
-                    duration = 2000;
+                    duration = 500,
+                    _xScale,
+                    _yScale,
+                    tan45 = Math.tan(45);
 
             _boxer.render = function () {
                 if (!_svg) {
@@ -206,40 +214,119 @@
                             .attr("width", _width);
                 }
 
-                _boxer.makebox (_svg);
+                _boxer.sierpinskiTriangle (400,400,600,3);
             };
 
+            xScale=d3.scale.linear()
+                    .domain([0,_width])
+                    .range([0,_width]);
+            yScale=d3.scale.linear()
+                    .domain([0,1000])
+                    .range([_height,0]);
 
+            _boxer.sierpinskiTriangle = function(cx,cy,h,levels) {
+                console.log('entering sierpinskiTriangle');
 
-            _boxer.makebox = function () {
-                var sin30 = Math.sin(30);
-                var box = _svg.selectAll("rect.box")
-                        .data([100, 200, 300]);
-
-                box.enter().append("rect")
-                        .attr("class", "box")
-                        .attr('fill','#f00')
-                        .attr("x", 0)
-                        .attr("y", function (d) {
-                            return (100);
-                        })
-                        .attr("width", _width)
-                        .attr("height", function (d) {
-                            return 200;
+                var descend = function(triangleGroup,level) {
+                    if (level>0){
+                        triangleGroup.forEach(function(d,i){
+                            var oneTriangle = d3.select(d);
+                            var triangleDef =   oneTriangle.datum();
+                            _boxer.sierpinskiTriangle(triangleDef.cx,triangleDef.cy,triangleDef.h, level) ;
                         });
+                    }
+                }
 
-                box.transition()
-                        .duration(duration)
-                        .attr("y", function (d) {
-                            return 200;
-                        })
-                        .attr("height", function (d) {
-                            return 400;
-                        });
 
-                box.exit().remove();
+                if (levels>0){
+                    levels -= 1;
+                    _boxer.quadTriangle (cx,cy,h,levels);
+                }  else {
+                    return;
+                }
+
+
+                    var triangles = d3.selectAll('.recursion'+levels).filter(function(d){return(d.label==='a')});
+                    console.log('a triangles='+triangles.length+', level='+levels+'.');
+                    descend(triangles[0],levels) ;
+                     triangles = d3.selectAll('.recursion'+levels).filter(function(d){return(d.label==='b')});
+
+                    console.log('b triangles='+triangles.length+', level='+levels+'.');
+                descend(triangles[0],levels) ;
+                     triangles = d3.selectAll('.recursion'+levels).filter(function(d){return(d.label==='c')});
+                    console.log('c triangles='+triangles.length+', level='+levels+'.');
+                descend(triangles[0],levels) ;
+
+//                    console.log('levels # '+levels+', with '+triangles[0].length+'triangles.');
+
+
+//                    descend (d3.selectAll('.recursion'+levels).filter(function(d){
+//                        console.log(d);
+//                        return(d.label==='a')
+//                    })[0]);
+////                    descend (d3.selectAll('.recursion'+levels).filter(function(d){console.log(d);return(d.label==='b')})[0]);
+//                    descend (d3.selectAll('.recursion'+levels).filter(function(d){console.log(d);return(d.label==='c')})[0]);
+
+//                    descend (triangles[0]);
+
+
+
+//                    triangles[0].forEach(function(d,i){
+//                        var oneTriangleDomElement = d[0];
+//                        var oneTriangle = d3.select(d);
+//                        var triangleDef =   oneTriangle.datum();
+//                        _boxer.sierpinskiTriangle(triangleDef.cx,triangleDef.cy,triangleDef.h, levels) ;
+//                    });
+ //               }
+
+
 
             }
+
+
+            _boxer.quadTriangle = function (cx,cy,h,level) {
+                var box = _svg.selectAll("polygon.triangle")
+                        .data([{cx:(((2*cx)-(h/tan45))/2), cy:(((2*cy)-(h/2))/2), h:h/2, label:'a'},
+                            {cx:cx, cy:(((2*cy)+(h/2))/2), h:h/2, label:'b'},
+                            {cx:(((2*cx)+(h/tan45))/2), cy:(((2*cy)-(h/2))/2), h:h/2, label:'c'}]);
+
+                box.enter().append("polygon")
+                        .attr("class", "triangle")
+                        .attr("class", function (d, i) {return ("recursion"+level+" sid_"+ d.label)})
+                        //.attr("class", function (d, i) {return "sid_"+ d.label})
+                        .attr('fill',function(){return "rgba(255,0,0,0.1)"})
+                        .attr('stroke','#00f')
+                        .attr('stroke-width','1')
+                        .attr('points',function (d, i) {
+//                            return (xScale(d.cx))  +','+ (yScale(d.cy)) +' '+
+//                                   (xScale(d.cx))  +','+ (yScale(d.cy))  +' '+
+//                                   (xScale(d.cx))  +','+ (yScale(d.cy))})  ;
+                return (xScale(d.cx- (d.h/tan45)))  +','+ (yScale(d.cy- (d.h/2))) +' '+
+                        (xScale(d.cx))  +','+ (yScale(d.cy + (d.h/2)))  +' '+
+                        (xScale(d.cx+(d.h/tan45)))  +','+ (yScale(d.cy- (d.h/2)))})  ;
+
+
+
+//                var x0 = h/tan45,
+//                heightOver2 = h/2.0,
+//                        cx2 = cx+500;
+                box.transition()
+                        .duration(duration)
+                        .attr('points',function (d, i) {
+                            return (xScale(d.cx- (d.h/tan45)))  +','+ (yScale(d.cy- (d.h/2))) +' '+
+                                   (xScale(d.cx))  +','+ (yScale(d.cy + (d.h/2)))  +' '+
+                                   (xScale(d.cx+(d.h/tan45)))  +','+ (yScale(d.cy- (d.h/2)))})  ;
+                 box.exit().remove();
+
+            }
+
+
+
+
+
+
+
+
             return  _boxer;
 //
         }
