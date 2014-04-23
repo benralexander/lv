@@ -32,7 +32,7 @@
                         .attr("width", _width);
             }
 
-            _holder.sierpinskiTriangle(400, 400, 600, 4);
+            _holder.sierpinskiTriangle(400, 400, 600, 6);
         };
 
         _xScale = d3.scale.linear()
@@ -88,7 +88,6 @@
                     .attr("class", function (d, i) {
                         return ("recursion" + level + " sid_" + d.label)
                     })
-                //.attr("class", function (d, i) {return "sid_"+ d.label})
                     .attr('fill', function () {
                         return "rgba(255,0,0,0.2)"
                     })
@@ -123,7 +122,7 @@
             var triangles = _svg.selectAll("polygon");
 
             triangles
-                     .attr('fill', function () {
+                    .attr('fill', function () {
                         return "#ff0000"
                     })
                     .attr('points', function (d, i) {
@@ -134,9 +133,9 @@
 
             triangles.transition()
                     .duration(duration*4)
-                     .attr('fill', function () {
-                         return "#00ff00"
-                     })
+                    .attr('fill', function () {
+                        return "#00ff00"
+                    })
                     .attr('points', function (d, i) {
                         return (_xScale(d.cx - (d.h / tan45))) + ',' + (0.5*_yScale(d.cy - (d.h / 2))) + ' ' +
                                 (_xScale(d.cx)) + ',' + (0.5*_yScale(d.cy + (d.h / 2))) + ' ' +
@@ -150,6 +149,14 @@
         }
 
 
+        _holder.resetColor = function() {
+            _svg.selectAll("polygon")
+                    .attr('fill', function () {
+                return "rgba(255,0,0,0.2)"
+            });
+        }
+
+
         return  _holder;
     }
 
@@ -160,7 +167,8 @@
 </script>
 
 <div class="control-group">
-    <button onclick="friendlyTriangle.reverser()">Update</button>
+    <button onclick="friendlyTriangle.reverser()">moveAround</button>
+    <button onclick="friendlyTriangle.resetColor()">resetColor</button>
 </div>
 
 </body>
