@@ -170,6 +170,7 @@
             .displayGridLines(true)
             .xAxisLabel('Concentration')
             .yAxisLabel('Response')
+            .selectionIdentifier('body')
 //            .x([0, 60])
 //            .y([0, 150])
             .domainMultiplier(1.2);

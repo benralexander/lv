@@ -16,6 +16,7 @@
             _displayGridLines,
             _xAxisLabel = '',
             _yAxisLabel = '',
+            _selectionIdentifier,
         // private variables
             _expansionPercent = 10.0, // percent we extend beyond the min max of the raw data
             _pointsDefiningGeneratedLine = 100  // the curve we generate from the four parameters is a series of
@@ -24,7 +25,7 @@
 
         _chart.render = function () {
             if (!_svg) {
-                _svg = d3.select("body").append("svg")
+                _svg = d3.select(_selectionIdentifier).append("svg")
                     .attr("height", _height)
                     .attr("width", _width);
 
@@ -687,7 +688,6 @@
             return _chart;
         };
 
-
         _chart.width = function (w) {
             if (!arguments.length) return _width;
             _width = w;
@@ -727,6 +727,13 @@
         _chart.domainMultiplier = function (domainMultiplier) {
             if (!arguments.length) return _domainMultiplier;
             _domainMultiplier = domainMultiplier;
+            return _chart;
+        };
+
+        // identify the dominant element upon which we will hang this graphic
+        _chart.selectionIdentifier = function (x) {
+            if (!arguments.length) return _selectionIdentifier;
+            _selectionIdentifier = x;
             return _chart;
         };
 
