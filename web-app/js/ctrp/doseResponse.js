@@ -140,13 +140,13 @@
                     var range = maximumValue-minimumValue,
                         expandedRange = range*_domainMultiplier,
                         rangeMidpoint =  (maximumValue+minimumValue)*0.5;
-                    chart.x([(rangeMidpoint - (expandedRange*0.5)),(rangeMidpoint + (expandedRange*0.5))]);
+                    _chart.x([(rangeMidpoint - (expandedRange*0.5)),(rangeMidpoint + (expandedRange*0.5))]);
                 },
                 setYRangeBasedOnData = function (minimumValue,maximumValue) {
                     var range = maximumValue-minimumValue,
                         expandedRange = range*_domainMultiplier,
                         rangeMidpoint =  (maximumValue+minimumValue)*0.5;
-                    chart.y([(rangeMidpoint - (expandedRange*0.5)),(rangeMidpoint + (expandedRange*0.5))]);
+                    _chart.y([(rangeMidpoint - (expandedRange*0.5)),(rangeMidpoint + (expandedRange*0.5))]);
 
                 };
 
@@ -194,7 +194,7 @@
 
         function renderAxes(svg, displayGridLines) {
             var axesG = svg.append("g")
-                .attr("class", "axes");
+                .attr("class", "dsaxes");
 
             renderXAxis(axesG, displayGridLines);
 
@@ -207,7 +207,7 @@
                 .orient("bottom");
 
             var xAxisTextGoesHere = axesG.append("g")
-                .attr("class", "x axis")
+                .attr("class", "x dsaxis")
                 .attr("transform", function () {
                     return "translate(" + xStart() + "," + yStart() + ")";
                 })
@@ -217,7 +217,7 @@
                 (_xAxisLabel)) {
                 xAxisTextGoesHere
                     .append("text")
-                    .attr("class", "label")
+                    .attr("class", "dslabel")
                     .attr("x", _width / 2)
                     .attr("y", _margins.bottom)
                     .style("text-anchor", "middle")
@@ -227,8 +227,8 @@
 
             if (displayGridLines) {
                 d3.selectAll("g.x g.tick")
-                    .append("line")
-                    .classed("grid-line", true)
+                    .append("dsline")
+                    .classed("dsgrid-line", true)
                     .attr("x1", 0)
                     .attr("y1", 0)
                     .attr("x2", 0)
@@ -242,7 +242,7 @@
                 .orient("left");
 
             var yAxisTextGoesHere = axesG.append("g")
-                .attr("class", "y axis")
+                .attr("class", "y dsaxis")
                 .attr("transform", function () {
                     return "translate(" + xStart() + "," + yEnd() + ")";
                 })
@@ -252,7 +252,7 @@
                 (_yAxisLabel)) {
                 yAxisTextGoesHere
                     .append("text")
-                    .attr("class", "label")
+                    .attr("class", "dslabel")
                     .attr("transform", "rotate(-90)")
                     .attr("y", 0)  // works together with dy
                     .attr("dy", "-3em") // how far from the y-axis should the word appear
@@ -265,7 +265,7 @@
             if (displayGridLines) {
                 d3.selectAll("g.y g.tick")
                     .append("line")
-                    .classed("grid-line", true)
+                    .classed("dsgrid-line", true)
                     .attr("x1", 0)
                     .attr("y1", 0)
                     .attr("x2", quadrantWidth())

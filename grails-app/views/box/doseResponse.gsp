@@ -17,6 +17,74 @@
 </head>
 
 <body>
+<div id="cdtCmpTabs-3" class="cTab" style="padding-left: 00px;">
+    <h3>Correlation plot</h3>
+
+    <div id="cdtGeneCorrelationAnalysis">
+        <table style='margin-top: 50px; border-top: 50px;'>
+            <tr>
+                <td id='correlationPlotLayout'>
+                    <span id='plot'></span>
+                </td>
+                <td id='correlationPlotControllers'>
+                    <div class='iqmLabel'>
+                        "Interquartile multiplier"
+                    </div>
+
+                    <div id='slider'>
+                    </div>
+
+                    <div id='outlierRadiusDiv'>
+                        <div class='outlierRadiusLabel'>Outlier radius:</div>
+
+                        <form id='outlierRadius'>
+                            <table class='options'>
+                                <tr>
+                                    <td>
+                                        <input type='radio' name='outlierRadius' value='1'>tiny</input>
+                                    </td>
+                                    <td>
+                                        <input type='radio' name='outlierRadius' value='2' checked>small</input>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type='radio' name='outlierRadius' value='4'>medium</input>
+                                    </td>
+                                    <td>
+                                        <input type='radio' name='outlierRadius' value='6'>large</input>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </form>
+                    </div>
+                </td>
+                <td style='margin-right: 0px;'>
+                </td>
+            </tr>
+        </table>
+
+        <div class='messagepop pop' id='examineCorrelation'>
+            <table class='graphTable'>
+                <tr>
+                    <td>
+                        <form method='post' id='new_message' action='/messages'>
+                            <h1>Correlation plot</h1>
+
+                            <div id='scatterPlot1'></div>
+
+                            <p><a class='close' href='/'>Cancel</a></p>
+                        </form>
+                    </td>
+                    <td>
+                        <div id='doseResponseCurve'></div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
 
@@ -167,7 +235,7 @@
     ];
 
     var chart =  d3.doseResponse()
-            .displayGridLines(true)
+            .displayGridLines(false)
             .xAxisLabel('Concentration')
             .yAxisLabel('Response')
             .selectionIdentifier('body')

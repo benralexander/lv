@@ -124,7 +124,7 @@
                 .data(data)
                 .enter()
                 .append("a")
-              //  .attr("xlink:href", "http://localhost:8028/cow/box/doseResponse")
+                .attr("xlink:href", "http://localhost:8028/cow/box/doseResponse")
                 .on('mouseover', tip.show)
                 .on('mouseout', tip.hide)
                 .on('click', clickCallback )
