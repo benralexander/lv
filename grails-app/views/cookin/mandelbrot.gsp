@@ -20,17 +20,21 @@
     myNamespace = {};
 
     myNamespace.mandelbrot = function module() {
-        var complexRange = [-2,2],
-                realRange = [-2,2],
-                numberDivisionsComplex = 100,
-                numberDivisionsReal = 100,
+        var complexRange = [-0.15,0.15],
+                realRange = [-1.65,-1.35],
+                screenXMax = 800,
+                screenXMin = 0,
+                screenYMax = 800,
+                screenYMin = 0,
+                numberDivisionsComplex = 500,
+                numberDivisionsReal = 500,
 
         xScale = d3.scale.linear()
-                .domain([-2,2])
-                .range([0, 800]),
+                .domain(realRange)
+                .range([screenXMin, screenXMax]),
         yScale = d3.scale.linear()
-                .domain([-2,2])
-                .range([800, 0]),
+                .domain(complexRange)
+                .range([screenYMax, screenYMin]),
         color = d3.scale.category20b();
 
 
@@ -59,60 +63,18 @@
                 // Update
                 rects
                         .attr('x',function (d) {
-                            return (xScale(d.c)) ;
+                            return (xScale(d.r)) ;
                         })
                         .attr('y',function (d) {
-                            return (yScale(d.r)) ;
+                            return (yScale(d.c)) ;
                         })
-                        .attr('width',6)
-                        .attr('height',6)
+                        .attr('width',800/(numberDivisionsComplex-5))
+                        .attr('height',800/(numberDivisionsReal-5))
                         .style('fill',function (d) {
-                            var co= d.e+1;
-                            if (co!=1){
-                                console.log('color='+co);
-                            }
-                            return d3.rgb(color(co)) ;
+                            return d3.rgb(color(d.e+1)) ;
                         })
-                        .style('stroke',function (d) {
-                            return d3.rgb(color( d.esc+1)) ;
-                        })
-                        .style('stroke-width',1)
+                        .style('stroke-width',0)
                 ;
-
-                // Exit
-//                d3.select("body").selectAll("rect")
-//                        .data(data)
-//                        .exit()
-//                        .remove();
-
-
-
-
-//                d3.select("body").selectAll("rect")
-//                        .data(outerProducts)
-//                        .enter()
-//                        .append("rect");
-//
-//                // Update
-//                d3.select("body").selectAll("rect")
-//                        .data(data)
-//                        .x(function (d) {
-//                            return (d.c) ;
-//                        })
-//                        .y(function (d) {
-//                            return (d.r) ;
-//                        })
-//                        .width(1)
-//                        .height(1)
-//                        .color(function (d) {
-//                            return d3.scale.category20b( d.esc+1) ;
-//                        });
-//
-//                // Exit
-//                d3.select("body").selectAll("rect")
-//                        .data(data)
-//                        .exit()
-//                        .remove();
 
             },
 
@@ -149,11 +111,11 @@
             selection.each(function(data) {
                 // first regenerate the outer product of the range we will consider
 
-                var outerProducts = generateOuterProducts( complexRange,numberDivisionsComplex,
-                        realRange,numberDivisionsReal) ,
-                computedColor = computeColor (outerProducts);
-                assignData(computedColor);
 
+                assignData(
+                        computeColor (
+                                generateOuterProducts( complexRange,numberDivisionsComplex,
+                                        realRange, numberDivisionsReal ) ) );
             });
 
 
@@ -192,7 +154,7 @@
                         iteratingValue  = {r:incoming.r, c:incoming.c} ;
                     while ((loopNumber < maximumIterations)  &&
                             (iteratingValue.c < 2))  {
-                        iteratingValue  = _add(_square (iteratingValue) ,iteratingValue);
+                        iteratingValue  = _add(_square (iteratingValue) ,incoming);
                         loopNumber++;
                     }
                     if (loopNumber < maximumIterations) {
@@ -210,49 +172,10 @@
     // Setters can also be chained directly to the returned function
     var mandelbrot =myNamespace.mandelbrot();
 
-    d3.select('body').datum(['howdy','do']).call(mandelbrot);
+    d3.select('body').call(mandelbrot);
 
 
 
-    //
-//
-//
-//
-//    function mandlebrot() {
-//        var _holder = {};
-//        var _width = 1000, _height = 1000,
-//                _svg,
-//                duration = 500,
-//                _xScale,
-//                _yScale;
-//
-//        _holder.render = function () {
-//            if (!_svg) {
-//                _svg = d3.select("body").append("svg")
-//                        .attr("height", _height)
-//                        .attr("width", _width);
-//            }
-//
-//            _holder.mandlebrotSet();
-//        };
-//
-//        _xScale = d3.scale.linear()
-//                .domain([0, _width])
-//                .range([0, _width]);
-//        _yScale = d3.scale.linear()
-//                .domain([0, 1000])
-//                .range([_height, 0]);
-//
-//        _holder.mandlebrotSet = function () {
-//
-//            console.log ('function mandlebrotSet') ;
-//
-//        }
-//
-//    }
-//
-//    var mandle = mandlebrot();
-//    mandle.render();
 
 </script>
 
