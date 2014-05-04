@@ -26,6 +26,68 @@
             featuremap = {},
             formatTooltipNumericValue = d3.format(".3g");
 
+
+
+        var firstInstance = true;
+
+        /***
+         *  This module adds a handler for clicks on the outlier elements in the
+         *  box whisker plot, and then retrieves the data necessary to insert
+         *  a scatter plot into a common div.  We use prototype definition tricks
+         *  JQuery here, so make sure those libraries are available.
+         */
+        var clickHandling = (function () {
+
+
+                var tooltip = d3.select("body")
+                    .append("div")
+                    .style("opacity", "0")
+                    .style("position", "absolute")
+                    .style("z-index", "100")
+                    .attr("class", "toolTextAppearance"),
+
+                appear = function(d) {
+                    if (d.name != '/') {
+                        tooltip.html('dd')
+                            .transition()
+                            .duration(200)
+                            .style("opacity", "1")
+                            .style("width", "400px")
+                            .style("height", "400px")
+                            .style("top", (d3.event.pageY - 30) + "px")
+                            .style("left", (d3.event.pageX + 30) + "px");
+                        return;
+                    }
+                    else {
+                        return tooltip.html(null).style("opacity", "0");
+                    }
+
+                } ,
+                mouseMove = function (d) {
+                    if (d.name === '/')  {
+                        return tooltip.html(null).style("opacity", "0");
+                    }  else {
+                        return tooltip .style("top", (d3.event.pageY - 10) + "px")
+                            .style("left", (d3.event.pageX + 10) + "px");
+                    }
+
+                },
+                disappear =  function () {
+                    return tooltip.style("opacity", "0");
+                };
+               return {
+                   appear:appear,
+                   disappear:disappear
+
+               }
+
+        }());
+
+
+
+
+
+
         // Where do you want your plot?
         var margin = {top: 10, right: 20, bottom: 10, left: 50},
             width = 300 - margin.left - margin.right,
@@ -155,6 +217,10 @@
                         .attr('y',0)
                         .attr('fill', function(d) {
                             return colorScale(d.value);
+                        })
+                        .on("click", function click(d)
+                        {
+                            clickHandling.appear(d);
                         });
 
                     // Here is the indicator that the feature under consideration
@@ -179,7 +245,12 @@
                         .on('mouseout', tip.hide)
                         .attr('y',height/3)
                         .attr('fill', "black")
-                        .attr('stroke', 'black');
+                        .attr('stroke', 'black')
+                        .on("click", function click(d)
+                        {
+                            clickHandling.appear(d);
+                        });
+
 
                     // create an X axis
 //                   g
