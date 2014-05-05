@@ -94,11 +94,6 @@
                     .attr('stroke', '#00f')
                     .attr('stroke-width', '1')
                     .attr('points', function (d, i) {
-//                            return (_xScale(d.cx+(d.h/tan45)))  +','+ (_yScale(d.cy- (d.h/2)))  +' '+
-//                                    (_xScale(d.cx- (d.h/tan45)))  +','+ (_yScale(d.cy- (d.h/2))) +' '+
-//                                    (_xScale(d.cx))  +','+ (_yScale(d.cy + (d.h/2)))
-//
-//                        })  ;
 
                         return (_xScale(d.cx)) + ',' + (_yScale(d.cy)) + ' ' +
                                 (_xScale(d.cx)) + ',' + (_yScale(d.cy)) + ' ' +

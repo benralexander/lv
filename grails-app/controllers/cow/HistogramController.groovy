@@ -8,7 +8,14 @@ class HistogramController {
     def histogram() {}
 
     def feedMeTripleJson( ){
-        render("""[{"name":"percent efflux","max":20.1905,"min":5.03001,"num":10,"histogram":[[3.0,5.03001,10.1102],[7.0,10.1102,15.1905],[5.0,15.1905,20.2905]],"resourcePath":null}]
+        render("""[{"name":"percent efflux","max":20.1905,"min":5.03001,"num":10,
+"histogram":[
+[3.0,5,10],
+[7.0,10,15],
+[9.0,15,20],
+[8.0,20,25],
+[5.0,25,30]],
+"resourcePath":null}]
 """)
     }
 
