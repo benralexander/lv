@@ -1,7 +1,4 @@
 // One dimensional heatmap.
-//     original: pgm
-//     modified: ba
-//     17-03-2014    ba   fix feature map cell width bug
 
 (function() {
 
@@ -16,7 +13,6 @@
             featureName = '',
             compoundName = '',
 
-
         // the variables that will never be exposed
             xAxis = {},
             instance={},
@@ -24,22 +20,63 @@
             svg = {},
             heatmap = {},
             featuremap = {},
-            formatTooltipNumericValue = d3.format(".3g");
+            formatTooltipNumericValue = d3.format(".3g"),
+            firstInstance = true,
+            clickCallback = function (d, i){
+                var cmpd = $('#imageHolder').data('compound'),
+                    compoundId = cmpd.compound_id,
+                    cellId = d.cell_sample_id;
+                setWaitCursor();
+                DTGetDoseResponsePoints(compoundId, cellId, function (data){
+                    var chart =  d3.doseResponse()
+                        .displayGridLines(false)
+                        .xAxisLabel(data.cell_primary_name)
+                        .yAxisLabel('Viability')
+                        .selectionIdentifier('#doseResponseCurve')
+                        .domainMultiplier(1.2);
+                    var curves=[data];
+                    curves.forEach(function (series) {
+                        chart.addSeries(series);
+                    });
+
+                    chart.render();
+                    removeWaitCursor();
+                });
+            },
 
 
-
-        var firstInstance = true;
-
-        /***
+            /***
          *  This module adds a handler for clicks on the outlier elements in the
          *  box whisker plot, and then retrieves the data necessary to insert
          *  a scatter plot into a common div.  We use prototype definition tricks
          *  JQuery here, so make sure those libraries are available.
          */
-        var clickHandling = (function () {
+         clickHandling = (function () {
 
 
-                var tooltip = d3.select("body")
+            var curves = [
+                { cell_primary_name: 'OVCOR8',
+                    curve_baseline: 2.5,
+                    curve_height: 93.1,
+                    nominal_ec50: 26.0,
+                    curve_slope: null,
+                    points:[
+                        {pert_conc: 1.5, cpd_pv_measured_value: 98.2, cpd_pv_error: null},
+                        {pert_conc: 10.5, cpd_pv_measured_value: 50, cpd_pv_error: null },
+                        {pert_conc: 20.9, cpd_pv_measured_value: 4, cpd_pv_error: null },
+                        {pert_conc: 49.9, cpd_pv_measured_value: 1, cpd_pv_error: null}
+                    ]
+
+                }
+
+            ];
+
+
+
+
+
+
+            var popUpGraphic = d3.select("body")
                     .append("div")
                     .style("opacity", "0")
                     .style("position", "absolute")
@@ -48,7 +85,7 @@
 
                 appear = function(d) {
                     if (d.name != '/') {
-                        tooltip.html('dd')
+                        popUpGraphic.html(contentForGraphicWindow ())
                             .transition()
                             .duration(200)
                             .style("opacity", "1")
@@ -56,35 +93,57 @@
                             .style("height", "400px")
                             .style("top", (d3.event.pageY - 30) + "px")
                             .style("left", (d3.event.pageX + 30) + "px");
+                        var chart =  d3.doseResponse()
+                            .displayGridLines(false)
+                            .xAxisLabel('Concentration')
+                            .yAxisLabel('Response')
+                            .width('390')
+                            .height('380')
+                            .selectionIdentifier('#doseResponseFromEnrichment')
+
+                        curves.forEach(function (series) {
+                            chart.addSeries(series);
+                        });
+
+                        chart.render();
+
                         return;
                     }
                     else {
-                        return tooltip.html(null).style("opacity", "0");
+                        return popUpGraphic.html(null).style("opacity", "0");
                     }
 
                 } ,
                 mouseMove = function (d) {
                     if (d.name === '/')  {
-                        return tooltip.html(null).style("opacity", "0");
+                        return popUpGraphic.html(null).style("opacity", "0");
                     }  else {
-                        return tooltip .style("top", (d3.event.pageY - 10) + "px")
+                        return popUpGraphic .style("top", (d3.event.pageY - 10) + "px")
                             .style("left", (d3.event.pageX + 10) + "px");
                     }
 
                 },
                 disappear =  function () {
-                    return tooltip.style("opacity", "0");
+                    return popUpGraphic.style("opacity", "0");
+                },
+                contentForGraphicWindow = function ()    {
+                    var retVal;
+                    retVal = "<div id='doseResponseFromEnrichment'></div>" +
+                        "<div id='doseResponseCloser' style='position:relative; top: 0px; left: 10px'><button onclick='heatMap.activatePopUpClose()'>Close window</button></div>" +
+                        "</table>";
+                    return retVal;
                 };
+
                return {
                    appear:appear,
                    disappear:disappear
 
                }
 
-        }());
+        }()),
 
 
-
+        closingPopUpCallback =  clickHandling.disappear;
 
 
 
@@ -357,6 +416,22 @@
             return instance;
         };
 
+        instance.closingPopUpCallback = function(x) {
+            if (!arguments.length) return closingPopUpCallback;
+            closingPopUpCallback = x;
+            return instance;
+        };
+
+        instance.clickCallback = function(x) {
+            if (!arguments.length) return clickCallback;
+            clickCallback = x;
+            return instance;
+        };
+
+        instance.activatePopUpClose = function(){
+            closingPopUpCallback ();
+            return instance;
+        }
 
         return instance;
     };

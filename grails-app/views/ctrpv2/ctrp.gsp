@@ -12,9 +12,11 @@
   <title>ctrp test</title>
     <link media="all" rel="stylesheet" href="../css/ctrp/enrichmentPlot.css">
     <link media="all" rel="stylesheet" href="../css/ctrp/d3tooltip.css">
+    <link media="all" rel="stylesheet" href="../css/ctrp/doseResponse.css">
     <script src="../js/ctrp/d3.js"></script>
     <script src="../js/ctrp/enrichmentPlot.js"></script>
     <script src="../js/ctrp/d3tooltip.js"></script>
+    <script src="../js/ctrp/doseResponse.js"></script>
     <script src="../js/ctrp/jquery-1.9.1.js"></script>
     <style>
     .toolTextAppearance {
@@ -263,15 +265,15 @@ var realdata= {
     // Where do you want your plot?
     var margin = {top: 10, right: 20, bottom: 10, left: 50},
             width = 300 - margin.left - margin.right,
-            height = 100 - margin.top - margin.bottom;
+            height = 100 - margin.top - margin.bottom,
 
     // create a  heatmap and populate it with data
-    d3.heatmap()
+    heatMap = d3.heatmap()
             .selectionIdentifier("#eplot1")
             .width(width + margin.left + margin.right)
             .height(height + margin.bottom + margin.top)
-            .assignData(realdata)
-            .render();
+            .assignData(realdata);
+    heatMap.render();
 //
 //    // create a  heatmap and populate it with data
 //    d3.heatmap()

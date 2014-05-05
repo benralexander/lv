@@ -9,6 +9,9 @@
             _y = null,
             _data = [],
             _colors = d3.scale.category10(),
+            _lineColors = d3.scale.linear()
+                .domain([0, 1,2])
+                .range(["black", "red", "green"]),
             _svg,
             _bodyG,
             _line,
@@ -313,7 +316,7 @@
                  return (d.linesExist);
              });
 
-            _line = d3.svg.line() //<-4A
+            _line = d3.svg.line()
                 .x(function (d) {
                     return _x(d.x);
                 })
@@ -323,16 +326,16 @@
 
             _bodyG.selectAll("path.line")
                 .data(filteredLines)
-                .enter() //<-4B
+                .enter()
                 .append("path")
                 .style("stroke", function (d, i) {
-                    return _colors(i); //<-4C
+                    return _lineColors(i);
                 })
                 .attr("class", "line");
 
             _bodyG.selectAll("path.line")
                 .data(filteredLines)
-                .transition() //<-4D
+                .transition()
                 .attr("d", function (d) {
                     return _line(d.lines);
                 });
@@ -497,7 +500,7 @@
                         }
                     })
                     .style("stroke", function (d) {
-                        return _colors(i);
+                        return _lineColors(i);
                     });
 
                 dataNeedingErrorBars
@@ -583,7 +586,7 @@
                     .data(list.elements)
                     .classed('cross', true)
                     .style("stroke", function (d) {
-                        return _colors(i);
+                        return _lineColors(i);
                     })
                     .style("fill", function (d) {
                         return '#ffffff';
