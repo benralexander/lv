@@ -15,7 +15,20 @@
     <script src="../js/ctrp/d3.js"></script>
     <script src="../js/ctrp/enrichmentPlot.js"></script>
     <script src="../js/ctrp/d3tooltip.js"></script>
+    <script src="../js/ctrp/jquery-1.9.1.js"></script>
+    <style>
+    .toolTextAppearance {
+        font: 20px serif;
+        font-weight: bold;
+        margin: 5px;
+        padding: 10px;
+        background: #eeeeee;
+        border: 1px solid blue;
+        -moz-border-radius: 15px;
+        border-radius: 15px;
+    }
 
+    </style>
 </head>
 <body>
 <h1>Enrichment plot</h1>

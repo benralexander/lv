@@ -63,6 +63,9 @@ class CookinController {
     def mandelbrot() {
         render (view: 'mandelbrot')
     }
+    def d3expts() {
+        render (view: 'd3expts')
+    }
 
 
     def cookin(){}
