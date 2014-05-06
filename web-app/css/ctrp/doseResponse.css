@@ -95,6 +95,20 @@
     font: 10px sans-serif;
 }
 
+.x .dslabel  {
+    font: 14px sans-serif;
+}
+
+.y .dslabel  {
+    font: 12px sans-serif;
+}
+
+.dsTitle  {
+    font: 16px sans-serif;
+   font-weight: bold;
+    text-decoration: underline;
+}
+
 .dsaxis .dsgrid-line{
     stroke: black;
     shape-rendering: crispEdges;

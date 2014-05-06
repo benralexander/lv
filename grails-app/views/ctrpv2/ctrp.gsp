@@ -37,6 +37,7 @@
 <h1>Enrichment plot</h1>
   <div class="heatmap"></div>
   <div class="featuremap"></div>
+<div id='cdtCmpTabs-2'>
 <table border="1" style="margin:10px;">
     <tr>
         <td style="padding:10px">
@@ -63,6 +64,7 @@
         </td>
     </tr>
 </table>
+</div>
 <script>
 
     // make up some data
@@ -260,7 +262,40 @@ var realdata= {
 
 
 
+    var testStubCallback = function () {
 
+        var curves = [
+            { cell_primary_name: 'OVCOR8',
+                curve_baseline: 2.5,
+                curve_height: 93.1,
+                nominal_ec50: 26.0,
+                curve_slope: null,
+                points:[
+                    {pert_conc: 1.5, cpd_pv_measured_value: 98.2, cpd_pv_error: null},
+                    {pert_conc: 10.5, cpd_pv_measured_value: 50, cpd_pv_error: null },
+                    {pert_conc: 20.9, cpd_pv_measured_value: 4, cpd_pv_error: null },
+                    {pert_conc: 49.9, cpd_pv_measured_value: 1, cpd_pv_error: null}
+                ]
+
+            }
+
+        ];
+
+        var chart =  d3.doseResponse()
+                .displayGridLines(false)
+                .xAxisLabel('Concentration')
+                .yAxisLabel('Response')
+                .width('390')
+                .height('380')
+                .title('my title')
+                .selectionIdentifier('#doseResponseFromEnrichment')
+
+        curves.forEach(function (series) {
+            chart.addSeries(series);
+        });
+
+        chart.render();
+    }
 
     // Where do you want your plot?
     var margin = {top: 10, right: 20, bottom: 10, left: 50},
@@ -272,17 +307,19 @@ var realdata= {
             .selectionIdentifier("#eplot1")
             .width(width + margin.left + margin.right)
             .height(height + margin.bottom + margin.top)
-            .assignData(realdata);
+            .assignData(realdata)
+            .clickCallback(testStubCallback);
     heatMap.render();
 //
-//    // create a  heatmap and populate it with data
-//    d3.heatmap()
-//            .selectionIdentifier("#eplot2")
-//            .width(width + margin.left + margin.right)
-//            .height(height + margin.bottom + margin.top)
-//            .assignData(dataForEnrichmentHeatMap2)
-//            .render();
-//
+    // create a  heatmap and populate it with data
+    heatMap = d3.heatmap()
+            .selectionIdentifier("#eplot2")
+            .width(width + margin.left + margin.right)
+            .height(height + margin.bottom + margin.top)
+            .assignData(dataForEnrichmentHeatMap2)
+            .clickCallback(testStubCallback);
+    heatMap.render();
+
 //
 //    // create a  heatmap and populate it with data.
 //    d3.heatmap()
