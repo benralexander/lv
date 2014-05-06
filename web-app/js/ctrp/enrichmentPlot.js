@@ -1,7 +1,4 @@
 // One dimensional heatmap.
-//     original: pgm
-//     modified: ba
-//     17-03-2014    ba   fix feature map cell width bug
 
 (function() {
 
@@ -16,7 +13,6 @@
             featureName = '',
             compoundName = '',
 
-
         // the variables that will never be exposed
             xAxis = {},
             instance={},
@@ -24,78 +20,108 @@
             svg = {},
             heatmap = {},
             featuremap = {},
-            formatTooltipNumericValue = d3.format(".3g");
-
-
-
-        var firstInstance = true;
+            formatTooltipNumericValue = d3.format(".3g"),
 
         /***
-         *  This module adds a handler for clicks on the outlier elements in the
-         *  box whisker plot, and then retrieves the data necessary to insert
-         *  a scatter plot into a common div.  We use prototype definition tricks
-         *  JQuery here, so make sure those libraries are available.
+         *  This module adds a handler for clicks on the colored bars in the
+         *  enrichment plot, and then retrieves the data necessary to insert
+         *  a viability curve into a pop-up div.  We use d3 to capture the
+         *  mouse events in this module instead of JQuery.
          */
-        var clickHandling = (function () {
+         clickHandling = (function () {
 
+            var popUpGraphic = d3.select('#cdtCmpTabs-2').selectAll('div.toolTextAppearance').data([1]);
 
-                var tooltip = d3.select("body")
-                    .append("div")
-                    .style("opacity", "0")
-                    .style("position", "absolute")
-                    .style("z-index", "100")
-                    .attr("class", "toolTextAppearance"),
+            popUpGraphic.enter()
+                .append("div")
+                .style("opacity", "0")
+                .style("position", "absolute")
+                .style("z-index", "100")
+                .attr("class", "toolTextAppearance"),
 
-                appear = function(d) {
+                appear = function(d,i) {
                     if (d.name != '/') {
-                        tooltip.html('dd')
+                        popUpGraphic.html(contentForGraphicWindow ())
                             .transition()
                             .duration(200)
                             .style("opacity", "1")
                             .style("width", "400px")
                             .style("height", "400px")
-                            .style("top", (d3.event.pageY - 30) + "px")
-                            .style("left", (d3.event.pageX + 30) + "px");
+                            .style("top", (d3.event.pageY - 130) + "px")
+                            .style("left", (d3.event.pageX - 70) + "px")
+                            .style("z-index", "100");
+                        clickCallback(d,i);
                         return;
                     }
                     else {
-                        return tooltip.html(null).style("opacity", "0");
+                        return popUpGraphic.html(null).style("opacity", "0").style("z-index", "-1");
                     }
 
                 } ,
                 mouseMove = function (d) {
                     if (d.name === '/')  {
-                        return tooltip.html(null).style("opacity", "0");
+                        return popUpGraphic.html(null).style("opacity", "0");
                     }  else {
-                        return tooltip .style("top", (d3.event.pageY - 10) + "px")
+                        return popUpGraphic .style("top", (d3.event.pageY - 10) + "px")
                             .style("left", (d3.event.pageX + 10) + "px");
                     }
 
                 },
                 disappear =  function () {
-                    return tooltip.style("opacity", "0");
+                    return popUpGraphic.style("opacity", "0").style("z-index", "-1");
+                },
+                contentForGraphicWindow = function ()    {
+                    var retVal;
+                    retVal = "<div id='doseResponseFromEnrichment'></div>" +
+                        "<div id='doseResponseCloser' style='position:relative; top: 0px; left: 10px'><button onclick='heatMap.activatePopUpClose()'>Close window</button></div>" +
+                        "</table>";
+                    return retVal;
                 };
+
                return {
                    appear:appear,
                    disappear:disappear
 
                }
 
-        }());
+        }()),
 
 
+        closingPopUpCallback =  clickHandling.disappear,
+        clickCallback = function (d, i){
+            var cmpd = $('#imageHolder').data('compound'),
+                compoundId = cmpd.compound_id,
+                cellId = d.cellSampleId;
+            setWaitCursor();
+            DTGetDoseResponsePoints(compoundId, cellId, function (data){
+                var chart =  d3.doseResponse()
+                    .displayGridLines(false)
+                    .xAxisLabel('log concentration')
+                    .yAxisLabel('Viability')
+                    .selectionIdentifier('#doseResponseCurve')
+                    .title(data.cell_primary_name)
+                    .domainMultiplier(1.2);
+                var curves=[data];
+                curves.forEach(function (series) {
+                    chart.addSeries(series);
+                });
+
+                chart.render();
+                removeWaitCursor();
+            });
+        },
 
 
 
 
         // Where do you want your plot?
-        var margin = {top: 10, right: 20, bottom: 10, left: 50},
+        margin = {top: 10, right: 20, bottom: 10, left: 50},
             width = 300 - margin.left - margin.right,
-            height = 100 - margin.top - margin.bottom;
+            height = 100 - margin.top - margin.bottom,
 
 
-        //  private variable
-        var tip = d3.tip()
+        //  private variable  handles the tooltip popup
+        tip = d3.tip()
             .attr('class', 'd3-tip')
             .offset([-10, 0])
             .html(function (d) {
@@ -130,7 +156,12 @@
                 return "<strong></strong><span style='color:" +textColor +"'>" +textToPresent+ "</span> ";
             });
 
-
+        /***
+         * Two externally visible methods
+         *  assignData
+         *  render
+         *
+         */
 
 
         // assign data to the DOM
@@ -251,24 +282,6 @@
                             clickHandling.appear(d);
                         });
 
-
-                    // create an X axis
-//                   g
-//                       .append("g")
-//                       .attr("class", "x axis")
-//                       .attr("transform", "translate(0," + (height-margin.top-margin.bottom) +")")
-//                       .attr("width", 140)
-//                       .attr("height", 30)
-//                       .call(xAxis)
-//                       .append("text")
-//                       .attr("class", "label")
-//                       .attr("x",  0  )
-//                       .attr("y",margin.bottom  )
-//                       .style("text-anchor", "middle")
-//                       .style("font-weight", "bold")
-//                       .text('');
-
-
                     function zoomed() {
                         selection.select(".x.axis").call(xAxis);
                         heatmap.attr('x', function(d,i) {
@@ -299,20 +312,6 @@
                         return rectangleWidth;
 
 
-//                        var rectangleWidth;
-//                        var curPos = dataVector[currentPosition].index-1;
-//                        if ((curPos>=0)&&
-//                            (curPos < (dataLength-1))){
-//                            var f = scale(dataVector[curPos].value-dataVector[curPos+1].value);
-//                            rectangleWidth =  (scale(dataVector[curPos].value)-scale(dataVector[curPos+1].value));
-//                        } else {
-//                            rectangleWidth = (scale(aveWidth)-scale(0));
-//                        }
-//                        return rectangleWidth;
-
-
-
-
 
                     }
 
@@ -323,6 +322,10 @@
 
 
         };
+
+        /***
+         * And now some getter/setters...
+        */
 
         instance.width = function(x) {
             if (!arguments.length) return width;
@@ -357,6 +360,22 @@
             return instance;
         };
 
+        instance.closingPopUpCallback = function(x) {
+            if (!arguments.length) return closingPopUpCallback;
+            closingPopUpCallback = x;
+            return instance;
+        };
+
+        instance.clickCallback = function(x) {
+            if (!arguments.length) return clickCallback;
+            clickCallback = x;
+            return instance;
+        };
+
+        instance.activatePopUpClose = function(){
+            closingPopUpCallback ();
+            return instance;
+        }
 
         return instance;
     };

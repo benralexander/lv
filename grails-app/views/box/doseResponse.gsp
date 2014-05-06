@@ -166,11 +166,13 @@
         }
     ];
 
+
     var chart =  d3.doseResponse()
             .displayGridLines(false)
             .xAxisLabel('Concentration')
             .yAxisLabel('Response')
             .selectionIdentifier('body')
+            .title('this is my title')
 //            .x([0, 60])
 //            .y([0, 150])
             .domainMultiplier(1.2);

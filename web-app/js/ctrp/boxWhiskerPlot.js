@@ -45,7 +45,7 @@
 
             // callback -- unselect the pop-up scatterplot
             function deselect() {
-                $(".pop").slideFadeToggle(function () {
+                $(".pop").slideFadeOut(function () {
                     visuallyUnidentifyAllDots();
                 });
             }
@@ -79,7 +79,7 @@
 
                             visuallyUnidentifyAllDots();
                             if (scatterIsUp()) {
-                                $(".pop").slideFadeToggle(function () {
+                                $(".pop").slideFadeOut(function () {
                                         scatterIsUp(false);
                                     }
                                 );
@@ -89,7 +89,7 @@
 
                             visuallyUnidentifyAllDots();
                             if (scatterIsUp()) {
-                                $(".pop").slideFadeToggle(function () {
+                                $(".pop").slideFadeOut(function () {
                                         scatterIsUp(false);
                                     }
                                 );
@@ -99,7 +99,7 @@
                             visuallyIdentifyDot(this);
                             // go get the data and launch a scatter plot
                             var genePrimaryName = $(this).attr('gpn');
-                            $(".pop").slideFadeToggle(function () {
+                            $(".pop").slideFadeIn(function () {
                                     // var cmpd = $('#imageHolder').data('compound');
                                     var cmpd = 999;
 
@@ -125,6 +125,15 @@
             $.fn.slideFadeToggle = function (easing, callback) {
                 return this.animate({ opacity: 'toggle', height: 'toggle' }, "fast", easing, callback);
             };
+
+            function fadeIn (easing, callback) {
+                return this.animate({ opacity: 'show', height: 'show' }, "fast", easing, callback);
+            };
+            $.fn.slideFadeIn = fadeIn;
+            function fadeOut (easing, callback) {
+                return this.animate({ opacity: 'hide', height: 'hide' }, "fast", easing, callback);
+            };
+            $.fn.slideFadeOut = fadeOut;
 
 
             // the callback which retrieves the correlation data. Note that this callback

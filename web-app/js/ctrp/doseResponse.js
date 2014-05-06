@@ -9,6 +9,10 @@
             _y = null,
             _data = [],
             _colors = d3.scale.category10(),
+            _title,
+            _lineColors = d3.scale.linear()
+                .domain([0, 1,2])
+                .range(["black", "red", "green"]),
             _svg,
             _bodyG,
             _line,
@@ -33,6 +37,7 @@
 
                 renderAxes(_svg, _displayGridLines);
 
+                renderTitle(_svg);
 
                 defineBodyClip(_svg);
             }
@@ -188,7 +193,16 @@
         }
 
 
+        function renderTitle (svg) {
+            svg.append("text")
+                .attr('id','titleBox')
+                .attr('class','dsTitle')
+                .attr("x", (_width / 2))
+                .attr("y", (0 - (margin.top / 2))+25)
+                .attr("text-anchor", "middle")
+                .text(_title);
 
+        }
 
 
 
@@ -219,7 +233,7 @@
                     .append("text")
                     .attr("class", "dslabel")
                     .attr("x", _width / 2)
-                    .attr("y", _margins.bottom)
+                    .attr("y", _margins.bottom-5)
                     .style("text-anchor", "middle")
                     .style("font-weight", "bold")
                     .text(_xAxisLabel);
@@ -255,7 +269,7 @@
                     .attr("class", "dslabel")
                     .attr("transform", "rotate(-90)")
                     .attr("y", 0)  // works together with dy
-                    .attr("dy", "-3em") // how far from the y-axis should the word appear
+                    .attr("dy", "-2em") // how far from the y-axis should the word appear
                     .attr("x", -_height / 2)    // how far up the y-axis
                     .style("text-anchor", "middle")
                     .style("font-weight", "bold")
@@ -313,7 +327,7 @@
                  return (d.linesExist);
              });
 
-            _line = d3.svg.line() //<-4A
+            _line = d3.svg.line()
                 .x(function (d) {
                     return _x(d.x);
                 })
@@ -323,16 +337,16 @@
 
             _bodyG.selectAll("path.line")
                 .data(filteredLines)
-                .enter() //<-4B
+                .enter()
                 .append("path")
                 .style("stroke", function (d, i) {
-                    return _colors(i); //<-4C
+                    return _lineColors(i);
                 })
                 .attr("class", "line");
 
             _bodyG.selectAll("path.line")
                 .data(filteredLines)
-                .transition() //<-4D
+                .transition()
                 .attr("d", function (d) {
                     return _line(d.lines);
                 });
@@ -497,7 +511,7 @@
                         }
                     })
                     .style("stroke", function (d) {
-                        return _colors(i);
+                        return _lineColors(i);
                     });
 
                 dataNeedingErrorBars
@@ -583,7 +597,7 @@
                     .data(list.elements)
                     .classed('cross', true)
                     .style("stroke", function (d) {
-                        return _colors(i);
+                        return _lineColors(i);
                     })
                     .style("fill", function (d) {
                         return '#ffffff';
@@ -678,7 +692,7 @@
 
         _chart.xAxisLabel = function (w) {
             if (!arguments.length) return _xAxisLabel;
-            _xAxisLabel = w;
+            _xAxisLabel = '['+w+']';
             return _chart;
         };
 
@@ -734,6 +748,14 @@
         _chart.selectionIdentifier = function (x) {
             if (!arguments.length) return _selectionIdentifier;
             _selectionIdentifier = x;
+            return _chart;
+        };
+
+
+        // a block of text to describe the title of the plot
+        _chart.title = function (x) {
+            if (!arguments.length) return _title;
+            _title = x;
             return _chart;
         };
 
