@@ -214,8 +214,8 @@ color: #000000;
 
         var createTheBars  = function (svg,oneHistogramsData) {
             // Create the rectangles that make up the histogram
-            var bar = svg.selectAll("rect")
-                    .data(oneHistogramsData.histogram);
+            var bar = svg.selectAll("g.bar")
+                    .data(oneHistogramsData.histogram,function(d){return d[3]});
 
             bar.enter() // enter
                     .append("g");
@@ -243,10 +243,17 @@ color: #000000;
                 return (b[0]-a[0]);
             };
             // Create the rectangles that make up the histogram
-            var bar = d3.selectAll(".bar");
-           // var bar = d3.selectAll(".bar").sort(sortFunction);
 
-            bar		.sort(sortFunction).transition()
+            var bar = svg.selectAll("g.bar")
+                    .data(oneHistogramsData.histogram,function(d){
+                        return d[3]
+                    }).sort(sortFunction);
+            bar.enter() // enter
+                    .append("g");
+
+            // var bar = d3.selectAll(".bar").sort(sortFunction);
+
+            bar.attr("class", "bar").transition()
                     .delay(function (d, i) {
                         return i * 50;
                     })
@@ -262,6 +269,33 @@ color: #000000;
                     }) ;
 
         }
+
+
+//        var sortTheBars  = function () {
+//            var sortFunction = function(a,b){
+//                return (b[0]-a[0]);
+//            };
+//            // Create the rectangles that make up the histogram
+//            var bar = d3.selectAll(".bar");
+//            // var bar = d3.selectAll(".bar").sort(sortFunction);
+//
+//            bar		.sort(sortFunction).transition()
+//                    .delay(function (d, i) {
+//                        return i * 50;
+//                    })
+//                    .duration(1000)
+//                    .attr('fill',function () {
+//                        return "#ff0000"
+//                    })
+//                    .attr('points', function (d) {
+//                        return (xScale(d[1]) + ' ' + (yScale(0)) + ',' +
+//                                xScale(d[1]) + ' ' + yScale(d[0]) + ',' +
+//                                xScale(d[2]) + ' ' + yScale(d[0]) + ',' +
+//                                xScale(d[2]) + ' ' + (yScale(0)))
+//                    }) ;
+//
+//        }
+
 
 
 

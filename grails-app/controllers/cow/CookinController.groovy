@@ -66,6 +66,9 @@ class CookinController {
     def d3expts() {
         render (view: 'd3expts')
     }
+    def histocruise() {
+        render (view: 'histocruise')
+    }
 
 
     def cookin(){}
