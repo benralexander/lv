@@ -303,22 +303,22 @@ var realdata= {
             height = 100 - margin.top - margin.bottom,
 
     // create a  heatmap and populate it with data
-    heatMap = d3.heatmap()
+    heatmapPlot  = d3.heatmap()
             .selectionIdentifier("#eplot1")
             .width(width + margin.left + margin.right)
             .height(height + margin.bottom + margin.top)
             .assignData(realdata)
             .clickCallback(testStubCallback);
-    heatMap.render();
+    heatmapPlot.render();
 //
     // create a  heatmap and populate it with data
-    heatMap = d3.heatmap()
+    heatmapPlot = d3.heatmap()
             .selectionIdentifier("#eplot2")
             .width(width + margin.left + margin.right)
             .height(height + margin.bottom + margin.top)
             .assignData(dataForEnrichmentHeatMap2)
             .clickCallback(testStubCallback);
-    heatMap.render();
+    heatmapPlot.render();
 
 //
 //    // create a  heatmap and populate it with data.

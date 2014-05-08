@@ -56,6 +56,6 @@
     background: #eeeeee;
     border: 1px solid blue;
     -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
     border-radius: 15px;
 }
-

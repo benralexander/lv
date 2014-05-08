@@ -1,3 +1,4 @@
+
 .h-bar {
     min-height: 15px;
     min-width: 10px;
@@ -19,6 +20,21 @@
     text-align: center;
     width: 10px;
     display: inline-block;
+}
+#doseResponseCurve{
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 30px;
+    padding-top: 25px;
+    width: 365px;
+    height: 350px;
+    border-radius: 8px;
+    margin-left: 25px;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    border: 3px solid #000080;
+    background: #eeeeee;
+    display: none;
 }
 
 .baseline {
@@ -78,25 +94,25 @@
 }
 
 .dsaxis path, .dsaxis line {
-    fill: none;
+    stroke-width: 1.2px;
+    fill: andne;
     stroke: #000;
     shape-rendering: crispEdges;
 }
 
 .dsaxis path, .dsaxis .domain {
-    stroke-width: 1.2px;
+    stroke-width: 1.5px;
     fill: none;
     stroke: #000;
     shape-rendering: crispEdges;
 }
-
-
 .dsaxis text {
-    font: 10px sans-serif;
+    font: 12px sans-serif;
+    font-weight: bold;
 }
 
 .x .dslabel  {
-    font: 14px sans-serif;
+    font: 12px sans-serif;
 }
 
 .y .dslabel  {
@@ -105,7 +121,7 @@
 
 .dsTitle  {
     font: 16px sans-serif;
-   font-weight: bold;
+    font-weight: bold;
     text-decoration: underline;
 }
 
@@ -117,7 +133,7 @@
 
 .line{
     fill: none;
-    stroke: steelblue;
+    stroke: black;
     stroke-width: 2;
 }
 
@@ -144,9 +160,9 @@
 }
 
 .cross {
-    stroke: none;
+    stroke: black;
     fill: blue;
-    fill-opacity: .7;
+    fill-opacity: 1;
 }
 
 .diamond {

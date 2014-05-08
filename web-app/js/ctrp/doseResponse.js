@@ -3,8 +3,8 @@
     d3.doseResponse = function () {
         var _chart = {};
 
-        var _width = 600, _height = 300,
-            _margins = {top: 30, left: 40, right: 30, bottom: 40},
+        var _width = 360, _height = 360,
+            _margins = {top: 5, left: 55, right: 5, bottom: 40},
             _x = null,
             _y = null,
             _data = [],
@@ -28,16 +28,21 @@
             ;
 
         _chart.render = function () {
-            if (!_svg) {
+
+            var previouslyExistingdoseResponseCurve = d3.select(_selectionIdentifier).selectAll("svg");
+            if (previouslyExistingdoseResponseCurve) {
+                previouslyExistingdoseResponseCurve.remove();
+            }
+
+            if (!_svg) { // adjust this logic if you want multiple curves on a single set of axes.
                 _svg = d3.select(_selectionIdentifier).append("svg")
                     .attr("height", _height)
                     .attr("width", _width);
 
-               autoScale(_data);
+                autoScale(_data);
 
                 renderAxes(_svg, _displayGridLines);
 
-                renderTitle(_svg);
 
                 defineBodyClip(_svg);
             }
@@ -80,7 +85,7 @@
                  * @param incomingArray
                  * @returns {{max: undefined, min: undefined}}
                  */
-                findHorizontalExtremes = function (incomingArray) {
+                    findHorizontalExtremes = function (incomingArray) {
                     var returnValue = {max: undefined, min: undefined};
                     if ((typeof incomingArray !== "undefined") &&
                         (incomingArray.length > 0)) {
@@ -113,7 +118,7 @@
                  * @param incomingArray
                  * @returns {{max: undefined, min: undefined}}
                  */
-                findVerticalExtremes = function (incomingArray) {
+                    findVerticalExtremes = function (incomingArray) {
                     var returnValue = {max: undefined, min: undefined};
                     if ((typeof incomingArray !== "undefined") &&
                         (incomingArray.length > 0)) {
@@ -165,7 +170,7 @@
                 );
                 // Calculate extremes for horizontal
                 maximumDataValue = d3.max([xExtremesForRawValues.max, xExtremesForCalculatedLines.max]),
-                minimumDataValue = d3.min([xExtremesForRawValues.min, xExtremesForCalculatedLines.min]);
+                    minimumDataValue = d3.min([xExtremesForRawValues.min, xExtremesForCalculatedLines.min]);
                 setXRangeBasedOnData(minimumDataValue,maximumDataValue);
             }
 
@@ -177,7 +182,7 @@
                 );
                 // Calculate extremes for vertical
                 var maximumDataValue = d3.max([yExtremesForRawValues.max, yExtremesForCalculatedLines.max]),
-                minimumDataValue = d3.min([yExtremesForRawValues.min, yExtremesForCalculatedLines.min]);
+                    minimumDataValue = d3.min([yExtremesForRawValues.min, yExtremesForCalculatedLines.min]);
                 setYRangeBasedOnData (minimumDataValue,maximumDataValue);
 
             }
@@ -205,7 +210,6 @@
         }
 
 
-
         function renderAxes(svg, displayGridLines) {
             var axesG = svg.append("g")
                 .attr("class", "dsaxes");
@@ -231,9 +235,9 @@
                 (_xAxisLabel)) {
                 xAxisTextGoesHere
                     .append("text")
-                    .attr("class", "dslabel")
+                    .attr("class", "label")
                     .attr("x", _width / 2)
-                    .attr("y", _margins.bottom-5)
+                    .attr("y", _margins.bottom)
                     .style("text-anchor", "middle")
                     .style("font-weight", "bold")
                     .text(_xAxisLabel);
@@ -241,7 +245,7 @@
 
             if (displayGridLines) {
                 d3.selectAll("g.x g.tick")
-                    .append("dsline")
+                    .append("line")
                     .classed("dsgrid-line", true)
                     .attr("x1", 0)
                     .attr("y1", 0)
@@ -266,10 +270,10 @@
                 (_yAxisLabel)) {
                 yAxisTextGoesHere
                     .append("text")
-                    .attr("class", "dslabel")
+                    .attr("class", "label")
                     .attr("transform", "rotate(-90)")
                     .attr("y", 0)  // works together with dy
-                    .attr("dy", "-2em") // how far from the y-axis should the word appear
+                    .attr("dy", "-3em") // how far from the y-axis should the word appear
                     .attr("x", -_height / 2)    // how far up the y-axis
                     .style("text-anchor", "middle")
                     .style("font-weight", "bold")
@@ -315,6 +319,9 @@
             // the area underneath the fitted lines (approximates AUC)
             renderAreas();
 
+            // title for the plot
+            renderTitle(_svg);
+
             // the raw data elements
             renderElements();
 
@@ -323,11 +330,11 @@
         }
 
         function renderLines() {
-             var filteredLines = _data.filter(function(d,i){
-                 return (d.linesExist);
-             });
+            var filteredLines = _data.filter(function(d,i){
+                return (d.linesExist);
+            });
 
-            _line = d3.svg.line()
+            _line = d3.svg.line() //<-4A
                 .x(function (d) {
                     return _x(d.x);
                 })
@@ -337,16 +344,16 @@
 
             _bodyG.selectAll("path.line")
                 .data(filteredLines)
-                .enter()
+                .enter() //<-4B
                 .append("path")
                 .style("stroke", function (d, i) {
-                    return _lineColors(i);
+                    return _lineColors(i); //<-4C
                 })
                 .attr("class", "line");
 
             _bodyG.selectAll("path.line")
                 .data(filteredLines)
-                .transition()
+                .transition() //<-4D
                 .attr("d", function (d) {
                     return _line(d.lines);
                 });
@@ -528,25 +535,25 @@
                     console.log (' hello');
                 }   else {
 
-                addSegmentToErrorBar(list.elements, 'line.errorbar.m',
-                    'vertical', 'up', 'mainline', i);
-                addSegmentToErrorBar(list.elements, 'line.errorbar.m',
-                    'vertical', 'up', 'crossbar', i);
+                    addSegmentToErrorBar(list.elements, 'line.errorbar.m',
+                        'vertical', 'up', 'mainline', i);
+                    addSegmentToErrorBar(list.elements, 'line.errorbar.m',
+                        'vertical', 'up', 'crossbar', i);
 
-                addSegmentToErrorBar(list.elements, 'line.errorbar.m',
-                    'vertical', 'down', 'mainline', i);
-                addSegmentToErrorBar(list.elements, 'line.errorbar.m',
-                    'vertical', 'down', 'crossbar', i);
+                    addSegmentToErrorBar(list.elements, 'line.errorbar.m',
+                        'vertical', 'down', 'mainline', i);
+                    addSegmentToErrorBar(list.elements, 'line.errorbar.m',
+                        'vertical', 'down', 'crossbar', i);
 
-                addSegmentToErrorBar(list.elements, 'line.errorbar.c',
-                    'horizontal', 'left', 'mainline', i);
-                addSegmentToErrorBar(list.elements, 'line.errorbar.c',
-                    'horizontal', 'left', 'crossbar', i);
+                    addSegmentToErrorBar(list.elements, 'line.errorbar.c',
+                        'horizontal', 'left', 'mainline', i);
+                    addSegmentToErrorBar(list.elements, 'line.errorbar.c',
+                        'horizontal', 'left', 'crossbar', i);
 
-                addSegmentToErrorBar(list.elements, 'line.errorbar.c',
-                    'horizontal', 'right', 'mainline', i);
-                addSegmentToErrorBar(list.elements, 'line.errorbar.c',
-                    'horizontal', 'right', 'crossbar', i);
+                    addSegmentToErrorBar(list.elements, 'line.errorbar.c',
+                        'horizontal', 'right', 'mainline', i);
+                    addSegmentToErrorBar(list.elements, 'line.errorbar.c',
+                        'horizontal', 'right', 'crossbar', i);
                 }
 
             });
@@ -556,8 +563,8 @@
         function renderElements() {
 
             var filteredElements = _data.filter(function(d,i){
-                    return (d.elementsExist);
-                });
+                return (d.elementsExist);
+            });
 
 
 
@@ -630,17 +637,17 @@
 
         function renderAreas() {
             var filteredLines = _data.filter(function(d,i){
-                return (d.linesExist);
-            }),
+                    return (d.linesExist);
+                }),
 
-            area = d3.svg.area() // <-A
-                .x(function (d) {
-                    return _x(d.x);
-                })
-                .y0(yStart())
-                .y1(function (d) {
-                    return _y(d.y);
-                });
+                area = d3.svg.area() // <-A
+                    .x(function (d) {
+                        return _x(d.x);
+                    })
+                    .y0(yStart())
+                    .y1(function (d) {
+                        return _y(d.y);
+                    });
 
             _bodyG.selectAll("path.area")
                 .data(filteredLines)
@@ -760,7 +767,6 @@
         };
 
 
-
         /***
          * Add another data set. Each additional data set will contribute both
          * a line (based on the four sigmoid line spec properties) as well as
@@ -839,9 +845,9 @@
                 }
             }
             dataHolder = { linesExist: linesExist,
-                           lines: generatedLine,
-                           elementsExist: elementsExist,
-                           elements: points };
+                lines: generatedLine,
+                elementsExist: elementsExist,
+                elements: points };
             _data.push(dataHolder);
             return _chart;
         };

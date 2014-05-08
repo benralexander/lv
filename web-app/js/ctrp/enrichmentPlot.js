@@ -1,4 +1,4 @@
-// One dimensional heatmap.
+/// One dimensional heatmap.
 
 (function() {
 
@@ -22,24 +22,24 @@
             featuremap = {},
             formatTooltipNumericValue = d3.format(".3g"),
 
-        /***
-         *  This module adds a handler for clicks on the colored bars in the
-         *  enrichment plot, and then retrieves the data necessary to insert
-         *  a viability curve into a pop-up div.  We use d3 to capture the
-         *  mouse events in this module instead of JQuery.
-         */
-         clickHandling = (function () {
+            /***
+             *  This module adds a handler for clicks on the colored bars in the
+             *  enrichment plot, and then retrieves the data necessary to insert
+             *  a viability curve into a pop-up div.  We use d3 to capture the
+             *  mouse events in this module instead of JQuery.
+             */
+                clickHandling = (function () {
 
-            var popUpGraphic = d3.select('#cdtCmpTabs-2').selectAll('div.toolTextAppearance').data([1]);
+                var popUpGraphic = d3.select('#cdtCmpTabs-2').selectAll('div.toolTextAppearance').data([1]);
+                popUpGraphic.enter()
+                    .append("div")
+                    .style("opacity", "0")
+                    .style("position", "absolute")
+                    .style("z-index", "100")
+                    .attr("class", "toolTextAppearance");
 
-            popUpGraphic.enter()
-                .append("div")
-                .style("opacity", "0")
-                .style("position", "absolute")
-                .style("z-index", "100")
-                .attr("class", "toolTextAppearance"),
+                appear = function(d,i,g) {
 
-                appear = function(d,i) {
                     if (d.name != '/') {
                         popUpGraphic.html(contentForGraphicWindow ())
                             .transition()
@@ -50,112 +50,118 @@
                             .style("top", (d3.event.pageY - 130) + "px")
                             .style("left", (d3.event.pageX - 70) + "px")
                             .style("z-index", "100");
-                        clickCallback(d,i);
+                        clickCallback(d,i,g);
                         return;
                     }
                     else {
-                        return popUpGraphic.html(null).style("opacity", "0").style("z-index", "-1");
+                        return popUpGraphic
+                            .html(null)
+                            .style("opacity", "0")
+                            .style("z-index", "-1");
                     }
 
                 } ,
-                mouseMove = function (d) {
-                    if (d.name === '/')  {
-                        return popUpGraphic.html(null).style("opacity", "0");
-                    }  else {
-                        return popUpGraphic .style("top", (d3.event.pageY - 10) + "px")
-                            .style("left", (d3.event.pageX + 10) + "px");
-                    }
+                    mouseMove = function (d) {
+                        if (d.name === '/')  {
+                            return popUpGraphic.html(null).style("opacity", "0");
+                        }  else {
+                            return popUpGraphic .style("top", (d3.event.pageY - 10) + "px")
+                                .style("left", (d3.event.pageX + 10) + "px");
+                        }
 
-                },
-                disappear =  function () {
-                    return popUpGraphic.style("opacity", "0").style("z-index", "-1");
-                },
-                contentForGraphicWindow = function ()    {
-                    var retVal;
-                    retVal = "<div id='doseResponseFromEnrichment'></div>" +
-                        "<div id='doseResponseCloser' style='position:relative; top: 0px; left: 10px'><button onclick='heatMap.activatePopUpClose()'>Close window</button></div>" +
-                        "</table>";
-                    return retVal;
-                };
+                    },
+                    disappear =  function () {
+                        return popUpGraphic
+                            .style("opacity", "0")
+                            .style("z-index", "-1");
+                    },
+                    contentForGraphicWindow = function ()    {
+                        var retVal;
+                        retVal = "<div id='doseResponseFromEnrichment'></div>" +
+                            "<div id='doseResponseCloser' style='position:relative; top: 0px; left: 10px'><button onclick='heatmapPlot.activatePopUpClose()'>Close window</button></div>" +
+                            "</table>";
+                        return retVal;
+                    };
 
-               return {
-                   appear:appear,
-                   disappear:disappear
+                return {
+                    appear:appear,
+                    disappear:disappear
 
-               }
+                }
 
-        }()),
+            }()),
 
 
-        closingPopUpCallback =  clickHandling.disappear,
-        clickCallback = function (d, i){
-            var cmpd = $('#imageHolder').data('compound'),
-                compoundId = cmpd.compound_id,
-                cellId = d.cellSampleId;
-            setWaitCursor();
-            DTGetDoseResponsePoints(compoundId, cellId, function (data){
-                var chart =  d3.doseResponse()
-                    .displayGridLines(false)
-                    .xAxisLabel('log concentration')
-                    .yAxisLabel('Viability')
-                    .selectionIdentifier('#doseResponseCurve')
-                    .title(data.cell_primary_name)
-                    .domainMultiplier(1.2);
-                var curves=[data];
-                curves.forEach(function (series) {
-                    chart.addSeries(series);
+            closingPopUpCallback =  clickHandling.disappear,
+            clickCallback = function (d, i, g){
+                var cmpd = $('#imageHolder').data('compound'),
+                    compoundId = cmpd.compound_id,
+                    cellId = d.cellSampleId;
+                setWaitCursor();
+                DTGetDoseResponsePoints(compoundId, cellId, function (data){
+                    var chart =  d3.doseResponse()
+                        .displayGridLines(false)
+                        .xAxisLabel(cmpd.compound_name)
+                        .yAxisLabel('Viability')
+                        .width('390')
+                        .height('380')
+                        .title(data.cell_primary_name)
+                        .selectionIdentifier('#doseResponseFromEnrichment')
+                        .domainMultiplier(1.2);
+                    var curves=[data];
+                    curves.forEach(function (series) {
+                        chart.addSeries(series);
+                    });
+
+                    chart.render();
+                    removeWaitCursor();
                 });
-
-                chart.render();
-                removeWaitCursor();
-            });
-        },
+            },
 
 
 
 
         // Where do you want your plot?
-        margin = {top: 10, right: 20, bottom: 10, left: 50},
+            margin = {top: 10, right: 20, bottom: 10, left: 50},
             width = 300 - margin.left - margin.right,
             height = 100 - margin.top - margin.bottom,
 
 
         //  private variable  handles the tooltip popup
-        tip = d3.tip()
-            .attr('class', 'd3-tip')
-            .offset([-10, 0])
-            .html(function (d) {
-                var textToPresent = "";
-                var textColor = '#000000';
-                if (d){
-                    if(d.featureExists){
-                        textColor = '#00ffff';
-                        textToPresent = "CCL: " +
-                            d.name+
-                            "<br/>Lineage: " +
-                            d.line+
-                            "<br/>Compound: " +
-                            compoundName+
-                            "<br/>Feature: " +
-                            featureName +
-                            "<br/>AUC: " +
-                            formatTooltipNumericValue (d.value)   ;
-                    }  else {
-                        textColor = '#00ff00';
-                        textToPresent = "CCL: "+
-                            d.name+
-                            "<br/>Lineage: " +
-                            d.line +
-                            "<br/>Compound: " +
-                            compoundName  +
-                            "<br/>AUC: " +
-                            formatTooltipNumericValue (d.value)   ;
+            tip = d3.tip()
+                .attr('class', 'd3-tip')
+                .offset([-10, 0])
+                .html(function (d) {
+                    var textToPresent = "";
+                    var textColor = '#000000';
+                    if (d){
+                        if(d.featureExists){
+                            textColor = '#00ffff';
+                            textToPresent = "CCL: " +
+                                d.name+
+                                "<br/>Lineage: " +
+                                d.line+
+                                "<br/>Compound: " +
+                                compoundName+
+                                "<br/>Feature: " +
+                                featureName +
+                                "<br/>AUC: " +
+                                formatTooltipNumericValue (d.value)   ;
+                        }  else {
+                            textColor = '#00ff00';
+                            textToPresent = "CCL: "+
+                                d.name+
+                                "<br/>Lineage: " +
+                                d.line +
+                                "<br/>Compound: " +
+                                compoundName  +
+                                "<br/>AUC: " +
+                                formatTooltipNumericValue (d.value)   ;
+                        }
+
                     }
-
-                }
-                return "<strong></strong><span style='color:" +textColor +"'>" +textToPresent+ "</span> ";
-            });
-
+                    return "<strong></strong><span style='color:" +textColor +"'>" +textToPresent+ "</span> ";
+                });
 
         // initialize
         // we might be coming back after having run this routine previously. Let's make sure there are no pop-up windows hanging around
@@ -168,7 +174,8 @@
          *
          */
 
-        // assign data to the DOM
+
+            // assign data to the DOM
         instance.assignData = function (x) {
             if (!arguments.length) return data;
             data = x;
@@ -246,16 +253,16 @@
                         })
                         .attr('height', 2*height/3)
                         .attr('x', function(d,i) {
-                           // return xScale(dVector[dVector[i].index].value);
+                            // return xScale(dVector[dVector[i].index].value);
                             return xScale(dVector[d.index].value);
                         } )
                         .attr('y',0)
                         .attr('fill', function(d) {
                             return colorScale(d.value);
                         })
-                        .on("click", function click(d)
+                        .on("click", function click(d,i,g)
                         {
-                            clickHandling.appear(d);
+                            clickHandling.appear(d,i,g);
                         });
 
                     // Here is the indicator that the feature under consideration
@@ -281,9 +288,9 @@
                         .attr('y',height/3)
                         .attr('fill', "black")
                         .attr('stroke', 'black')
-                        .on("click", function click(d)
+                        .on("click", function click(d,i,g)
                         {
-                            clickHandling.appear(d);
+                            clickHandling.appear(d,i,g);
                         });
 
                     function zoomed() {
@@ -329,7 +336,7 @@
 
         /***
          * And now some getter/setters...
-        */
+         */
 
         instance.width = function(x) {
             if (!arguments.length) return width;
