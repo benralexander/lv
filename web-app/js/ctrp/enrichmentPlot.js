@@ -156,13 +156,17 @@
                 return "<strong></strong><span style='color:" +textColor +"'>" +textToPresent+ "</span> ";
             });
 
+
+        // initialize
+        // we might be coming back after having run this routine previously. Let's make sure there are no pop-up windows hanging around
+        clickHandling.disappear();
+
         /***
          * Two externally visible methods
          *  assignData
          *  render
          *
          */
-
 
         // assign data to the DOM
         instance.assignData = function (x) {

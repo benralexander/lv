@@ -198,7 +198,7 @@
                 .attr('id','titleBox')
                 .attr('class','dsTitle')
                 .attr("x", (_width / 2))
-                .attr("y", (0 - (margin.top / 2))+25)
+                .attr("y", (0 - (_margins.top / 2))+25)
                 .attr("text-anchor", "middle")
                 .text(_title);
 
@@ -846,7 +846,7 @@
             return _chart;
         };
 
-        _chart.generateSigmoidPoints = function (yMin, yMax, hillSlope, Ec50, numberOfPoints, xStart, xEnd) {
+        _chart.generateSigmoidPoints = function (yMin, curveHeight, hillSlope, Ec50, numberOfPoints, xStart, xEnd) {
             var xVector = [];
             var returnValue = [];
             // first create the X factor
@@ -864,7 +864,7 @@
                 // nonnegative.
                 if (xVector[i] >= 0) {
                     returnValue.push({x: xVector[i],
-                        y: (yMin + (yMax - yMin) / (1 + Math.pow((xVector[i] / Ec50), (0 - hillSlope))))});
+                        y: (yMin + curveHeight / (1 + Math.pow((xVector[i] / Ec50), (0 - hillSlope))))});
                 }
             }
             return returnValue;
