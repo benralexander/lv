@@ -14,16 +14,18 @@
                 .domain([0, 1,2])
                 .range(["black", "red", "green"]),
             _svg,
+            _autoScale = true,
             _bodyG,
             _line,
             _domainMultiplier = 1.1,  // 110% of the data we get by default
             _displayGridLines,
+            _areaUnderTheCurve,
             _xAxisLabel = '',
             _yAxisLabel = '',
             _selectionIdentifier,
         // private variables
             _expansionPercent = 10.0, // percent we extend beyond the min max of the raw data
-            _pointsDefiningGeneratedLine = 100  // the curve we generate from the four parameters is a series of
+            _pointsDefiningGeneratedLine = 2000  // the curve we generate from the four parameters is a series of
         // straight-line segments. This variable describes how many exactly.
             ;
 
@@ -39,7 +41,9 @@
                     .attr("height", _height)
                     .attr("width", _width);
 
-                autoScale(_data);
+                if (_autoScale){
+                    autoScale(_data);
+                }
 
                 renderAxes(_svg, _displayGridLines);
 
@@ -222,7 +226,8 @@
         function renderXAxis(axesG, displayGridLines) {
             var xAxis = d3.svg.axis()
                 .scale(_x.range([0, quadrantWidth()]))
-                .orient("bottom");
+                .orient("bottom")
+                .ticks(5,d3.format(".2g"));
 
             var xAxisTextGoesHere = axesG.append("g")
                 .attr("class", "x dsaxis")
@@ -362,7 +367,7 @@
 
         function renderErrorBars() {
 
-            var crossbarWidth = 0.8;
+            var crossbarWidth = 5;
 
 
             /***
@@ -457,14 +462,14 @@
                             if (portion === 'mainline') {
                                 return _x(d.x);
                             } else if (portion === 'crossbar') {
-                                return _x(d.x - crossbarWidth);
+                                return _x(d.x) - crossbarWidth;
                             }
                         } else { // orientation must be horizontal
                             var offset = extractOffset(d, orientation, direction);
                             if (portion === 'mainline') {
                                 return _x(d.x);
                             } else if (portion === 'crossbar') {
-                                return _x(d.x - offset);
+                                return _x(d.x) - offset;
                             }
                         }
                     })
@@ -489,14 +494,14 @@
                             if (portion === 'mainline') {
                                 return _x(d.x);
                             } else if (portion === 'crossbar') {
-                                return  _x(d.x + crossbarWidth);
+                                return  _x(d.x) + crossbarWidth;
                             }
                         } else { // orientation must be horizontal
                             var offset = extractOffset(d, orientation, direction);
                             if (portion === 'mainline') {
                                 return _x(d.x - offset);
                             } else if (portion === 'crossbar') {
-                                return _x(d.x - offset);
+                                return _x(d.x) - offset;
                             }
 
                         }
@@ -636,22 +641,54 @@
 
 
         function renderAreas() {
+            // only looked data sets if they have a fitted curve
             var filteredLines = _data.filter(function(d,i){
                     return (d.linesExist);
                 }),
 
-                area = d3.svg.area() // <-A
-                    .x(function (d) {
+            // only shade those points that fall inside the area we were told to shade
+            filterXRange = function (incoming){
+                return incoming.filter( function(d,i){
+                    return ((d.x>xMinimumForShading)&&(d.x<xMaximumForShading));
+                });
+            },
+
+            area = d3.svg.area() // <-A
+                .x(function (d) {
                         return _x(d.x);
-                    })
-                    .y0(yStart())
-                    .y1(function (d) {
-                        return _y(d.y);
-                    });
+                 })
+                .y0(yStart())
+                .y1(function (d) {
+                    return _y(d.y);
+                }),
+
+            xMinimumForShading,
+            xMaximumForShading;
+
+            // perform a calculation to map the indexes of points aim for shading
+            //  to actual domain values.  We have to do this because we are shading
+            //  under a line built with many more points than the actual raw points
+            //  we were given ( since we want the curve to be smooth) but we haven't
+            //  yet mapped index values into our range of X values
+
+
+            // TODO: remove this sorting line after the API starts giving us values in a sorted order
+            var sortedDataElements = _data[0].elements.sort(function (a,b){
+                return  (a.x - b.x);
+            })
+
+            if (typeof _areaUnderTheCurve !== "undefined")   {
+                if ((_areaUnderTheCurve[0] > 0) &&
+                    (_areaUnderTheCurve[1] < _data[0].elements.length)  &&
+                    (_areaUnderTheCurve[1] > _areaUnderTheCurve[0]) ){
+                    xMinimumForShading = _data[0].elements[_areaUnderTheCurve[0]].x;
+                    xMaximumForShading = _data[0].elements[_areaUnderTheCurve[1]].x;
+                }
+            }
 
             _bodyG.selectAll("path.area")
                 .data(filteredLines)
-                .enter() // <-B
+                .enter()
                 .append("path")
                 .style("fill", function (d, i) {
                     return _colors(i);
@@ -660,9 +697,9 @@
 
             _bodyG.selectAll("path.area")
                 .data(filteredLines)
-                .transition() // <-D
+                .transition()
                 .attr("d", function (d) {
-                    return area(d.lines); // <-E
+                    return area(filterXRange(d.lines));
                 });
         }
 
@@ -735,13 +772,19 @@
 
         _chart.x = function (x) {
             if (!arguments.length) return _x;
-            _x = d3.scale.linear().domain(x);
+            _x = x;
             return _chart;
         };
 
         _chart.y = function (y) {
             if (!arguments.length) return _y;
-            _y = d3.scale.linear().domain(y);
+            _y = y;
+            return _chart;
+        };
+
+        _chart.autoScale = function (autoScale) {
+            if (!arguments.length) return _autoScale;
+            _autoScale = autoScale;
             return _chart;
         };
 
@@ -751,10 +794,21 @@
             return _chart;
         };
 
+
         // identify the dominant element upon which we will hang this graphic
         _chart.selectionIdentifier = function (x) {
             if (!arguments.length) return _selectionIdentifier;
             _selectionIdentifier = x;
+            return _chart;
+        };
+
+
+        // an array indicating the indices corresponding to the raw points used
+        //  to calculate the area under the curve.  These will be visually represented
+        //  with a shaded area
+        _chart.areaUnderTheCurve = function (x) {
+            if (!arguments.length) return _areaUnderTheCurve;
+            _areaUnderTheCurve = x;
             return _chart;
         };
 
@@ -823,7 +877,7 @@
                 // special restriction.  X values must be nonnegative in order for the EC50 calculation
                 // to be valid.  Therefore we can go ahead and increase the range, but we cannot increase
                 // to include x-values smaller than zero.
-                    lowXRange = Math.max(minimumX - ((maximumX - minimumX) * (_expansionPercent / 100.0)), 0.0),
+                    lowXRange = Math.max(minimumX - ((maximumX - minimumX) * (_expansionPercent / 100.0)), 0.000001),
                     highXRange = maximumX + ((maximumX - minimumX) * (_expansionPercent / 100.0)),
                     lowYRange = minimumY - ((maximumY - minimumY) * (_expansionPercent / 100.0)),
                     highYRange = maximumY + ((maximumY - minimumY) * (_expansionPercent / 100.0)),
@@ -856,8 +910,9 @@
             var xVector = [];
             var returnValue = [];
             // first create the X factor
-            for (var i = 0; i < (numberOfPoints - 1); i++) {
-                xVector.push(xStart + ((((numberOfPoints - 1) - i) / (numberOfPoints - 1)) * (xEnd - xStart)));
+            for (var i = 0; i < (numberOfPoints); i++) {
+                var xValue = xStart + ((((numberOfPoints - 1) - i) / (numberOfPoints - 1)) * (xEnd - xStart));
+                xVector.push(xValue);
             }
             xVector = xVector.reverse();
             // now apply x vector to the sigmoid function
