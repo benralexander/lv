@@ -227,6 +227,8 @@
             var xAxis = d3.svg.axis()
                 .scale(_x.range([0, quadrantWidth()]))
                 .orient("bottom")
+              //  .tickValues([0.001,0.01,0.035,0.1,.35,1,2,3.5,10,20,35])
+              //  .tickFormat(d3.format(".2g"));
                 .ticks(5,d3.format(".2g"));
 
             var xAxisTextGoesHere = axesG.append("g")
@@ -242,7 +244,7 @@
                     .append("text")
                     .attr("class", "label")
                     .attr("x", _width / 2)
-                    .attr("y", _margins.bottom)
+                    .attr("y", _margins.bottom-5)
                     .style("text-anchor", "middle")
                     .style("font-weight", "bold")
                     .text(_xAxisLabel);
@@ -736,7 +738,7 @@
 
         _chart.xAxisLabel = function (w) {
             if (!arguments.length) return _xAxisLabel;
-            _xAxisLabel = '['+w+']';
+            _xAxisLabel = w;
             return _chart;
         };
 

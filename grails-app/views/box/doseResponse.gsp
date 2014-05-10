@@ -178,7 +178,7 @@
 
     var chart =  d3.doseResponse()
             .displayGridLines(false)
-            .xAxisLabel('Concentration')
+            .xAxisLabel('log Concentration')
             .yAxisLabel('Response')
             .selectionIdentifier('body')
             .title('this is my title')
