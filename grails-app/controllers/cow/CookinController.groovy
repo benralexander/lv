@@ -70,6 +70,24 @@ class CookinController {
         render (view: 'histocruise')
     }
 
+    def histogramData = """
+[
+    { "key": 0, "value": 5 },
+    { "key": 1, "value": 10 },
+    { "key": 2, "value": 13 },
+    { "key": 3, "value": 19 },
+    { "key": 4, "value": 21 },
+    { "key": 5, "value": 25 },
+    { "key": 6, "value": 22 },
+    { "key": 7, "value": 18 },
+    { "key": 8, "value": 15 },
+    { "key": 9, "value": 13 },
+    { "key": 10, "value": 11 },
+    { "key": 11, "value": 12 },
+    { "key": 12, "value": 15 }]"""
 
+    def retrieveJson(){
+        render(histogramData.toString()) ;
+    }
     def cookin(){}
 }
