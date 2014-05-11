@@ -7,15 +7,24 @@
 </head>
 
 <body>
-<div id="histogramGoesHere"/>
-<button id="sort" onclick="sortBars()">Sort</button>
-<button id="reset" onclick="reset()">Reset</button>
 <script>
-d3.json("http://localhost:8028/cow/cookin/retrieveJson", function (error, inData) {
-    console.log('huh');
-    var swirlyHistogram = d3.swirlyHistogram();
-    swirlyHistogram.addSeries(inData);
-    swirlyHistogram.render();
-});
+
+    d3.json("http://localhost:8028/cow/cookin/retrieveJson", function (error, inData) {
+
+        var swirlyHistogram = d3.swirlyHistogram().selectionIdentifier('#histogramGoesHere');
+
+        swirlyHistogram.addSeries(inData);
+
+        swirlyHistogram.render();
+
+    });
+
 </script>
+<div id="histogramGoesHere"></div>
+<div>
+<button id="sort" >Sort</button>
+<button id="reset">Reset</button>
+<button id="random">Randomize</button>
+</div>
+
 </body>

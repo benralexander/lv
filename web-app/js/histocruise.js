@@ -3,7 +3,8 @@
 
     d3.swirlyHistogram = function () {
         var chart = {},
-            dataset;
+            dataset,
+            selectionIdentifier;
 
         var w = 600;
         var h = 250;
@@ -11,6 +12,15 @@
         chart.addSeries = function (series) {
             dataset = series;
         }
+
+
+        // identify the dominant element upon which we will hang this graphic
+        chart.selectionIdentifier = function (x) {
+            if (!arguments.length) return selectionIdentifier;
+            selectionIdentifier = x;
+            return chart;
+        };
+
 
 
         chart.render = function () {
@@ -31,7 +41,7 @@
 
             var colors = d3.scale.category10();
 
-            var svg = d3.select("body")
+            var svg = d3.select(selectionIdentifier)
                 .append("svg")
                 .attr("width", w)
                 .attr("height", h);
@@ -53,7 +63,38 @@
                     return yScale(d.value);
                 })
                 .attr("fill", function (d,i) {
-                    return  colors(i) ;
+                    var retColor;
+                    switch (i){
+                        case 0:
+                        case 1:
+                        case 2:
+                            retColor =   colors(1);
+                            break;
+                        case 3:
+                        case 4:
+                        case 5:
+                            retColor =   colors(2);
+                            break;
+                        case 6:
+                        case 7:
+                        case 8:
+                            retColor =   '#8A0886';
+                            break;
+                        case 9:
+                        case 10:
+                        case 11:
+                            retColor =   '#17becf';
+                            break;
+                        case 12:
+                        case 13:
+                        case 14:
+                            retColor =   colors(6);
+                            break;
+                        default:
+                            retColor =  colors(i);
+
+                    }
+                    return  retColor ;
                    // return "rgb(0, 0, " + (d.value * 10) + ")";
                 })
 
@@ -135,41 +176,8 @@
                         return h - yScale(d.value) + 14;
                     });
             };
-// Add the onclick callback to the button
+
             d3.select("#sort").on("click", sortBars);
-            d3.select("#reset").on("click", reset);
-            function randomSort() {
-
-
-                svg.selectAll("rect")
-                    .sort(sortItems)
-                    .transition()
-                    .delay(function (d, i) {
-                        return i * 50;
-                    })
-                    .duration(1000)
-                    .attr("x", function (d, i) {
-                        return xScale(i);
-                    });
-
-                svg.selectAll('text')
-                    .sort(sortItems)
-                    .transition()
-                    .delay(function (d, i) {
-                        return i * 50;
-                    })
-                    .duration(1000)
-                    .text(function (d) {
-                        return d.value;
-                    })
-                    .attr("text-anchor", "middle")
-                    .attr("x", function (d, i) {
-                        return xScale(i) + xScale.rangeBand() / 2;
-                    })
-                    .attr("y", function (d) {
-                        return h - yScale(d.value) + 14;
-                    });
-            }
 
             function reset() {
                 svg.selectAll("rect")
@@ -205,6 +213,54 @@
                         return h - yScale(d.value) + 14;
                     });
             };
+            function shuffleArray(d) {
+                for (var c = d.length - 1; c > 0; c--) {
+                    var b = Math.floor(Math.random() * (c + 1));
+                    var a = d[c];
+                    d[c] = d[b];
+                    d[b] = a;
+                }
+                return d
+            };
+            d3.select("#reset").on("click", reset);
+            function random() {
+                var randomArray = [];
+                for (var i = 0; i < 15; i++) {randomArray.push(i)};
+                shuffleArray(randomArray) ;
+                svg.selectAll("rect")
+                    .sort(function (a, b) {
+                        return randomArray[a.key] - randomArray[b.key];
+                    })
+                    .transition()
+                    .delay(function (d, i) {
+                        return i * 50;
+                    })
+                    .duration(1000)
+                    .attr("x", function (d, i) {
+                        return xScale(i);
+                    });
+
+                svg.selectAll('text')
+                    .sort(function (a, b) {
+                        return randomArray[a.key] - randomArray[b.key];
+                    })
+                    .transition()
+                    .delay(function (d, i) {
+                        return i * 50;
+                    })
+                    .duration(1000)
+                    .text(function (d) {
+                        return d.value;
+                    })
+                    .attr("text-anchor", "middle")
+                    .attr("x", function (d, i) {
+                        return xScale(i) + xScale.rangeBand() / 2;
+                    })
+                    .attr("y", function (d) {
+                        return h - yScale(d.value) + 14;
+                    });
+            };
+            d3.select("#random").on("click", random);
         };
 
         return chart;
