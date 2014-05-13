@@ -213,20 +213,20 @@
                         return h - yScale(d.value) + 14;
                     });
             };
-            function shuffleArray(d) {
-                for (var c = d.length - 1; c > 0; c--) {
-                    var b = Math.floor(Math.random() * (c + 1));
-                    var a = d[c];
-                    d[c] = d[b];
-                    d[b] = a;
+            // function for shuffling an array
+            function shuffle(array, i0, i1) {
+                var m = i1 - i0, t, i, j;
+                while (m) {
+                    i = Math.random() * m-- | 0;
+                    t = array[m + i0], array[m + i0] = array[i + i0], array[i + i0] = t;
                 }
-                return d
+                return array;
             };
             d3.select("#reset").on("click", reset);
             function random() {
                 var randomArray = [];
                 for (var i = 0; i < 15; i++) {randomArray.push(i)};
-                shuffleArray(randomArray) ;
+                shuffle(randomArray,0,randomArray.length) ;
                 svg.selectAll("rect")
                     .sort(function (a, b) {
                         return randomArray[a.key] - randomArray[b.key];
