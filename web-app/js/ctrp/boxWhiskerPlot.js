@@ -25,8 +25,8 @@
             scatterDataCallback = {},
 
         // these sizes referred to each individual bar in the bar whisker plot
-            margin = {top: 50, right: 50, bottom: 20, left: 50},
-            width = 420 - margin.left - margin.right,
+            margin = {top: 50, right: 50, bottom: 20, left: 80},
+            width = 380 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom,
 
         // the variables that will never be exposed
@@ -593,7 +593,7 @@
                         .select("svg").selectAll("g.y").data([1]).enter()
                         .append("g")
                         .attr("class", "y axis")
-                        .attr("transform", "translate(10,0)")
+                        .attr("transform", "translate(30,0)")
                         .call(yAxis)
                         .append("text")
                         .attr("class", "label")

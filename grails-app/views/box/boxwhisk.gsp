@@ -25,58 +25,12 @@
 <meta charset="utf-8">
 <script>
 //    $('#imageHolder').data('compound')='999';
+setWaitCursor=function(){console.log('stub setWaitCursor');};
+removeWaitCursor=function(){console.log('stub removeWaitCursor');};
 </script>
 
 <body>
 <table style='margin-top: 50px; border-top: 50px;'>
-    <style>
-    #outlierRadiusDiv {
-        border: 2px outset #777;
-        width: 131px;
-        margin-left: 10px;
-    }
-    #outlierRadiusDiv .outlierRadiusLabel {
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        font-size: 10pt;
-        margin-left:5px;
-        padding-top:10px;
-        text-decoration : underline;
-    }
-    #outlierRadius {
-        padding-left: 5px;
-        padding-left: 5px;
-        padding-top: 10px;
-        padding-bottom: 2px;
-    }
-    #outlierRadius .options {
-        font-size: 9pt;
-    }
-    #slider {
-        border: 2px outset #777;
-        margin-top: 4px;
-        margin-left: 10px;
-        margin-right: 10px;
-        padding-left: 40px;
-        padding-bottom: 50px;
-        padding-top: 50px;
-        padding-right: 40px
-    }
-    #correlationPlotLayout {
-        width: 450px;
-    }
-    #correlationPlotControllers {
-        width: 100px;
-    }
-    #correlationPlotControllers .iqmLabel {
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        font-size: 12px;
-        font-weight: bold;
-        text-decoration: underline;
-    }
-
-    </style>
-
-
     <tr>
                       <td id='correlationPlotLayout'>
                           <span id='plot'></span>
@@ -122,9 +76,6 @@
                               </form>
                           </div>
 
-
-
-                          %{--</div>--}%
                       </td>
                       <td style='margin-right: 0px;'></td>
                   </tr>
@@ -138,6 +89,15 @@
 <script src="../js/ctrp/boxWhiskerPlot.js"></script>
 <script src="../js/ctrp/scatter.js"></script>
 <script src="../js/ctrp/slider.js"></script>
+<div id='imageHolder'></div>
+<script>
+    // for stub only
+    var compound = {compound_id:123456,
+        compound_name:'benzaldehyde' } ;
+    $('#imageHolder').data('compound',compound);
+</script>
+
+
 <script>
 
     var
@@ -239,8 +199,8 @@
 
 
     function respondToScatterData(data)  {
-        var margin = {top: 30, right: 20, bottom: 50, left: 70},
-                width = 600 - margin.left - margin.right,
+        var margin = {top: 80, right: 20, bottom: 50, left: 70},
+                width = 400 - margin.left - margin.right,
                 height = 400 - margin.top - margin.bottom;
         d3.scatterPlot()
                 .selectionIdentifier("#scatterPlot1")
@@ -250,6 +210,7 @@
                 .assignData (data)
                 .xAxisLabel ('Navitoclax AUC')
                 .yAxisLabel ('BCL2 expression level')
+                .clickCallback(function(){console.log('stub clickCallback')})
                 .render() ;
 
     }
@@ -294,9 +255,8 @@
 </script>
 <div class="messagepop pop" id="examineCorrelation">
     <form method="post" id="new_message" action="/messages">
-        <h1>Correlation plot</h1>
-        <div id="scatterPlot1"></div>
-        <p><a class="close" href="/">Cancel</a></p>
+        <div id='scatterPlot1'></div>
+        <p><a id='scatterPlotCloser' class='close' href='/'>Close window</a></p>
     </form>
 </div>
 %{--<div class="d" id="outlierRadius" style="border: 2px outset red; width: 133px">--}%

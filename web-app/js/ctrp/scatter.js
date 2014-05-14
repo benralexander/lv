@@ -1,7 +1,6 @@
-
 (function () {
 
-          d3.scatterPlot = function() {
+    d3.scatterPlot = function () {
 
         // the variables we intend to surface
         var
@@ -9,16 +8,42 @@
             height = 1,
             margin = {},
             selectionIdentifier = '',
-            data={},
-            xAxisLabel='',
-            yAxisLabel='',
-            clickCallback = function (d, i){
-                console.log(' uninitialized scatter callback ='+ d+'.') ;
+            data = {},
+            xAxisLabel = '',
+            yAxisLabel = '',
+            clickCallback = function (d, i) {
+                var cmpd = $('#imageHolder').data('compound'),
+                    compoundId = cmpd.compound_id,
+                    cellId = d.cell_sample_id;
+                setWaitCursor();
+                DTGetDoseResponsePoints(compoundId, cellId, function (data) {
+                    var chart = d3.doseResponse()
+                        .displayGridLines(false)
+                        .xAxisLabel('log [' + cmpd.compound_name + ']')
+                        .yAxisLabel('Viability')
+                        .width('355')
+                        .height('360')
+                        .title(data.cell_primary_name)
+                        .selectionIdentifier('#doseResponseCurve')
+                        .autoScale(false)
+                        .areaUnderTheCurve([5, 13])
+                        .x(d3.scale.log().domain([0.0001, 40]))
+                        .y(d3.scale.linear().domain([0, 1.5]));
+                    d3.select('.messagepop').style('width', '800px');
+                    d3.select('#doseResponseCurve').style('display', 'block');
+                    var curves = [data];
+                    curves.forEach(function (series) {
+                        chart.addSeries(series);
+                    });
+
+                    chart.render();
+                    removeWaitCursor();
+                });
             },
 
 
         // private variables
-            instance={},
+            instance = {},
             selection = {},
             x,
             y,
@@ -35,17 +60,18 @@
                 .html(function (d) {
                     var textToPresent = "";
                     if (d) {
-                        if ((d.primary_site) && (d.primary_site.length > 0)) {
+                        if (d.cell_primary_name) {
+                            textToPresent = "CCLE: " + d.cell_primary_name.toString();
                         }
-                        textToPresent = "CCLE: " + d.primary_site.toString();
-                    } else {
-                        textToPresent = "CCLE: " + d.toString();
+                        else {
+                            textToPresent = "CCLE: " + d.toString();
+                        }
                     }
                     return "<strong><span>" + textToPresent + "</span></strong> ";
                 });
 
 
-              // assign data to the DOM
+        // assign data to the DOM
         instance.assignData = function (x) {
             if (!arguments.length) return data;
             data = x;
@@ -54,7 +80,7 @@
 
 
         // Now walk through the DOM and create the enrichment plot
-        instance.render=function (g) {
+        instance.render = function (g) {
 
             x = d3.scale.linear()
                 .range([0, width]);
@@ -77,8 +103,7 @@
                 previouslyExistingScatterPlot.remove();
             }
 
-
-            if (!svg){
+            if (!svg) {
                 svg = selection
                     .append("svg")
                     .attr("width", width + margin.left + margin.right)
@@ -89,9 +114,10 @@
                     .call(tip);
             }
 
-
-            x.domain(d3.extent(data, function(d) { return d.cpd_auc; })).nice();
-            y.domain(d3.extent(data, function(d) {
+            x.domain(d3.extent(data, function (d) {
+                return d.cpd_auc;
+            })).nice();
+            y.domain(d3.extent(data, function (d) {
                 return d.value;
             })).nice();
 
@@ -101,7 +127,7 @@
                 .call(xAxis)
                 .append("text")
                 .attr("class", "label")
-                .attr("x", width/2)
+                .attr("x", width / 2)
                 .attr("y", 40)
                 .style("text-anchor", "middle")
                 .style("font-weight", "bold")
@@ -115,7 +141,7 @@
                 .attr("transform", "rotate(-90)")
                 .attr("y", 6)
                 .attr("dy", "-3em")
-                .attr("x", -height/2)
+                .attr("x", -height / 2)
                 .style("text-anchor", "middle")
                 .style("font-weight", "bold")
                 .text(yAxisLabel);
@@ -123,19 +149,20 @@
             svg.selectAll(".dot")
                 .data(data)
                 .enter()
-                .append("a")
-                .attr("xlink:href", "http://localhost:8028/cow/box/doseResponse")
+                .append("circle")
                 .on('mouseover', tip.show)
                 .on('mouseout', tip.hide)
-                .on('click', clickCallback )
-                .append("circle")
+                .on('click', clickCallback)
+
                 .attr("class", "dot")
                 .attr("r", 3.5)
-                .attr("cx", function(d) {
+                .attr("cx", function (d) {
                     return x(d.cpd_auc);
                 })
-                .attr("cy", function(d) { return y(d.value); })
-                .style("fill", function(d) {
+                .attr("cy", function (d) {
+                    return y(d.value);
+                })
+                .style("fill", function (d) {
                     return color(d.primary_site[0]);
                 });
 
@@ -143,7 +170,9 @@
                 .data(color.domain())
                 .enter().append("g")
                 .attr("class", "legend")
-                .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+                .attr("transform", function (d, i) {
+                    return "translate(0," + ((i * 20) - margin.top) + ")";
+                });
 
             legend.append("rect")
                 .attr("x", width - 18)
@@ -156,48 +185,50 @@
                 .attr("y", 9)
                 .attr("dy", ".35em")
                 .style("text-anchor", "end")
-                .text(function(d) { return d; });
+                .text(function (d) {
+                    return d;
+                });
 
         };
 
-        instance.width = function(x) {
+        instance.width = function (x) {
             if (!arguments.length) return width;
             width = x;
             return instance;
         };
 
-        instance.height = function(x) {
+        instance.height = function (x) {
             if (!arguments.length) return height;
             height = x;
             return instance;
         };
 
 
-        instance.xAxisLabel = function(x) {
+        instance.xAxisLabel = function (x) {
             if (!arguments.length) return xAxisLabel;
             xAxisLabel = x;
             return instance;
         };
 
-        instance.yAxisLabel = function(x) {
+        instance.yAxisLabel = function (x) {
             if (!arguments.length) return yAxisLabel;
             yAxisLabel = x;
             return instance;
         };
 
-        instance.margin = function(x) {
+        instance.margin = function (x) {
             if (!arguments.length) return margin;
             margin = x;
             return instance;
         };
 
-        instance.clickCallback = function(x) {
+        instance.clickCallback = function (x) {
             if (!arguments.length) return clickCallback;
             clickCallback = x;
             return instance;
         };
 
-        instance.selectionIdentifier = function(x) {
+        instance.selectionIdentifier = function (x) {
             if (!arguments.length) return selectionIdentifier;
             selectionIdentifier = x;
             selection = d3.select(selectionIdentifier);
@@ -206,7 +237,5 @@
 
         return instance;
     };
-
-
 
 })();

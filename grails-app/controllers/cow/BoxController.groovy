@@ -252,30 +252,35 @@ class BoxController {
         "value": 6.7829559999999995,
         "cpd_auc": 6.2818000000000005,
         "cell_sample_id": 985,
+        "cell_primary_name":"CUPV3",
         "primary_site": ["RMUGS"]
     },
     {
         "value": 5.991586,
         "cpd_auc": 7.4305,
         "cell_sample_id": 299,
+        "cell_primary_name":"CUPV3",
         "primary_site": ["HCC1359"]
     },
     {
         "value": 5.8883,
         "cpd_auc": 6.8716,
         "cell_sample_id": 1133,
+        "cell_primary_name":"CUPV3",
         "primary_site": ["SNUC4"]
     },
     {
         "value": 6.118193,
         "cpd_auc": 6.983300000000001,
         "cell_sample_id": 536,
+        "cell_primary_name":"CUPV3",
         "primary_site": ["KM12"]
     },
     {
         "value": 6.527301,
         "cpd_auc": 7.7155000000000005,
         "cell_sample_id": 759,
+        "cell_primary_name":"CUPV3",
         "primary_site": ["NCIH1755"]
     }
 ]
