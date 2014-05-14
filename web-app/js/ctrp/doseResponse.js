@@ -25,7 +25,7 @@
             _selectionIdentifier,
         // private variables
             _expansionPercent = 10.0, // percent we extend beyond the min max of the raw data
-            _pointsDefiningGeneratedLine = 2000  // the curve we generate from the four parameters is a series of
+            _pointsDefiningGeneratedLine = 5000  // the curve we generate from the four parameters is a series of
         // straight-line segments. This variable describes how many exactly.
             ;
 
@@ -227,8 +227,6 @@
             var xAxis = d3.svg.axis()
                 .scale(_x.range([0, quadrantWidth()]))
                 .orient("bottom")
-              //  .tickValues([0.001,0.01,0.035,0.1,.35,1,2,3.5,10,20,35])
-              //  .tickFormat(d3.format(".2g"));
                 .ticks(5,d3.format(".2g"));
 
             var xAxisTextGoesHere = axesG.append("g")
@@ -649,23 +647,23 @@
                 }),
 
             // only shade those points that fall inside the area we were told to shade
-            filterXRange = function (incoming){
-                return incoming.filter( function(d,i){
-                    return ((d.x>xMinimumForShading)&&(d.x<xMaximumForShading));
-                });
-            },
+                filterXRange = function (incoming){
+                    return incoming.filter( function(d,i){
+                        return ((d.x>xMinimumForShading)&&(d.x<xMaximumForShading));
+                    });
+                },
 
-            area = d3.svg.area() // <-A
-                .x(function (d) {
+                area = d3.svg.area() // <-A
+                    .x(function (d) {
                         return _x(d.x);
-                 })
-                .y0(yStart())
-                .y1(function (d) {
-                    return _y(d.y);
-                }),
+                    })
+                    .y0(yStart())
+                    .y1(function (d) {
+                        return _y(d.y);
+                    }),
 
-            xMinimumForShading,
-            xMaximumForShading;
+                xMinimumForShading,
+                xMaximumForShading;
 
             // perform a calculation to map the indexes of points aim for shading
             //  to actual domain values.  We have to do this because we are shading

@@ -34,10 +34,10 @@
 </head>
 <body>
 <h1>Enrichment plot</h1>
-<h1>Enrichment plot</h1>
   <div class="heatmap"></div>
   <div class="featuremap"></div>
 <div id='cdtCmpTabs-2'>
+
 <table border="1" style="margin:10px;">
     <tr>
         <td style="padding:10px">
@@ -269,13 +269,73 @@ var realdata= {
                 curve_baseline: 2.5,
                 curve_height: 93.1,
                 nominal_ec50: 26.0,
-                curve_slope: null,
+                curve_slope: -2,
                 points:[
-                    {pert_conc: 1.5, cpd_pv_measured_value: 98.2, cpd_pv_error: null},
-                    {pert_conc: 10.5, cpd_pv_measured_value: 50, cpd_pv_error: null },
-                    {pert_conc: 20.9, cpd_pv_measured_value: 4, cpd_pv_error: null },
-                    {pert_conc: 49.9, cpd_pv_measured_value: 1, cpd_pv_error: null}
-                ]
+                    {cpd_pv_error: 0.1318,
+                        cpd_pv_measured_value: 0.324434474079502,
+                        pert_conc: 4.6096
+                    },
+                    {
+                        cpd_pv_error: 0.16274,
+                        cpd_pv_measured_value: 0.545953173554408,
+                        pert_conc: 0.5762
+                    },
+                    {
+                        cpd_pv_error: 0.16288,
+                        cpd_pv_measured_value: 1.19459763383528,
+                        pert_conc: 0.14404999999999998
+                    }, {
+                        cpd_pv_error: 0.16404,
+                        cpd_pv_measured_value: 0.149170758931566,
+                        pert_conc: 18.439
+                    }, {
+                        cpd_pv_error: 0.14105,
+                        cpd_pv_measured_value: 1.08706946062705,
+                        pert_conc: 0.0011254
+                    }, {
+                        cpd_pv_error: 0.19055,
+                        cpd_pv_measured_value: 0.0668850140667255,
+                        pert_conc: 36.877
+                    }, {
+                        cpd_pv_error: 0.13658,
+                        cpd_pv_measured_value: 1.05569766581735,
+                        pert_conc: 0.0022508
+                    }, {
+                        cpd_pv_error: 0.13569,
+                        cpd_pv_measured_value: 0.290083305298151,
+                        pert_conc: 9.2193
+                    }, {
+                        cpd_pv_error: 0.1758,
+                        cpd_pv_measured_value: 0.435199909443407,
+                        pert_conc: 1.1524
+                    }, {
+                        cpd_pv_error: 0.13312,
+                        cpd_pv_measured_value: 1.0630196586361,
+                        pert_conc: 0.07202599999999999
+                    }, {
+                        cpd_pv_error: 0.10862,
+                        cpd_pv_measured_value: 1.1742602289787,
+                        pert_conc: 0.036012999999999996
+                    }, {
+                        cpd_pv_error: 0.10774,
+                        cpd_pv_measured_value: 1.00368884863886,
+                        pert_conc: 0.018005999999999998
+                    }, {
+                        cpd_pv_error: 0.11862,
+                        cpd_pv_measured_value: 1.05802786878813,
+                        pert_conc: 0.0090032
+                    }, {
+                        cpd_pv_error: 0.16129,
+                        cpd_pv_measured_value: 0.51925804315052,
+                        pert_conc: 2.3048
+                    }, {
+                        cpd_pv_error: 0.16677,
+                        cpd_pv_measured_value: 0.577750380861931,
+                        pert_conc: 0.2881
+                    }, {
+                        cpd_pv_error: 0.12924,
+                        cpd_pv_measured_value: 1.11152987671054,
+                        pert_conc: 0.0045016}                ]
 
             }
 
@@ -283,12 +343,16 @@ var realdata= {
 
         var chart =  d3.doseResponse()
                 .displayGridLines(false)
-                .xAxisLabel('Concentration')
-                .yAxisLabel('Response')
+                .xAxisLabel('log ['+'Concentration'+']')
+                .yAxisLabel('Viability')
                 .width('390')
                 .height('380')
                 .title('my title')
                 .selectionIdentifier('#doseResponseFromEnrichment')
+                .autoScale(false)
+                .areaUnderTheCurve ([5,13]) // Shade points 5 - 13
+                .x(d3.scale.log().domain([0.001, 40]))
+                .y(d3.scale.linear().domain([0,1.5]));
 
         curves.forEach(function (series) {
             chart.addSeries(series);
@@ -307,6 +371,7 @@ var realdata= {
             .selectionIdentifier("#eplot1")
             .width(width + margin.left + margin.right)
             .height(height + margin.bottom + margin.top)
+            .fromFeaturePage(true)
             .assignData(realdata)
             .clickCallback(testStubCallback);
     heatmapPlot.render();
@@ -316,6 +381,7 @@ var realdata= {
             .selectionIdentifier("#eplot2")
             .width(width + margin.left + margin.right)
             .height(height + margin.bottom + margin.top)
+            .fromFeaturePage(true)
             .assignData(dataForEnrichmentHeatMap2)
             .clickCallback(testStubCallback);
     heatmapPlot.render();

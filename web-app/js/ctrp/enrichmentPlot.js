@@ -1,4 +1,4 @@
-/// One dimensional heatmap.
+// One dimensional heatmap.
 
 (function() {
 
@@ -11,7 +11,9 @@
             selectionIdentifier = '',
             data={},
             featureName = '',
-            compoundName = '',
+            compoundName,
+            compoundId,
+            fromFeaturePage,
 
         // the variables that will never be exposed
             xAxis = {},
@@ -30,15 +32,34 @@
              */
                 clickHandling = (function () {
 
-                var popUpGraphic = d3.select('#cdtCmpTabs-2').selectAll('div.toolTextAppearance').data([1]);
-                popUpGraphic.enter()
-                    .append("div")
-                    .style("opacity", "0")
-                    .style("position", "absolute")
-                    .style("z-index", "100")
-                    .attr("class", "toolTextAppearance");
+                var popUpGraphic;
+                function givePopUpTheRightParent (){
+                    var correctSelection;
+                    if (fromFeaturePage){
+                        correctSelection = d3.select('#cdtCmpTabs-2').selectAll('div.toolTextAppearance').data([1]);
+                    }else {
+                        correctSelection = d3.select('#cdtGeneTabs-2').selectAll('div.toolTextAppearance').data([1]);
+                    }
+                    return correctSelection;
+                }
+//                    var popUpGraphic = d3.select('#cdtCmpTabs-2').selectAll('div.toolTextAppearance').data([1]);
+//                    popUpGraphic.enter()
+//                    .append("div")
+//                    .style("opacity", "0")
+//                    .style("position", "absolute")
+//                    .style("z-index", "100")
+//                    .attr("class", "toolTextAppearance");
 
                 appear = function(d,i,g) {
+
+                    popUpGraphic = givePopUpTheRightParent ();
+                    popUpGraphic.enter()
+                        .append("div")
+                        .style("opacity", "0")
+                        .style("position", "absolute")
+                        .style("z-index", "100")
+                        .attr("class", "toolTextAppearance");
+
 
                     if (d.name != '/') {
                         popUpGraphic.html(contentForGraphicWindow ())
@@ -50,7 +71,20 @@
                             .style("top", (d3.event.pageY - 130) + "px")
                             .style("left", (d3.event.pageX - 70) + "px")
                             .style("z-index", "100");
+
+                        // if we know the compound name/ID then pass that information down to the callback click handler
+                        if ( typeof compoundId !== "undefined" ){
+                            d.compoundId = compoundId;
+                        }
+                        if ( typeof compoundName !== "undefined" ){
+                            d.compoundName = compoundName;
+                        }
+                        if ( typeof fromFeaturePage !== "undefined" ){
+                            d.fromFeaturePage = fromFeaturePage;
+                        }
+
                         clickCallback(d,i,g);
+
                         return;
                     }
                     else {
@@ -62,6 +96,7 @@
 
                 } ,
                     mouseMove = function (d) {
+                        popUpGraphic = givePopUpTheRightParent ();
                         if (d.name === '/')  {
                             return popUpGraphic.html(null).style("opacity", "0");
                         }  else {
@@ -71,15 +106,23 @@
 
                     },
                     disappear =  function () {
+                        popUpGraphic = givePopUpTheRightParent ();
                         return popUpGraphic
                             .style("opacity", "0")
                             .style("z-index", "-1");
                     },
                     contentForGraphicWindow = function ()    {
                         var retVal;
-                        retVal = "<div id='doseResponseFromEnrichment'></div>" +
-                            "<div id='doseResponseCloser' style='position:relative; top: 0px; left: 10px'><button onclick='heatmapPlot.activatePopUpClose()'>Close window</button></div>" +
-                            "</table>";
+                        if (fromFeaturePage){
+                            retVal = "<div id='doseResponseFromEnrichment'></div>" +
+                                "<div id='doseResponseCloser' style='position:relative; top: 0px; left: 10px'><button onclick='heatmapPlot.activatePopUpClose()'>Close window</button></div>" +
+                                "</table>";
+                        } else {
+                            retVal = "<div id='doseResponseFromFeatureTab'></div>" +
+                                "<div id='doseResponseCloserFromFeatureTab' style='position:relative; top: 0px; left: 10px'><button onclick='heatmapPlot.activatePopUpClose()'>Close window</button></div>" +
+                                "</table>";
+                        }
+
                         return retVal;
                     };
 
@@ -94,20 +137,39 @@
 
             closingPopUpCallback =  clickHandling.disappear,
             clickCallback = function (d, i, g){
+
                 var cmpd = $('#imageHolder').data('compound'),
-                    compoundId = cmpd.compound_id,
-                    cellId = d.cellSampleId;
+                // compoundId = cmpd.compound_id,
+                    compoundId ,
+                    cellId = d.cellSampleId,
+                    compoundName,
+                    parentDomElement='#doseResponseFromEnrichment';
+                if ( typeof d.compoundId!== "undefined"){
+                    compoundId = d.compoundId;
+                }
+                if ( typeof d.compoundName!== "undefined"){
+                    compoundName = d.compoundName;
+                }
+                if (d.fromFeaturePage){
+                    parentDomElement='#doseResponseFromEnrichment';
+                } else {
+                    parentDomElement='#doseResponseFromFeatureTab';
+                }
                 setWaitCursor();
+                // parentDomElement = $(selectionIdentifier).closest(".enrichmentTab");
                 DTGetDoseResponsePoints(compoundId, cellId, function (data){
                     var chart =  d3.doseResponse()
                         .displayGridLines(false)
-                        .xAxisLabel(cmpd.compound_name)
+                        .xAxisLabel('log ['+compoundName+']')
                         .yAxisLabel('Viability')
                         .width('390')
                         .height('380')
                         .title(data.cell_primary_name)
-                        .selectionIdentifier('#doseResponseFromEnrichment')
-                        .domainMultiplier(1.2);
+                        .selectionIdentifier(parentDomElement)
+                        .autoScale(false)
+                        .areaUnderTheCurve ([5,13]) // Shade points 5 - 13
+                        .x(d3.scale.log().domain([0.001, 40]))
+                        .y(d3.scale.linear().domain([0,1.5]));
                     var curves=[data];
                     curves.forEach(function (series) {
                         chart.addSeries(series);
@@ -184,6 +246,9 @@
             }
             if (typeof data.compoundName !== undefined) {
                 compoundName =  data.compoundName;
+            }
+            if (typeof data.compoundId !== undefined) {
+                compoundId =  data.compoundId;
             }
             selection
                 .selectAll("svg")
@@ -363,6 +428,22 @@
             compoundName = x;
             return instance;
         };
+
+        // May alternatively be passed in through initial Json data assignment
+        instance.compoundId = function(x) {
+            if (!arguments.length) return compoundId;
+            compoundId = x;
+            return instance;
+        };
+
+
+        // May alternatively be passed in through initial Json data assignment
+        instance.fromFeaturePage = function(x) {
+            if (!arguments.length) return fromFeaturePage;
+            fromFeaturePage = x;
+            return instance;
+        };
+
 
         instance.selectionIdentifier = function(x) {
             if (!arguments.length) return selectionIdentifier;
