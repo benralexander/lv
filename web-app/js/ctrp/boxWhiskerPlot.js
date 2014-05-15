@@ -1,11 +1,9 @@
 (function () {
-    "use strict";
 
     var firstInstance = true;
 
-
-// Inspired by http://informationandvisualization.de/blog/box-plot
     d3.boxWhiskerPlot = function () {
+
         var instance = {},
             width = 1,
             height = 1,
@@ -19,20 +17,60 @@
             xAxis = {},
             yAxis = {},
             boxWhiskerName = '',
-            outlierRadius = 7,
+            outlierRadius = 2,
             compoundIdentifier = '',
-            data = '',
-            scatterDataCallback = {},
+            scatterDataCallback,
+        // the callback which retrieves the correlation data. Note that this callback
+        // also assigns a second callback ( scatterDataCallback ) which it uses to
+        // actually launch the scatter plot
+        //
+        // also note: I externalize this callback to support inserting a stub in the test harness.
+        // During regular usage, however, this default value should be perfectly adequate
+            retrieveCorrelationData = function (compoundId, geneName) {
+                setWaitCursor();
+                DTGetCorrelationPoints(compoundId, geneName, function (data){
+                    if (typeof scatterDataCallback !== "undefined") {
+                        scatterDataCallback(data, geneName, compoundId);
+                    }
+                    removeWaitCursor();
+                });
+            },
+
 
         // these sizes referred to each individual bar in the bar whisker plot
-            margin = {top: 50, right: 50, bottom: 20, left: 80},
-            width = 380 - margin.left - margin.right,
+            margin = {top: 50, right: 70, bottom: 20, left: 80},
+            width = 350 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom,
 
-        // the variables that will never be exposed
+        // the following variables are not publicly exposed
             value = Number,
             tickFormat = null,
-            selection = {};
+            selection = {},
+
+
+            cleanUpAfterYourself = function (comprehensiveCleanup) {
+
+                // Previous incarnations of this plot can interfere with new ones so clear out the DOM
+                var previouslyExistingScatterPlot = d3.select("#scatterPlot1").selectAll("svg");
+                if (previouslyExistingScatterPlot) {
+                    previouslyExistingScatterPlot.remove();
+                }
+
+                // if we are getting rid of the scatter plot then we'd best also clear out any lingering dose response curves
+                var previouslyExistingdoseResponseCurve = d3.select('#doseResponseCurve').selectAll("svg");
+                if (previouslyExistingdoseResponseCurve) {
+                    previouslyExistingdoseResponseCurve.remove();
+                }
+
+                if (comprehensiveCleanup=== true){
+                    d3.selectAll('svg.box').remove()
+                    d3.select("#examineCorrelation").classed('scatterIsUp',false);
+                    d3.select("#examineCorrelation").style('display','none');
+                }
+            };
+
+        // before we start a new box whisker plot, let's make sure we cleaned up any remnants of the previous box whisker
+        cleanUpAfterYourself(true);
 
 
         /***
@@ -43,133 +81,140 @@
          */
         var clickHandling = (function () {
 
-            // callback -- unselect the pop-up scatterplot
-            function deselect() {
-                $(".pop").slideFadeOut(function () {
+            /***
+             *  deselect: this method will unselect any outliers that might be selected, mark the scatterplot
+             *  as not visible, and remove the underlying SVG representation of the data
+             */
+            var deselect = function () {
                     visuallyUnidentifyAllDots();
-                });
-            }
+                    $(".pop").slideFadeOut(function () {
 
-            function visuallyIdentifyDot(currentDot) {
-                d3.select(currentDot).select('circle').classed('selectedCircle', true).classed('outlier', false);
-            }
+                        cleanUpAfterYourself(false);
 
-            function visuallyUnidentifyAllDots() {
-                d3.selectAll('.selectedCircle').classed('outlier', true).classed('selectedCircle', false);
-            }
+                        scatterIsUp(false) ;
 
-            function scatterIsUp(trueOrFalse) {
-                if (!arguments.length) {
-                    return d3.select("#examineCorrelation").classed('scatterIsUp');
-                }
-                d3.select("#examineCorrelation").classed('scatterIsUp', trueOrFalse);
-            }
+                    });
+                },
 
-            function thisDotIsAlreadySelected(currentDot) {
-                return d3.select(currentDot).select('circle').classed('selectedCircle');
-            }
 
-            // The meat of the clickHandling function
+                /***
+                 * Mark an outlier point as selected
+                 */
+                    visuallyIdentifyDot = function (currentDot) {
+                    d3.select(currentDot).select('circle').classed('selectedCircle',true).classed('outlier',false);
+                },
+
+
+                /***
+                 * Make sure that all outlier points are deselected
+                 */
+                    visuallyUnidentifyAllDots = function () {
+                    d3.selectAll('.selectedCircle').classed('outlier',true).classed('selectedCircle', false);
+                },
+
+                /***
+                 * This method is a mixed getter setter. With the parameter we set the specified ID as
+                 * either having or not having a class that tells us the scatterplot is in place.  Without
+                 * a parameter we return a truth value answering the question of whether the scatterplot
+                 * is in place
+                 */
+                    scatterIsUp = function (trueOrFalse) {
+                    var retval=false;
+                    if (!arguments.length) {
+                        if (!d3.select("#examineCorrelation").empty()){
+                            retval = d3.select("#examineCorrelation").classed('scatterIsUp');
+                        }
+                        return retval;
+                    }
+                    d3.select("#examineCorrelation").classed('scatterIsUp',trueOrFalse);
+                },
+
+                /***
+                 * Is this outlier point already selected? We behave differently if we hit a selected point
+                 * ( simply bring down the scatterplot) then if we select a new point ( bring down the old
+                 * scatterplot and put up a new one).
+                 */
+                    thisDotIsAlreadySelected = function (currentDot) {
+                    var retval=false;
+                    if (!d3.select(currentDot).select('circle').empty()){
+                        retval=d3.select(currentDot).select('circle').classed('selectedCircle');
+                    }
+                    return retval;
+                };
+
+
+            /***
+             * Encapsulate the logic of the clickHandling module. The majority of this logic is held within
+             * a callback that is activated when the user clicks on outlier point
+             */
             $(function () {
-                if (firstInstance) {
+
+                if (firstInstance) {  // let's not install multiple copies of the same callback
+
                     firstInstance = false;
-                    $(document.body).on('click', 'a.clickable', function () {
+                    $(document.body).on('click','.clickable' ,function () {
 
-                        if (thisDotIsAlreadySelected(this)) {
+                        if (thisDotIsAlreadySelected(this)){
 
-                            visuallyUnidentifyAllDots();
-                            if (scatterIsUp()) {
-                                $(".pop").slideFadeOut(function () {
-                                        scatterIsUp(false);
-                                    }
-                                );
-                            }
+                            deselect();
 
                         } else {
 
                             visuallyUnidentifyAllDots();
-                            if (scatterIsUp()) {
-                                $(".pop").slideFadeOut(function () {
-                                        scatterIsUp(false);
-                                    }
-                                );
+                            if (scatterIsUp()){
+                                deselect();
                             }
 
-
                             visuallyIdentifyDot(this);
-                            // go get the data and launch a scatter plot
+
                             var genePrimaryName = $(this).attr('gpn');
                             $(".pop").slideFadeIn(function () {
-                                    // var cmpd = $('#imageHolder').data('compound');
-                                    var cmpd = 999;
+                                var cmpd = $('#imageHolder').data('compound');
 
-                                    retrieveCorrelationData(cmpd,
-                                        genePrimaryName);
-                                    scatterIsUp(true);
-                                    // $("#examineCorrelation").focus();
-                                }
-                            );
+                                d3.select('#doseResponseCurve').style('display','none');
+                                d3.select('.messagepop').style('width','400px');
 
+                                retrieveCorrelationData(cmpd,
+                                    genePrimaryName);
+                                scatterIsUp(true) ;
+                            });
                         }
                         return false;
                     });
                 }
 
-                // assign a call back on the close button
-                $(document.body).on('click', '.close', function () {
+                // there is only one close label so we only need to establish the callback once
+                $(document.body).on('click','.close', function () {
                     deselect();
+                    d3.select("#examineCorrelation").classed('scatterIsUp',false);
+                    d3.select("#examineCorrelation").style('display','none');
+
                     return false;
                 });
+
             });
 
             $.fn.slideFadeToggle = function (easing, callback) {
-                return this.animate({ opacity: 'toggle', height: 'toggle' }, "fast", easing, callback);
+                return this.animate({ opacity: 'toggle', height: 'toggle' }, "medium", easing, callback);
             };
 
             function fadeIn (easing, callback) {
                 return this.animate({ opacity: 'show', height: 'show' }, "fast", easing, callback);
             };
             $.fn.slideFadeIn = fadeIn;
+
             function fadeOut (easing, callback) {
                 return this.animate({ opacity: 'hide', height: 'hide' }, "fast", easing, callback);
             };
             $.fn.slideFadeOut = fadeOut;
 
-
-            // the callback which retrieves the correlation data. Note that this callback
-            // also assigns a second callback ( scatterDataCallback ) which it uses to
-            // actually launch the scatter plot
-            var retrieveCorrelationData = function (compoundId, geneName) {
-                var regObj = new Object();
-                regObj.cpd_id = compoundId;
-                regObj.gene_primary_name = geneName;
-
-
-                var res = $.ajax({
-                    url: './correlationPoints',
-                    type: 'post',
-                    context: document.body,
-                    data: JSON.stringify(regObj),
-                    contentType: 'application/json',
-                    async: true,
-                    success: function (data) {
-                        var obj = (JSON.parse(data));
-                        scatterDataCallback(obj.results);
-                    },
-                    error: function () {
-                        alert('Contact message failed');
-                    }
-                });
-            };
-
-            // the public methods of clickHandling method
             return {
-                // public variables
-
-                // public methods
+                // public variables and methods.  Current none are necessary
             }
 
         }());
+
+
 
 
         /***
@@ -184,54 +229,53 @@
                 lastY = null,
                 centralXPosition = null,
                 lastAxialPoint = null,
-            //radiusOfPoint =  outlierRadius,
                 shiftLeftNext = true,
                 currentX = 0,
 
-                determinePositioning = function (xValue, yValue) {
+                determinePositioning = function(xValue,yValue){
                     if ((lastX === null) && (lastY === null)) {  // this is our first time through
-                        lastX = 0;
-                        centralXPosition = xValue;
-                        lastAxialPoint = yValue;
+                        lastX =  0;
+                        centralXPosition =  xValue;
+                        lastAxialPoint =  yValue;
                         lastY = yValue;
                         shiftLeftNext = true;
                     }
                     else {  // this is not our first time
-                        if (yValue > (lastAxialPoint - (2 * outlierRadius))) { // potential overlap. Shift it.
-                            if (shiftLeftNext) {    // let's shift to the left.  expand on left shifts only
-                                if (lastX < 0) {
+                        if (yValue > (lastAxialPoint-(2*outlierRadius)))  { // potential overlap. Shift it.
+                            if (shiftLeftNext){    // let's shift to the left.  expand on left shifts only
+                                if (lastX<0){
                                     lastX = (0 - lastX);
                                 }
-                                lastX += (2 * outlierRadius);
+                                lastX +=  (2*outlierRadius);
                                 shiftLeftNext = false;
                             } else {  // we are shifting to the right. Change sign.
                                 lastX = (0 - lastX);
                                 shiftLeftNext = true;
                             }
                         } else { // no overlap possible. Return to center
-                            lastX = 0;
-                            lastAxialPoint = yValue;
+                            lastX =  0;
+                            lastAxialPoint =  yValue;
                             shiftLeftNext = true;
                         }
                         lastY = yValue;
                     }
-                    currentX = (centralXPosition + lastX);
+                    currentX =  (centralXPosition+lastX);
                 },
-                shiftedX = function (xValue, yValue) {
-                    if (yValue > lastY) {
+                shiftedX  = function(xValue,yValue){
+                    if (yValue>lastY) {
                         initialize();
                     }
-                    determinePositioning(xValue, yValue);
+                    determinePositioning(xValue,yValue);
                     return currentX;
                 },
-                shiftedY = function (xValue, yValue) {
-                    if (yValue > lastY) {
+                shiftedY  = function(xValue,yValue){
+                    if (yValue>lastY) {
                         initialize();
                     }
-                    determinePositioning(xValue, yValue);
+                    determinePositioning(xValue,yValue);
                     return lastY;
                 },
-                initialize = function () {
+                initialize = function (){
                     lastX = null;
                     lastY = null;
                 }
@@ -240,12 +284,15 @@
                 // public variables
 
                 // public methods
-                currentX: shiftedX,
-                currentY: shiftedY,
+                currentX :  shiftedX,
+                currentY :  shiftedY,
                 initialize: initialize
             }
 
         }());
+
+
+
 
         //  private variable
         var tip = d3.tip()
@@ -253,8 +300,9 @@
             .offset([-10, 0])
             .html(function (d) {
                 var nodeData = d3.select(this.parentNode).datum()[d];
-                return "<strong></strong> <span style='color:#00ff00'>Gene: " + nodeData.description + "<br/>" +
-                    "Correlation: " + nodeData.value + "</span>";
+                var valueToDisplay = new Number(nodeData.value);
+                return "<strong></strong> <span style='color:#00ff00'>Gene: " + nodeData.description + "<br/>"+
+                    "Correlation: " +  valueToDisplay.toPrecision(3)+ "</span>";
             });
 
 
@@ -288,18 +336,19 @@
                     // Compute the new x-scale.
                     var xScale = d3.scale.linear()
                         .domain([0, 1])
-                        .range([width + margin.right + margin.left, 0]);
+                        .range([width+margin.right+margin.left, 0]);
+
 
 
                     // Compute the new y-scale.
                     var yScale = d3.scale.linear()
-                        .domain([min - ((max - min) * 0.05), max + ((max - min) * 0.05)])
-                        .range([height , 0]);
+                        .domain([min-((max-min)*0.05), max+((max-min)*0.05)])
+                        .range([height ,0]);
 
-                    // Right now we are only using one scale so that yScale is equivalent to  yScaleOld, but let's retain
+                    // Retrieve the old x-scale, if this is an update.
                     var yScaleOld = this.__chart__ || d3.scale.linear()
-                        .domain([min - ((max - min) * 0.05), max + ((max - min) * 0.05)])
-                        .range([height/* + margin.bottom + margin.top*/, 0]);
+                        .domain([min-((max-min)*0.05), max+((max-min)*0.05)])
+                        .range([height/* + margin.bottom + margin.top*/,0]);
 
 
                     // Stash the new scale.
@@ -400,8 +449,7 @@
 
                     box.exit().remove();
 
-                    // Update median line.   This is the horizontal line
-                    //  that runs through the center of the box.
+                    // Update median line.
                     var medianLine = g.selectAll("line.median")
                         .data([quartileData[1]]);
 
@@ -456,7 +504,7 @@
 
                     // Update outliers.  These are the circles that Mark data outside of the whiskers.
                     var outlier = g.selectAll("circle.outlier")
-                        .data(outlierIndices || [], Number);
+                        .data(outlierIndices||[], Number);
 
 
                     outlier.enter()
@@ -464,62 +512,54 @@
                         .attr("class", "clickable")
                         .attr("gpn", function (i) {
                             return d[i].description;
-                        })
-//                        .attr("xlink:href", "/examineCorrelation")
+                        } )
                         .on('mouseover', tip.show)
                         .on('mouseout', tip.hide)
                         .append("circle", "text")
                         .attr("class", "outlier")
-                        .attr("r", function (d) {
+                        .attr("r", function (d){
                             return outlierRadius;
                         })
-                        .attr("cx", function (i) {
-                            var xx = jitter.currentX(width / 2, yScaleOld(d[i].value));
-                            return xx;
+                        .attr("cx", function (i){
+                            return jitter.currentX(width/2,yScaleOld(d[i].value));
                         })
                         .attr("cy", function (i) {
-                            var yy = jitter.currentY(width / 2, yScaleOld(d[i].value));
-                            return yy;
+                            return jitter.currentY(width/2,yScaleOld(d[i].value));
                         })
                         .style("opacity", 1e-6)
+
                         .transition()
                         .duration(duration)
-                        .attr("r", function (d) {
-                            return outlierRadius;
-                        })
-                        .attr("cx", function (i) {
-                            return jitter.currentX(width / 2, yScaleOld(d[i].value));
+                        .attr("r", function (d){return outlierRadius;})
+                        .attr("cx", function (i){
+                            return jitter.currentX(width/2,yScaleOld(d[i].value));
                         })
                         .attr("cy", function (i) {
-                            return jitter.currentY(width / 2, yScaleOld(d[i].value));
+                            return jitter.currentY(width/2,yScaleOld(d[i].value));
                         })
                         .style("opacity", 1)
                     ;
 
                     outlier.transition()
                         .duration(duration)
-                        .attr("r", function (d) {
-                            return outlierRadius;
-                        })
-                        .attr("cx", function (i) {
-                            return jitter.currentX(width / 2, yScaleOld(d[i].value));
+                        .attr("r", function (d){return outlierRadius;})
+                        .attr("cx", function (i){
+                            return jitter.currentX(width/2,yScaleOld(d[i].value));
                         })
                         .attr("cy", function (i) {
-                            return jitter.currentY(width / 2, yScaleOld(d[i].value));
+                            return jitter.currentY(width/2,yScaleOld(d[i].value));
                         })
                         .style("opacity", 1);
 
                     outlier.exit()
                         .transition()
                         .duration(duration)
-                        .attr("r", function (d) {
-                            return outlierRadius;
-                        })
-                        .attr("cx", function (i) {
-                            return jitter.currentX(width / 2, yScaleOld(d[i].value));
+                        .attr("r", function (d){return outlierRadius;})
+                        .attr("cx", function (i){
+                            return jitter.currentX(width/2,yScaleOld(d[i].value));
                         })
                         .attr("cy", function (i) {
-                            return jitter.currentY(width / 2, yScaleOld(d[i].value));
+                            return jitter.currentY(width/2,yScaleOld(d[i].value));
                         })
                         .style("opacity", 1e-6)
                         .remove();
@@ -593,12 +633,12 @@
                         .select("svg").selectAll("g.y").data([1]).enter()
                         .append("g")
                         .attr("class", "y axis")
-                        .attr("transform", "translate(30,0)")
+                        .attr("transform", "translate(32,0)")
                         .call(yAxis)
                         .append("text")
                         .attr("class", "label")
-                        .attr("x", 0)
-                        .attr("y", height / 2 + margin.top + margin.bottom)
+                        .attr("x",  0 )
+                        .attr("y", height/2  + margin.top + margin.bottom )
                         .style("text-anchor", "middle")
                         .style("font-weight", "bold")
                         .text('');
@@ -608,15 +648,17 @@
                         .select("svg").selectAll("g.x").data([1]).enter()
                         .append("g")
                         .attr("class", "x axis")
-                        .attr("transform", "translate(0," + (height) + ")")
+                        .attr("transform", "translate(0," + (height) +")")
                         .call(xAxis)
                         .append("text")
                         .attr("class", "label")
-                        .attr("x", (width + margin.left + margin.right) / 2)
-                        .attr("y", margin.bottom)
+                        .attr("x", (width + margin.left + margin.right)/2 )
+                        .attr("y",margin.bottom )
                         .style("text-anchor", "middle")
                         .style("font-weight", "bold")
                         .text(boxWhiskerName);
+
+
 
 
                 });
@@ -627,15 +669,18 @@
         instance.assignData = function (x) {
             if (!arguments.length) return data;
             data = x;
-            selection
+            var bwPlot = selection
                 .selectAll("svg")
-                .data(data)
-                .enter()
+                .data(data);
+
+            var bwPlotExt = bwPlot.enter()
                 .append("svg")
                 .attr("class", "box")
                 .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.bottom + margin.top)
-                .append("g")
+                .attr("height", height + margin.bottom + margin.top);
+
+
+            bwPlotExt.append("g")
                 .attr("class", "boxHolder")
                 .attr("transform", "translate(" + margin.left + ",0)")
                 .call(tip);
@@ -720,12 +765,12 @@
             return instance;
         };
 
-
         // Identify the compounds that will be retrieved by the scatter plot ( activated
         // through a click on the outlier points)
         instance.compoundIdentifier = function (x) {
             if (!arguments.length) return compoundIdentifier;
             compoundIdentifier = x;
+            d3.select('#cdtGeneCorrelationAnalysis').datum(x);
             return instance;
         };
 
@@ -736,6 +781,13 @@
             return instance;
         };
 
+
+        // Methods to be activated to create the scatter plot
+        instance.retrieveCorrelationData = function (x) {
+            if (!arguments.length) return retrieveCorrelationData;
+            retrieveCorrelationData = x;
+            return instance;
+        };
 
         return instance;
     };

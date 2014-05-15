@@ -130,7 +130,7 @@ removeWaitCursor=function(){console.log('stub removeWaitCursor');};
             maximumInterquartileMultiplier,
             onScreenStart,
             onScreenEnd,
-            'vertical',defaultInterquartileMultiplier/2,onBrushMoveDoThis,onBrushEndDoThis) ;
+            'vertical',defaultInterquartileMultiplier,onBrushMoveDoThis,onBrushEndDoThis) ;
     onBrushMoveDoThis(minimumInterquartileMultiplier);
 
     // get your data
@@ -179,6 +179,22 @@ removeWaitCursor=function(){console.log('stub removeWaitCursor');};
              }
          ]
          */
+        function respondToScatterData(data)  {
+            var margin = {top: 80, right: 20, bottom: 50, left: 70},
+                    width = 400 - margin.left - margin.right,
+                    height = 400 - margin.top - margin.bottom;
+            d3.scatterPlot()
+                    .selectionIdentifier("#scatterPlot1")
+                    .width (width)
+                    .height (height)
+                    .margin(margin)
+                    .assignData (data)
+                    .xAxisLabel ('Navitoclax AUC')
+                    .yAxisLabel ('BCL2 expression level')
+                    .clickCallback(function(){console.log('stub clickCallback')})
+                    .render() ;
+
+        }
 
 
         // We are finally ready to display the box whisker plot
@@ -186,7 +202,29 @@ removeWaitCursor=function(){console.log('stub removeWaitCursor');};
              .min(globalMinimum)
              .max(globalMaximum)
                 .scatterDataCallback( respondToScatterData )
-                .compoundIdentifier(375788)
+                .retrieveCorrelationData(function (compoundId, geneName) {
+            var regObj = new Object();
+            regObj.cpd_id = compoundId;
+            regObj.gene_primary_name = geneName;
+
+
+            var res = $.ajax({
+                url: './correlationPoints',
+                type: 'post',
+                context: document.body,
+                data: JSON.stringify(regObj),
+                contentType: 'application/json',
+                async: true,
+                success: function (data) {
+                    var obj = (JSON.parse(data));
+                    respondToScatterData(obj.results);
+                },
+                error: function () {
+                    alert('Contact message failed');
+                }
+            });
+        })
+        .compoundIdentifier(375788)
              .render();
 
         // and now we can render the slider as well
@@ -198,22 +236,6 @@ removeWaitCursor=function(){console.log('stub removeWaitCursor');};
     });
 
 
-    function respondToScatterData(data)  {
-        var margin = {top: 80, right: 20, bottom: 50, left: 70},
-                width = 400 - margin.left - margin.right,
-                height = 400 - margin.top - margin.bottom;
-        d3.scatterPlot()
-                .selectionIdentifier("#scatterPlot1")
-                .width (width)
-                .height (height)
-                .margin(margin)
-                .assignData (data)
-                .xAxisLabel ('Navitoclax AUC')
-                .yAxisLabel ('BCL2 expression level')
-                .clickCallback(function(){console.log('stub clickCallback')})
-                .render() ;
-
-    }
 
 
 
