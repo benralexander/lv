@@ -38,6 +38,7 @@
 
             if (!_svg) { // adjust this logic if you want multiple curves on a single set of axes.
                 _svg = d3.select(_selectionIdentifier).append("svg")
+                    .classed('viability',true)
                     .attr("height", _height)
                     .attr("width", _width);
 

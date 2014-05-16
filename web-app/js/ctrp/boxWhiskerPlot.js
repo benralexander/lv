@@ -313,7 +313,7 @@
                 .select("svg").select("g.boxHolder")
                 .each(function (d, i) {
                     d = d.sort(function (a, b) {
-                        return a.value - b.value;
+                        return b.value-a.value;
                     });
                     var g = d3.select(this),
                         n = d.length;
@@ -323,7 +323,7 @@
 
                     // Compute whiskers. Must return exactly 2 elements, or null.
                     var whiskerIndices = whiskers && whiskers.call(this, d, i),
-                        whiskerData = whiskerIndices && whiskerIndices.map(function (i) {
+                    whiskerData = whiskerIndices && whiskerIndices.map(function (i) {
                             return d[i].value;
                         });
 
