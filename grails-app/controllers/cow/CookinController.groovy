@@ -69,6 +69,9 @@ class CookinController {
     def histocruise() {
         render (view: 'histocruise')
     }
+    def sierpinski() {
+        render (view: 'sierpinski')
+    }
 
     def histogramData = """
 [
