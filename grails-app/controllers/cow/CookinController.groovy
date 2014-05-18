@@ -72,6 +72,11 @@ class CookinController {
     def sierpinski() {
         render (view: 'sierpinski')
     }
+    def runSTests() {
+        render (view: 'runSTests')
+    }
+
+
 
     def histogramData = """
 [

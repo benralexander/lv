@@ -15,26 +15,32 @@ Minimal coding example in D3 for May 22 demo
 
 <body>
 
+
+<div id="triangleGoesHere" />
+
+
+
+
+
+<div id="controlWidgets">
+    <input id="levelSpinner" type="number" min="1" max="10" step="1" value="6" size="2"
+           oninput="myTriangle.levelsOfDescent(this.value).clear().render()">
+    Levels of descent
+    </input>
+    <button id="moveAroundButton" onclick="myTriangle.moveAround()">moveAround</button>
+</div>
+
 <script>
 
-    var friendlyTriangle = d3.sierpinskiTriangle()
-            .selectionIdentifier("body");
 
-    friendlyTriangle
+    var myTriangle = cbbo.sierpinskiTriangle()
+            .selectionIdentifier("#triangleGoesHere")
             .levelsOfDescent(6)
             .render();
 
+
 </script>
 
-<div id="triangleGoesHere">
 
-
-</div>
-<input id="levelSpinner" type="number" min="1" max="10" step="1" value="6" size="2"
-             oninput="friendlyTriangle.levelsOfDescent(this.value).clear().render()"/>
-
-<div class="control-group">
-    <button onclick="friendlyTriangle.moveAround()">moveAround</button>
-</div>
 </body>
 </html>

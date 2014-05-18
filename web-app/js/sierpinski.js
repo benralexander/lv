@@ -1,7 +1,9 @@
+var cbbo = cbbo || {};
+
 (function () {
     "use strict";
 
-    d3.sierpinskiTriangle = function () {
+    cbbo.sierpinskiTriangle = function () {
 
 
         var chart = {},
@@ -23,7 +25,7 @@
             /***
              *  private: encapsulate the geometrical trick for making a triangle
              */
-                geometryOfATriangle = function (d, xMultiplier, yMultiplier) {
+             geometryOfATriangle = function (d, xMultiplier, yMultiplier) {
                 return (xMultiplier * xScale(d.cx - (d.h / tan45))) + ',' + (yMultiplier * yScale(d.cy - (d.h / 2))) + ' ' +
                     (xMultiplier * xScale(d.cx)) + ',' + (yMultiplier * yScale(d.cy + (d.h / 2))) + ' ' +
                     (xMultiplier * xScale(d.cx + (d.h / tan45))) + ',' + (yMultiplier * yScale(d.cy - (d.h / 2)));
@@ -32,7 +34,7 @@
             /***
              * private: render a triangle and then return
              */
-                renderASingleTriangle = function (cx, cy, h, level) {
+             renderASingleTriangle = function (cx, cy, h, level) {
                 var triangle = svg.selectAll("polygon.triangle")
                     .data([
                         {cx: (((2 * cx) - (h / tan45)) / 2), cy: (((2 * cy) - (h / 2)) / 2), h: h / 2, label: 'a'},
@@ -65,7 +67,7 @@
              *   private: break each triangle into 3 pieces and then launch a recursive
              *   descent down each one
              */
-                sierpinskiRecursiveDescent = function (cx, cy, h, levels) {
+             sierpinskiRecursiveDescent = function (cx, cy, h, levels) {
 
                 // here's the subroutine that directs the descent
                 var descend = function (triangleGroup, level) {
@@ -108,7 +110,9 @@
                     .attr("width", width);
             }
 
-            sierpinskiRecursiveDescent(width / 2, height / 2, (3 * width / 4), +levelsOfDescent + 1);
+            sierpinskiRecursiveDescent(width / 2, 5 * height / 8, (3 * width / 4), +levelsOfDescent + 1);
+
+            return chart;
         };
 
         /***
@@ -117,11 +121,10 @@
          */
         chart.clear = function () {
             if (svg) {
-                // svg = d3.select(selectionIdentifier).append("svg").remove();
                 svg.selectAll("polygon").remove();
             }
 
-            return   chart;
+            return chart;
         };
 
 
