@@ -25,20 +25,13 @@ Minimal coding example in D3 for May 22 demo
 
     var chart = cbbo.barChart();
 
-    function update(){
-        var data = randomDataset();
-        d3.select('#container')
-                .datum(data)
-                .call(chart);
-    }
+    var myDataSet = [3,7,10,8,5];
 
-    function randomDataset(){
-        return d3.range(~~(Math.random() * 50)).map(function(d, i){
-            return ~~(Math.random() * 1000);
-        });
-    }
 
-    update();
+    d3.select('#container')
+      .datum(myDataSet)
+      .call(chart.render);
+
 
 
 </script>

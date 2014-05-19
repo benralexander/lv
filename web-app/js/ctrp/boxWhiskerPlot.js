@@ -306,14 +306,23 @@
             });
 
 
-        // For each small multiple…
-        instance.render = function () {
+        // For each data element
+        instance.render = function (selectionOverride) {
+            var workingSelection;
+
+            // allow data selections to be immediately assigned
+            if (typeof selectionOverride !== "undefined"){
+                workingSelection = selectionOverride;
+            }   else {
+                workingSelection =  selection
+
+            }
 
             selection
                 .select("svg").select("g.boxHolder")
                 .each(function (d, i) {
                     d = d.sort(function (a, b) {
-                        return b.value-a.value;
+                        return a.value-b.value;
                     });
                     var g = d3.select(this),
                         n = d.length;
@@ -663,6 +672,7 @@
 
                 });
             d3.timer.flush();
+            return instance.render;
         }
 
         // Note:  this method will assign data to the DOM

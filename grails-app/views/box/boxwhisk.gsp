@@ -197,38 +197,54 @@ removeWaitCursor=function(){console.log('stub removeWaitCursor');};
         }
 
 
+
+        var clickCallback = function (compoundId, geneName) {
+                var regObj = new Object();
+                regObj.cpd_id = compoundId;
+                regObj.gene_primary_name = geneName;
+
+
+                var res = $.ajax({
+                    url: './correlationPoints',
+                    type: 'post',
+                    context: document.body,
+                    data: JSON.stringify(regObj),
+                    contentType: 'application/json',
+                    async: true,
+                    success: function (data) {
+                        var obj = (JSON.parse(data));
+                        respondToScatterData(obj.results);
+                    },
+                    error: function () {
+                        alert('Contact message failed');
+                    }
+                });
+            } ;
+
+
+
+
+
+
+//       d3.select("#scatterPlot1").selectAll("svg").datum(data).select("g.boxHolder").call(
+//
+//               chart
+//                       .min(globalMinimum)
+//                       .max(globalMaximum)
+//                       .scatterDataCallback( respondToScatterData )
+//                       .retrieveCorrelationData(clickCallback)
+//                       .compoundIdentifier(375788)
+//                       .render
+//        );
+
         // We are finally ready to display the box whisker plot
         chart.assignData (data)
              .min(globalMinimum)
              .max(globalMaximum)
                 .scatterDataCallback( respondToScatterData )
-                .retrieveCorrelationData(function (compoundId, geneName) {
-            var regObj = new Object();
-            regObj.cpd_id = compoundId;
-            regObj.gene_primary_name = geneName;
-
-
-            var res = $.ajax({
-                url: './correlationPoints',
-                type: 'post',
-                context: document.body,
-                data: JSON.stringify(regObj),
-                contentType: 'application/json',
-                async: true,
-                success: function (data) {
-                    var obj = (JSON.parse(data));
-                    respondToScatterData(obj.results);
-                },
-                error: function () {
-                    alert('Contact message failed');
-                }
-            });
-        })
+                .retrieveCorrelationData(clickCallback)
         .compoundIdentifier(375788)
              .render();
-
-        // and now we can render the slider as well
-     //   slider.render();
 
 
 

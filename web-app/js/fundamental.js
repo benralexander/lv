@@ -1,109 +1,136 @@
 var cbbo = cbbo || {};
 
 
-cbbo.barChart = function module() {
-    var margin = {top: 20, right: 20, bottom: 40, left: 40},
-        width = 500,
-        height = 500,
-        gap = 0,
-        ease = "bounce";
-    var chartClass = "chart";
+(function () {
+    "use strict";
 
-    var dispatch = d3.dispatch("customHover");
-    function exports(_selection) {
-        _selection.each(function(_data) {
+    cbbo.barChart = function module() {
 
-            var chartW = width - margin.left - margin.right,
-                chartH = height - margin.top - margin.bottom;
+        var chart = {},
+            margin = {top: 20, right: 20, bottom: 40, left: 40},
+            width = 500,
+            height = 500,
+            gap = 20,
+            ease = "bounce",
+            chartClass = "chart";
 
-            var x1 = d3.scale.ordinal()
-                .domain(_data.map(function(d, i){ return i; }))
-                .rangeRoundBands([0, chartW], 0.1);
+        chart.render = function (selection) {
+            selection.each(function (data) {
 
-            var y1 = d3.scale.linear()
-                .domain([0, d3.max(_data, function(d, i){ return d; })])
-                .range([chartH, 0]);
+                var chartW = width - margin.left - margin.right,
+                    chartH = height - margin.top - margin.bottom,
 
-            var xAxis = d3.svg.axis()
-                .scale(x1)
-                .orient("bottom");
+                    x1 = d3.scale.linear()
+                        .domain([0, d3.max(data, function (d, i) {
+                            return d;
+                        })])
+                        .range([0, chartW]),
 
-            var yAxis = d3.svg.axis()
-                .scale(y1)
-                .orient("left");
+                    y1 = d3.scale.linear()
+                        .domain([0, 300])
+                        .range([chartH, 0]),
 
-            var barW = chartW / _data.length;
+                    xAxis = d3.svg.axis()
+                        .scale(x1)
+                        .orient("bottom"),
 
-            var svg = d3.select(this)
-                .selectAll("svg")
-                .data([_data]);
-            var container = svg.enter().append("svg")
-                .classed(chartClass, true)
-                .append("g").classed("container-group", true);
-            container.append("g").classed("chart-group", true);
-            container.append("g").classed("x-axis-group axis", true);
-            container.append("g").classed("y-axis-group axis", true);
+                    yAxis = d3.svg.axis()
+                        .scale(y1)
+                        .orient("left"),
 
-            svg.transition().attr({width: width, height: height});
-            svg.select(".container-group")
-                .attr({transform: "translate(" + margin.left + "," + margin.top + ")"});
 
-            svg.select(".x-axis-group.axis")
-                .transition()
-                .ease(ease)
-                .attr({transform: "translate(0," + (chartH) + ")"})
-                .call(xAxis);
+                    svg = d3.select(this)
+                        .selectAll("svg")
+                        .data([data]),
 
-            svg.select(".y-axis-group.axis")
-                .transition()
-                .ease(ease)
-                .call(yAxis);
+                    container = svg.enter().append("svg")
+                        .classed(chartClass, true)
+                        .append("g").classed("container-group", true)
+                        .append("g").classed("chart-group", true),
+                    barH = 50,
 
-            var gapSize = x1.rangeBand() / 100 * gap;
-            var barW = x1.rangeBand() - gapSize;
-            var bars = svg.select(".chart-group")
-                .selectAll(".bar")
-                .data(_data);
-            bars.enter().append("rect")
-                .classed("bar", true)
-                .attr({x: chartW,
-                    width: barW,
-                    y: function(d, i) { return y1(d); },
-                    height: function(d, i) { return chartH - y1(d); }
-                })
-                .on("mouseover", dispatch.customHover);
-            bars.transition()
-                .ease(ease)
-                .attr({
-                    width: barW,
-                    x: function(d, i) { return x1(i) + gapSize/2; },
-                    y: function(d, i) { return y1(d); },
-                    height: function(d, i) { return chartH - y1(d); }
-                });
-            bars.exit().transition().style({opacity: 0}).remove();
+                    bars = svg.select(".chart-group")
+                        .selectAll(".bar")
+                        .data(data);
 
-        });
-    }
-    exports.width = function(_x) {
-        if (!arguments.length) return width;
-        width = parseInt(_x);
-        return this;
+//                bars.enter().append("rect")
+//                    .classed("bar", true)
+//                    .attr({x: chartW,
+//                        width: barW,
+//                        y: function (d, i) {
+//                            return y1(d);
+//                        },
+//                        height: function (d, i) {
+//                            return chartH - y1(d);
+//                        }
+//                    });
+//                bars.transition()
+//                    .ease(ease)
+//                    .attr({
+//                        width: barW,
+//                        x: function (d, i) {
+//                            return x1(i) + gapSize / 2;
+//                        },
+//                        y: function (d, i) {
+//                            return y1(d);
+//                        },
+//                        height: function (d, i) {
+//                            return chartH - y1(d);
+//                        }
+//                    });
+//                bars.exit().transition().style({opacity: 0}).remove();
+                bars.enter().append("rect")
+                    .classed("bar", true)
+                    .attr({x: margin.left,
+                        width: 0,
+                        y: function (d, i) {
+                            return (barH+gap)*i;
+                        },
+                        height: function (d, i) {
+                            return barH;
+                        }
+                    });
+                bars.transition()
+                    .ease(ease)
+                    .attr({x: margin.left,
+                        width:function (d, i) {
+                            return x1(d);
+                        },
+                        y: function (d, i) {
+                            return (barH+gap)*i;
+                        },
+                        height: function (d, i) {
+                            return barH;
+                        }
+                    });
+                bars.exit().transition().style({opacity: 0}).remove();
+
+            });
+            return chart.render;
+        };
+        chart.width = function (x) {
+            if (!arguments.length) {return width;}
+            width = parseInt(x,10);
+            return this;
+        };
+        chart.height = function (x) {
+            if (!arguments.length) {return height;}
+            height = parseInt(x,10);
+            return this;
+        };
+        chart.gap = function (x) {
+            if (!arguments.length) {return gap;}
+            gap = x;
+            return this;
+        };
+        chart.ease = function (x) {
+            if (!arguments.length) {return ease;}
+            ease = x;
+            return this;
+        };
+
+        return chart;
     };
-    exports.height = function(_x) {
-        if (!arguments.length) return height;
-        height = parseInt(_x);
-        return this;
-    };
-    exports.gap = function(_x) {
-        if (!arguments.length) return gap;
-        gap = _x;
-        return this;
-    };
-    exports.ease = function(_x) {
-        if (!arguments.length) return ease;
-        ease = _x;
-        return this;
-    };
-    d3.rebind(exports, dispatch, "on");
-    return exports;
-};
+
+
+})();
