@@ -75,6 +75,9 @@ class CookinController {
     def runSTests() {
         render (view: 'runSTests')
     }
+    def fundamental() {
+        render (view: 'fundamental')
+    }
 
 
 
