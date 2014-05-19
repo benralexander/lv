@@ -60,6 +60,15 @@ class CookinController {
     def poly() {
         render (view: 'poly')
     }
+    def simpleHtml() {
+        render (view: 'simpleHtml')
+    }
+    def simpleCss() {
+        render (view: 'simpleCss')
+    }
+    def simpleJs() {
+        render (view: 'simpleJs')
+    }
     def mandelbrot() {
         render (view: 'mandelbrot')
     }

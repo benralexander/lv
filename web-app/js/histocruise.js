@@ -1,13 +1,15 @@
+var cbbo = cbbo || {};
+
 (function () {
 
 
-    d3.swirlyHistogram = function () {
+    cbbo.swirlyHistogram = function () {
         var chart = {},
             dataset,
             selectionIdentifier;
 
-        var w = 600;
-        var h = 250;
+        var w = 900;
+        var h = 500;
 
         chart.addSeries = function (series) {
             dataset = series;

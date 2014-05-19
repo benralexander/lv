@@ -11,7 +11,7 @@
 
     d3.json("http://localhost:8028/cow/cookin/retrieveJson", function (error, inData) {
 
-        var swirlyHistogram = d3.swirlyHistogram().selectionIdentifier('#histogramGoesHere');
+        var swirlyHistogram = cbbo.swirlyHistogram().selectionIdentifier('#histogramGoesHere');
 
         swirlyHistogram.addSeries(inData);
 

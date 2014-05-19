@@ -10,13 +10,22 @@ Minimal coding example in D3 for May 22 demo
     <link rel="stylesheet" type="text/css" href="../css/sierpinski.css"/>
     <script type="text/javascript" src="../js/d3.js"></script>
     <script type="text/javascript" src="../js/fundamental.js"></script>
+    <style>
+    #container {
+        height: 400px;
+    }
 
+        #controls {
+            position: relative;
+            margin: : 10px;
+        }
+    </style>
 </head>
 
 <body>
 
 
-<div id="container" />
+<div id="container"></div>
 
 
 <script>
@@ -25,7 +34,7 @@ Minimal coding example in D3 for May 22 demo
 
     var chart = cbbo.barChart();
 
-    var myDataSet = [3,7,10,8,5];
+    var myDataSet = [30,70,100,80,50];
 
 
     d3.select('#container')
@@ -35,6 +44,14 @@ Minimal coding example in D3 for May 22 demo
 
 
 </script>
+
+
+<div id="controls">
+    <button id="moveAroundButton" onclick="chart.changeForm()">change form</button>
+    <button id="changeRoundButton" onclick="chart.changeRound()">change round</button>
+    <button id="changeColorButton" onclick="chart.changeColor()">change color</button>
+</div>
+
 
 </body>
 </html>
