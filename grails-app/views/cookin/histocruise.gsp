@@ -9,7 +9,7 @@
 <body>
 <script>
 
-    d3.json("http://localhost:8028/cow/cookin/retrieveJson", function (error, inData) {
+    d3.json("/cow/cookin/retrieveJson", function (error, inData) {
 
         var swirlyHistogram = cbbo.swirlyHistogram().selectionIdentifier('#histogramGoesHere');
 

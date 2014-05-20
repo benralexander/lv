@@ -124,7 +124,7 @@ text {
                 /***
                 *   Call for the data, and perform all the functions that are data dependent.
                 */
-                d3.json("http://localhost:8028/cow/curvedForce/feedMeJson", function (error, inData) {
+                d3.json("/cow/curvedForce/feedMeJson", function (error, inData) {
                     nodePlotInternals(inData);
                 });
 

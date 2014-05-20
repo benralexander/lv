@@ -1,4 +1,4 @@
-d3.json("http://localhost:8028/cow/crossfilter/feedMeJson", function(sleep) {
+d3.json("/cow/crossfilter/feedMeJson", function(sleep) {
 
     // Various formatters.
   var formatNumber = d3.format(",d"),
