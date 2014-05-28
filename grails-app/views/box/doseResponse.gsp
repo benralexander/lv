@@ -186,7 +186,7 @@
             .autoScale(false)
             .areaUnderTheCurve ([5,13]) // Shade points 5 - 13
             //.domainMultiplier(1.2)    only used if autoscale==true
-            .x(d3.scale.log().domain([0.001, 40]))
+            .x(d3.scale.log().base(2).domain([0.001, 40]))
             .y(d3.scale.linear().domain([0,1.5]));
 
 //    var c = chart.generateSigmoidPoints(10,  //  yMin

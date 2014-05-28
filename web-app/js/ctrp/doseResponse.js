@@ -298,11 +298,12 @@
         }
 
         function defineBodyClip(svg) { // <-2C
-            var padding = 5;
+            var padding = 5,
+                bodyClipId = "body-clip_"+_selectionIdentifier;
 
             svg.append("defs")
                 .append("clipPath")
-                .attr("id", "body-clip")
+                .attr("id", "body-clip_"+_selectionIdentifier)
                 .append("rect")
                 .attr("x", 0 - padding)
                 .attr("y", 0)
@@ -317,7 +318,7 @@
                     .attr("transform", "translate("
                         + xStart() + ","
                         + yEnd() + ")") // <-2E
-                    .attr("clip-path", "url(#body-clip)");
+                    .attr("clip-path", "url(#body-clip_"+_selectionIdentifier+")");
 
             // the fitted lines
             renderLines();
@@ -932,8 +933,68 @@
             return returnValue;
         }
 
-        return _chart; // <-1E
+        // we will be given a data array,  a maximum value for the shading area, and then the number of points below maximum
+        //  that we should consider shaded.  Convert these numbers and indexes which we can return (and which will presumably
+        //  be used immediately by the areaUnderTheCurve method).
+        // Note: it's possible that the maximum we are given won't match any of the concentration points.  If that's the case then
+        //  choose the first point vbove the index value ( or the maximum array value, whichever is smaller )
+        _chart.calculateBoundsForShading = function (dataArray,maximumShadingValue,numberOfPoints) {
+
+            // private method:
+            // we need to match the value we are given with one of the array values, but the
+            //  match might not be precise, therefore we need this epsilon equivalence.  Yuck.
+            var almostEqual = function (a, b, epsilonAsMultiplier){
+                   var allowableSpread = a*epsilonAsMultiplier,
+                       lowerValue = a-allowableSpread,
+                       upperValue = a+allowableSpread;
+                return (( b < upperValue)  && ( b > lowerValue));
+                },
+            returnValue = {maxIndex: 0,minIndex: 0};
+
+            // now we begin the coding.  Start with some parameter checking
+            if ((typeof dataArray!== "undefined") &&
+                (typeof dataArray.length!== "undefined") &&
+                ( dataArray.length > 0)) {
+
+                // loop until we find the number we are trying to identify as the maximum
+                for ( var concentrationIndex = 0 ; concentrationIndex <dataArray.length; concentrationIndex++){
+                     if (almostEqual(maximumShadingValue,dataArray[concentrationIndex].cpdConc,.001)) {
+                         returnValue.maxIndex = concentrationIndex;
+                         break;
+                     }
+                }
+
+                // if we never found the number we were looking for then loop again and choose the first number
+                //  past the maximum we been given
+                if (returnValue.maxIndex === 0) {
+                    for ( var concentrationIndex = 0 ; concentrationIndex <dataArray.length; concentrationIndex++){
+                        if (maximumShadingValue>dataArray[concentrationIndex].cpdConc) {
+                            returnValue.maxIndex = concentrationIndex;
+                            break;
+                        }
+                    }
+                }
+
+                // if we never found a suitable index number we were looking for then choose the largest index as the default
+                if (returnValue.maxIndex === 0) {
+                    returnValue.maxIndex = dataArray.length;
+                }
+
+                if (returnValue.maxIndex > numberOfPoints)  {
+                    numberOfPoints.minIndex = returnValue.maxIndex - numberOfPoints;
+                }
+
+            }
+            return returnValue;
+
+        }
+
+
+
+            return _chart; // <-1E
     };
+
+
 
 
 })();

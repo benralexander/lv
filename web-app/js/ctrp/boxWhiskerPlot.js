@@ -1,11 +1,11 @@
 (function () {
 
-    var firstInstance = true;
+    var firstInstance = true,
+        instance;
 
     d3.boxWhiskerPlot = function () {
 
-        var instance = {},
-            width = 1,
+        var width = 1,
             height = 1,
             selectionIdentifier = '',
             duration = 500,
@@ -69,8 +69,27 @@
                 }
             };
 
+
+        /***
+         * Start code (as opposed to variable definitions) here.
+         */
+
+        // Enforce that this object is initialized with a 'new'
+        if (!(this instanceof d3.boxWhiskerPlot)) {
+            return new d3.boxWhiskerPlot();
+        }
+
+
+        // Enforce that there is only ever one of these objects
+        if (typeof instance === "object") {
+            return instance;
+        }  else {
+            instance = {};
+        }
+
         // before we start a new box whisker plot, let's make sure we cleaned up any remnants of the previous box whisker
         cleanUpAfterYourself(true);
+
 
 
         /***
