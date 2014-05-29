@@ -1,9 +1,11 @@
+var cbbo = cbbo || {};
+
 (function () {
 
-    var firstInstance = true,
-        instance;
+    var instance; // object that retains the box whisker across instantiations.  We use a
+    //  singleton-based approach, so there is never more than one box whisker.
 
-    d3.boxWhiskerPlot = function () {
+    cbbo.boxWhiskerPlot = function () {
 
         var width = 1,
             height = 1,
@@ -20,15 +22,17 @@
             outlierRadius = 2,
             compoundIdentifier = '',
             scatterDataCallback,
+            dataSet = 'GEX',
         // the callback which retrieves the correlation data. Note that this callback
         // also assigns a second callback ( scatterDataCallback ) which it uses to
         // actually launch the scatter plot
         //
         // also note: I externalize this callback to support inserting a stub in the test harness.
         // During regular usage, however, this default value should be perfectly adequate
-            retrieveCorrelationData = function (compoundId, geneName) {
+            retrieveCorrelationData = function (compoundId, geneName,dataSet) {
                 setWaitCursor();
-                DTGetCorrelationPoints(compoundId, geneName, function (data){
+                var filter = collectFilterStrings();
+                DTGetCorrelationPoints(compoundId, geneName, dataSet, filter, function (data){
                     if (typeof scatterDataCallback !== "undefined") {
                         scatterDataCallback(data, geneName, compoundId);
                     }
@@ -71,24 +75,27 @@
 
 
         /***
-         * Start code (as opposed to variable definitions) here.
+         * Begin the code for the box whisker plot (everything up to this point includes only variable definitions,
+         * and nothing that is immediately executed).
          */
 
-        // Enforce that this object is initialized with a 'new'
-        if (!(this instanceof d3.boxWhiskerPlot)) {
-            return new d3.boxWhiskerPlot();
+
+        // First step, and enforce that this object is initialized with a 'new'.  If not then we will impose one.
+        if (!(this instanceof cbbo.boxWhiskerPlot)) {
+            return new cbbo.boxWhiskerPlot();
         }
 
 
-        // Enforce that there is only ever one of these objects
+        // Enforce that there is only ever one of these objects (Singleton pattern).  We presume 
+        //  that calling a boxwhisker that already exists should imply that we reinitialize the plot,
+        //  so we call a clean up before returning the pointer.  
         if (typeof instance === "object") {
+            cleanUpAfterYourself(true);
             return instance;
         }  else {
             instance = {};
         }
 
-        // before we start a new box whisker plot, let's make sure we cleaned up any remnants of the previous box whisker
-        cleanUpAfterYourself(true);
 
 
 
@@ -168,39 +175,38 @@
              */
             $(function () {
 
-                if (firstInstance) {  // let's not install multiple copies of the same callback
+                $(document.body).on('click','.clickable' ,function () {
 
-                    firstInstance = false;
-                    $(document.body).on('click','.clickable' ,function () {
+                    if (thisDotIsAlreadySelected(this)){
 
-                        if (thisDotIsAlreadySelected(this)){
+                        deselect();
 
+                    } else {
+
+                        visuallyUnidentifyAllDots();
+                        if (scatterIsUp()){
                             deselect();
-
-                        } else {
-
-                            visuallyUnidentifyAllDots();
-                            if (scatterIsUp()){
-                                deselect();
-                            }
-
-                            visuallyIdentifyDot(this);
-
-                            var genePrimaryName = $(this).attr('gpn');
-                            $(".pop").slideFadeIn(function () {
-                                var cmpd = $('#imageHolder').data('compound');
-
-                                d3.select('#doseResponseCurve').style('display','none');
-                                d3.select('.messagepop').style('width','400px');
-
-                                retrieveCorrelationData(cmpd,
-                                    genePrimaryName);
-                                scatterIsUp(true) ;
-                            });
                         }
-                        return false;
-                    });
-                }
+
+                        visuallyIdentifyDot(this);
+
+                        var genePrimaryName = $(this).attr('gpn');
+                        $(".pop").slideFadeIn(function () {
+                            var cmpd = $('#imageHolder').data('compound'),
+                                correlationDataType =  $('input:radio[name=correlationChoice]:checked').val();
+
+                            d3.select('#doseResponseCurve').style('display','none');
+                            d3.select('.messagepop').style('width','400px');
+
+                            retrieveCorrelationData(cmpd,
+                                genePrimaryName,
+                                correlationDataType);
+                            scatterIsUp(true) ;
+                        });
+                    }
+                    return false;
+                });
+
 
                 // there is only one close label so we only need to establish the callback once
                 $(document.body).on('click','.close', function () {
@@ -229,7 +235,7 @@
 
             return {
                 // public variables and methods.  Current none are necessary
-            }
+            };
 
         }());
 
@@ -297,7 +303,7 @@
                 initialize = function (){
                     lastX = null;
                     lastY = null;
-                }
+                };
 
             return {
                 // public variables
@@ -306,7 +312,7 @@
                 currentX :  shiftedX,
                 currentY :  shiftedY,
                 initialize: initialize
-            }
+            };
 
         }());
 
@@ -324,24 +330,26 @@
                     "Correlation: " +  valueToDisplay.toPrecision(3)+ "</span>";
             });
 
+        /***
+         * publicly available method.  The data are changing, so clean up any residual on-screen data elements
+         */
+        instance.launchCleanup = function (thoroughCleanup){
+            cleanUpAfterYourself(thoroughCleanup);
+            return instance;
+        };
 
-        // For each data element
-        instance.render = function (selectionOverride) {
-            var workingSelection;
 
-            // allow data selections to be immediately assigned
-            if (typeof selectionOverride !== "undefined"){
-                workingSelection = selectionOverride;
-            }   else {
-                workingSelection =  selection
 
-            }
+
+
+        // For each small multiple…
+        instance.render = function () {
 
             selection
                 .select("svg").select("g.boxHolder")
                 .each(function (d, i) {
                     d = d.sort(function (a, b) {
-                        return a.value-b.value;
+                        return a.value - b.value;
                     });
                     var g = d3.select(this),
                         n = d.length;
@@ -351,7 +359,7 @@
 
                     // Compute whiskers. Must return exactly 2 elements, or null.
                     var whiskerIndices = whiskers && whiskers.call(this, d, i),
-                    whiskerData = whiskerIndices && whiskerIndices.map(function (i) {
+                        whiskerData = whiskerIndices && whiskerIndices.map(function (i) {
                             return d[i].value;
                         });
 
@@ -582,14 +590,7 @@
                     outlier.exit()
                         .transition()
                         .duration(duration)
-                        .attr("r", function (d){return outlierRadius;})
-                        .attr("cx", function (i){
-                            return jitter.currentX(width/2,yScaleOld(d[i].value));
-                        })
-                        .attr("cy", function (i) {
-                            return jitter.currentY(width/2,yScaleOld(d[i].value));
-                        })
-                        .style("opacity", 1e-6)
+                        .attr("r", function (d){return 0;})
                         .remove();
 
                     // Compute the tick format.
@@ -604,10 +605,10 @@
                         .attr("class", "box")
                         .attr("dy", ".3em")
                         .attr("dx", function (d, i) {
-                            return i & 1 ? 6 : -6
+                            return i & 1 ? 6 : -6;
                         })
                         .attr("x", function (d, i) {
-                            return i & 1 ? width : 0
+                            return i & 1 ? width : 0;
                         })
                         .attr("y", yScaleOld)
                         .attr("text-anchor", function (d, i) {
@@ -691,8 +692,7 @@
 
                 });
             d3.timer.flush();
-            return instance.render;
-        }
+        };
 
         // Note:  this method will assign data to the DOM
         instance.assignData = function (x) {
@@ -811,12 +811,21 @@
         };
 
 
-        // Methods to be activated to create the scatter plot
+        // Methods used to retrieve data in response to a box whisker outlier click.  Necessary only if the default won't  suit you
         instance.retrieveCorrelationData = function (x) {
             if (!arguments.length) return retrieveCorrelationData;
             retrieveCorrelationData = x;
             return instance;
         };
+
+        // change the data set.  Current options are GEX (gene expression) and CNV (copy number variation)
+        instance.dataSet = function (x) {
+            if (!arguments.length) return dataSet;
+            dataSet = x;
+            return instance;
+        };
+
+
 
         return instance;
     };
@@ -828,7 +837,7 @@
     function boxQuartiles(d) {
         var accumulator = [];
         d.forEach(function (x) {
-            accumulator.push(x.value)
+            accumulator.push(x.value);
         });
         return [
             d3.quantile(accumulator, .25),
