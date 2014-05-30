@@ -119,7 +119,7 @@ removeWaitCursor=function(){console.log('stub removeWaitCursor');};
             onScreenEnd = 100;
 
     // build those portions of the box whisker plot that our data independent
-    var chart = d3.boxWhiskerPlot()
+    var chart = cbbo.boxWhiskerPlot()
             .selectionIdentifier("#plot")
             .width(width)
             .height(height)
