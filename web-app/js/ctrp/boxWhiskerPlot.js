@@ -8,22 +8,27 @@ var cbbo = cbbo || {};
 
     cbbo.boxWhiskerPlot = function () {
 
-        var selectionIdentifier = '',
-            duration = 500,
-            domain = null,
-            min = Infinity,
-            max = -Infinity,
-            whiskers = boxWhiskers,
-            quartiles = boxQuartiles,
-            xAxis = {},
-            yAxis = {},
-            boxWhiskerName = '',
-            outlierRadius = 2,
-            compoundIdentifier = '',
+        /***
+         * Publicly accessible data goes here
+         */
+        var boxWhiskerData,  // All the points the box whisker plot represents ( outliers or boxed )
+            selectionIdentifier = '', // String defining Dom element where the plot will hang
+            min = Infinity,  // min y value.  Autoscale if not set
+            max = -Infinity,  // max y value.  Autoscale if not set
+            whiskers = boxWhiskers, // function to set the whiskers
+            boxWhiskerName = '', // little text label under b/w
+            outlierRadius = 2,  // size of outlier dots on screen
             scatterDataCallback,
-            dataSet = 'GEX',
 
-            // the callback which retrieves the correlation data. Note that this callback
+            // Private variables, which can be surfaced as necessary
+            duration = 500,  // How many milliseconds to animations require
+            quartiles = boxQuartiles, // function describing how quartiles are calculated
+            value = Number,
+            tickFormat = null,
+            selection = {},
+
+
+        // the callback which retrieves the correlation data. Note that this callback
             // also assigns a second callback ( scatterDataCallback ) which it uses to
             // actually launch the scatter plot
             //
@@ -45,12 +50,6 @@ var cbbo = cbbo || {};
             margin = {top: 50, right: 70, bottom: 20, left: 80},
             width = 350 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom,
-
-        // the following variables are not publicly exposed
-            value = Number,
-            tickFormat = null,
-            selection = {},
-
 
             cleanUpAfterYourself = function (comprehensiveCleanup) {
 
@@ -102,11 +101,6 @@ var cbbo = cbbo || {};
          *  box whisker plot, and then retrieves the data necessary to insert
          *  a scatter plot into a common div.  We use prototype definition tricks
          *  JQuery here, so make sure those libraries are available.
-         *
-         *  The point of this whole 'clickHandling' module is only to provide two things:
-         *    provide a function that runs when a user clicks on anything with the class
-         *    '.clickable', and then another function to run when the user hits the close
-         *    button (  identified with class = '.close').
          */
         var clickHandling = (function () {
 
@@ -116,20 +110,25 @@ var cbbo = cbbo || {};
              */
             var deselect = function () {
                     visuallyUnidentifyAllDots();
-                    $(".pop").slideFadeOut(function () {
 
-                        cleanUpAfterYourself(false);
+                    cleanUpAfterYourself(false);
 
-                        scatterIsUp(false);
+                    scatterIsUp(false);
 
-                    });
+                    d3.select(".pop").style('display', 'block')
+                        .style('height', '445px')
+                        .transition()
+                        .style('height', '5px')
+                        .style('display', 'none');
+
+
                 },
 
 
                 /***
                  * Mark an outlier point as selected
                  */
-                visuallyIdentifyDot = function (currentDot) {
+                    visuallyIdentifyDot = function (currentDot) {
                     d3.select(currentDot).select('circle').classed('selectedCircle', true).classed('outlier', false);
                 },
 
@@ -137,7 +136,7 @@ var cbbo = cbbo || {};
                 /***
                  * Make sure that all outlier points are deselected
                  */
-                visuallyUnidentifyAllDots = function () {
+                    visuallyUnidentifyAllDots = function () {
                     d3.selectAll('.selectedCircle').classed('outlier', true).classed('selectedCircle', false);
                 },
 
@@ -147,7 +146,7 @@ var cbbo = cbbo || {};
                  * a parameter we return a truth value answering the question of whether the scatterplot
                  * is in place
                  */
-                 scatterIsUp = function (trueOrFalse) {
+                    scatterIsUp = function (trueOrFalse) {
                     var retval = false;
                     if (!arguments.length) {
                         if (!d3.select("#examineCorrelation").empty()) {
@@ -163,7 +162,7 @@ var cbbo = cbbo || {};
                  * ( simply bring down the scatterplot) then if we select a new point ( bring down the old
                  * scatterplot and put up a new one).
                  */
-                 thisDotIsAlreadySelected = function (currentDot) {
+                    thisDotIsAlreadySelected = function (currentDot) {
                     var retval = false;
                     if (!d3.select(currentDot).select('circle').empty()) {
                         retval = d3.select(currentDot).select('circle').classed('selectedCircle');
@@ -194,34 +193,21 @@ var cbbo = cbbo || {};
                         visuallyIdentifyDot(this);
 
                         var genePrimaryName = $(this).attr('gpn');
-//                        $(".pop").slideFadeIn(function () {
-//                            var cmpd = $('#imageHolder').data('compound'),
-//                                correlationDataType = $('input:radio[name=correlationChoice]:checked').val();
-//
-//                            d3.select('#doseResponseCurve').style('display', 'none');
-//                            d3.select('.messagepop').style('width', '400px');
-//
-//                            retrieveCorrelationData(cmpd,
-//                                genePrimaryName,
-//                                correlationDataType);
-//                            scatterIsUp(true);
-//                        });
 
-                            var cmpd = $('#imageHolder').data('compound'),
-                                correlationDataType = $('input:radio[name=correlationChoice]:checked').val();
+                        var cmpd = $('#imageHolder').data('compound'),
+                            correlationDataType = $('input:radio[name=correlationChoice]:checked').val();
 
-                            d3.select('#doseResponseCurve').style('display', 'none');
-                            d3.select('.messagepop').style('width', '400px');
+                        d3.select('#doseResponseCurve').style('display', 'none');
+                        d3.select('.messagepop').style('width', '400px');
 
-                            retrieveCorrelationData(cmpd,
-                                genePrimaryName,
-                                correlationDataType);
-                            scatterIsUp(true);
-                        d3.select('.pop').style('display','block')
-                            .style('opacity','1')
-                            .style('height','45px')
+                        retrieveCorrelationData(cmpd,
+                            genePrimaryName,
+                            correlationDataType);
+                        scatterIsUp(true);
+                        d3.select(".pop").style('display', 'block')
+                            .style('height', '5px')
                             .transition()
-                            .style('height',height+margin.bottom+'px');
+                            .style('height', '445px');
 
                     }
                     return false;
@@ -239,15 +225,6 @@ var cbbo = cbbo || {};
 
             });
 
-            function fadeIn(easing, callback) {
-                return this.animate({ opacity: 'show', height: 'show' }, "fast", easing, callback);
-            };
-            $.fn.slideFadeIn = fadeIn;
-
-            function fadeOut(easing, callback) {
-                return this.animate({ opacity: 'hide', height: 'hide' }, "fast", easing, callback);
-            };
-            $.fn.slideFadeOut = fadeOut;
 
             return {
                 // public variables and methods.  Current none are necessary
@@ -353,8 +330,11 @@ var cbbo = cbbo || {};
 
         // For each small multiple…
         instance.render = function () {
+            var xAxis,
+                yAxis;
 
-            selection
+
+                selection
                 .select("svg").select("g.boxHolder")
                 .each(function (d, i) {
                     d = d.sort(function (a, b) {
@@ -708,11 +688,11 @@ var cbbo = cbbo || {};
 
         // Note:  this method will assign data to the DOM
         instance.assignData = function (x) {
-            if (!arguments.length) return data;
-            data = x;
+            if (!arguments.length) return boxWhiskerData;
+            boxWhiskerData = x;
             var bwPlot = selection
                 .selectAll("svg")
-                .data(data);
+                .data(boxWhiskerData);
 
             var bwPlotExt = bwPlot.enter()
                 .append("svg")
@@ -748,13 +728,6 @@ var cbbo = cbbo || {};
             return instance;
         };
 
-
-        instance.domain = function (x) {
-            if (!arguments.length) return instance;
-            domain = x == null ? x : d3.functor(x);
-            return instance;
-        };
-
         instance.height = function (x) {
             if (!arguments.length) return height;
             height = x;
@@ -780,12 +753,6 @@ var cbbo = cbbo || {};
             return instance;
         };
 
-        instance.quartiles = function (x) {
-            if (!arguments.length) return quartiles;
-            quartiles = x;
-            return instance;
-        };
-
         instance.outlierRadius = function (x) {
             if (!arguments.length) return outlierRadius;
             outlierRadius = x;
@@ -806,15 +773,6 @@ var cbbo = cbbo || {};
             return instance;
         };
 
-        // Identify the compounds that will be retrieved by the scatter plot ( activated
-        // through a click on the outlier points)
-        instance.compoundIdentifier = function (x) {
-            if (!arguments.length) return compoundIdentifier;
-            compoundIdentifier = x;
-            d3.select('#cdtGeneCorrelationAnalysis').datum(x);
-            return instance;
-        };
-
         // Methods to be activated to create the scatter plot
         instance.scatterDataCallback = function (x) {
             if (!arguments.length) return scatterDataCallback;
@@ -829,14 +787,6 @@ var cbbo = cbbo || {};
             retrieveCorrelationData = x;
             return instance;
         };
-
-        // change the data set.  Current options are GEX (gene expression) and CNV (copy number variation)
-        instance.dataSet = function (x) {
-            if (!arguments.length) return dataSet;
-            dataSet = x;
-            return instance;
-        };
-
 
         return instance;
     };

@@ -123,7 +123,7 @@ removeWaitCursor=function(){console.log('stub removeWaitCursor');};
             .selectionIdentifier("#plot")
             .width(width)
             .height(height)
-            .whiskers(iqr(defaultInterquartileMultiplier))
+
             .boxWhiskerName ('3,4,5-trimethoxy benzaldehyde');
     // build a slider and attach the callback methods
     var slider = d3.slider(minimumInterquartileMultiplier,
@@ -241,9 +241,9 @@ removeWaitCursor=function(){console.log('stub removeWaitCursor');};
         chart.assignData (data)
              .min(globalMinimum)
              .max(globalMaximum)
+                .whiskers(iqr(defaultInterquartileMultiplier))
                 .scatterDataCallback( respondToScatterData )
                 .retrieveCorrelationData(clickCallback)
-        .compoundIdentifier(375788)
              .render();
 
 
