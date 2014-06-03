@@ -16,21 +16,20 @@ grails.project.dependency.resolution = {
     checksums true // Whether to verify checksums on resolve
 
     repositories {
-        inherits true // Whether to inherit repository definitions from plugins
-
+        inherit(false) // don't repositories from plugins
         grailsPlugins()
         grailsHome()
-        grailsCentral()
 
-        mavenLocal()
-        mavenCentral()
-
-        // uncomment these (or add new ones) to enable remote dependency resolution from public Maven repositories
-        //mavenRepo "http://snapshots.repository.codehaus.org"
-        //mavenRepo "http://repository.codehaus.org"
-        //mavenRepo "http://download.java.net/maven/2/"
-        //mavenRepo "http://repository.jboss.com/maven2/"
+        if (useBroadRepo) {
+            mavenRepo "http://bard-repo.broadinstitute.org:8081/artifactory/bard-virtual-repo"
+            grailsRepo("http://bard-repo.broadinstitute.org:8081/artifactory/bard-virtual-repo", "grailsCentral")
+        } else {
+            grailsCentral()
+            mavenLocal()
+            mavenCentral()
+        }
     }
+
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
         test "org.spockframework:spock-grails-support:0.7-groovy-2.0"
@@ -41,6 +40,8 @@ grails.project.dependency.resolution = {
         test(":spock:0.7") {
             exclude "spock-grails-support"
         }
+
+        compile ":rest:0.5"
 
         runtime ":hibernate:$grailsVersion"
         runtime ":jquery:1.8.0"

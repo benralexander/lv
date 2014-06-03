@@ -1,6 +1,8 @@
 
 package cow
 
+import cbbo.ctrp.RunDataGeneration
+
 
 class GroovyLauncherController {
 
@@ -8,6 +10,7 @@ class GroovyLauncherController {
         render(view: 'cddbApiTester')
     }
     def cddbApiTester() {
+        RunDataGeneration runDataGeneration = new RunDataGeneration()
         render(view:'cddbApiTester')
     }
     def generateSunburst() {
