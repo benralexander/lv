@@ -17,7 +17,8 @@ class RunDataGeneration {
     Random random = new Random()
 
 
-    private String generateFilename(String restApiCall,String directoryForFile, Date callStarted) {
+    private String generateFilename(String restApiCall,String directoryForFile, Date callStarted,
+                                    int countDisambiguator) {
         String fileName = restApiCall.replaceAll("[\\/&=]", ".");
         if (fileName.startsWith("."))
             fileName = fileName.replaceFirst(".", "");
@@ -26,7 +27,7 @@ class RunDataGeneration {
 
         // append elapsed time to end of name
         Date currentDate = new Date();
-        fileName += ((currentDate.getTime() - callStarted.getTime()) + "ms" + ".");
+        fileName += ((currentDate.getTime() - callStarted.getTime()) + "ms_" +countDisambiguator+ ".");
         String filePath = System.getProperty("user.home") + System.getProperty("file.separator");
         if (directoryForFile != null) {
             filePath += (directoryForFile + System.getProperty("file.separator"));
@@ -65,8 +66,9 @@ class RunDataGeneration {
                                     String restApiCall,
                                     String parameterSummary,
                                     Date callStarted,
-                                    String returnFromApi) {
-        String fileName = generateFilename(restApiCall, directoryForFile, callStarted)
+                                    String returnFromApi,
+                                    int countDisambiguator) {
+        String fileName = generateFilename(restApiCall, directoryForFile, callStarted,countDisambiguator)
         writeValuesToFile(fileName,
                 parameterSummary,
                 returnFromApi)
@@ -91,7 +93,8 @@ class RunDataGeneration {
             // append elapsed time to end of name
             Date currentDate = new Date();
             fileName += ((currentDate.getTime() - callStarted.getTime()) + "ms" + ".");
-            String filePath = System.getProperty("user.home") + System.getProperty("file.separator");
+  //          String filePath = System.getProperty("user.home") + System.getProperty("file.separator");
+            String filePath = "\\\\dropbox\\dropbox\\balexand"
             if (directoryForFile != null) {
                 filePath += (directoryForFile + System.getProperty("file.separator"));
             }
@@ -146,7 +149,7 @@ class RunDataGeneration {
 
 
 
-     boolean executePost3(String urlString, String parameters) {
+     boolean executePost3(String urlString, String parameters,int countDisambiguator) {
         HttpURLConnection connection = null;
         URL url = new URL(serverLocation+urlString)
          boolean retval = false
@@ -178,13 +181,42 @@ class RunDataGeneration {
                     urlString,
                     parameters,
                     callStarted,
-                    apiResponse)
-
-
-            //println(recaptchaResponse)
-
+                    apiResponse,
+                    countDisambiguator)
 
             println "completed post"
+        } catch (e) {
+            e.printStackTrace()
+            println "FAILURE on parm="+parameters+"."
+        }
+        return retval
+    }
+
+    /***
+     * retrieve data from the API, presumably nicely formatted as Json
+     * @param urlString
+     * @return
+     */
+    String executeGet(String urlString) {
+        URL url = new URL(serverLocation+urlString)
+        String retval = false
+        try {
+            HttpURLConnection connection = url.openConnection()
+            connection.setRequestMethod("GET")
+            connection.setRequestProperty("Content-Type",
+                    "application/json");
+            connection.setRequestProperty("user", "ctrp")
+            connection.doOutput = true
+
+            connection.setUseCaches(false);
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+            Date callStarted = new Date ()
+
+            connection.connect()
+
+            retval = connection.content.text
+            JsonSlurper jsonSlurper = new JsonSlurper()
         } catch (e) {
             e.printStackTrace()
             println "error"
@@ -192,25 +224,89 @@ class RunDataGeneration {
         return retval
     }
 
-
-
-
- List <String> randomStringSelector ( List <String> universe, int maximumElementsToReturn, boolean lessThanMaximumNumberAllowed )  {
-     List <String> returnValue = []
-     int elementsToReturn  =   maximumElementsToReturn
-    int sizeOfTheUniverse =   universe.size()
-    if (lessThanMaximumNumberAllowed)  {    // we might select a number of elements to return less than the maximum
-        elementsToReturn = 1 +random.nextInt(maximumElementsToReturn)
-    }
-    if((elementsToReturn > 0) && (sizeOfTheUniverse > 0)) {
-        def counter = 0
-        while(counter>elementsToReturn) {
-            returnValue.add(universe.minus(returnValue).getAt(random.nextInt(sizeOfTheUniverse)))
-            counter++
+    List <String> randomStringSelector ( List <String> universe, int maximumElementsToReturn, boolean lessThanMaximumNumberAllowed )  {
+        List <String> returnValue = []
+        int elementsToReturn  =   maximumElementsToReturn
+        int sizeOfTheUniverse =   universe.size()
+        if (lessThanMaximumNumberAllowed)  {    // we might select a number of elements to return less than the maximum
+            elementsToReturn = 1 +random.nextInt(maximumElementsToReturn)
         }
+        if((elementsToReturn > 0) && (sizeOfTheUniverse > 0)) {
+            def counter = 0
+            while(counter<elementsToReturn) {
+                returnValue.add(universe.minus(returnValue).getAt(random.nextInt(sizeOfTheUniverse-counter)))
+                counter++
+            }
+        }
+        return  returnValue
     }
-    return  returnValue
-}
+
+
+
+    List <String>  extractCompounds (String apiReturnValues)  {
+        List <String> returnValue = []
+        JsonSlurper jsonSlurper = new JsonSlurper()
+        HashMap compoundAnnotations = jsonSlurper.parseText(apiReturnValues)
+        List compoundAnnotation =  compoundAnnotations["annotation"]
+        for (HashMap annotation in compoundAnnotation)   {
+            returnValue << annotation["cpdID"]
+        }
+        return returnValue
+    }
+
+
+
+
+
+    HashMap  extractAnnotations (String apiReturnValues)  {
+        HashMap returnValue = []
+        JsonSlurper jsonSlurper = new JsonSlurper()
+        HashMap allAllowableAnnotations = jsonSlurper.parseText(apiReturnValues)
+        // get the parts of the growth mode annotation that we need
+        List <String>  growthModeList = []
+        List growthModeAnnotation =  allAllowableAnnotations["growthMode"]
+        for (HashMap annotation in growthModeAnnotation)   {
+            growthModeList << ("\""+annotation["name"]+"\"" )
+        }
+
+        // get the parts of the growth mode annotation that we need
+        List <String>  sitePrimaryList = []
+        List sitePrimaryAnnotation =  allAllowableAnnotations["sitePrimary"]
+        for (HashMap annotation in sitePrimaryAnnotation)   {
+            String  sitePrimaryName = annotation["name"]
+            List  histSubtypeList = annotation["histSubtype"]
+            for (HashMap histSubtype in histSubtypeList)   {
+                sitePrimaryList << ("{\"sitePrimary\":\""+sitePrimaryName+"\",\"histSubtype\":\""+histSubtype["name"]+"\"}")
+            }
+        }
+
+
+        // get the parts of the dataset annotation that we need
+        List <String>  datasetList = []
+        List datasetAnnotation =  allAllowableAnnotations["dataset"]
+        for (HashMap annotation in datasetAnnotation)   {
+            datasetList << ("\""+annotation["name"]+"\"" )
+        }
+
+        returnValue ["growthMode"]  =  growthModeList
+        returnValue ["sitePrimary"]  =  sitePrimaryList
+        returnValue ["dataset"]  =  datasetList
+        return returnValue
+    }
+
+
+
+
+    List <String> retrieveCompounds(int numberOfCompounds) {
+        String apiReturnValues = executeGet("cddb/ctrp2/annotation/perCompound/");
+        List <String> compoundList =  extractCompounds (apiReturnValues)
+        return randomStringSelector ( compoundList, 64, false )
+    }
+
+    HashMap retrieveAnnotations() {
+        String apiReturnValues = executeGet("cddb/ctrp2/facet/");
+        return  extractAnnotations (apiReturnValues)
+    }
 
 
 
@@ -222,7 +318,55 @@ String generateParametersForCorrelationPointCall ()   {
 
 
 
+    public List <String> prepForTestRun() {
+        List <String> parameterCombinations = []
+        List <String> compoundList = retrieveCompounds(64);
+        HashMap annotationHashMap =  retrieveAnnotations()
+        for ( String oneCompound in compoundList ){
+            for (int i = 0 ; i < 16; i++ ){
+                String oneParameterCombo = "{\"cpdID\":" +oneCompound+ ",\"cellSampleAnnotation\":["
+                // pick a random number of primary sites to use
+                List< String> sitePrimaryList =  randomStringSelector ( annotationHashMap ["sitePrimary"], (i+1), true )
+                for (int j = 0 ; j < sitePrimaryList.size(); j++ ){
+                    oneParameterCombo += sitePrimaryList [j]
+                    if  ((j+1) < sitePrimaryList.size())  {
+                        oneParameterCombo+=","
+                    }
+                }
+                oneParameterCombo += "],\"growthMode\":["
 
+                // pick a random number of growth modes to use
+                List< String> growthModeList =  randomStringSelector ( annotationHashMap ["growthMode"], annotationHashMap ["growthMode"].size(), true )
+                for (int j = 0 ; j < growthModeList.size(); j++ ){
+                    oneParameterCombo += growthModeList [j]
+                    if  ((j+1) < growthModeList.size())  {
+                        oneParameterCombo+=","
+                    }
+                }
+                oneParameterCombo += "],\"dataset\":["
+
+                // pick a random number of growth modes to use
+                List< String> datasetList =  randomStringSelector ( annotationHashMap ["dataset"],  annotationHashMap ["dataset"].size(), true )
+                for (int j = 0 ; j < datasetList.size(); j++ ){
+                    oneParameterCombo += datasetList [j]
+                    if  ((j+1) < datasetList.size())  {
+                        oneParameterCombo+=","
+                    }
+                }
+                oneParameterCombo += "],\"geneFeatureDataset\":"
+                List< String> geneFeatureDatasetList = []
+                geneFeatureDatasetList << "GEX"
+                geneFeatureDatasetList << "CNV"
+                oneParameterCombo+=  "\""+randomStringSelector ( geneFeatureDatasetList, 1, false )[0]+"\"}"
+
+                parameterCombinations <<  oneParameterCombo
+            }
+
+        }
+        return parameterCombinations
+
+
+    }
 
 
 
@@ -255,8 +399,14 @@ String generateParametersForCorrelationPointCall ()   {
 
     public RunDataGeneration() {
         println('launching RunDataGeneration')
-        testCallCorrelationPoint()
-       // executePost3("123")
+        List<String> listOfHeaderParms= prepForTestRun ()
+        List<String> randomizedListOfHeaderParms=randomStringSelector ( listOfHeaderParms,  listOfHeaderParms.size(), false )
+        int loopCount = 1;
+        for (String headerParm in randomizedListOfHeaderParms) {
+            executePost3("cddb/ctrp2/perturbation/perCurve/correlation/",headerParm,loopCount++)
+        }
+
+     //   testCallCorrelationPoint()
     }
 
 }

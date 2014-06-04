@@ -15,6 +15,8 @@
                 .range(["black", "red", "green"]),
             _svg,
             _autoScale = true,
+            _derivedXMin,
+            _derivedXMax,
             _bodyG,
             _line,
             _domainMultiplier = 1.1,  // 110% of the data we get by default
@@ -25,9 +27,10 @@
             _selectionIdentifier,
         // private variables
             _expansionPercent = 10.0, // percent we extend beyond the min max of the raw data
-            _pointsDefiningGeneratedLine = 5000  // the curve we generate from the four parameters is a series of
-        // straight-line segments. This variable describes how many exactly.
+            _logBaseOfFittedCurve = 1.1// the curve we generate from the four parameters is a series of
+        // straight-line segments. This exponent determines how many line segments we generate
             ;
+
 
         _chart.render = function () {
 
@@ -116,6 +119,8 @@
                             returnValue.min = tempValue;
                         }
                     }
+                    _derivedXMin = returnValue.min;
+                    _derivedXMax = returnValue.max;
                     return  returnValue;
                 },
                 /***
@@ -298,8 +303,7 @@
         }
 
         function defineBodyClip(svg) { // <-2C
-            var padding = 5,
-                bodyClipId = "body-clip_"+_selectionIdentifier;
+            var padding = 5;
 
             svg.append("defs")
                 .append("clipPath")
@@ -842,20 +846,20 @@
                 points;
             // convert the Json field names, whatever they are, into an
             //  internal form we can depend on
-            if (series.points){
-                points = series.points.map(function (element){
+            if (series.pvPoint){
+                points = series.pvPoint.map(function (element){
                     var returnValue;
-                    if ((element.cpd_pv_error) && (element.cpd_pv_error !==null)) {
+                    if ((element.pvError) && (element.pvError !==null)) {
                         returnValue = {
-                            x: element.pert_conc,
-                            y: element.cpd_pv_measured_value,
-                            dyp: element.cpd_pv_error/2.0,
-                            dyn: element.cpd_pv_error/2.0
+                            x: element.cpdConc,
+                            y: element.pv,
+                            dyp: element.pvError/2.0,
+                            dyn: element.pvError/2.0
                         }
                     } else {
                         returnValue = {
-                            x: element.pert_conc,
-                            y: element.cpd_pv_measured_value
+                            x: element.cpdConc,
+                            y: element.pv
                         };
                     }
                     return returnValue;
@@ -879,23 +883,23 @@
                 // special restriction.  X values must be nonnegative in order for the EC50 calculation
                 // to be valid.  Therefore we can go ahead and increase the range, but we cannot increase
                 // to include x-values smaller than zero.
-                    lowXRange = Math.max(minimumX - ((maximumX - minimumX) * (_expansionPercent / 100.0)), 0.000001),
+                    lowXRange = minimumX,
                     highXRange = maximumX + ((maximumX - minimumX) * (_expansionPercent / 100.0)),
                     lowYRange = minimumY - ((maximumY - minimumY) * (_expansionPercent / 100.0)),
                     highYRange = maximumY + ((maximumY - minimumY) * (_expansionPercent / 100.0)),
                     linesExist = true;
 
-                if ((series.curve_baseline===null) ||
-                    (series.curve_height===null) ||
-                    (series.curve_slope===null) ||
-                    (series.nominal_ec50===null)) {
+                if ((series.curveBaseline===null) ||
+                    (series.curveHeight===null) ||
+                    (series.curveSlope===null) ||
+                    (series.nominalEC50===null)) {
                     linesExist =false;
                 }  else {
-                    generatedLine = _chart.generateSigmoidPoints(series.curve_baseline,
-                        series.curve_height,
-                        series.curve_slope,
-                        series.nominal_ec50,
-                        _pointsDefiningGeneratedLine,
+                    generatedLine = _chart.generateSigmoidPoints(series.curveBaseline,
+                        series.curveHeight,
+                        series.curveSlope,
+                        series.nominalEC50,
+                        _logBaseOfFittedCurve,
                         lowXRange,
                         highXRange);
                 }
@@ -908,13 +912,17 @@
             return _chart;
         };
 
-        _chart.generateSigmoidPoints = function (yMin, curveHeight, hillSlope, Ec50, numberOfPoints, xStart, xEnd) {
+        _chart.generateSigmoidPoints = function (yMin, curveHeight, hillSlope, Ec50, logBaseOfFittedCurve, xStart, xEnd) {
             var xVector = [];
             var returnValue = [];
             // first create the X factor
-            for (var i = 0; i < (numberOfPoints); i++) {
-                var xValue = xStart + ((((numberOfPoints - 1) - i) / (numberOfPoints - 1)) * (xEnd - xStart));
-                xVector.push(xValue);
+            var startHere = xStart*0.33;
+            var endHere = xEnd*3;
+            var curValue = startHere;
+
+            while (curValue < endHere){
+                xVector.push(curValue);
+                curValue = curValue*logBaseOfFittedCurve;
             }
             xVector = xVector.reverse();
             // now apply x vector to the sigmoid function
@@ -927,29 +935,28 @@
                 // nonnegative.
                 if (xVector[i] >= 0) {
                     returnValue.push({x: xVector[i],
-                        y: (yMin + curveHeight / (1 + Math.pow((xVector[i] / Ec50), (0 - hillSlope))))});
+                        y: (yMin + curveHeight / (1 + Math.pow(10,((Ec50-xVector[i])* (hillSlope)))))});
+
                 }
             }
             return returnValue;
-        }
+        };
 
         // we will be given a data array,  a maximum value for the shading area, and then the number of points below maximum
         //  that we should consider shaded.  Convert these numbers and indexes which we can return (and which will presumably
         //  be used immediately by the areaUnderTheCurve method).
-        // Note: it's possible that the maximum we are given won't match any of the concentration points.  If that's the case then
-        //  choose the first point vbove the index value ( or the maximum array value, whichever is smaller )
         _chart.calculateBoundsForShading = function (dataArray,maximumShadingValue,numberOfPoints) {
 
             // private method:
             // we need to match the value we are given with one of the array values, but the
             //  match might not be precise, therefore we need this epsilon equivalence.  Yuck.
             var almostEqual = function (a, b, epsilonAsMultiplier){
-                   var allowableSpread = a*epsilonAsMultiplier,
-                       lowerValue = a-allowableSpread,
-                       upperValue = a+allowableSpread;
-                return (( b < upperValue)  && ( b > lowerValue));
+                    var allowableSpread = a*epsilonAsMultiplier,
+                        lowerValue = a-allowableSpread,
+                        upperValue = a+allowableSpread;
+                    return (( b < upperValue)  && ( b > lowerValue));
                 },
-            returnValue = {maxIndex: 0,minIndex: 0};
+                returnValue = {maxIndex: 0,minIndex: 0};
 
             // now we begin the coding.  Start with some parameter checking
             if ((typeof dataArray!== "undefined") &&
@@ -958,43 +965,94 @@
 
                 // loop until we find the number we are trying to identify as the maximum
                 for ( var concentrationIndex = 0 ; concentrationIndex <dataArray.length; concentrationIndex++){
-                     if (almostEqual(maximumShadingValue,dataArray[concentrationIndex].cpdConc,.001)) {
-                         returnValue.maxIndex = concentrationIndex;
-                         break;
-                     }
+                    if (almostEqual(maximumShadingValue,dataArray[concentrationIndex].cpdConc,.001)) {
+                        returnValue.maxIndex = concentrationIndex;
+                    }
                 }
 
                 // if we never found the number we were looking for then loop again and choose the first number
                 //  past the maximum we been given
                 if (returnValue.maxIndex === 0) {
                     for ( var concentrationIndex = 0 ; concentrationIndex <dataArray.length; concentrationIndex++){
-                        if (maximumShadingValue>dataArray[concentrationIndex].cpdConc) {
+                        if (maximumShadingValue<dataArray[concentrationIndex].cpdConc) {
                             returnValue.maxIndex = concentrationIndex;
                             break;
                         }
                     }
                 }
 
-                // if we never found a suitable index number we were looking for then choose the largest index as the default
+                // if we never found the number we were looking for then choose the largest index as the default
                 if (returnValue.maxIndex === 0) {
                     returnValue.maxIndex = dataArray.length;
                 }
 
                 if (returnValue.maxIndex > numberOfPoints)  {
-                    numberOfPoints.minIndex = returnValue.maxIndex - numberOfPoints;
+                    returnValue.minIndex = returnValue.maxIndex - numberOfPoints;
                 }
 
             }
             return returnValue;
 
-        }
+        };
+
+
+        // we will be given a data array and we simply need to go a little above and a little
+        // below the range of the data we start this
+        _chart.calculateBoundsForXAxis = function (dataArray) {
+
+            // private method:
+            // we need to match the value we are given with one of the array values, but the
+            //  match might not be precise, therefore we need this epsilon equivalence.  Yuck.
+            var  returnValue = {maxIndex: 0,minIndex: 0};
+
+            // now we begin the coding.  Start with some parameter checking
+            if ((typeof dataArray!== "undefined") &&
+                (typeof dataArray.length!== "undefined") &&
+                ( dataArray.length > 0)) {
+
+                // get the range of the concentrations
+                returnValue.max = d3.max(dataArray.map(function (element) {
+                    return element.cpdConc
+                }));
+                returnValue.min = d3.min(dataArray.map(function (element) {
+                    return element.cpdConc
+                }));
+
+                // our data and our axes are all log base 2.  Is therefore simple enough to
+                //  extend the range in either direction
+                returnValue.min = returnValue.min*0.25;
+                returnValue.max = returnValue.max*4;
+
+            }
+            return returnValue;
+
+        };
 
 
 
-            return _chart; // <-1E
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        return _chart; // <-1E
     };
-
-
 
 
 })();
