@@ -2,6 +2,9 @@
 package cow
 
 import cbbo.ctrp.RunDataGeneration
+import cbbo.cidhierarchy.GenerateHierarchicalData
+import cbbo.cidhierarchy.Node
+import cbbo.cidhierarchy.NodeHolder
 
 
 class GroovyLauncherController {
@@ -13,15 +16,16 @@ class GroovyLauncherController {
         RunDataGeneration runDataGeneration = new RunDataGeneration()
         render(view:'cddbApiTester')
     }
-    def generateSunburst() {
-
-        cbbo.Prober prober = new cbbo.Prober()
-        TreeSet<Integer> treeSet = prober.readFromFile2()
+    def GenerateHierarchicalData() {
+        // First we need to read in the data file
+        String inputFile = "d:/dev/bootstrapCow/teststub.csv"
+        GenerateHierarchicalData prober = new GenerateHierarchicalData()
+        TreeSet<Integer> treeSet = prober.convertCidsToProteinTargets(inputFile)
         prober.display(treeSet)
-        TreeSet<String> uniprotIds = prober.readFromBioIDFile()
-        TreeSet<String> uniprotSet = prober.convertBiologyIdsToUniprotIds(uniprotIds)
+        //TreeSet<String> uniprotIds = prober.readFromBioIDFile()
+        TreeSet<String> uniprotSet = prober.convertBiologyIdsToUniprotIds(treeSet)
         TreeSet<String> filteredUniprotSet = prober.record (uniprotSet)
-        cbbo.NodeHolder nodeHolder =  prober.convertUniprotIdsToNodes(filteredUniprotSet)
+        NodeHolder nodeHolder =  prober.convertUniprotIdsToNodes(filteredUniprotSet)
         println "total number nodes = ${nodeHolder.nodeFinder.size()}"
         nodeHolder.adjustArcWidthSlices()
         nodeHolder.createDummyNodes()
