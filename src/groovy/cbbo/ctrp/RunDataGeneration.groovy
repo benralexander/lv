@@ -17,6 +17,16 @@ class RunDataGeneration {
     Random random = new Random()
 
 
+    private String getCoreFilePath(String directoryForFile) {
+        String filePath = System.getProperty("user.home") + System.getProperty("file.separator");
+        if (directoryForFile != null) {
+            filePath += (directoryForFile + System.getProperty("file.separator"));
+        }
+        return  filePath;
+    }
+
+
+
     private String generateFilename(String restApiCall,String directoryForFile, Date callStarted,
                                     int countDisambiguator) {
         String fileName = restApiCall.replaceAll("[\\/&=]", ".");
@@ -27,11 +37,8 @@ class RunDataGeneration {
 
         // append elapsed time to end of name
         Date currentDate = new Date();
-        fileName += ((currentDate.getTime() - callStarted.getTime()) + "ms_" +countDisambiguator+ ".");
-        String filePath = System.getProperty("user.home") + System.getProperty("file.separator");
-        if (directoryForFile != null) {
-            filePath += (directoryForFile + System.getProperty("file.separator"));
-        }
+        fileName += ((currentDate.getTime() - callStarted.getTime()) + "ms." +countDisambiguator+ ".");
+        String filePath = getCoreFilePath(directoryForFile)
         return (filePath + fileName + "txt");
     }
 
@@ -47,8 +54,8 @@ class RunDataGeneration {
             // we have the file name.  now fill it up.  Headers go first, the the Json we received from the API
             file.createNewFile();
             FileWriter fileWriter = new FileWriter(file);
-            fileWriter.write(parameterSummary);
-            fileWriter.write(System.getProperty("line.separator"));
+            // fileWriter.write(parameterSummary);
+            //  fileWriter.write(System.getProperty("line.separator"));
             fileWriter.write(returnFromApi);
             fileWriter.flush();
             fileWriter.close();
@@ -93,7 +100,7 @@ class RunDataGeneration {
             // append elapsed time to end of name
             Date currentDate = new Date();
             fileName += ((currentDate.getTime() - callStarted.getTime()) + "ms" + ".");
-  //          String filePath = System.getProperty("user.home") + System.getProperty("file.separator");
+            //          String filePath = System.getProperty("user.home") + System.getProperty("file.separator");
             String filePath = "\\\\dropbox\\dropbox\\balexand"
             if (directoryForFile != null) {
                 filePath += (directoryForFile + System.getProperty("file.separator"));
@@ -149,10 +156,11 @@ class RunDataGeneration {
 
 
 
-     boolean executePost3(String urlString, String parameters,int countDisambiguator) {
+    boolean executePost3(String urlString, String parameters,int countDisambiguator) {
         HttpURLConnection connection = null;
         URL url = new URL(serverLocation+urlString)
-         boolean retval = false
+        boolean retval = false
+        String apiResponse
         try {
             connection = url.openConnection()
             connection.setRequestMethod("POST")
@@ -175,19 +183,39 @@ class RunDataGeneration {
             writer.close()
             connection.connect()
 
-            def apiResponse = connection.content.text
+            apiResponse = connection.content.text
 
-            writeRawJsonToFile( null,
-                    urlString,
-                    parameters,
-                    callStarted,
-                    apiResponse,
-                    countDisambiguator)
+            if ((apiResponse != null)  &&
+                    (apiResponse.length() > 0)){
+                JsonSlurper jsonSlurper = new JsonSlurper()
+                HashMap header = jsonSlurper.parseText(apiResponse)
+                List perCurveCorrelation = header["perCurveCorrelation"]
+                StringBuilder sb = new StringBuilder()
+                int  perCurveCorrelationSize = perCurveCorrelation.size()
+                sb << "geneFeature,correlationValue"
+                sb << '\n'
+                for ( int i=0 ; i<perCurveCorrelationSize ; i++ ) {
+                    sb << ((HashMap)perCurveCorrelation[i]) ["geneFeature"]+ ","
+                    sb << +((HashMap)perCurveCorrelation[i]) ["correlationValue"]
+                    if (i+1<perCurveCorrelationSize) sb << '\n'
+                }
 
+
+                String perCurveCorrelationText  = sb.toString()
+
+                writeRawJsonToFile( null,
+                        urlString,
+                        parameters,
+                        callStarted,
+                        perCurveCorrelationText,
+                        countDisambiguator)
+
+            }
             println "completed post"
         } catch (e) {
             e.printStackTrace()
-            println "FAILURE on parm="+parameters+"."
+            println "FAILURE:  PARM="+parameters+'\n'+
+                    "returned (first 100 chars) JSON="+apiResponse.substring(0,100)+"."
         }
         return retval
     }
@@ -311,10 +339,10 @@ class RunDataGeneration {
 
 
 
-String generateParametersForCorrelationPointCall ()   {
-    String returnValue = ""
-    return  returnValue
-}
+    String generateParametersForCorrelationPointCall ()   {
+        String returnValue = ""
+        return  returnValue
+    }
 
 
 
@@ -371,18 +399,18 @@ String generateParametersForCorrelationPointCall ()   {
 
 
     public testCallCorrelationPoint() {
-        executePost3("cddb/ctrp2/mutation/perGene/cellCount/byFacet",
-"""{
-    "dataset":["Onco"],
-    "growthMode":["adherent"],
-    "cellSampleAnnotation":[
-        {"sitePrimary": "lung", "histSubtype": "adenocarcinoma"},
-        {"sitePrimary": "bone", "histSubtype": "unspecified"}
-    ]
-}
-""".toString())
+//        executePost3("cddb/ctrp2/mutation/perGene/cellCount/byFacet",
+//"""{
+//    "dataset":["Onco"],
+//    "growthMode":["adherent"],
+//    "cellSampleAnnotation":[
+//        {"sitePrimary": "lung", "histSubtype": "adenocarcinoma"},
+//        {"sitePrimary": "bone", "histSubtype": "unspecified"}
+//    ]
+//}
+//""".toString())
         executePost3("cddb/ctrp2/perturbation/perCurve/correlation/",
-"""{"cpdID":411738,
+                """{"cpdID":411738,
     "cellSampleAnnotation":[
              {"sitePrimary":"biliary_tract","histSubtype":"unspecified"},
              {"sitePrimary":"bone","histSubtype":"unspecified"},
@@ -392,21 +420,95 @@ String generateParametersForCorrelationPointCall ()   {
       "dataset":["Onco","COSMIC","TES"],
       "geneFeatureDataset":"GEX"
 }
-""".toString())
-     }
+""".toString(),1)
+    }
 
 
 
     public RunDataGeneration() {
         println('launching RunDataGeneration')
-        List<String> listOfHeaderParms= prepForTestRun ()
-        List<String> randomizedListOfHeaderParms=randomStringSelector ( listOfHeaderParms,  listOfHeaderParms.size(), false )
-        int loopCount = 1;
-        for (String headerParm in randomizedListOfHeaderParms) {
-            executePost3("cddb/ctrp2/perturbation/perCurve/correlation/",headerParm,loopCount++)
-        }
-
-     //   testCallCorrelationPoint()
+//        List<String> listOfHeaderParms= prepForTestRun ()
+//     //   List<String> randomizedListOfHeaderParms=randomStringSelector ( listOfHeaderParms,  8, false )
+//        List<String> randomizedListOfHeaderParms=randomStringSelector ( listOfHeaderParms,  listOfHeaderParms.size(), false )
+//        int loopCount = 1;
+//        try {
+//            String filePath = getCoreFilePath(null)
+//            File metaFile = new File(filePath + "metafile.txt");
+//
+//            // Create a metafile which we will then fill as we perform all the other calls
+//            metaFile.createNewFile();
+//            FileWriter fileWriter = new FileWriter(metaFile);
+//
+//            fileWriter.write("[");
+//
+//            int lengthListOfHeaderParms =   randomizedListOfHeaderParms.size()
+//            for (String headerParm in randomizedListOfHeaderParms) {
+//                JsonSlurper jsonSlurper = new JsonSlurper()
+//                HashMap header = jsonSlurper.parseText(headerParm)
+//                StringBuilder sb =  new StringBuilder()
+//
+//                // Compound ID
+//                sb << "{\"cpdId\":"+ header ["cpdID"] + ','
+//
+//                // Site primary
+//                List cellSampleAnnotationList = header ["cellSampleAnnotation"]
+//                sb << "\"sitePrimary\":["
+//                int numberOfHistologyRecords = cellSampleAnnotationList.size()
+//                for ( int i=0 ; i<numberOfHistologyRecords ; i++ )  {
+//                    sb << "\"" +((HashMap)cellSampleAnnotationList[i]) ["sitePrimary"]+ "\""
+//                    if (i+1<numberOfHistologyRecords) sb << ","
+//                }
+//                sb << "],"
+//
+//                // Histology subtype
+//                sb << "\"histSubtype\":["
+//                for ( int i=0 ; i<numberOfHistologyRecords ; i++ )  {
+//                    sb << "\"" +((HashMap)cellSampleAnnotationList[i]) ["histSubtype"]+ "\""
+//                    if (i+1<numberOfHistologyRecords) sb << ","
+//                }
+//                sb << "],"
+//
+//                // Growth mode
+//                List growthModeList = header ["growthMode"]
+//                sb << "\"growthMode\":["
+//                for ( int i=0 ; i<growthModeList.size() ; i++ )  {
+//                    sb << "\"" +(growthModeList[i])+ "\""
+//                    if (i+1<growthModeList.size()) sb << ","
+//                }
+//                sb << "],"
+//
+//                // dataset
+//                List datasetList = header ["dataset"]
+//                sb << "\"dataset\":["
+//                for ( int i=0 ; i<datasetList.size() ; i++ )  {
+//                    sb << "\"" +(datasetList[i])+ "\""
+//                    if (i+1<datasetList.size()) sb << ","
+//                }
+//                sb << "],"
+//
+//                // geneFeatureDataset
+//                sb << "\"geneFeatureDataset\":\""+ header ["geneFeatureDataset"] + '\",'
+//
+//
+//                // testId
+//
+//                sb << "\"testId\":"+ loopCount + "}"
+//                if (loopCount<lengthListOfHeaderParms)  sb << (","+'\n')
+//
+//                fileWriter.write(sb.toString());
+//                executePost3("cddb/ctrp2/perturbation/perCurve/correlation/",headerParm,loopCount++)
+//            }
+//            fileWriter.write("]");
+//
+//            fileWriter.flush();
+//            fileWriter.close();
+//
+//        } catch (Exception e) {
+//            System.out.print("problem writing output from " + restApiCall + ".");
+//            e.printStackTrace();
+//        }
+//
+        testCallCorrelationPoint()
     }
 
 }

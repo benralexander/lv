@@ -1,6 +1,8 @@
+var cbbo = cbbo || {};
+
 (function () {
 
-    d3.doseResponse = function () {
+    cbbo.doseResponse = function () {
         var _chart = {};
 
         var _width = 360, _height = 360,
@@ -27,9 +29,24 @@
             _selectionIdentifier,
         // private variables
             _expansionPercent = 10.0, // percent we extend beyond the min max of the raw data
-            _logBaseOfFittedCurve = 1.1// the curve we generate from the four parameters is a series of
+            _logBaseOfFittedCurve = 1.1;// the curve we generate from the four parameters is a series of
         // straight-line segments. This exponent determines how many line segments we generate
-            ;
+
+
+        //  private variable
+        var tip = d3.tip()
+            .attr('class', 'd3-tip dose-tip')
+            .style('z-index', 51)
+            .offset([-10, 0])
+            .html(function (d) {
+                var textToPresent = "";
+                if (d) {
+                    textToPresent = "conc: " + d.x.toPrecision (3)+'<br\>' +
+                        "viab: "+ d.y.toPrecision (3) ;
+                }
+                return "<strong><span>" + textToPresent + "</span></strong> ";
+            });
+
 
 
         _chart.render = function () {
@@ -43,7 +60,8 @@
                 _svg = d3.select(_selectionIdentifier).append("svg")
                     .classed('viability',true)
                     .attr("height", _height)
-                    .attr("width", _width);
+                    .attr("width", _width)
+                    .call(tip);
 
                 if (_autoScale){
                     autoScale(_data);
@@ -67,8 +85,8 @@
          */
         function autoScale(data) {
             // Private variables
-            var xExtremesForRawValues,
-                yExtremesForRawValues,
+            var xExtremesForRawValues={max:0,min:0},
+                yExtremesForRawValues={max:0,min:0},
                 xExtremesForCalculatedLines,
                 yExtremesForCalculatedLines,
                 minimumDataValue,
@@ -171,28 +189,27 @@
                 };
 
 
-
-            if (_x ===null) {
-                data.forEach(function (arrayElement, index) {
+            if (_x === null) {
+                data.forEach(function (arrayElement) {
                         xExtremesForRawValues = collectExtremes(arrayElement.elements, findHorizontalExtremes, xExtremesForRawValues);
                         xExtremesForCalculatedLines = collectExtremes(arrayElement.lines, findHorizontalExtremes, xExtremesForCalculatedLines);
                     }
                 );
                 // Calculate extremes for horizontal
-                maximumDataValue = d3.max([xExtremesForRawValues.max, xExtremesForCalculatedLines.max]),
-                    minimumDataValue = d3.min([xExtremesForRawValues.min, xExtremesForCalculatedLines.min]);
-                setXRangeBasedOnData(minimumDataValue,maximumDataValue);
+                maximumDataValue = d3.max([xExtremesForRawValues.max, xExtremesForCalculatedLines.max]);
+                minimumDataValue = d3.min([xExtremesForRawValues.min, xExtremesForCalculatedLines.min]);
+                setXRangeBasedOnData(minimumDataValue, maximumDataValue);
             }
 
             if (_y ===null) {
-                data.forEach(function (arrayElement, index) {
+                data.forEach(function (arrayElement) {
                         yExtremesForRawValues = collectExtremes(arrayElement.elements, findVerticalExtremes, yExtremesForRawValues);
                         yExtremesForCalculatedLines = collectExtremes(arrayElement.lines, findVerticalExtremes, yExtremesForCalculatedLines);
                     }
                 );
                 // Calculate extremes for vertical
-                var maximumDataValue = d3.max([yExtremesForRawValues.max, yExtremesForCalculatedLines.max]),
-                    minimumDataValue = d3.min([yExtremesForRawValues.min, yExtremesForCalculatedLines.min]);
+                maximumDataValue = d3.max([yExtremesForRawValues.max, yExtremesForCalculatedLines.max]);
+                minimumDataValue = d3.min([yExtremesForRawValues.min, yExtremesForCalculatedLines.min]);
                 setYRangeBasedOnData (minimumDataValue,maximumDataValue);
 
             }
@@ -302,7 +319,7 @@
             }
         }
 
-        function defineBodyClip(svg) { // <-2C
+        function defineBodyClip(svg) {
             var padding = 5;
 
             svg.append("defs")
@@ -315,13 +332,13 @@
                 .attr("height", quadrantHeight());
         }
 
-        function renderBody(svg) { // <-2D
+        function renderBody(svg) {
             if (!_bodyG)
                 _bodyG = svg.append("g")
                     .attr("class", "body")
                     .attr("transform", "translate("
                         + xStart() + ","
-                        + yEnd() + ")") // <-2E
+                        + yEnd() + ")")
                     .attr("clip-path", "url(#body-clip_"+_selectionIdentifier+")");
 
             // the fitted lines
@@ -345,7 +362,7 @@
                 return (d.linesExist);
             });
 
-            _line = d3.svg.line() //<-4A
+            _line = d3.svg.line()
                 .x(function (d) {
                     return _x(d.x);
                 })
@@ -355,16 +372,16 @@
 
             _bodyG.selectAll("path.line")
                 .data(filteredLines)
-                .enter() //<-4B
+                .enter()
                 .append("path")
                 .style("stroke", function (d, i) {
-                    return _lineColors(i); //<-4C
+                    return _lineColors(i);
                 })
                 .attr("class", "line");
 
             _bodyG.selectAll("path.line")
                 .data(filteredLines)
-                .transition() //<-4D
+                .transition()
                 .attr("d", function (d) {
                     return _line(d.lines);
                 });
@@ -543,7 +560,7 @@
 
                 if ((! list.elements) ||
                     (list.elements.length === 0)) {
-                    console.log (' hello');
+                    console.log ('list length === 0');
                 }   else {
 
                     addSegmentToErrorBar(list.elements, 'line.errorbar.m',
@@ -580,58 +597,64 @@
 
 
             // go here to draw circles
-//            _data.forEach(function (list, i) {
-//                _bodyG.selectAll("circle._" + i) //<-4E
-//                    .data(list.elements)
-//                    .enter()
-//                    .append("circle")
-//                    .attr("class", "dot _" + i);
-//
-//                _bodyG.selectAll("circle._" + i)
-//                    .data(list.elements)
-//                    .style("stroke", function (d) {
-//                        return _colors(i); //<-4F
-//                    })
-//                    .transition() //<-4G
-//                    .attr("cx", function (d) {
-//                        return _x(d.x);
-//                    })
-//                    .attr("cy", function (d) {
-//                        return _y(d.y);
-//                    })
-//                    .attr("r", 4.5);
-//            });
+            filteredElements.forEach(function (list, i) {
+                _bodyG.selectAll("rect._" + i)
+                    .data(list.elements)
+                    .enter()
+                    .append("rect")
+                    .on('mouseover', tip.show)
+                    .on('mouseout', tip.hide)
+                    .attr("class", "dot _" + i);
+
+                _bodyG.selectAll("rect._" + i)
+                    .data(list.elements)
+                    .style("stroke", function (d) {
+                        return _lineColors(0);
+                    })
+                    .transition()
+                    .attr("x", function (d) {
+                        return (_x(d.x)-3);
+                    })
+                    .attr("y", function (d) {
+                        return (_y(d.y)-3);
+                    })
+                    .attr("width", "6")
+                    .attr("height", "6");
+            });
 
 
             // go here to draw shapes
-            filteredElements.forEach(function (list, i) {
-                _bodyG.selectAll("path._" + i) //<-4E
-                    .data(list.elements)
-                    .enter()
-                    .append("path")
-                    .attr("class", "symbol _" + i);
-
-                _bodyG.selectAll("path._" + i)
-                    .data(list.elements)
-                    .classed('cross', true)
-                    .style("stroke", function (d) {
-                        return _lineColors(i);
-                    })
-                    .style("fill", function (d) {
-                        return '#ffffff';
-                    })
-                    .transition()
-                    .attr("transform", function (d) {
-                        return "translate(" // <-D
-                            + _x(d.x)
-                            + ","
-                            + _y(d.y)
-                            + ")";
-                    })
-                    .attr("d",
-                        d3.svg.symbol() // <-E
-                            .type('cross')
-                    );
+//            filteredElements.forEach(function (list, i) {
+//                _bodyG.selectAll("path._" + i)
+//                    .data(list.elements)
+//                    .enter()
+//                    .append("path")
+//                    .attr("class", "symbol _" + i);
+//
+//                _bodyG.selectAll("path._" + i)
+//                    .data(list.elements)
+//                    .classed('cross', true)
+//                    .style("stroke", function (d) {
+//                        return _lineColors(i);
+//                    })
+//                    .style("fill", function (d) {
+//                        return '#ffffff';
+//                    })
+//                    .transition()
+//                    .attr("transform", function (d) {
+//                        return "translate("
+//                            + _x(d.x)
+//                            + ","
+//                            + _y(d.y)
+//                            + ")";
+//                    })
+//                    .attr("d",
+//                        d3.svg.symbol()
+//                            .type('cross')
+//                    )
+//                    .on('mouseover', tip.show)
+//                    .on('mouseout', tip.hide)
+//                ;
 
 //                .attr("cx", function (d) {
 //                        return _x(d.x);
@@ -640,7 +663,7 @@
 //                        return _y(d.y);
 //                    })
 //                    .attr("r", 4.5);
-            });
+//            });
 
 
         }
@@ -659,7 +682,7 @@
                     });
                 },
 
-                area = d3.svg.area() // <-A
+                area = d3.svg.area()
                     .x(function (d) {
                         return _x(d.x);
                     })
@@ -758,7 +781,7 @@
             return _chart;
         };
 
-        _chart.height = function (h) { // <-1C
+        _chart.height = function (h) {
             if (!arguments.length) return _height;
             _height = h;
             return _chart;
@@ -935,7 +958,7 @@
                 // nonnegative.
                 if (xVector[i] >= 0) {
                     returnValue.push({x: xVector[i],
-                        y: (yMin + curveHeight / (1 + Math.pow(10,((Ec50-xVector[i])* (hillSlope)))))});
+                        y: (yMin + curveHeight / (1 + Math.pow(Math.E,((Ec50-xVector[i])* (hillSlope)))))});
 
                 }
             }
@@ -1028,30 +1051,7 @@
 
         };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        return _chart; // <-1E
+        return _chart;
     };
 
 

@@ -28,11 +28,10 @@
     padding-top: 25px;
     width: 365px;
     height: 350px;
-    border-radius: 8px;
-    margin-left: 25px;
-    -moz-border-radius: 8px;
-    -webkit-border-radius: 8px;
-    border: 3px solid #000080;
+    border: 1px solid #222222;
+    -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
     background: #eeeeee;
     display: none;
 }
@@ -196,4 +195,35 @@
 .bar{
     stroke: none;
     fill: steelblue;
+}
+.d3-tip {
+    line-height: 1;
+    font-weight: bold;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+    box-sizing: border-box;
+    display: inline;
+    font-size: 10px;
+    width: 100%;
+    line-height: 1;
+    color: rgba(0, 0, 0, 0.8);
+    content: "\25BC";
+    position: absolute;
+    text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+    margin: -1px 0 0 0;
+    top: 100%;
+    left: 0;
+}
+.dose-tip  {
+    background: rgba(30, 36, 121, 0.8);
 }

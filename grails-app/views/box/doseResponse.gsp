@@ -3,16 +3,18 @@
 <head>
     <meta charset="utf-8">
     <title>Line Chart</title>
+
     <link rel="stylesheet" type="text/css" href="../css/ctrp/doseResponse.css"/>
     <script type="text/javascript" src="../js/d3.js"></script>
-    <script src="../js/ctrp/doseResponse.js"></script>
     <script src="../js/ctrp/d3tooltip.js"></script>
+    <script src="../js/ctrp/doseResponse.js"></script>
+
     <style>
-        .errorbar {
-            fill: #379;
-            stroke: #0099ff;
-            stroke-width: 1.1px;
-        }
+    .errorbar {
+        fill: #379;
+        stroke: #0099ff;
+        stroke-width: 1.1px;
+    }
     </style>
 </head>
 
@@ -38,104 +40,103 @@
             data = [];
     var curves =  [
         {
-            "curveInflectionPoint": -114.4,
-            "inflectionPointUpperCI": 143020000000,
-            "curveBaseline": 1.151,
-            "curveSlope": 9.1461,
-            "maxConcAUC08": 498.3,
-            "cpdAUC": 6.8761,
-            "curveHeight": -0.16868,
+            "curveInflectionPoint": 1.0914,
+            "inflectionPointUpperCI": 29.035,
+            "curveBaseline": 0.2156,
+            "curveSlope": -0.10978,
+            "maxConcAUC08": 36.8,
+            "cpdAUC": 3.3268,
+            "curveHeight": 0.62897,
             "pvPoint": [
                 {
-                    "pvError": 0.33817,
-                    "pv": 1.01187575991386,
-                    "cpdConc": 0.015208
+                    "pvError": 0.11172,
+                    "pv": 0.963065667456791,
+                    "cpdConc": 0.0011254
                 },
                 {
-                    "pvError": 0.30108,
-                    "pv": 0.973134525228617,
-                    "cpdConc": 0.030416
+                    "pvError": 0.11172,
+                    "pv": 1.0861674195306,
+                    "cpdConc": 0.0022508
                 },
                 {
-                    "pvError": 0.26798,
-                    "pv": 1.07411145842929,
-                    "cpdConc": 0.060832
+                    "pvError": 0.11172,
+                    "pv": 1.0125526695726,
+                    "cpdConc": 0.0045016
                 },
                 {
-                    "pvError": 0.2386,
-                    "pv": 1.20346710033447,
-                    "cpdConc": 0.12165999999999999
+                    "pvError": 0.11172,
+                    "pv": 0.961082107912598,
+                    "cpdConc": 0.0090032
                 },
                 {
-                    "pvError": 0.21245,
-                    "pv": 0.907895292568535,
-                    "cpdConc": 0.24333
+                    "pvError": 0.11172,
+                    "pv": 0.778476091025291,
+                    "cpdConc": 0.018005999999999998
                 },
                 {
-                    "pvError": 0.1892,
-                    "pv": 1.0371045605161,
-                    "cpdConc": 0.48666
+                    "pvError": 0.11172,
+                    "pv": 0.948958726025352,
+                    "cpdConc": 0.036012999999999996
                 },
                 {
-                    "pvError": 0.16847,
-                    "pv": 1.23423509941709,
-                    "cpdConc": 0.97332
+                    "pvError": 0.11172,
+                    "pv": 0.745154528467278,
+                    "cpdConc": 0.07202599999999999
+                },
+                {
+                    "pvError": 0.11172,
+                    "pv": 0.574434720322612,
+                    "cpdConc": 0.14404999999999998
+                },
+                {
+                    "pvError": 0.11172,
+                    "pv": 0.604261596569457,
+                    "cpdConc": 0.2881
+                },
+                {
+                    "pvError": 0.11171,
+                    "pv": 0.771532402217735,
+                    "cpdConc": 0.5762
                 },
                 {
                     "pvError": null,
-                    "pv": 1.03398548274094,
-                    "cpdConc": 1.9466
+                    "pv": 0.52585186554098,
+                    "cpdConc": 1.1524
                 },
                 {
-                    "pvError": 0.13365,
-                    "pv": 0.913347672574305,
-                    "cpdConc": 3.8933
+                    "pvError": 1.1346,
+                    "pv": 0.382398860349926,
+                    "cpdConc": 2.3048
                 },
                 {
-                    "pvError": 0.11906,
-                    "pv": 0.88818915987826,
-                    "cpdConc": 7.7865
+                    "pvError": 0.18215,
+                    "pv": 0.176171960892228,
+                    "cpdConc": 4.6096
                 },
                 {
-                    "pvError": 0.10604,
-                    "pv": 0.967871300572043,
-                    "cpdConc": 15.573
+                    "pvError": 0.20414,
+                    "pv": 0.243164629820139,
+                    "cpdConc": 9.2193
                 },
                 {
-                    "pvError": 0.94456,
-                    "pv": 0.853815061119003,
-                    "cpdConc": 31.146
+                    "pvError": 0.20414,
+                    "pv": 0.168381244537229,
+                    "cpdConc": 18.439
                 },
                 {
-                    "pvError": 0.84155,
-                    "pv": 0.690549755436603,
-                    "cpdConc": 62.292
-                },
-                {
-                    "pvError": 0.7501,
-                    "pv": 0.77014971340433,
-                    "cpdConc": 124.58
-                },
-                {
-                    "pvError": 0.66781,
-                    "pv": 0.604333068293458,
-                    "cpdConc": 249.17000000000002
-                },
-                {
-                    "pvError": 0.59595,
-                    "pv": 0.90459192190164,
-                    "cpdConc": 498.34000000000003
+                    "pvError": 0.20414,
+                    "pv": 0.274036081054617,
+                    "cpdConc": 36.877
                 }
             ],
-            "nominalEC50": 3.6364e-35,
-            "pvPredValueLast": 0.9823,
-            "inflectionPointLowerCI": -143020000000,
+            "nominalEC50": 2.1308,
+            "pvPredValueLast": 0.2156,
+            "inflectionPointLowerCI": -26.852,
             "concUnit": "uM"
-        }
-    ];
+        }    ];
 
 
-    var viabilityChart =  d3.doseResponse();
+    var viabilityChart =  cbbo.doseResponse();
     var calculatedAucIndexRange = viabilityChart.calculateBoundsForShading (curves[0].pvPoint,
                     data.maxConcAUC08, 8),
             boundsForXAxis = viabilityChart.calculateBoundsForXAxis(curves[0].pvPoint);
@@ -147,30 +148,30 @@
             .width(400)
             .autoScale(false)
             .areaUnderTheCurve ([5,13]) // Shade points 5 - 13
-            //.domainMultiplier(1.2)    only used if autoscale==true
+        //.domainMultiplier(1.2)    only used if autoscale==true
             .areaUnderTheCurve([calculatedAucIndexRange.minIndex,calculatedAucIndexRange.maxIndex ])
             .x(d3.scale.log().domain([boundsForXAxis.min, boundsForXAxis.max]))
             .y(d3.scale.linear().domain([0, 1.5]));
 
-//    var c = chart.generateSigmoidPoints(10,  //  yMin
-//                                        100, //  yMax
-//                                        -5,  // hillSlope
-//                                        900,  // Ec50
-//                                        100,  //  numberOfPoints
-//                                        200,  //   xStart
-//                                        1400 //   xEnd
-//    );
-//    var d = chart.generateSigmoidPoints( 50,  //  yMin
-//            90, //  yMax
-//            -6,  // hillSlope
-//            900,  // Ec50
-//            1000,  //  numberOfPoints
-//            400,  //   xStart
-//            1600 //   xEnd
-//    );
+    //    var c = chart.generateSigmoidPoints(10,  //  yMin
+    //                                        100, //  yMax
+    //                                        -5,  // hillSlope
+    //                                        900,  // Ec50
+    //                                        100,  //  numberOfPoints
+    //                                        200,  //   xStart
+    //                                        1400 //   xEnd
+    //    );
+    //    var d = chart.generateSigmoidPoints( 50,  //  yMin
+    //            90, //  yMax
+    //            -6,  // hillSlope
+    //            900,  // Ec50
+    //            1000,  //  numberOfPoints
+    //            400,  //   xStart
+    //            1600 //   xEnd
+    //    );
 
- //   curves[1].elements =  c;
- //   curves[2].elements =  d;
+    //   curves[1].elements =  c;
+    //   curves[2].elements =  d;
 
     curves.forEach(function (series) {
         viabilityChart.addSeries(series);
