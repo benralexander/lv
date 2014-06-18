@@ -126,7 +126,7 @@ removeWaitCursor=function(){console.log('stub removeWaitCursor');};
 
             .boxWhiskerName ('3,4,5-trimethoxy benzaldehyde');
     // build a slider and attach the callback methods
-    var slider = d3.slider(minimumInterquartileMultiplier,
+    var slider = cbbo.slider(minimumInterquartileMultiplier,
             maximumInterquartileMultiplier,
             onScreenStart,
             onScreenEnd,
@@ -183,7 +183,7 @@ removeWaitCursor=function(){console.log('stub removeWaitCursor');};
             var margin = {top: 80, right: 20, bottom: 50, left: 70},
                     width = 400 - margin.left - margin.right,
                     height = 400 - margin.top - margin.bottom;
-            d3.scatterPlot()
+            cbbo.scatterPlot()
                     .selectionIdentifier("#scatterPlot1")
                     .width (width)
                     .height (height)

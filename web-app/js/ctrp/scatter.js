@@ -1,6 +1,8 @@
+var cbbo = cbbo || {};
+
 (function () {
 
-    d3.scatterPlot = function () {
+    cbbo.scatterPlot = function () {
 
         // the variables we intend to surface
         var
@@ -14,29 +16,34 @@
             clickCallback = function (d, i) {
                 var cmpd = $('#imageHolder').data('compound'),
                     compoundId = cmpd.compound_id,
-                    cellId = d.cell_sample_id;
+                    cellId = d.cellSampleID,
+                    viabilityChart = cbbo.doseResponse();
                 setWaitCursor();
                 DTGetDoseResponsePoints(compoundId, cellId, function (data) {
-                    var chart = d3.doseResponse()
+                    var calculatedAucIndexRange = viabilityChart.calculateBoundsForShading (data.pvPoint,
+                            data.maxConcAUC08, 8),
+                        boundsForXAxis = viabilityChart.calculateBoundsForXAxis(data.pvPoint);
+
+                    viabilityChart
                         .displayGridLines(false)
-                        .xAxisLabel('log [' + cmpd.compound_name + ']')
+                        .xAxisLabel('[' + cmpd.compound_name + ']')
                         .yAxisLabel('Viability')
                         .width('355')
                         .height('360')
-                        .title(data.cell_primary_name)
+                        .title(data.cellName)
                         .selectionIdentifier('#doseResponseCurve')
                         .autoScale(false)
-                        .areaUnderTheCurve([5, 13])
-                        .x(d3.scale.log().domain([0.0001, 40]))
-                        .y(d3.scale.linear().domain([0, 1.5]));
+                        .areaUnderTheCurve ([calculatedAucIndexRange.minIndex,calculatedAucIndexRange.maxIndex])
+                        .x(d3.scale.log().domain([boundsForXAxis.min, boundsForXAxis.max]))
+                        .y(d3.scale.linear().domain([0,1.5]));
                     d3.select('.messagepop').style('width', '800px');
                     d3.select('#doseResponseCurve').style('display', 'block');
                     var curves = [data];
                     curves.forEach(function (series) {
-                        chart.addSeries(series);
+                        viabilityChart.addSeries(series);
                     });
 
-                    chart.render();
+                    viabilityChart.render();
                     removeWaitCursor();
                 });
             },
@@ -60,8 +67,8 @@
                 .html(function (d) {
                     var textToPresent = "";
                     if (d) {
-                        if (d.cell_primary_name) {
-                            textToPresent = "CCLE: " + d.cell_primary_name.toString();
+                        if (d.cellName) {
+                            textToPresent = "CCLE: " + d.cellName.toString();
                         }
                         else {
                             textToPresent = "CCLE: " + d.toString();
@@ -115,10 +122,10 @@
             }
 
             x.domain(d3.extent(data, function (d) {
-                return d.cpd_auc;
+                return d.cpdAUC;
             })).nice();
             y.domain(d3.extent(data, function (d) {
-                return d.value;
+                return d.geneFeatureValue;
             })).nice();
 
             svg.append("g")
@@ -157,13 +164,13 @@
                 .attr("class", "dot")
                 .attr("r", 3.5)
                 .attr("cx", function (d) {
-                    return x(d.cpd_auc);
+                    return x(d.cpdAUC);
                 })
                 .attr("cy", function (d) {
-                    return y(d.value);
+                    return y(d.geneFeatureValue);
                 })
                 .style("fill", function (d) {
-                    return color(d.primary_site[0]);
+                    return color(d.sitePrimary);
                 });
 
             var legend = svg.selectAll(".legend")
