@@ -1,6 +1,7 @@
 var cbbo = cbbo || {};
 
 (function () {
+    "use strict";
 
     cbbo.scatterPlot = function () {
 
@@ -14,38 +15,6 @@ var cbbo = cbbo || {};
             xAxisLabel = '',
             yAxisLabel = '',
             clickCallback = function (d, i) {
-                var cmpd = $('#imageHolder').data('compound'),
-                    compoundId = cmpd.compound_id,
-                    cellId = d.cellSampleID,
-                    viabilityChart = cbbo.doseResponse();
-                setWaitCursor();
-                DTGetDoseResponsePoints(compoundId, cellId, function (data) {
-                    var calculatedAucIndexRange = viabilityChart.calculateBoundsForShading (data.pvPoint,
-                            data.maxConcAUC08, 8),
-                        boundsForXAxis = viabilityChart.calculateBoundsForXAxis(data.pvPoint);
-
-                    viabilityChart
-                        .displayGridLines(false)
-                        .xAxisLabel('[' + cmpd.compound_name + ']')
-                        .yAxisLabel('Viability')
-                        .width('355')
-                        .height('360')
-                        .title(data.cellName)
-                        .selectionIdentifier('#doseResponseCurve')
-                        .autoScale(false)
-                        .areaUnderTheCurve ([calculatedAucIndexRange.minIndex,calculatedAucIndexRange.maxIndex])
-                        .x(d3.scale.log().domain([boundsForXAxis.min, boundsForXAxis.max]))
-                        .y(d3.scale.linear().domain([0,1.5]));
-                    d3.select('.messagepop').style('width', '800px');
-                    d3.select('#doseResponseCurve').style('display', 'block');
-                    var curves = [data];
-                    curves.forEach(function (series) {
-                        viabilityChart.addSeries(series);
-                    });
-
-                    viabilityChart.render();
-                    removeWaitCursor();
-                });
             },
 
 
@@ -88,6 +57,8 @@ var cbbo = cbbo || {};
 
         // Now walk through the DOM and create the enrichment plot
         instance.render = function (g) {
+            var previouslyExistingScatterPlot = selection.selectAll("svg"),
+                legend;
 
             x = d3.scale.linear()
                 .range([0, width]);
@@ -105,7 +76,6 @@ var cbbo = cbbo || {};
                 .scale(y)
                 .orient("left");
 
-            var previouslyExistingScatterPlot = selection.selectAll("svg");
             if (previouslyExistingScatterPlot) {
                 previouslyExistingScatterPlot.remove();
             }
@@ -173,7 +143,7 @@ var cbbo = cbbo || {};
                     return color(d.sitePrimary);
                 });
 
-            var legend = svg.selectAll(".legend")
+            legend = svg.selectAll(".legend")
                 .data(color.domain())
                 .enter().append("g")
                 .attr("class", "legend")

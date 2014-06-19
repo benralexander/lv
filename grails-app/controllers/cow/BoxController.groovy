@@ -299,53 +299,115 @@ class BoxController {
     ]
 }"""
 
-//
-//
-//
-//    "results": [
-//    {
-//        "value": 6.7829559999999995,
-//        "cpd_auc": 6.2818000000000005,
-//        "cell_sample_id": 985,
-//        "cell_primary_name":"CUPV3",
-//        "primary_site": ["RMUGS"]
-//    },
-//    {
-//        "value": 5.991586,
-//        "cpd_auc": 7.4305,
-//        "cell_sample_id": 299,
-//        "cell_primary_name":"CUPV3",
-//        "primary_site": ["HCC1359"]
-//    },
-//    {
-//        "value": 5.8883,
-//        "cpd_auc": 6.8716,
-//        "cell_sample_id": 1133,
-//        "cell_primary_name":"CUPV3",
-//        "primary_site": ["SNUC4"]
-//    },
-//    {
-//        "value": 6.118193,
-//        "cpd_auc": 6.983300000000001,
-//        "cell_sample_id": 536,
-//        "cell_primary_name":"CUPV3",
-//        "primary_site": ["KM12"]
-//    },
-//    {
-//        "value": 6.527301,
-//        "cpd_auc": 7.7155000000000005,
-//        "cell_sample_id": 759,
-//        "cell_primary_name":"CUPV3",
-//        "primary_site": ["NCIH1755"]
-//    }
-//]
-//}"""
+
+
+
+    def doseResponseData = """
+        {
+            "curveInflectionPoint": 1.0914,
+            "inflectionPointUpperCI": 29.035,
+            "curveBaseline": 0.2156,
+            "curveSlope": -0.10978,
+            "maxConcAUC08": 36.8,
+            "cpdAUC": 3.3268,
+            "curveHeight": 0.62897,
+            "pvPoint": [
+                {
+                    "pvError": 0.11172,
+                    "pv": 0.963065667456791,
+                    "cpdConc": 0.0011254
+                },
+                {
+                    "pvError": 0.11172,
+                    "pv": 1.0861674195306,
+                    "cpdConc": 0.0022508
+                },
+                {
+                    "pvError": 0.11172,
+                    "pv": 1.0125526695726,
+                    "cpdConc": 0.0045016
+                },
+                {
+                    "pvError": 0.11172,
+                    "pv": 0.961082107912598,
+                    "cpdConc": 0.0090032
+                },
+                {
+                    "pvError": 0.11172,
+                    "pv": 0.778476091025291,
+                    "cpdConc": 0.018005999999999998
+                },
+                {
+                    "pvError": 0.11172,
+                    "pv": 0.948958726025352,
+                    "cpdConc": 0.036012999999999996
+                },
+                {
+                    "pvError": 0.11172,
+                    "pv": 0.745154528467278,
+                    "cpdConc": 0.07202599999999999
+                },
+                {
+                    "pvError": 0.11172,
+                    "pv": 0.574434720322612,
+                    "cpdConc": 0.14404999999999998
+                },
+                {
+                    "pvError": 0.11172,
+                    "pv": 0.604261596569457,
+                    "cpdConc": 0.2881
+                },
+                {
+                    "pvError": 0.11171,
+                    "pv": 0.771532402217735,
+                    "cpdConc": 0.5762
+                },
+                {
+                    "pvError": null,
+                    "pv": 0.52585186554098,
+                    "cpdConc": 1.1524
+                },
+                {
+                    "pvError": 1.1346,
+                    "pv": 0.382398860349926,
+                    "cpdConc": 2.3048
+                },
+                {
+                    "pvError": 0.18215,
+                    "pv": 0.176171960892228,
+                    "cpdConc": 4.6096
+                },
+                {
+                    "pvError": 0.20414,
+                    "pv": 0.243164629820139,
+                    "cpdConc": 9.2193
+                },
+                {
+                    "pvError": 0.20414,
+                    "pv": 0.168381244537229,
+                    "cpdConc": 18.439
+                },
+                {
+                    "pvError": 0.20414,
+                    "pv": 0.274036081054617,
+                    "cpdConc": 36.877
+                }
+            ],
+            "nominalEC50": 2.1308,
+            "pvPredValueLast": 0.2156,
+            "inflectionPointLowerCI": -26.852,
+            "concUnit": "uM"
+        }   """
+
 
     def retrieveBoxData(){
         render(dataInJsonForm) ;
     }
     def correlationPoints(){
         render(correlationInJsonForm.toString()) ;
+    }
+    def doseResponsePoints(){
+        render(doseResponseData.toString()) ;
     }
 
     def retrieveData(){

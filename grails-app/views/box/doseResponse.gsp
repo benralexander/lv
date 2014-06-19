@@ -153,26 +153,6 @@
             .x(d3.scale.log().domain([boundsForXAxis.min, boundsForXAxis.max]))
             .y(d3.scale.linear().domain([0, 1.5]));
 
-    //    var c = chart.generateSigmoidPoints(10,  //  yMin
-    //                                        100, //  yMax
-    //                                        -5,  // hillSlope
-    //                                        900,  // Ec50
-    //                                        100,  //  numberOfPoints
-    //                                        200,  //   xStart
-    //                                        1400 //   xEnd
-    //    );
-    //    var d = chart.generateSigmoidPoints( 50,  //  yMin
-    //            90, //  yMax
-    //            -6,  // hillSlope
-    //            900,  // Ec50
-    //            1000,  //  numberOfPoints
-    //            400,  //   xStart
-    //            1600 //   xEnd
-    //    );
-
-    //   curves[1].elements =  c;
-    //   curves[2].elements =  d;
-
     curves.forEach(function (series) {
         viabilityChart.addSeries(series);
     });
