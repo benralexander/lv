@@ -16,6 +16,10 @@ var cbbo = cbbo || {};
             yAxisLabel = '',
             clickCallback = function (d, i) {
             },
+            xAxisDataAccessor,
+            yAxisDataAccessor,
+            colorByDataAccessor,
+
 
 
         // private variables
@@ -134,13 +138,13 @@ var cbbo = cbbo || {};
                 .attr("class", "dot")
                 .attr("r", 3.5)
                 .attr("cx", function (d) {
-                    return x(d.cpdAUC);
+                    return x(xAxisDataAccessor(d));
                 })
                 .attr("cy", function (d) {
-                    return y(d.geneFeatureValue);
+                    return y(yAxisDataAccessor(d));
                 })
                 .style("fill", function (d) {
-                    return color(d.sitePrimary);
+                    return color(colorByDataAccessor(d));
                 });
 
             legend = svg.selectAll(".legend")
@@ -202,6 +206,24 @@ var cbbo = cbbo || {};
         instance.clickCallback = function (x) {
             if (!arguments.length) return clickCallback;
             clickCallback = x;
+            return instance;
+        };
+
+        instance.xAxisDataAccessor = function (x) {
+            if (!arguments.length) return xAxisDataAccessor;
+            xAxisDataAccessor = x;
+            return instance;
+        };
+
+        instance.yAxisDataAccessor = function (x) {
+            if (!arguments.length) return yAxisDataAccessor;
+            yAxisDataAccessor = x;
+            return instance;
+        };
+
+        instance.colorByDataAccessor = function (x) {
+            if (!arguments.length) return colorByDataAccessor;
+            colorByDataAccessor = x;
             return instance;
         };
 

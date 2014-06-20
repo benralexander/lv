@@ -427,87 +427,87 @@ class RunDataGeneration {
 
     public RunDataGeneration() {
         println('launching RunDataGeneration')
-//        List<String> listOfHeaderParms= prepForTestRun ()
-//     //   List<String> randomizedListOfHeaderParms=randomStringSelector ( listOfHeaderParms,  8, false )
-//        List<String> randomizedListOfHeaderParms=randomStringSelector ( listOfHeaderParms,  listOfHeaderParms.size(), false )
-//        int loopCount = 1;
-//        try {
-//            String filePath = getCoreFilePath(null)
-//            File metaFile = new File(filePath + "metafile.txt");
-//
-//            // Create a metafile which we will then fill as we perform all the other calls
-//            metaFile.createNewFile();
-//            FileWriter fileWriter = new FileWriter(metaFile);
-//
-//            fileWriter.write("[");
-//
-//            int lengthListOfHeaderParms =   randomizedListOfHeaderParms.size()
-//            for (String headerParm in randomizedListOfHeaderParms) {
-//                JsonSlurper jsonSlurper = new JsonSlurper()
-//                HashMap header = jsonSlurper.parseText(headerParm)
-//                StringBuilder sb =  new StringBuilder()
-//
-//                // Compound ID
-//                sb << "{\"cpdId\":"+ header ["cpdID"] + ','
-//
-//                // Site primary
-//                List cellSampleAnnotationList = header ["cellSampleAnnotation"]
-//                sb << "\"sitePrimary\":["
-//                int numberOfHistologyRecords = cellSampleAnnotationList.size()
-//                for ( int i=0 ; i<numberOfHistologyRecords ; i++ )  {
-//                    sb << "\"" +((HashMap)cellSampleAnnotationList[i]) ["sitePrimary"]+ "\""
-//                    if (i+1<numberOfHistologyRecords) sb << ","
-//                }
-//                sb << "],"
-//
-//                // Histology subtype
-//                sb << "\"histSubtype\":["
-//                for ( int i=0 ; i<numberOfHistologyRecords ; i++ )  {
-//                    sb << "\"" +((HashMap)cellSampleAnnotationList[i]) ["histSubtype"]+ "\""
-//                    if (i+1<numberOfHistologyRecords) sb << ","
-//                }
-//                sb << "],"
-//
-//                // Growth mode
-//                List growthModeList = header ["growthMode"]
-//                sb << "\"growthMode\":["
-//                for ( int i=0 ; i<growthModeList.size() ; i++ )  {
-//                    sb << "\"" +(growthModeList[i])+ "\""
-//                    if (i+1<growthModeList.size()) sb << ","
-//                }
-//                sb << "],"
-//
-//                // dataset
-//                List datasetList = header ["dataset"]
-//                sb << "\"dataset\":["
-//                for ( int i=0 ; i<datasetList.size() ; i++ )  {
-//                    sb << "\"" +(datasetList[i])+ "\""
-//                    if (i+1<datasetList.size()) sb << ","
-//                }
-//                sb << "],"
-//
-//                // geneFeatureDataset
-//                sb << "\"geneFeatureDataset\":\""+ header ["geneFeatureDataset"] + '\",'
-//
-//
-//                // testId
-//
-//                sb << "\"testId\":"+ loopCount + "}"
-//                if (loopCount<lengthListOfHeaderParms)  sb << (","+'\n')
-//
-//                fileWriter.write(sb.toString());
-//                executePost3("cddb/ctrp2/perturbation/perCurve/correlation/",headerParm,loopCount++)
-//            }
-//            fileWriter.write("]");
-//
-//            fileWriter.flush();
-//            fileWriter.close();
-//
-//        } catch (Exception e) {
-//            System.out.print("problem writing output from " + restApiCall + ".");
-//            e.printStackTrace();
-//        }
-//
+        List<String> listOfHeaderParms= prepForTestRun ()
+        List<String> randomizedListOfHeaderParms=randomStringSelector ( listOfHeaderParms,  8, false )
+     //   List<String> randomizedListOfHeaderParms=randomStringSelector ( listOfHeaderParms,  listOfHeaderParms.size(), false )
+        int loopCount = 1;
+        try {
+            String filePath = getCoreFilePath(null)
+            File metaFile = new File(filePath + "metafile.txt");
+
+            // Create a metafile which we will then fill as we perform all the other calls
+            metaFile.createNewFile();
+            FileWriter fileWriter = new FileWriter(metaFile);
+
+            fileWriter.write("[");
+
+            int lengthListOfHeaderParms =   randomizedListOfHeaderParms.size()
+            for (String headerParm in randomizedListOfHeaderParms) {
+                JsonSlurper jsonSlurper = new JsonSlurper()
+                HashMap header = jsonSlurper.parseText(headerParm)
+                StringBuilder sb =  new StringBuilder()
+
+                // Compound ID
+                sb << "{\"cpdId\":"+ header ["cpdID"] + ','
+
+                // Site primary
+                List cellSampleAnnotationList = header ["cellSampleAnnotation"]
+                sb << "\"sitePrimary\":["
+                int numberOfHistologyRecords = cellSampleAnnotationList.size()
+                for ( int i=0 ; i<numberOfHistologyRecords ; i++ )  {
+                    sb << "\"" +((HashMap)cellSampleAnnotationList[i]) ["sitePrimary"]+ "\""
+                    if (i+1<numberOfHistologyRecords) sb << ","
+                }
+                sb << "],"
+
+                // Histology subtype
+                sb << "\"histSubtype\":["
+                for ( int i=0 ; i<numberOfHistologyRecords ; i++ )  {
+                    sb << "\"" +((HashMap)cellSampleAnnotationList[i]) ["histSubtype"]+ "\""
+                    if (i+1<numberOfHistologyRecords) sb << ","
+                }
+                sb << "],"
+
+                // Growth mode
+                List growthModeList = header ["growthMode"]
+                sb << "\"growthMode\":["
+                for ( int i=0 ; i<growthModeList.size() ; i++ )  {
+                    sb << "\"" +(growthModeList[i])+ "\""
+                    if (i+1<growthModeList.size()) sb << ","
+                }
+                sb << "],"
+
+                // dataset
+                List datasetList = header ["dataset"]
+                sb << "\"dataset\":["
+                for ( int i=0 ; i<datasetList.size() ; i++ )  {
+                    sb << "\"" +(datasetList[i])+ "\""
+                    if (i+1<datasetList.size()) sb << ","
+                }
+                sb << "],"
+
+                // geneFeatureDataset
+                sb << "\"geneFeatureDataset\":\""+ header ["geneFeatureDataset"] + '\",'
+
+
+                // testId
+
+                sb << "\"testId\":"+ loopCount + "}"
+                if (loopCount<lengthListOfHeaderParms)  sb << (","+'\n')
+
+                fileWriter.write(sb.toString());
+                executePost3("cddb/ctrp2/perturbation/perCurve/correlation/",headerParm,loopCount++)
+            }
+            fileWriter.write("]");
+
+            fileWriter.flush();
+            fileWriter.close();
+
+        } catch (Exception e) {
+            System.out.print("problem writing output from " + restApiCall + ".");
+            e.printStackTrace();
+        }
+
         testCallCorrelationPoint()
     }
 

@@ -79,6 +79,9 @@
             .xAxisLabel ('Navitoclax AUC')
             .yAxisLabel ('BCL2 expression level')
             .assignData (data)
+            .xAxisDataAccessor (function (d){return  d.cpdAUC ;})
+            .yAxisDataAccessor (function (d){return  d.geneFeatureValue ;})
+            .colorByDataAccessor (function (d){return  d.sitePrimary;})
             .render() ;
 
 
@@ -88,6 +91,9 @@
             .height (height)
             .margin(margin)
             .assignData (data)
+            .xAxisDataAccessor (function (d){return  d.cpdAUC ;})
+            .yAxisDataAccessor (function (d){return  d.geneFeatureValue ;})
+            .colorByDataAccessor (function (d){return  d.sitePrimary;})
             .render() ;
 
 
